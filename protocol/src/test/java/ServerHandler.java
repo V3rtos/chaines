@@ -1,21 +1,13 @@
 import io.netty.channel.ChannelHandlerContext;
-import me.moonways.bridgenet.BridgenetMessageHandler;
-import me.moonways.bridgenet.MessageRegistryContainer;
+import me.moonways.bridgenet.message.BridgenetMessageHandler;
+import me.moonways.bridgenet.message.MessageContainer;
+import me.moonways.bridgenet.message.MessageRegistry;
 import org.jetbrains.annotations.NotNull;
 
 public class ServerHandler extends BridgenetMessageHandler {
 
-    public ServerHandler(MessageRegistryContainer messageRegistryContainer) {
-        super(messageRegistryContainer);
-    }
-
-    public static void main(String[] args) {
-
-    }
-
-    @Override
-    public void handleChannelActive(@NotNull ChannelHandlerContext channelHandlerContext) {
-        super.handleChannelActive(channelHandlerContext);
+    public ServerHandler(MessageContainer messageContainer) {
+        super(messageContainer);
     }
 
     public void initialize() {

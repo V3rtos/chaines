@@ -7,9 +7,9 @@ import io.netty.channel.socket.SocketChannel;
 import lombok.Builder;
 import lombok.Setter;
 import me.moonways.bridgenet.Bridgenet;
-import me.moonways.bridgenet.BridgenetChannelHandler;
-import me.moonways.bridgenet.BridgenetMessageHandler;
-import me.moonways.bridgenet.MessageRegistryContainer;
+import me.moonways.bridgenet.message.MessageContainer;
+import me.moonways.bridgenet.pipeline.handler.BridgenetChannelHandler;
+import me.moonways.bridgenet.message.BridgenetMessageHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -17,12 +17,12 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 @Builder(setterPrefix = "set", builderClassName = "Builder", builderMethodName = "newFullBuilder")
-public class BridgenetConfiguration extends ChannelInitializer<SocketChannel> {
+public class BridgenetSettings extends ChannelInitializer<SocketChannel> {
 
     private static final String ADDITIONAL_CHANNEL_INITIALIZER_ID = "additional_channel_initializer_%d";
 
     public static Builder newBuilder(@NotNull Bridgenet bridgenet) {
-        return BridgenetConfiguration.newFullBuilder().setBridgenet(bridgenet);
+        return BridgenetSettings.newFullBuilder().setBridgenet(bridgenet);
     }
 
     private final Bridgenet bridgenet;
@@ -35,8 +35,8 @@ public class BridgenetConfiguration extends ChannelInitializer<SocketChannel> {
     private final Set<ChannelInitializer<? extends SocketChannel>> additionalChannelInitializers = new HashSet<>();
 
     private void initHandlers(@NotNull ChannelPipeline pipeline) {
-        MessageRegistryContainer messageRegistryContainer = bridgenet.getMessageRegistryContainer();
-        BridgenetMessageHandler messageHandler = bridgenetMessageHandlerFactory.create(messageRegistryContainer);
+        MessageContainer messageContainer = bridgenet.getMessageContainer();
+        BridgenetMessageHandler messageHandler = bridgenetMessageHandlerFactory.create(messageContainer);
 
         pipeline.addLast(new BridgenetChannelHandler(messageHandler));
     }
@@ -70,7 +70,7 @@ public class BridgenetConfiguration extends ChannelInitializer<SocketChannel> {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @NotNull
-    public BridgenetConfiguration thenComplete(@NotNull Consumer<SocketChannel> initChannelConsumer) {
+    public BridgenetSettings thenComplete(@NotNull Consumer<SocketChannel> initChannelConsumer) {
         if (this.initChannelConsumer == null)
             this.initChannelConsumer = initChannelConsumer;
         else
@@ -79,7 +79,7 @@ public class BridgenetConfiguration extends ChannelInitializer<SocketChannel> {
     }
 
     @NotNull
-    public BridgenetConfiguration addNext(@NotNull ChannelInitializer<? extends SocketChannel> additional) {
+    public BridgenetSettings addNext(@NotNull ChannelInitializer<? extends SocketChannel> additional) {
         additionalChannelInitializers.add(additional);
         return this;
     }

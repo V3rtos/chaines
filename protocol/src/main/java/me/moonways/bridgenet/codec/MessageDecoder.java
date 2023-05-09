@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.Message;
-import me.moonways.bridgenet.MessageRegistryContainer;
+import me.moonways.bridgenet.message.Message;
+import me.moonways.bridgenet.message.MessageRegistry;
 import me.moonways.bridgenet.exception.MessageDecoderEmptyPacketException;
 import me.moonways.bridgenet.transfer.MessageTransfer;
 import me.moonways.bridgenet.transfer.TransferAllocator;
@@ -30,7 +30,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
     private ByteArrayOutputStream output;
 
-    private final MessageRegistryContainer messageRegistryContainer;
+    private final MessageRegistry messageRegistry;
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
@@ -45,7 +45,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
             MessageTransfer messageTransfer = new MessageTransfer(null, bytes);
 
-            Class<? extends Message> messageClass = messageRegistryContainer.getMessageById(messageId);
+            Class<? extends Message> messageClass = messageRegistry.getMessageById(messageId);
 
             Message message = transferAllocator.allocatePacket(messageClass, messageTransfer);
             message.setMessageId(messageId);

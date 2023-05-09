@@ -1,10 +1,16 @@
 package me.moonways.bridgenet;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface BootstrapWorker {
 
-    void bindSync();
+    BridgenetChannel bindSync();
 
-    void bind();
+    CompletableFuture<BridgenetChannel> bind();
+
+    BridgenetChannel connectSync();
+
+    CompletableFuture<BridgenetChannel> connect();
 
     void shutdownGracefully();
 

@@ -6,7 +6,7 @@ import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import me.moonways.bridgenet.Message;
+import me.moonways.bridgenet.message.Message;
 import me.moonways.bridgenet.transfer.provider.TransferProvider;
 
 @AllArgsConstructor

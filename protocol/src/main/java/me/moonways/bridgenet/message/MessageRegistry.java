@@ -1,12 +1,16 @@
-package me.moonways.bridgenet;
+package me.moonways.bridgenet.message;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import me.moonways.bridgenet.exception.MessageNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class MessageRegistryContainer {
+@SuppressWarnings("unused")
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public class MessageRegistry {
 
     private final Map<Integer, Class<? extends Message>> messageIdentifierMap = new HashMap<>();
 

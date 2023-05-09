@@ -1,4 +1,4 @@
-package me.moonways.bridgenet;
+package me.moonways.bridgenet.message;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

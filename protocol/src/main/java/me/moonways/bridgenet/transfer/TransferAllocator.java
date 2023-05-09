@@ -3,7 +3,7 @@ package me.moonways.bridgenet.transfer;
 import java.lang.reflect.Field;
 
 import lombok.SneakyThrows;
-import me.moonways.bridgenet.Message;
+import me.moonways.bridgenet.message.Message;
 import sun.misc.Unsafe;
 
 public class TransferAllocator {

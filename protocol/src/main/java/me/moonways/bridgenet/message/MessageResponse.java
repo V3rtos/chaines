@@ -1,4 +1,4 @@
-package me.moonways.bridgenet;
+package me.moonways.bridgenet.message;
 
 import org.jetbrains.annotations.NotNull;
 

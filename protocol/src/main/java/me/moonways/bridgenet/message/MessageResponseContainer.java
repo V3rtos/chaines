@@ -1,5 +1,7 @@
-package me.moonways.bridgenet;
+package me.moonways.bridgenet.message;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import me.moonways.bridgenet.exception.ResponseMessageNotFoundException;
 import org.jetbrains.annotations.NotNull;
 
@@ -7,9 +9,34 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ResponseContainer {
+@SuppressWarnings("unused")
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public class MessageResponseContainer {
 
     private final Map<Integer, MessageResponse<?>> responseMessagesMap = new HashMap<>();
+
+    private int responseId = 0;
+
+    private void validateNull(MessageResponse<?> response) {
+        if (response == null) {
+            throw new ResponseMessageNotFoundException("response message is not found");
+        }
+    }
+
+    public void handleResponse(int responseId, @NotNull Message message) {
+        MessageResponse<Message> response = getResponse(responseId);
+        validateNull(response);
+
+        response.complete(message);
+    }
+
+    public int getNextAwaitResponseMessageId() {
+        if (responseId == Integer.MAX_VALUE) {
+            responseId = 0;
+        }
+
+        return responseId++;
+    }
 
     public void addResponse(int id, @NotNull MessageResponse<?> response) {
         responseMessagesMap.put(id, response);

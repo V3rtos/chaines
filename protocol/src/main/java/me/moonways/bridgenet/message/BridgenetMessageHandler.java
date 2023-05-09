@@ -1,10 +1,9 @@
-package me.moonways.bridgenet;
+package me.moonways.bridgenet.message;
 
-import io.netty.channel.ChannelHandlerContext;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.exception.MessageNotFoundException;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,28 +13,17 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class BridgenetMessageHandler {
 
-    @Getter
-    private final MessageResponseHandler responseHandler = new MessageResponseHandler();
+    private final Map<Integer, Consumer<Message>> handleMessageMap = new HashMap<>();
 
     @Getter
-    private final BridgenetChannelExecutor executor = new BridgenetChannelExecutor(responseHandler);
-
-    @SuppressWarnings("rawtypes")
-    private final Map<Integer, Consumer> handleMessageMap = new HashMap<>();
-
-    private final MessageRegistryContainer messageRegistryContainer;
-
-    public <M extends Message> void addHandler(Class<M> messageClass, Consumer<M> consumer) {
-        int messageId = getMessageId(messageClass);
-
-        handleMessageMap.put(messageId, consumer);
-    }
-
-    public void handleChannelActive(@NotNull ChannelHandlerContext channelHandlerContext) {
-        executor.initializeChannelHandlerContext(channelHandlerContext);
-    }
+    private final MessageContainer messageContainer;
 
     @SuppressWarnings("unchecked")
+    public <M extends Message> void addHandler(Class<M> messageClass, Consumer<M> consumer) {
+        int messageId = getMessageId(messageClass);
+        handleMessageMap.put(messageId, (Consumer<Message>) consumer);
+    }
+
     public void handle(int messageId, Message message) {
         Optional.ofNullable(handleMessageMap.get(messageId))
                 .orElseThrow(() ->
@@ -43,6 +31,6 @@ public class BridgenetMessageHandler {
     }
 
     private <M extends Message> int getMessageId(Class<M> messageClass) {
-        return messageRegistryContainer.getIdByMessage(messageClass);
+        return messageContainer.getIdByMessage(messageClass);
     }
 }

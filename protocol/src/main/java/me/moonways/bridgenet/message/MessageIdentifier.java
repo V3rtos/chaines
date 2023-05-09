@@ -1,4 +1,4 @@
-package me.moonways.bridgenet;
+package me.moonways.bridgenet.message;
 
 public @interface MessageIdentifier {
 

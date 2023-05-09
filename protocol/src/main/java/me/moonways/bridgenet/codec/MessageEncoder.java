@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.Message;
-import me.moonways.bridgenet.MessageRegistryContainer;
+import me.moonways.bridgenet.message.Message;
+import me.moonways.bridgenet.message.MessageRegistry;
 import me.moonways.bridgenet.exception.MessageEncoderPacketIsNullException;
 import me.moonways.bridgenet.transfer.MessageTransfer;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,7 @@ import java.util.zip.DeflaterOutputStream;
 @RequiredArgsConstructor
 public class MessageEncoder extends MessageToByteEncoder<Message> {
 
-    private final MessageRegistryContainer messageRegistryContainer;
+    private final MessageRegistry messageRegistry;
 
     private static final boolean USE_GZIP = Boolean.TRUE;
 
@@ -31,7 +31,7 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
             throw new MessageEncoderPacketIsNullException("Packet in encoder is null");
         }
 
-        int messageId = messageRegistryContainer.getIdByMessage(message.getClass());
+        int messageId = messageRegistry.getIdByMessage(message.getClass());
 
         MessageTransfer messageTransfer = new MessageTransfer(message, null);
 

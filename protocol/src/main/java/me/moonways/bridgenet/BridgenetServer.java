@@ -1,37 +1,78 @@
 package me.moonways.bridgenet;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import me.moonways.bridgenet.exception.BridgenetConnectionException;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Getter
 public class BridgenetServer implements BootstrapWorker {
 
-    private final Set<BridgenetChannelExecutor> executorSet = new HashSet<>();
-
     private final ServerBootstrap serverBootstrap;
+    private final Bridgenet bridgenet;
 
-    @SneakyThrows
+    private BridgenetChannel bridgenetChannel;
+
     @Override
-    public void bindSync() {
-        serverBootstrap.bind().sync();
+    public BridgenetChannel bindSync() {
+        ChannelFuture channelFuture = serverBootstrap.bind().syncUninterruptibly();
+
+        if (channelFuture.isSuccess()) {
+            Channel channel = channelFuture.channel();
+
+            System.out.println("channel was initialized");
+            return bridgenetChannel = new BridgenetChannel(channel, bridgenet.getMessageContainer());
+        }
+
+        throw new BridgenetConnectionException(channelFuture.cause(), "Internal synchronized bind error");
     }
 
     @Override
-    public void bind() {
-        serverBootstrap.bind();
+    public CompletableFuture<BridgenetChannel> bind() {
+        CompletableFuture<BridgenetChannel> bridgenetChannelFuture =
+                new CompletableFuture<>();
+
+        serverBootstrap.bind().addListener((ChannelFutureListener) future -> {
+
+            if (future.isSuccess()) {
+                Channel channel = future.channel();
+                bridgenetChannelFuture.complete(bridgenetChannel = new BridgenetChannel(channel, bridgenet.getMessageContainer()));
+
+                System.out.println("channel was initialized");
+            }
+            else {
+                BridgenetConnectionException exception = new BridgenetConnectionException(future.cause(), "Internal asynchronous bind error");
+                bridgenetChannelFuture.completeExceptionally(exception);
+
+                System.out.println("channel throws exception");
+            }
+        });
+
+        return bridgenetChannelFuture;
+    }
+
+    @Override
+    public BridgenetChannel connectSync() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public CompletableFuture<BridgenetChannel> connect() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void shutdownGracefully() {
-    }
+        if (bridgenetChannel == null) {
+            throw new BridgenetConnectionException("channel is null");
+        }
 
-    public Set<BridgenetChannelExecutor> getExecutors() {
-        return executorSet;
+        bridgenetChannel.close();
     }
 }
