@@ -12,9 +12,7 @@ import org.jline.reader.LineReaderBuilder;
 public class BridgenetConsole extends SimpleTerminalConsole {
 
     private final BridgenetBootstrap bootstrap;
-
     private final ConsoleSender consoleSender = new ConsoleSender();
-
 
     @Override
     protected boolean isRunning() {
@@ -24,13 +22,6 @@ public class BridgenetConsole extends SimpleTerminalConsole {
     @Override
     protected void runCommand(String command) {
         String[] arguments = command.split(" ");
-
-        //CommandCondition commandCondition = new CommandCondition();
-        //
-        //commandCondition.addCondition(
-        //        CommandAccessDeniedType.DO_NOT_HAVE_PERMISSION, (sender) -> sender.hasPermission("test"));
-        //
-        //commandCondition.validateConditions(consoleSender);
 
         CommandExecutorSession commandExecutorSession = new CommandExecutorSession(consoleSender);
 
@@ -51,14 +42,6 @@ public class BridgenetConsole extends SimpleTerminalConsole {
 
     @Override
     protected void shutdown() {
-
-    }
-
-    @Override
-    protected LineReader buildReader(LineReaderBuilder builder) {
-        return super.buildReader(builder
-                .appName("Bridgenet")
-                .completer(new ConsoleTabComplete())
-        );
+        // TODO: 09.05.2023
     }
 }
