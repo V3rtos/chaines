@@ -30,6 +30,7 @@ public final class PlayerManager {
     @InitMethod
     private void init() {
         offlinePlayerRepository = convenoRouter.getRepository(OfflinePlayerRepository.class);
+        offlinePlayerRepository.validateTableExists();
     }
 
     private ConvenoResponseLine getResponseLineByPlayerId(int playerId) {

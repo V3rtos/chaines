@@ -19,8 +19,7 @@ public interface OfflinePlayerRepository {
             "id int not null primary key auto_increment, " +
             "name varchar not null, " +
             "experience int not null, " +
-            "group int not null, " +
-            ")")
+            "group int not null)")
     @ConvenoNonResponse
     @ConvenoAsynchronous(onlySubmit = true)
     void validateTableExists();
