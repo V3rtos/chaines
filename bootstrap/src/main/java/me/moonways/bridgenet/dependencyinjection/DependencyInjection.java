@@ -7,10 +7,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Depend
 public class DependencyInjection {
+
+    private static final ExecutorService CACHED_THREADS_POOL = Executors.newCachedThreadPool();
 
     private final Map<Class<?>, Object> dependencyInstancesMap = new HashMap<>();
 
@@ -34,15 +39,28 @@ public class DependencyInjection {
             Constructor<?> constructor = dependencyClass.getConstructor();
             constructor.setAccessible(true);
 
-            addDepend(constructor.newInstance());
+            Object dependencyInstance = constructor.newInstance();
+
+            addDepend(dependencyClass, dependencyInstance);
         }
+
+        dependencyInstancesMap.forEach((dependencyClass, dependencyInstance) -> {
+
+            if (classesByAnnotation.contains(dependencyClass)) {
+                fireInitMethods(dependencyClass, dependencyInstance);
+            }
+        });
     }
 
     public void addDepend(@NotNull Object depend) {
+        addDepend(depend.getClass(), depend);
+    }
+
+    public void addDepend(@NotNull Class<?> dependClass, @NotNull Object depend) {
         validateDepend(depend);
 
         injectDependencies(depend);
-        dependencyInstancesMap.put(depend.getClass(), depend);
+        dependencyInstancesMap.put(dependClass, depend);
     }
 
     public void injectDependencies(@NotNull Object instance) {
@@ -53,7 +71,7 @@ public class DependencyInjection {
         }
     }
 
-    private void injectDependency(@NotNull Object instance, @NotNull Class<?> dependType, @NotNull Object dependInstance) {
+    private void injectDependency(Object instance, Class<?> dependType, Object dependInstance) {
         Field[] accessedToInjectFields = getAccessedToInjectFields(instance, dependType);
         for (Field field : accessedToInjectFields) {
             try {
@@ -65,7 +83,7 @@ public class DependencyInjection {
         }
     }
 
-    private Field[] getAccessedToInjectFields(@NotNull Object instance, @NotNull Class<?> dependType) {
+    private Field[] getAccessedToInjectFields(Object instance, Class<?> dependType) {
         Set<Field> fieldsSet = new HashSet<>();
 
         Class<?> instanceClass = instance.getClass();
@@ -85,5 +103,38 @@ public class DependencyInjection {
         }
 
         return fieldsSet.toArray(new Field[0]);
+    }
+
+    private void fireInitMethods(Class<?> instanceClass, Object instance) {
+        Method[] methods = instanceClass.getDeclaredMethods();
+
+        for (Method method : methods) {
+            InitMethod annotation = method.getDeclaredAnnotation(InitMethod.class);
+            if (annotation == null)
+                continue;
+
+            method.setAccessible(true);
+            boolean asynchronousInitialization = annotation.asynchronousInitialization();
+
+            fireInitMethod(asynchronousInitialization, method, instance);
+            method.setAccessible(false);
+        }
+    }
+
+    private void fireInitMethod(boolean asynchronous, Method method, Object instance) {
+        Runnable fireRunnable = () -> {
+
+            try {
+                method.invoke(instance);
+            }
+            catch (Exception exception) {
+                throw new RuntimeException(exception);
+            }
+        };
+
+        if (asynchronous)
+            CACHED_THREADS_POOL.submit(fireRunnable);
+        else
+            fireRunnable.run();
     }
 }
