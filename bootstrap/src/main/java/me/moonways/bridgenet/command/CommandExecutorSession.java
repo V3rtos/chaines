@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.command.sender.ConsoleSender;
 import me.moonways.bridgenet.command.exception.CommandSenderCastException;
 import me.moonways.bridgenet.command.sender.Sender;
-import me.moonways.bridgenet.user.User;
+import me.moonways.bridgenet.player.Player;
 
 @RequiredArgsConstructor
 public class CommandExecutorSession {
@@ -13,7 +13,7 @@ public class CommandExecutorSession {
 
     @SuppressWarnings("unchecked")
     public <T extends Sender> T senderCast(Class<T> senderClass)  {
-        if (senderClass.isAssignableFrom(User.class)) {
+        if (senderClass.isAssignableFrom(Player.class)) {
             return (T) sender;
         }
 

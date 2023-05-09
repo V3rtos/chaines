@@ -8,7 +8,9 @@ import me.moonways.bridgenet.dependencyinjection.DependencyInjection;
 import me.moonways.bridgenet.dependencyinjection.Inject;
 import me.moonways.bridgenet.event.EventService;
 import me.moonways.bridgenet.module.ModuleContainer;
+import me.moonways.bridgenet.player.PlayerManager;
 import me.moonways.bridgenet.scheduler.Scheduler;
+import me.moonways.bridgenet.server.ServerContainer;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -31,6 +33,12 @@ public class BridgenetControl {
 
     @Inject
     private ModuleContainer moduleContainer;
+
+    @Inject
+    private ServerContainer serverContainer;
+
+    @Inject
+    private PlayerManager playerManager;
 
     public void init() {
         moduleContainer.loadModules();
