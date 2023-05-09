@@ -42,7 +42,7 @@ public class DependencyInjection {
                 .setScanners(new TypeAnnotationsScanner(), new SubTypesScanner(false), new ResourcesScanner())
                 .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName))));
 
-        return reflections.getTypesAnnotatedWith(Depend.class);
+        return reflections.getTypesAnnotatedWith(Component.class);
     }
 
     @SneakyThrows

@@ -3,10 +3,10 @@ package me.moonways.bridgenet.api.command;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.api.command.exception.CommandNotAnnotatedException;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Component;
 import org.jetbrains.annotations.NotNull;
 
-@Depend
+@Component
 public class CommandRegistry {
 
     @Getter

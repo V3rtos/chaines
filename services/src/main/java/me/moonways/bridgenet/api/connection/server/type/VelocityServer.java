@@ -26,7 +26,7 @@ public class VelocityServer implements Server {
 
     @Override
     public int getTotalOnline() {
-        return 0;
+        return connectedPlayers.size();
     }
 
     @Override

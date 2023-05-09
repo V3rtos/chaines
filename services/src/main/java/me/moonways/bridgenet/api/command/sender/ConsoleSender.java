@@ -1,9 +1,9 @@
 package me.moonways.bridgenet.api.command.sender;
 
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Component;
 import org.jetbrains.annotations.NotNull;
 
-@Depend
+@Component
 public class ConsoleSender implements Sender {
 
     private static final String CONSOLE_SENDER_NAME = "BRIDGENET_CONTROL";

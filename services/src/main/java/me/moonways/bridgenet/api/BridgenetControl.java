@@ -4,19 +4,19 @@ import lombok.Getter;
 import me.moonways.bridgenet.api.command.Command;
 import me.moonways.bridgenet.api.command.CommandContainer;
 import me.moonways.bridgenet.api.command.CommandRegistry;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Component;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.InitMethod;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.module.ModuleContainer;
-import me.moonways.bridgenet.api.connection.player.PlayerManager;
+import me.moonways.bridgenet.api.connection.player.PlayerController;
 import me.moonways.bridgenet.api.scheduler.Scheduler;
-import me.moonways.bridgenet.api.connection.server.ServerContainer;
+import me.moonways.bridgenet.api.connection.server.ServerController;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-@Depend
+@Component
 public class BridgenetControl {
 
     @Inject
@@ -35,10 +35,10 @@ public class BridgenetControl {
     private ModuleContainer moduleContainer;
 
     @Inject
-    private ServerContainer serverContainer;
+    private ServerController serverController;
 
     @Inject
-    private PlayerManager playerManager;
+    private PlayerController playerController;
 
     @InitMethod
     private void init() {

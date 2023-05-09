@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.module;
 
 import me.moonways.bridgenet.api.BridgenetControl;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Component;
 import me.moonways.bridgenet.api.inject.Inject;
 import sun.misc.Unsafe;
 
@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-@Depend
+@Component
 public class ModuleContainer {
 
     private static final Unsafe UNSAFE;

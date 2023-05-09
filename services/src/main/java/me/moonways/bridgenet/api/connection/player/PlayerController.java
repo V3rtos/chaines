@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.connection.player;
 
 import lombok.Getter;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Component;
 import me.moonways.bridgenet.api.inject.InitMethod;
 import me.moonways.bridgenet.api.inject.Inject;
 import net.conveno.jdbc.ConvenoRouter;
@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@Depend
-public final class PlayerManager {
+@Component
+public final class PlayerController {
 
     private static final int PLAYER_ID_LABEL_INDEX = 1;
     private static final int PLAYER_NAME_LABEL_INDEX = 2;
