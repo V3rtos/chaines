@@ -1,11 +1,12 @@
 package me.moonways.bridgenet;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.command.Command;
-import me.moonways.bridgenet.command.CommandExecutorSession;
-import me.moonways.bridgenet.command.exception.CommandNotFoundException;
-import me.moonways.bridgenet.command.sender.ConsoleSender;
-import me.moonways.bridgenet.dependencyinjection.Inject;
+import me.moonways.bridgenet.api.BridgenetControl;
+import me.moonways.bridgenet.api.command.Command;
+import me.moonways.bridgenet.api.command.CommandExecutorSession;
+import me.moonways.bridgenet.api.command.exception.CommandNotFoundException;
+import me.moonways.bridgenet.api.command.sender.ConsoleSender;
+import me.moonways.bridgenet.api.dependencyinjection.Inject;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
 
 @RequiredArgsConstructor

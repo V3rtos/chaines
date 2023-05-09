@@ -1,5 +1,5 @@
-import me.moonways.bridgenet.message.BridgenetMessageHandler;
-import me.moonways.bridgenet.message.MessageContainer;
+import me.moonways.bridgenet.protocol.message.BridgenetMessageHandler;
+import me.moonways.bridgenet.protocol.message.MessageContainer;
 
 public class ServerHandler extends BridgenetMessageHandler {
 

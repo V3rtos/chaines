@@ -1,9 +1,10 @@
 package me.moonways.bridgenet;
 
 import lombok.Getter;
-import me.moonways.bridgenet.dependencyinjection.DependencyInjection;
-import me.moonways.bridgenet.dependencyinjection.Inject;
-import me.moonways.bridgenet.dependencyinjection.scanner.ResourceClasspathScanner;
+import me.moonways.bridgenet.api.BridgenetControl;
+import me.moonways.bridgenet.api.TestCommand;
+import me.moonways.bridgenet.api.dependencyinjection.DependencyInjection;
+import me.moonways.bridgenet.api.dependencyinjection.Inject;
 import net.conveno.jdbc.ConvenoRouter;
 
 public class BridgenetBootstrap {
@@ -12,28 +13,28 @@ public class BridgenetBootstrap {
     @Getter
     private BridgenetControl bridgenetControl;
 
+    @Inject
+    private BridgenetConsole bridgenetConsole;
+
     private void applyDependencyInjection() {
         DependencyInjection dependencyInjection = new DependencyInjection();
-        dependencyInjection.scanDependencies("me.moonways", new ResourceClasspathScanner());
 
         // local system services.
         dependencyInjection.addDepend(new BridgenetConsole(this));
-        dependencyInjection.addDepend(new BridgenetControl());
 
         // dependencies services.
         dependencyInjection.addDepend(ConvenoRouter.create());
 
         // inject
+        dependencyInjection.scanDependencies("me.moonways");
         dependencyInjection.injectDependencies(this);
     }
 
     public void start() {
         applyDependencyInjection();
-
-        bridgenetControl.init();
         registerInternalCommands();
 
-        bridgenetControl.getConsole().start();
+        bridgenetConsole.start();
     }
 
     private void registerInternalCommands() {

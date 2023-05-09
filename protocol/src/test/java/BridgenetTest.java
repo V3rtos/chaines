@@ -1,10 +1,10 @@
-import me.moonways.bridgenet.Bridgenet;
-import me.moonways.bridgenet.BridgenetChannel;
-import me.moonways.bridgenet.BridgenetNetty;
-import me.moonways.bridgenet.BridgenetServer;
-import me.moonways.bridgenet.message.Message;
-import me.moonways.bridgenet.message.MessageParameter;
-import me.moonways.bridgenet.pipeline.BridgenetSettings;
+import me.moonways.bridgenet.protocol.Bridgenet;
+import me.moonways.bridgenet.protocol.BridgenetChannel;
+import me.moonways.bridgenet.protocol.BridgenetNetty;
+import me.moonways.bridgenet.protocol.BridgenetServer;
+import me.moonways.bridgenet.protocol.message.Message;
+import me.moonways.bridgenet.protocol.message.MessageParameter;
+import me.moonways.bridgenet.protocol.pipeline.BridgenetSettings;
 
 public class BridgenetTest {
 
