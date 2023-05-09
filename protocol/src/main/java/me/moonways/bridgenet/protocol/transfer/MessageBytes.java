@@ -2,24 +2,24 @@ package me.moonways.bridgenet.protocol.transfer;
 
 import java.util.Arrays;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.Value;
+import lombok.*;
 import lombok.experimental.NonFinal;
 
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
-@Value(staticConstructor = "create")
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MessageBytes {
 
-    @NonFinal
-    int position;
+    public static MessageBytes create(byte[] rawArray) {
+        return new MessageBytes(rawArray);
+    }
 
-    byte[] rawArray;
+    @NonFinal
+    private int position;
+
+    private final byte[] rawArray;
 
     public void addPosition(int add) {
         this.position += add;

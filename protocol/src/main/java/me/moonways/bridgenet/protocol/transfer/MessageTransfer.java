@@ -116,7 +116,7 @@ public final class MessageTransfer {
         Class<? extends Message> packetType = messageObject.getClass();
         Field[] declaredFieldsArray = packetType.getDeclaredFields();
 
-        MessageBytes messageBytes = MessageBytes.create(0, bytes);
+        MessageBytes messageBytes = MessageBytes.create(bytes);
 
         for (Field field : declaredFieldsArray) {
             ByteTransfer declaredAnnotation = field.getDeclaredAnnotation(ByteTransfer.class);
