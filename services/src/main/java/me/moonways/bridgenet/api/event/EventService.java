@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.api.event;
 
-import me.moonways.bridgenet.api.dependencyinjection.Depend;
+import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscription;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscriptionApplier;
 import org.jetbrains.annotations.NotNull;

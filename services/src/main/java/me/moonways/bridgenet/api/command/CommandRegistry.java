@@ -3,7 +3,7 @@ package me.moonways.bridgenet.api.command;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.api.command.exception.CommandNotAnnotatedException;
-import me.moonways.bridgenet.api.dependencyinjection.Depend;
+import me.moonways.bridgenet.api.inject.Depend;
 import org.jetbrains.annotations.NotNull;
 
 @Depend

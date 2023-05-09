@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.api.command.sender;
 
-import me.moonways.bridgenet.api.dependencyinjection.Depend;
+import me.moonways.bridgenet.api.inject.Depend;
 import org.jetbrains.annotations.NotNull;
 
 @Depend

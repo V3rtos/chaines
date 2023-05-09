@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.api.module;
 
 import me.moonways.bridgenet.api.BridgenetControl;
-import me.moonways.bridgenet.api.dependencyinjection.Depend;
-import me.moonways.bridgenet.api.dependencyinjection.Inject;
+import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Inject;
 import sun.misc.Unsafe;
 
 import java.io.File;

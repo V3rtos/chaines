@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.api.scheduler;
 
-import me.moonways.bridgenet.api.dependencyinjection.Depend;
+import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.scheduler.task.ScheduledTaskExecutor;
 import me.moonways.bridgenet.api.scheduler.task.TaskFuture;
 import org.jetbrains.annotations.NotNull;

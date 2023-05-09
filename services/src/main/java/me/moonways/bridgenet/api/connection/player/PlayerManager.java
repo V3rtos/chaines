@@ -1,9 +1,9 @@
 package me.moonways.bridgenet.api.connection.player;
 
 import lombok.Getter;
-import me.moonways.bridgenet.api.dependencyinjection.Depend;
-import me.moonways.bridgenet.api.dependencyinjection.InitMethod;
-import me.moonways.bridgenet.api.dependencyinjection.Inject;
+import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.InitMethod;
+import me.moonways.bridgenet.api.inject.Inject;
 import net.conveno.jdbc.ConvenoRouter;
 import net.conveno.jdbc.response.ConvenoResponse;
 import net.conveno.jdbc.response.ConvenoResponseLine;

@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.api.connection.server;
 
-import me.moonways.bridgenet.api.dependencyinjection.Depend;
+import me.moonways.bridgenet.api.inject.Depend;
 
 import java.util.Collections;
 import java.util.HashMap;

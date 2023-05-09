@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.module;
 
 import lombok.Getter;
 import me.moonways.bridgenet.api.BridgenetControl;
-import me.moonways.bridgenet.api.dependencyinjection.Inject;
+import me.moonways.bridgenet.api.inject.Inject;
 
 @Getter
 public abstract class AbstractModule implements Module {

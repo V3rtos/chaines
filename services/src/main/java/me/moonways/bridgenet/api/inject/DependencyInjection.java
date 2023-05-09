@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.dependencyinjection;
+package me.moonways.bridgenet.api.inject;
 
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
