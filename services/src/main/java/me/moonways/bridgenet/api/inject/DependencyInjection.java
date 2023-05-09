@@ -18,7 +18,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-@Depend
 public class DependencyInjection {
 
     private static final ExecutorService CACHED_THREADS_POOL = Executors.newCachedThreadPool();

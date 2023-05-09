@@ -20,6 +20,7 @@ public class BridgenetBootstrap {
         DependencyInjection dependencyInjection = new DependencyInjection();
 
         // local system services.
+        dependencyInjection.addDepend(dependencyInjection);
         dependencyInjection.addDepend(new BridgenetConsole(this));
 
         // dependencies services.
