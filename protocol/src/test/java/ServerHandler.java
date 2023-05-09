@@ -11,6 +11,5 @@ public class ServerHandler extends BridgenetMessageHandler {
         addHandler(TestMessage.class, testMessage -> {
 
         });
-
     }
 }

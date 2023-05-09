@@ -1,0 +1,27 @@
+!main:
+    @1 Mode Selector
+    @3 6
+@hub:
+    item:
+        #1 slot 1
+        #2 stone
+        #3 1
+        #4 1
+    display:
+        #1 gui_hub_name
+        #2 gui_hub_lore
+    action:
+        #1 serv hub
+        #2 msg &eTeleporting to Hub...
+@skywars:
+    item:
+        #1 matrix 1,2
+        #2 ender_pearl
+        #3 1
+        #4 1
+    display:
+        #1 sw_hub_name
+        #2 sw_hub_lore
+    action:
+        #1 serv swlobby
+        #2 msg &eTeleporting to SkyWars...

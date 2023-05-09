@@ -1,6 +1,11 @@
 package me.moonways.bridgenet.protocol.message;
 
-public @interface MessageIdentifier {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    int id();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface MessageIdentifier {
 }

@@ -1,17 +1,16 @@
+package me.moonways.bnmg.protocol;
+
+import lombok.Getter;
+import me.moonways.bnmg.descriptor.GuiDescriptor;
 import me.moonways.bridgenet.protocol.message.Message;
 import me.moonways.bridgenet.protocol.message.MessageIdentifier;
 import me.moonways.bridgenet.protocol.transfer.ByteTransfer;
 import me.moonways.bridgenet.protocol.transfer.provider.TransferSerializeProvider;
 
+@Getter
 @MessageIdentifier
-public class TestMessage extends Message {
-
-    @ByteTransfer
-    private int playerId;
-
-    @ByteTransfer
-    private String playerName;
+public class BnmgCreateMessage extends Message {
 
     @ByteTransfer(provider = TransferSerializeProvider.class)
-    private Server server;
+    private GuiDescriptor descriptor;
 }

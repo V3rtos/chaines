@@ -12,6 +12,7 @@
 
     <modules>
         <module>authentication-module</module>
+        <module>bnmg-module</module>
     </modules>
 
     <properties>
