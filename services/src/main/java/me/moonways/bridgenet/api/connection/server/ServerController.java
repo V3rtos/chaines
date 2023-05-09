@@ -5,6 +5,7 @@ import me.moonways.bridgenet.api.connection.server.lookup.ServerLookupService;
 import me.moonways.bridgenet.api.connection.server.type.SpigotServer;
 import me.moonways.bridgenet.api.connection.server.type.VelocityServer;
 import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +23,9 @@ public class ServerController {
     @Inject
     private ServerLookupService lookupService;
 
+    @Inject
+    private DependencyInjection dependencyInjection;
+
     private void validateNull(Server server) {
         if (server == null) {
             throw new NullPointerException("server");
@@ -36,6 +40,8 @@ public class ServerController {
 
     public void addServer(@NotNull Server server) {
         validateNull(server);
+
+        dependencyInjection.injectDependencies(server);
         serverMap.put(server.getName().toLowerCase(), server);
     }
 

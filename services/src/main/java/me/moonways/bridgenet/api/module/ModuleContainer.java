@@ -2,6 +2,7 @@ package me.moonways.bridgenet.api.module;
 
 import me.moonways.bridgenet.api.BridgenetControl;
 import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import sun.misc.Unsafe;
 
@@ -34,7 +35,7 @@ public class ModuleContainer {
     private final Map<String, ModuleData> registered = new HashMap<>();
 
     @Inject
-    private BridgenetControl bridgenetControl;
+    private DependencyInjection dependencyInjection;
 
     {
         moduleFolder.mkdirs();
@@ -122,7 +123,7 @@ public class ModuleContainer {
 
         Module module = (Module) UNSAFE.allocateInstance(moduleClass);
 
-        bridgenetControl.getDependencyInjection().injectDependencies(module);
+        dependencyInjection.injectDependencies(module);
         registered.put(id, new ModuleData(module, id, name, version));
 
         module.onEnable();
