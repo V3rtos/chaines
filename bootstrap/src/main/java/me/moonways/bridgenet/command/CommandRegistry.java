@@ -4,8 +4,10 @@ import com.sun.istack.internal.NotNull;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.command.exception.CommandNotAnnotatedException;
+import me.moonways.bridgenet.dependencyinjection.Depend;
 
-public class CommandRegistrationService {
+@Depend
+public class CommandRegistry {
 
     @Getter
     private final CommandContainer commandContainer = new CommandContainer();

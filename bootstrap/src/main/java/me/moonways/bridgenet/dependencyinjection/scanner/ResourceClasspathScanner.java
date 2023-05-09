@@ -1,4 +1,6 @@
-package me.moonways.bridgenet.scanner;
+package me.moonways.bridgenet.dependencyinjection.scanner;
+
+import me.moonways.bridgenet.dependencyinjection.Depend;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -7,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
+@Depend
 public final class ResourceClasspathScanner {
 
     public ResourceClasspathScannerResponse find(String packageName) {

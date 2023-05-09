@@ -53,29 +53,25 @@ public abstract class Command {
             @NotNull String commandName,
             @NotNull CommandCondition commandCondition,
             @NotNull BiConsumer<String[], CommandExecutorSession> consumerCommand) {
+
         validateContains(commandName);
 
         CommandExecutorWrapper commandCompleterProvider = createCommandExecutor(commandCondition, consumerCommand);
-
         subcommandExecutorMap.put(commandName.toLowerCase(), commandCompleterProvider);
     }
 
     public void setCommand(
             @NotNull CommandCondition commandCondition,
             @NotNull BiConsumer<String[], CommandExecutorSession> consumerCommand) {
+
         this.defaultCommand = createCommandExecutor(commandCondition, consumerCommand);
     }
 
     public void setHelpCommand(
             @NotNull CommandCondition commandCondition,
             @NotNull BiConsumer<String[], CommandExecutorSession> consumerCommand) {
+
         this.helpCommand = createCommandExecutor(commandCondition, consumerCommand);
-    }
-
-    private void executeHelpCommand(@NotNull String[] arguments, @NotNull CommandExecutorSession sender) {
-        validateHelpCommand();
-
-        helpCommand.accept(arguments, sender);
     }
 
     private void executeSubcommand(@NotNull String name, @NotNull String[] arguments,  @NotNull CommandExecutorSession sender) {
@@ -83,6 +79,12 @@ public abstract class Command {
 
         CommandExecutorWrapper commandAccepterWrapper = getSubcommand(name.toLowerCase());
         commandAccepterWrapper.accept(arguments, sender);
+    }
+
+    private void executeHelpCommand(@NotNull String[] arguments, @NotNull CommandExecutorSession sender) {
+        validateHelpCommand();
+
+        helpCommand.accept(arguments, sender);
     }
 
     private void executeDefaultCommand(@NotNull String[] arguments, @NotNull CommandExecutorSession sender) {
@@ -100,18 +102,13 @@ public abstract class Command {
         String subcommand = arguments[1];
 
         if (containsSubcommand(subcommand)) {
-            String[] argsWithoutSubcommand = removeSubcommandInArgs(arguments);
+            String[] argsWithoutSubcommand = Arrays.copyOfRange(arguments, 2, arguments.length);
 
             executeSubcommand(subcommand, argsWithoutSubcommand, sender);
             return;
         }
 
         executeDefaultCommand(arguments, sender);
-    }
-
-
-    private String[] removeSubcommandInArgs(String[] args) {
-        return Arrays.copyOfRange(args, 2, args.length);
     }
 
     private CommandExecutorWrapper getSubcommand(@NotNull String name) {
@@ -125,6 +122,7 @@ public abstract class Command {
     private CommandExecutorWrapper createCommandExecutor(
             @NotNull CommandCondition commandCondition,
             @NotNull BiConsumer<String[], CommandExecutorSession> consumerCommand) {
+
         return new CommandExecutorWrapper(commandCondition, consumerCommand);
     }
 }

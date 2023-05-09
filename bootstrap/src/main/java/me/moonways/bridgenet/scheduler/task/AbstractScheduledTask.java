@@ -1,5 +1,7 @@
 package me.moonways.bridgenet.scheduler.task;
 
+import me.moonways.bridgenet.scheduler.ScheduledTime;
+import me.moonways.bridgenet.scheduler.Scheduler;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractScheduledTask implements TaskProcess {

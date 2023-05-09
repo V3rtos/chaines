@@ -40,7 +40,7 @@ public class CommandCondition {
     }
 
     private void throwAccessDeniedException(@NotNull CommandAccessDeniedType blocker) {
-        throw new CommandAccessDeniedException(blocker.getMessage());
+        throw new CommandAccessDeniedException(blocker.getErrorMessage());
     }
 
     private boolean validCondition(@NotNull Sender sender, @NotNull Predicate<Sender> predicate) {

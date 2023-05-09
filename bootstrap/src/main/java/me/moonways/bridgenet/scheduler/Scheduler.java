@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.scheduler;
 
+import me.moonways.bridgenet.dependencyinjection.Depend;
 import me.moonways.bridgenet.scheduler.task.ScheduledTaskExecutor;
 import me.moonways.bridgenet.scheduler.task.TaskFuture;
 import org.jetbrains.annotations.NotNull;
@@ -7,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+@Depend
 public final class Scheduler {
 
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);

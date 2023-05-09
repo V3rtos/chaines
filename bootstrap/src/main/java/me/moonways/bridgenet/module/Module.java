@@ -2,7 +2,7 @@ package me.moonways.bridgenet.module;
 
 public interface Module {
 
-	void enable();
+	void onEnable();
 
-	void disable();
+	void onDisable();
 }

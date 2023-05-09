@@ -4,6 +4,7 @@ import me.moonways.bridgenet.command.Command;
 import me.moonways.bridgenet.command.CommandIdentifier;
 import me.moonways.bridgenet.command.condition.CommandAccessDeniedType;
 import me.moonways.bridgenet.command.condition.CommandCondition;
+import me.moonways.bridgenet.command.sender.ConsoleSender;
 
 @CommandIdentifier(name = "moonways")
 public class TestCommand extends Command {
@@ -15,7 +16,7 @@ public class TestCommand extends Command {
                 sender -> sender.hasPermission("moonways"));
 
         addSubcommand("test", commandCondition, (args, session) -> {
-                    ConsoleSender consoleSender = session.of(ConsoleSender.class);
+                    ConsoleSender consoleSender = session.senderCast(ConsoleSender.class);
 
                     consoleSender.sendMessage("Здарова зайбал!");
                 });

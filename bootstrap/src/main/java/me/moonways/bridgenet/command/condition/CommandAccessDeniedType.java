@@ -9,5 +9,5 @@ public enum CommandAccessDeniedType {
 
     DO_NOT_HAVE_PERMISSION("У вас недостаточно прав!");
 
-    private final String message;
+    private final String errorMessage;
 }

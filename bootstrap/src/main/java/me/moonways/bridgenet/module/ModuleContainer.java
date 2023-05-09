@@ -1,5 +1,8 @@
 package me.moonways.bridgenet.module;
 
+import me.moonways.bridgenet.BridgenetControl;
+import me.moonways.bridgenet.dependencyinjection.Depend;
+import me.moonways.bridgenet.dependencyinjection.Inject;
 import sun.misc.Unsafe;
 
 import java.io.File;
@@ -11,6 +14,7 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+@Depend
 public class ModuleContainer {
 
     private static final Unsafe UNSAFE;
@@ -26,12 +30,13 @@ public class ModuleContainer {
         }
     }
 
-    private final File moduleFolder;
+    private final File moduleFolder = new File("modules");
     private final Map<String, ModuleData> registered = new HashMap<>();
 
-    public ModuleContainer(File folder) {
-        this.moduleFolder = new File(folder + File.separator + "modules");
+    @Inject
+    private BridgenetControl bridgenetControl;
 
+    {
         moduleFolder.mkdirs();
     }
 
@@ -114,9 +119,11 @@ public class ModuleContainer {
         String id = annotation.id(), name = annotation.name(), version = annotation.version();
 
         Module module = (Module) UNSAFE.allocateInstance(moduleClass);
+
+        bridgenetControl.getDependencyInjection().injectDependencies(module);
         registered.put(id, new ModuleData(module, id, name, version));
 
-        module.enable();
+        module.onEnable();
     }
 
     private List<Class<?>> scanModules() {

@@ -1,18 +1,20 @@
 package me.moonways.bridgenet;
 
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.command.Command;
 import me.moonways.bridgenet.command.CommandExecutorSession;
-import me.moonways.bridgenet.command.exception.CommandAccessDeniedException;
 import me.moonways.bridgenet.command.exception.CommandNotFoundException;
+import me.moonways.bridgenet.command.sender.ConsoleSender;
+import me.moonways.bridgenet.dependencyinjection.Inject;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
 
 @RequiredArgsConstructor
 public class BridgenetConsole extends SimpleTerminalConsole {
 
     private final BridgenetBootstrap bootstrap;
-    private final ConsoleSender consoleSender = new ConsoleSender();
+
+    @Inject
+    private ConsoleSender consoleSender;
 
     @Override
     protected boolean isRunning() {
@@ -20,19 +22,18 @@ public class BridgenetConsole extends SimpleTerminalConsole {
     }
 
     @Override
-    protected void runCommand(String command) {
-        String[] arguments = command.split(" ");
-
+    protected void runCommand(String commandLine) {
+        BridgenetControl bridgenetControl = bootstrap.getBridgenetControl();
         CommandExecutorSession commandExecutorSession = new CommandExecutorSession(consoleSender);
 
         try {
-            bootstrap.getCommandRegistrationService().getCommandContainer().getCommand(getCommandName(arguments))
-                    .executeCommand(arguments, commandExecutorSession);
+            String[] arguments = commandLine.split("\b");
 
-        } catch (CommandNotFoundException exception) {
+            Command command = bridgenetControl.getCommand(getCommandName(arguments));
+            command.executeCommand(arguments, commandExecutorSession);
+        }
+        catch (CommandNotFoundException exception) {
             System.out.println("Command not found!");
-        } catch (CommandAccessDeniedException exception) {
-            System.out.println("Don't have permission");
         }
     }
 

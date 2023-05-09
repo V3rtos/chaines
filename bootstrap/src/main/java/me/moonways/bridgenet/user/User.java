@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.command.user;
+package me.moonways.bridgenet.user;
 
 import me.moonways.bridgenet.command.sender.Sender;
 

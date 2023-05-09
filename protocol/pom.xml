@@ -5,18 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>me.moonways.bridgenet</groupId>
-        <artifactId>moonways-bridgenet</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <artifactId>bridgenet</artifactId>
+        <version>1.0</version>
     </parent>
 
     <artifactId>protocol</artifactId>
 
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <dependencies>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.92.Final</version>
-        </dependency>
+        <!-- Annotations processing utility dependencies -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -28,11 +30,20 @@
             <version>24.0.1</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- TCP Protocol management dependency -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.92.Final</version>
+        </dependency>
+
+        <!-- Integrated Unit tests dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
-            <scope>compile</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -40,12 +51,12 @@
             <version>1.10.19</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- Internal BridgeNet modules dependencies-->
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
 </project>

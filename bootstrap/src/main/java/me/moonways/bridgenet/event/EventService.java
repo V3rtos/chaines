@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.event;
 
+import me.moonways.bridgenet.dependencyinjection.Depend;
 import me.moonways.bridgenet.event.subscribe.EventSubscription;
 import me.moonways.bridgenet.event.subscribe.EventSubscriptionApplier;
 import org.jetbrains.annotations.NotNull;
@@ -7,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Depend
 public final class EventService {
 
     private final ExecutorService threadsExecutorService = Executors.newCachedThreadPool();
