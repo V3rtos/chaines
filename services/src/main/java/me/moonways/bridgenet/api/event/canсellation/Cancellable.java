@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.event.cansellation;
+package me.moonways.bridgenet.api.event.canсellation;
 
 public interface Cancellable {
 

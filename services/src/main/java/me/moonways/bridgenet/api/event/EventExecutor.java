@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.event;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.event.cansellation.Cancellable;
+import me.moonways.bridgenet.api.event.canсellation.Cancellable;
 import me.moonways.bridgenet.api.event.handle.EventPriority;
 import org.jetbrains.annotations.NotNull;
 
