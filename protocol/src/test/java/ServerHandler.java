@@ -1,15 +1,10 @@
-import me.moonways.bridgenet.protocol.message.BridgenetMessageHandler;
-import me.moonways.bridgenet.protocol.message.MessageContainer;
+import me.moonways.bridgenet.protocol.message.MessageHandler;
+import me.moonways.bridgenet.protocol.message.MessageTrigger;
 
-public class ServerHandler extends BridgenetMessageHandler {
+@MessageHandler
+public class ServerHandler {
 
-    public ServerHandler(MessageContainer messageContainer) {
-        super(messageContainer);
-    }
-
-    public void initialize() {
-        addHandler(TestMessage.class, testMessage -> {
-
-        });
+    @MessageTrigger
+    public void handle(TestMessage testMessage) {
     }
 }
