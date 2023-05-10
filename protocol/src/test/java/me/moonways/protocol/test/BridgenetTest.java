@@ -27,18 +27,17 @@ public class BridgenetTest {
     }
 
     public static void main(String[] args) {
+        injectDependencies();
+
         System.setProperty(Bridgenet.DEFAULT_HOST_PROPERTY, "localhost");
         System.setProperty(Bridgenet.DEFAULT_PORT_PROPERTY, "8080");
 
         Bridgenet bridgenet = Bridgenet.createByProperties();
 
         BridgenetServer server = Bridgenet.newServerBuilder(bridgenet)
-                .setChannelFactory(BridgenetNetty.createServerChannelFactory())
-                .setSettings(BridgenetSettings.newBuilder(bridgenet)
-                        .setBridgenetMessageHandlerFactory(ServerHandler::new)
-                        .build())
                 .setGroup(BridgenetNetty.createEventLoopGroup(2),
                         BridgenetNetty.createEventLoopGroup(4))
+                .setChannelFactory(BridgenetNetty.createServerChannelFactory())
                 .build();
 
         BridgenetChannel bridgenetChannel = server.bindSync();
