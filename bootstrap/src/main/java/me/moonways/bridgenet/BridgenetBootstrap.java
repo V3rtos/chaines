@@ -3,8 +3,8 @@ package me.moonways.bridgenet;
 import lombok.Getter;
 import me.moonways.bridgenet.api.BridgenetControl;
 import me.moonways.bridgenet.api.TestCommand;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
-import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.service.inject.DependencyInjection;
+import me.moonways.bridgenet.service.inject.Inject;
 import net.conveno.jdbc.ConvenoRouter;
 
 public class BridgenetBootstrap {
@@ -27,7 +27,7 @@ public class BridgenetBootstrap {
         dependencyInjection.addDepend(ConvenoRouter.create());
 
         // inject
-        dependencyInjection.scanDependencies("me.moonways");
+        dependencyInjection.scanDependenciesOfBasicPackage();
         dependencyInjection.injectDependencies(this);
     }
 

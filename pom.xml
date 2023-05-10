@@ -13,8 +13,7 @@
     <modules>
         <module>bootstrap</module>
         <module>protocol</module>
-        <module>services</module>
-        <module>triggers</module>
+        <module>api</module>
     </modules>
 
     <properties>

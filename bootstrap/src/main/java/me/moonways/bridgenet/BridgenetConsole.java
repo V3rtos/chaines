@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.command.Command;
 import me.moonways.bridgenet.api.command.CommandExecutorSession;
 import me.moonways.bridgenet.api.command.exception.CommandNotFoundException;
 import me.moonways.bridgenet.api.command.sender.ConsoleSender;
-import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.service.inject.Inject;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
 
 @RequiredArgsConstructor

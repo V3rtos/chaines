@@ -1,7 +1,6 @@
 package me.moonways.bnmg.test;
 
 import me.moonways.bnmg.component.BnmgComponent;
-import me.moonways.bnmg.component.BnmgComponentLine;
 import me.moonways.bnmg.content.BnmgContentEnumeration;
 
 import java.util.Arrays;
