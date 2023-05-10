@@ -26,11 +26,19 @@ public class DependencyInjection {
     private static final ExecutorService CACHED_THREADS_POOL = Executors.newCachedThreadPool();
 
     private final Map<Class<?>, Object> dependencyInstancesMap = new HashMap<>();
+    private final Map<Class<?>, Class<? extends Annotation>> dependencyAnnotatedMap = new HashMap<>();
 
     private void validateDepend(Object depend) {
         if (depend == null) {
             throw new NullPointerException("depend");
         }
+    }
+
+    public Set<Object> getInjectedDependsByAnnotation(@NotNull Class<? extends Annotation> componentAnnotation) {
+        return dependencyInstancesMap.keySet()
+                .stream()
+                .filter(cls -> dependencyAnnotatedMap.get(cls) == componentAnnotation)
+                .collect(Collectors.toSet());
     }
 
     private Set<Class<?>> scanningPackages(@NotNull String packageName, @NotNull Class<? extends Annotation> componentAnnotation) {
@@ -72,7 +80,9 @@ public class DependencyInjection {
 
         for (Class<?> dependencyClass : classesByAnnotationList) {
             if (dependencyClass == DependencyInjection.class) {
+
                 addDepend(this);
+                addDependAnnotated(dependencyClass, Component.class);
                 continue;
             }
 
@@ -85,6 +95,7 @@ public class DependencyInjection {
             Object dependencyInstance = constructor.newInstance();
 
             addDepend(dependencyClass, dependencyInstance);
+            addDependAnnotated(dependencyClass, componentAnnotation);
         }
 
         dependencyInstancesMap.forEach((dependencyClass, dependencyInstance) -> {
@@ -93,6 +104,10 @@ public class DependencyInjection {
                 fireInitMethods(dependencyClass, dependencyInstance);
             }
         });
+    }
+
+    private void addDependAnnotated(@NotNull Class<?> dependClass, @NotNull Class<? extends Annotation> componentAnnotation) {
+        dependencyAnnotatedMap.put(dependClass, componentAnnotation);
     }
 
     public void addDepend(@NotNull Object depend) {
