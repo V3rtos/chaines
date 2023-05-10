@@ -34,9 +34,10 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
         int messageId = messageRegistry.getIdByMessage(message.getClass());
 
         MessageTransfer messageTransfer = new MessageTransfer(message, null);
-
         writeMessageId(byteBuf, messageId);
-        byteBuf.writeBytes(messageTransfer.getBytes());
+
+        byte[] compressedBytes = makeCompress(messageTransfer.getBytes());
+        byteBuf.writeBytes(compressedBytes);
     }
 
     private void writeMessageId(ByteBuf byteBuf, int messageId) {
