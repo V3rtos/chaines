@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.command.CommandContainer;
 import me.moonways.bridgenet.api.command.CommandRegistry;
 import me.moonways.bridgenet.api.connection.player.PlayerController;
 import me.moonways.bridgenet.api.connection.server.ServerController;
-import me.moonways.bridgenet.api.event.EventService;
+import me.moonways.bridgenet.service.event.EventService;
 import me.moonways.bridgenet.api.module.ModuleContainer;
 import me.moonways.bridgenet.api.scheduler.Scheduler;
 import me.moonways.bridgenet.service.inject.Component;

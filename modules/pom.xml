@@ -11,8 +11,14 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>authentication-module</module>
+        <module>auth-module</module>
         <module>bnmg-module</module>
+        <module>friends-module</module>
+        <module>guilds-module</module>
+        <module>party-module</module>
+        <module>reports-module</module>
+        <module>social-networks-module</module>
+        <module>staff-module</module>
     </modules>
 
     <properties>
