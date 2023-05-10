@@ -9,7 +9,7 @@ import lombok.Setter;
 import me.moonways.bridgenet.protocol.Bridgenet;
 import me.moonways.bridgenet.protocol.message.MessageContainer;
 import me.moonways.bridgenet.protocol.pipeline.handler.BridgenetChannelHandler;
-import me.moonways.bridgenet.protocol.message.BridgenetMessageHandler;
+import me.moonways.bridgenet.protocol.message.BridgenetMessageHandlerProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -36,7 +36,7 @@ public class BridgenetSettings extends ChannelInitializer<SocketChannel> {
 
     private void initHandlers(@NotNull ChannelPipeline pipeline) {
         MessageContainer messageContainer = bridgenet.getMessageContainer();
-        BridgenetMessageHandler messageHandler = bridgenetMessageHandlerFactory.create(messageContainer);
+        BridgenetMessageHandlerProvider messageHandler = bridgenetMessageHandlerFactory.create(messageContainer);
 
         pipeline.addLast(new BridgenetChannelHandler(messageHandler));
     }

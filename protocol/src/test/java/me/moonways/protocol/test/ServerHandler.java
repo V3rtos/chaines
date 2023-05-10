@@ -1,5 +1,3 @@
-package me.moonways.protocol.test;
-
 import me.moonways.bridgenet.protocol.message.BridgenetMessageHandler;
 import me.moonways.bridgenet.protocol.message.MessageContainer;
 

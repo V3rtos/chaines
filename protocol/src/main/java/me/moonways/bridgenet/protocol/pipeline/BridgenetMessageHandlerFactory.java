@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.protocol.pipeline;
 
-import me.moonways.bridgenet.protocol.message.BridgenetMessageHandler;
+import me.moonways.bridgenet.protocol.message.BridgenetMessageHandlerProvider;
 import me.moonways.bridgenet.protocol.message.MessageContainer;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,5 +8,5 @@ import org.jetbrains.annotations.NotNull;
 public interface BridgenetMessageHandlerFactory {
 
     @NotNull
-    BridgenetMessageHandler create(@NotNull MessageContainer messageContainer);
+    BridgenetMessageHandlerProvider create(@NotNull MessageContainer messageContainer);
 }
