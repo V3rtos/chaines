@@ -18,6 +18,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>injection-service</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!-- TCP Protocol management dependency -->
         <dependency>
             <groupId>io.netty</groupId>
