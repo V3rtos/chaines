@@ -1,21 +1,19 @@
-package me.moonways.bridgenet.protocol.pipeline.handler;
+package me.moonways.bridgenet.protocol.pipeline;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.protocol.message.BridgenetMessageHandlerProvider;
+import me.moonways.bridgenet.protocol.message.MessageTriggersProvider;
 import me.moonways.bridgenet.protocol.message.Message;
 import me.moonways.bridgenet.protocol.message.MessageContainer;
-import me.moonways.bridgenet.service.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 public class BridgenetChannelHandler extends SimpleChannelInboundHandler<Message> {
 
-    @Inject
-    private MessageContainer messageContainer;
+    private final MessageContainer messageContainer;
 
-    private final BridgenetMessageHandlerProvider messageHandler;
+    private final MessageTriggersProvider triggersProvider;
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) {
@@ -26,7 +24,7 @@ public class BridgenetChannelHandler extends SimpleChannelInboundHandler<Message
             return;
         }
 
-        messageHandler.handle(message);
+        triggersProvider.fireTriggers(message);
     }
 
     private void handleResponse(int messageResponseId, @NotNull Message message) {

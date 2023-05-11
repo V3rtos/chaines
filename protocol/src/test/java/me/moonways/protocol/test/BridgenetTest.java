@@ -6,12 +6,9 @@ import me.moonways.bridgenet.protocol.BridgenetNetty;
 import me.moonways.bridgenet.protocol.BridgenetServer;
 import me.moonways.bridgenet.protocol.message.Message;
 import me.moonways.bridgenet.protocol.message.MessageParameter;
-import me.moonways.bridgenet.protocol.pipeline.BridgenetSettings;
 import me.moonways.bridgenet.service.inject.Component;
 import me.moonways.bridgenet.service.inject.DependencyInjection;
 import me.moonways.bridgenet.service.inject.Inject;
-
-import java.lang.reflect.Method;
 
 @Component
 public class BridgenetTest {

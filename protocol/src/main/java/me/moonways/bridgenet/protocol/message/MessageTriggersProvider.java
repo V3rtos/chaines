@@ -2,19 +2,21 @@ package me.moonways.bridgenet.protocol.message;
 
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.protocol.message.exception.MessageHandleException;
+import me.moonways.bridgenet.service.inject.Component;
 import me.moonways.bridgenet.service.inject.DependencyInjection;
 import me.moonways.bridgenet.service.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 
-public class BridgenetMessageHandlerProvider {
+@Component
+public final class MessageTriggersProvider {
 
     @Inject
     private DependencyInjection dependencyInjection;
 
     @SneakyThrows
-    public void handle(@NotNull Message message) {
+    public void fireTriggers(@NotNull Message message) {
         for (Object messageHandler : dependencyInjection.getInjectedDependsByAnnotation(MessageHandler.class)) {
             for (Method method : messageHandler.getClass().getDeclaredMethods()) {
                 if (method.isAnnotationPresent(MessageTrigger.class)) {

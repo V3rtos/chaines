@@ -6,15 +6,15 @@ import io.netty.channel.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.protocol.message.MessageContainer;
-import me.moonways.bridgenet.protocol.pipeline.BridgenetSettings;
+import me.moonways.bridgenet.protocol.pipeline.BridgenetPipeline;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-@RequiredArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public class Bridgenet {
 
     public static final String DEFAULT_HOST_PROPERTY = "bridgenet.address.host";
@@ -73,8 +73,8 @@ public class Bridgenet {
             return this;
         }
 
-        public ServerBuilder setSettings(@NotNull BridgenetSettings bridgenetSettings) {
-            serverBootstrap.childHandler(bridgenetSettings);
+        public ServerBuilder setSettings(@NotNull BridgenetPipeline bridgenetPipeline) {
+            serverBootstrap.childHandler(bridgenetPipeline);
             return this;
         }
 
@@ -111,8 +111,8 @@ public class Bridgenet {
             return this;
         }
 
-        public ClientBuilder setSettings(@NotNull BridgenetSettings bridgenetSettings) {
-            bootstrap.handler(bridgenetSettings);
+        public ClientBuilder setSettings(@NotNull BridgenetPipeline bridgenetPipeline) {
+            bootstrap.handler(bridgenetPipeline);
             return this;
         }
 

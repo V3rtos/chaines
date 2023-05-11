@@ -18,7 +18,7 @@ public class Report {
 
     private final String comment;
 
-    private final String whereServerName;
+    private final String serverName;
 
     private final long createdTimeMillis;
 }
