@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 public class CommandCondition {
 
     private final Command command;
+
     private final Map<CommandAccessDeniedType, Predicate<Sender>> predicates = new HashMap<>();
 
     public void addCondition(CommandAccessDeniedType accessDeniedMessageType, Predicate<Sender> sender) {
