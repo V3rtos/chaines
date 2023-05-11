@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.api.command;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.command.sender.ConsoleSender;
 import me.moonways.bridgenet.api.command.exception.CommandSenderCastException;
@@ -7,9 +8,11 @@ import me.moonways.bridgenet.api.command.sender.Sender;
 import me.moonways.bridgenet.api.connection.player.Player;
 
 @RequiredArgsConstructor
-public class CommandExecutorSession {
+@Getter
+public class CommandSenderSession {
 
     private final Sender sender;
+    private final String[] arguments;
 
     @SuppressWarnings("unchecked")
     public <T extends Sender> T senderCast(Class<T> senderClass)  {
