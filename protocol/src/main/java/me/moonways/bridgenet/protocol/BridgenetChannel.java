@@ -5,8 +5,6 @@ import io.netty.channel.ChannelFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.protocol.message.Message;
-import me.moonways.bridgenet.protocol.message.MessageContainer;
-import me.moonways.bridgenet.protocol.message.MessageParameter;
 import me.moonways.bridgenet.protocol.message.MessageResponse;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,15 +12,14 @@ import org.jetbrains.annotations.NotNull;
 public class BridgenetChannel {
 
     private final Channel channel;
-
-    private final MessageContainer messageContainer;
+    private final ProtocolControl protocolControl;
 
     @SneakyThrows
-    public <M extends Message> MessageResponse<M> sendMessage(@NotNull Message message, @NotNull MessageParameter messageParameter) {
+    public <M extends Message> MessageResponse<M> sendMessage(@NotNull Message message, boolean callback) {
         ChannelFuture channelFuture = channel.writeAndFlush(message);
         MessageResponse<M> messageResponse;
 
-        if (messageParameter.isCallback()) {
+        if (callback) {
             messageResponse = new MessageResponse<>();
 
             int responseId = getNextAwaitResponseMessageId();
@@ -51,11 +48,11 @@ public class BridgenetChannel {
     }
 
     private void addAwaitResponseMessage(int id, @NotNull MessageResponse<?> messageResponse) {
-        messageContainer.addResponse(id, messageResponse);
+        protocolControl.addResponse(id, messageResponse);
     }
 
     private int getNextAwaitResponseMessageId() {
-        return messageContainer.getNextAwaitResponseMessageId();
+        return protocolControl.getNextAwaitResponseMessageId();
     }
 
     public synchronized void close() {

@@ -6,16 +6,18 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.protocol.exception.BridgenetConnectionException;
 
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Getter
+@Log4j2
 public class BridgenetServer implements BootstrapWorker {
 
     private final ServerBootstrap serverBootstrap;
-    private final Bridgenet bridgenet;
+    private final ProtocolControl protocolControl;
 
     private BridgenetChannel bridgenetChannel;
 
@@ -26,8 +28,9 @@ public class BridgenetServer implements BootstrapWorker {
         if (channelFuture.isSuccess()) {
             Channel channel = channelFuture.channel();
 
-            System.out.println("channel was initialized");
-            return bridgenetChannel = new BridgenetChannel(channel, bridgenet.getMessageContainer());
+            log.info(String.format("Successful synchronous bind server: %s", channel));
+
+            return bridgenetChannel = new BridgenetChannel(channel, protocolControl);
         }
 
         throw new BridgenetConnectionException(channelFuture.cause(), "Internal synchronized bind error");
@@ -42,9 +45,9 @@ public class BridgenetServer implements BootstrapWorker {
 
             if (future.isSuccess()) {
                 Channel channel = future.channel();
-                bridgenetChannelFuture.complete(bridgenetChannel = new BridgenetChannel(channel, bridgenet.getMessageContainer()));
+                bridgenetChannelFuture.complete(bridgenetChannel = new BridgenetChannel(channel, protocolControl));
 
-                System.out.println("channel was initialized");
+                log.info(String.format("Successful bind server: %s", channel));
             }
             else {
                 BridgenetConnectionException exception = new BridgenetConnectionException(future.cause(), "Internal asynchronous bind error");

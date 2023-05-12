@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.protocol.message;
 
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.moonways.bridgenet.protocol.exception.ResponseMessageNotFoundException;
+import me.moonways.bridgenet.service.inject.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @SuppressWarnings("unused")
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor
+@Component
 public class MessageResponseContainer {
 
     private final Map<Integer, MessageResponse<?>> responseMessagesMap = new HashMap<>();

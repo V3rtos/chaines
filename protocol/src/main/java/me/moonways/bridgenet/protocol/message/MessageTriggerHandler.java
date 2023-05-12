@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.protocol.message;
 
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.protocol.message.exception.MessageHandleException;
 import me.moonways.bridgenet.service.inject.Component;
@@ -10,7 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Method;
 
 @Component
-public final class MessageTriggersProvider {
+@NoArgsConstructor
+public final class MessageTriggerHandler {
 
     @Inject
     private DependencyInjection dependencyInjection;

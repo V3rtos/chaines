@@ -3,17 +3,34 @@ package me.moonways.bridgenet.protocol.pipeline;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.protocol.message.MessageTriggersProvider;
+import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.protocol.ProtocolControl;
+import me.moonways.bridgenet.protocol.message.MessageTriggerHandler;
 import me.moonways.bridgenet.protocol.message.Message;
-import me.moonways.bridgenet.protocol.message.MessageContainer;
+import me.moonways.bridgenet.protocol.pipeline.exception.ChannelHandlerException;
 import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
+@Log4j2
 public class BridgenetChannelHandler extends SimpleChannelInboundHandler<Message> {
 
-    private final MessageContainer messageContainer;
+    private final ProtocolControl protocolControl;
+    private final MessageTriggerHandler triggerHandler;
 
-    private final MessageTriggersProvider triggersProvider;
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) {
+        log.info("Activated channel: " + ctx);
+    }
+
+    @Override
+    public void channelRegistered(ChannelHandlerContext ctx) {
+        log.info("Registered channel: " + ctx);
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) {
+        log.info("Unregistered channel: " + ctx);
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) {
@@ -24,10 +41,15 @@ public class BridgenetChannelHandler extends SimpleChannelInboundHandler<Message
             return;
         }
 
-        triggersProvider.fireTriggers(message);
+        triggerHandler.fireTriggers(message);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        throw new ChannelHandlerException(cause, "error");
     }
 
     private void handleResponse(int messageResponseId, @NotNull Message message) {
-        messageContainer.handleResponse(messageResponseId, message);
+        protocolControl.handleResponse(messageResponseId, message);
     }
 }

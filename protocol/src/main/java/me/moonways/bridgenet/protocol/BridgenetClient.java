@@ -5,15 +5,18 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.protocol.exception.BridgenetConnectionException;
+import me.moonways.bridgenet.service.inject.Inject;
 
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
+@Log4j2
 public class BridgenetClient implements BootstrapWorker {
 
     private final Bootstrap bootstrap;
-    private final Bridgenet bridgenet;
+    private final ProtocolControl protocolControl;
 
     private BridgenetChannel bridgenetChannel;
 
@@ -33,7 +36,10 @@ public class BridgenetClient implements BootstrapWorker {
 
         if (channelFuture.isSuccess()) {
             Channel channel = channelFuture.channel();
-            return bridgenetChannel = new BridgenetChannel(channel, bridgenet.getMessageContainer());
+
+            log.info(String.format("Successful synchronous connected to server: %s", channel));
+
+            return bridgenetChannel = new BridgenetChannel(channel, protocolControl);
         }
 
         throw new BridgenetConnectionException(channelFuture.cause(), "Internal synchronized connect error");
@@ -48,7 +54,9 @@ public class BridgenetClient implements BootstrapWorker {
 
             if (future.isSuccess()) {
                 Channel channel = future.channel();
-                bridgenetChannelFuture.complete(bridgenetChannel = new BridgenetChannel(channel, bridgenet.getMessageContainer()));
+                bridgenetChannelFuture.complete(bridgenetChannel = new BridgenetChannel(channel, protocolControl));
+
+                log.info(String.format("Successful connected to server: %s", channel));
             }
             else {
                 BridgenetConnectionException exception = new BridgenetConnectionException(future.cause(), "Internal asynchronous connect error");

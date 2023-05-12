@@ -22,7 +22,7 @@ public class TransferAllocator {
     }
 
     @SneakyThrows
-    public <T extends Message> T allocatePacket(Class<T> cls, MessageTransfer messageTransfer) {
+    public <T extends Message> T allocatePacket(Class<?> cls, MessageTransfer messageTransfer) {
         Object packetObj = UNSAFE.allocateInstance(cls);
 
         @SuppressWarnings("unchecked") T packet = (T) packetObj;

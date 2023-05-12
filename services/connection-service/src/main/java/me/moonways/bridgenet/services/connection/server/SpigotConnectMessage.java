@@ -1,8 +1,11 @@
 package me.moonways.bridgenet.services.connection.server;
 
-import me.moonways.bridgenet.protocol.message.MessageIdentifier;
+import lombok.NoArgsConstructor;
+import me.moonways.bridgenet.protocol.message.MessageComponent;
+import me.moonways.bridgenet.protocol.message.ProtocolDirection;
 
-@MessageIdentifier
+@MessageComponent(direction = ProtocolDirection.SERVER)
+@NoArgsConstructor
 public class SpigotConnectMessage extends ServerConnectMessage {
 
     // @ByteTransfer

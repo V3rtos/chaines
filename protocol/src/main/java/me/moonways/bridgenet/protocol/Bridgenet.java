@@ -5,7 +5,6 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.protocol.message.MessageContainer;
 import me.moonways.bridgenet.protocol.pipeline.BridgenetPipeline;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,15 +31,13 @@ public class Bridgenet {
         return createByProperties(DEFAULT_HOST_PROPERTY, DEFAULT_PORT_PROPERTY);
     }
 
-    public static ServerBuilder newServerBuilder(@NotNull Bridgenet bridgenet) {
-        return new ServerBuilder(bridgenet);
+    public static ServerBuilder newServerBuilder(@NotNull Bridgenet bridgenet, @NotNull ProtocolControl protocolControl) {
+        return new ServerBuilder(bridgenet, protocolControl);
     }
 
-    public static ClientBuilder newClientBuilder(@NotNull Bridgenet bridgenet) {
-        return new ClientBuilder(bridgenet);
+    public static ClientBuilder newClientBuilder(@NotNull Bridgenet bridgenet, @NotNull ProtocolControl protocolControl) {
+        return new ClientBuilder(bridgenet, protocolControl);
     }
-
-    private final MessageContainer messageContainer = MessageContainer.createContainers();
 
     @Getter
     private final SocketAddress socketAddress;
@@ -49,6 +46,7 @@ public class Bridgenet {
     public static class ServerBuilder {
 
         private final Bridgenet bridgenet;
+        private final ProtocolControl protocolControl;
 
         private final ServerBootstrap serverBootstrap = new ServerBootstrap();
 
@@ -68,12 +66,7 @@ public class Bridgenet {
             return this;
         }
 
-        public ServerBuilder setChannelHandler(@NotNull ChannelHandler channelHandler) {
-            serverBootstrap.childHandler(channelHandler);
-            return this;
-        }
-
-        public ServerBuilder setSettings(@NotNull BridgenetPipeline bridgenetPipeline) {
+        public ServerBuilder setChannelInitializer(@NotNull BridgenetPipeline bridgenetPipeline) {
             serverBootstrap.childHandler(bridgenetPipeline);
             return this;
         }
@@ -90,7 +83,7 @@ public class Bridgenet {
 
         public BridgenetServer build() {
             serverBootstrap.localAddress(bridgenet.getSocketAddress());
-            return new BridgenetServer(serverBootstrap, bridgenet);
+            return new BridgenetServer(serverBootstrap, protocolControl);
         }
     }
 
@@ -98,6 +91,7 @@ public class Bridgenet {
     public static class ClientBuilder {
 
         private final Bridgenet bridgenet;
+        private final ProtocolControl protocolControl;
 
         private final Bootstrap bootstrap = new Bootstrap();
 
@@ -106,13 +100,13 @@ public class Bridgenet {
             return this;
         }
 
-        public ClientBuilder setChannelHandler(@NotNull ChannelHandler channelHandler) {
-            bootstrap.handler(channelHandler);
+        public ClientBuilder setChannelInitializer(@NotNull BridgenetPipeline bridgenetPipeline) {
+            bootstrap.handler(bridgenetPipeline);
             return this;
         }
 
-        public ClientBuilder setSettings(@NotNull BridgenetPipeline bridgenetPipeline) {
-            bootstrap.handler(bridgenetPipeline);
+        public ClientBuilder setChannelFactory(@NotNull ChannelFactory<? extends Channel> channelFactory) {
+            bootstrap.channelFactory(channelFactory);
             return this;
         }
 
@@ -123,7 +117,7 @@ public class Bridgenet {
 
         public BridgenetClient build() {
             bootstrap.remoteAddress(bridgenet.getSocketAddress());
-            return new BridgenetClient(bootstrap, bridgenet);
+            return new BridgenetClient(bootstrap, protocolControl);
         }
     }
 }

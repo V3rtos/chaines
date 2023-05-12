@@ -5,8 +5,9 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import lombok.Builder;
-import me.moonways.bridgenet.protocol.Bridgenet;
-import me.moonways.bridgenet.protocol.message.MessageTriggersProvider;
+import me.moonways.bridgenet.protocol.ProtocolControl;
+import me.moonways.bridgenet.protocol.pipeline.codec.MessageDecoder;
+import me.moonways.bridgenet.protocol.pipeline.codec.MessageEncoder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -18,20 +19,23 @@ public class BridgenetPipeline extends ChannelInitializer<SocketChannel> {
 
     private static final String ADDITIONAL_CHANNEL_INITIALIZER_ID = "additional_channel_initializer_%d";
 
-    public static Builder newBuilder(@NotNull Bridgenet bridgenet) {
-        return BridgenetPipeline.newFullBuilder().setBridgenet(bridgenet);
+    public static Builder newBuilder(@NotNull ProtocolControl protocolControl) {
+        return BridgenetPipeline.newFullBuilder().setProtocolControl(protocolControl);
     }
 
-    private final Bridgenet bridgenet;
+    private final ProtocolControl protocolControl;
 
     private Consumer<SocketChannel> initChannelConsumer;
 
     private final Set<ChannelInitializer<? extends SocketChannel>> additionalChannelInitializers = new HashSet<>();
 
     private void initHandlers(@NotNull ChannelPipeline pipeline) {
-        MessageTriggersProvider messageTriggersProvider = new MessageTriggersProvider();
-        pipeline.addLast(new BridgenetChannelHandler(
-                bridgenet.getMessageContainer(), messageTriggersProvider));
+        pipeline.addLast(new BridgenetChannelHandler(protocolControl, protocolControl.getTriggerHandler()));
+    }
+
+    private void initCodec(@NotNull ChannelPipeline pipeline) {
+        pipeline.addLast(new MessageDecoder(protocolControl.getRegistrationService()));
+        pipeline.addLast(new MessageEncoder(protocolControl.getRegistrationService()));
     }
 
     private void initOptions(@NotNull ChannelConfig config) {
@@ -52,6 +56,7 @@ public class BridgenetPipeline extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {
+        initCodec(socketChannel.pipeline());
         initHandlers(socketChannel.pipeline());
         initOptions(socketChannel.config());
 

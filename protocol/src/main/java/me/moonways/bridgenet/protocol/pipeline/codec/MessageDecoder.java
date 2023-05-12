@@ -1,11 +1,11 @@
-package me.moonways.bridgenet.protocol.codec;
+package me.moonways.bridgenet.protocol.pipeline.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.protocol.message.Message;
-import me.moonways.bridgenet.protocol.message.MessageRegistry;
+import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
 import me.moonways.bridgenet.protocol.exception.MessageDecoderEmptyPacketException;
 import me.moonways.bridgenet.protocol.transfer.MessageTransfer;
 import me.moonways.bridgenet.protocol.transfer.TransferAllocator;
@@ -30,10 +30,12 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
     private ByteArrayOutputStream output;
 
-    private final MessageRegistry messageRegistry;
+    private final MessageRegistrationService messageRegistrationService;
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
+        System.out.println("Пришло мсг");
+
         try {
             if (byteBuf.readableBytes() == 0) {
                 throw new MessageDecoderEmptyPacketException("Get empty packet from decoder");
@@ -45,7 +47,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
             MessageTransfer messageTransfer = new MessageTransfer(null, bytes);
 
-            Class<? extends Message> messageClass = messageRegistry.getMessageById(messageId);
+            Class<?> messageClass = messageRegistrationService.getMessageById(messageId);
 
             Message message = transferAllocator.allocatePacket(messageClass, messageTransfer);
             message.setMessageId(messageId);
