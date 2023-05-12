@@ -27,6 +27,10 @@ public class TransferBufferProvider implements TransferProvider {
             return null;
         }
 
+        if (CharSequence.class.isAssignableFrom(cls)) {
+            return new String(array);
+        }
+
         validateAsPrimitive(cls);
 
         if (isBoolean(cls)) {
@@ -49,6 +53,11 @@ public class TransferBufferProvider implements TransferProvider {
     @Override
     public byte[] toByteArray(ByteCodec byteCodec, Object object) {
         final Class<?> cls = object.getClass();
+
+        if (CharSequence.class.isAssignableFrom(cls)) {
+            return object.toString().getBytes();
+        }
+
         validateAsPrimitive(cls);
 
         if (isBoolean(cls)) {
