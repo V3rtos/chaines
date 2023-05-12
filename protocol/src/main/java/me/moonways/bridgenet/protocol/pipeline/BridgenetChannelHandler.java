@@ -46,7 +46,7 @@ public class BridgenetChannelHandler extends SimpleChannelInboundHandler<Message
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        throw new ChannelHandlerException(cause, "error");
+        throw new ChannelHandlerException(cause, "Internal channel handling error");
     }
 
     private void handleResponse(int messageResponseId, @NotNull Message message) {

@@ -39,9 +39,11 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
         MessageTransfer messageTransfer = new MessageTransfer(message, null);
         messageTransfer.buf(); // TODO: 12.05.2023
 
-        writeMessageId(byteBuf, messageId);
+        byteBuf.writeIntLE(messageId);
+        //writeMessageId(byteBuf, messageId);
         
-        byte[] compressedBytes = makeCompress(messageTransfer.getBytes()); // TODO: 12.05.2023
+        //byte[] compressedBytes = makeCompress(messageTransfer.getBytes()); // TODO: 12.05.2023
+        byte[] compressedBytes = messageTransfer.getBytes();
 
         byteBuf.writeBytes(compressedBytes);
     }

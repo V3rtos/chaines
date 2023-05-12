@@ -74,7 +74,7 @@ public final class MessageTransfer {
         reflectiveBuf();
     }
 
-    @SneakyThrows
+    @SneakyThrows()
     private void reflectiveBuf() {
         Class<? extends Message> packetType = messageObject.getClass();
         Field[] declaredFieldsArray = packetType.getDeclaredFields();

@@ -43,9 +43,12 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
             int messageId = byteBuf.readIntLE();
 
-            byte[] bytes = makeDecompress(byteBuf.array());
+            byte[] bufArray = new byte[byteBuf.readableBytes()];
+            byteBuf.readBytes(bufArray);
 
-            MessageTransfer messageTransfer = new MessageTransfer(null, bytes);
+            //byte[] bytes = makeDecompress(bufArray);
+
+            MessageTransfer messageTransfer = new MessageTransfer(null, bufArray);
 
             Class<?> messageClass = messageRegistrationService.getMessageById(messageId);
 
