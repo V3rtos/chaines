@@ -5,16 +5,16 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.protocol.compression.CompressionUtils;
-import me.moonways.bridgenet.protocol.exception.MessageDecoderEmptyPacketException;
 import me.moonways.bridgenet.protocol.message.Message;
 import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
+import me.moonways.bridgenet.protocol.exception.MessageDecoderEmptyPacketException;
 import me.moonways.bridgenet.protocol.transfer.MessageTransfer;
 import me.moonways.bridgenet.protocol.transfer.TransferAllocator;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.util.Arrays;
+import java.io.*;
 import java.util.List;
-import java.util.zip.DataFormatException;
+import java.util.zip.*;
 
 @RequiredArgsConstructor
 public class MessageDecoder extends ByteToMessageDecoder {
@@ -31,12 +31,23 @@ public class MessageDecoder extends ByteToMessageDecoder {
             }
 
             int messageId = byteBuf.readIntLE();
+
+            int responseId = 0;
+            boolean response = byteBuf.readBoolean();
+
+            if (response) {
+                responseId = byteBuf.readIntLE();
+            }
+
             MessageTransfer messageTransfer = createTransfer(byteBuf);
 
             Class<?> messageClass = messageRegistrationService.getMessageById(messageId);
 
             Message message = transferAllocator.allocatePacket(messageClass, messageTransfer);
+
+            message.setChannel(channelHandlerContext.channel());
             message.setMessageId(messageId);
+            message.setResponseId(responseId);
 
             list.add(message);
         } finally {

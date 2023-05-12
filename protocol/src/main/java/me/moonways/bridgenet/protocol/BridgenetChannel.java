@@ -16,7 +16,6 @@ public class BridgenetChannel {
 
     @SneakyThrows
     public <M extends Message> MessageResponse<M> sendMessage(@NotNull Message message, boolean callback) {
-        ChannelFuture channelFuture = channel.writeAndFlush(message);
         MessageResponse<M> messageResponse;
 
         if (callback) {
@@ -30,6 +29,8 @@ public class BridgenetChannel {
         } else {
             messageResponse = new MessageResponse<>();
         }
+
+        ChannelFuture channelFuture = channel.writeAndFlush(message);
 
         addChannelListener(channelFuture, messageResponse);
         return messageResponse;

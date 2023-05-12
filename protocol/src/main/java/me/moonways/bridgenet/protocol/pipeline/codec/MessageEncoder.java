@@ -32,10 +32,22 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
 
         try {
             byteBuf.writeIntLE(messageId);
+
+            byteBuf.writeBoolean(message.isResponsible());
+
+            if (message.isResponsible()) {
+                byteBuf.writeIntLE(message.getResponseId());
+            }
+
             CompressionUtils.write(messageTransfer.getBytes(), byteBuf);
+
+
         }
+
+
         catch (IOException exception) {
             throw new RuntimeException(exception);
         }
     }
 }
+

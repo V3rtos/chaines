@@ -23,7 +23,7 @@ public class MessageRegistrationService {
     private DependencyInjection dependencyInjection;
 
     public void registerAll(@NotNull ProtocolDirection protocolDirection) {
-        int counter = 0;
+        int counter = 1;
 
         for (Object message : dependencyInjection.getInjectedDependsByAnnotation(MessageComponent.class)) {
             Class<?> messageClass = message.getClass();
@@ -58,7 +58,7 @@ public class MessageRegistrationService {
     public void addMessage(int id, Class<?> messageClass) {
         messageIdentifierMap.put(id, messageClass);
 
-        log.info("Registered message: " + messageClass);
+        log.info(String.format("Registered message: %s [id:%s]", messageClass, id));
     }
 
     public Class<?> getMessageById(int id) {

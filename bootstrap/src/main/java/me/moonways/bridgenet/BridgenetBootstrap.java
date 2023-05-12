@@ -81,7 +81,11 @@ public class BridgenetBootstrap {
 
         BridgenetChannel bridgenetChannel = client.connectSync();
 
-        bridgenetChannel.sendMessage(new TestMessage(1, "TESSTT"), false);
+        MessageResponse<TestMessageResponse> response = bridgenetChannel.sendMessage(new TestMessage(1, "TESSTT"), true);
+
+        response.whenReceived((testMessageResponse, throwable) -> {
+            System.out.println("ПРИШЁЛ!!!" + testMessageResponse.getMessage());
+        });
     }
 
     private void registerMessages() {

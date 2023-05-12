@@ -33,10 +33,10 @@ public class MessageResponseContainer {
 
     public int getNextAwaitResponseMessageId() {
         if (responseId == Integer.MAX_VALUE) {
-            responseId = 0;
+            responseId = 1;
         }
 
-        return responseId++;
+        return ++responseId;
     }
 
     public void addResponse(int id, @NotNull MessageResponse<?> response) {

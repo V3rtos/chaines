@@ -34,10 +34,10 @@ public class BridgenetChannelHandler extends SimpleChannelInboundHandler<Message
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) {
-        if (message.isResponsible()) {
-            int messageResponseId = message.getResponseMessageId();
+        System.out.println("дошёл");
 
-            handleResponse(messageResponseId, message);
+        if (message.isResponsible()) {
+            handleResponse(message.getMessageId(), message);
             return;
         }
 
