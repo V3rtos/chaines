@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.service.inject;
 
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -19,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+@Log4j2
 public class DependencyInjection {
 
     public static final String BASE_PACKAGE_NAME = "me.moonways";
@@ -38,6 +40,7 @@ public class DependencyInjection {
         return dependencyInstancesMap.keySet()
                 .stream()
                 .filter(cls -> dependencyAnnotatedMap.get(cls) == componentAnnotation)
+                .map(dependencyInstancesMap::get)
                 .collect(Collectors.toSet());
     }
 
@@ -119,6 +122,8 @@ public class DependencyInjection {
 
         injectDependencies(depend);
         dependencyInstancesMap.put(dependClass, depend);
+
+        log.info("Found dependency: " + dependClass);
     }
 
     public void injectDependencies(@NotNull Object instance) {
