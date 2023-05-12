@@ -18,6 +18,7 @@
         <module>friends-service</module>
         <module>guilds-service</module>
         <module>events-service</module>
+        <module>connection-service</module>
     </modules>
 
     <properties>

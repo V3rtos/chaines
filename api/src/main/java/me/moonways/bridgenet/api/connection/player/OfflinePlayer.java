@@ -16,7 +16,7 @@ public class OfflinePlayer implements Player {
 
     @Override
     public boolean hasPermission(@NotNull String permission) {
-        return false;
+        return false; // todo
     }
 
     @Override

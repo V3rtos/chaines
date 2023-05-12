@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.connection.player;
+package me.moonways.bridgenet.services.connection.player;
 
 import net.conveno.jdbc.*;
 import net.conveno.jdbc.response.ConvenoResponse;

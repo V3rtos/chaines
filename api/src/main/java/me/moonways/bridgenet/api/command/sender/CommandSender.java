@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.command.sender;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface Sender {
+public interface CommandSender {
 
     String getName();
 

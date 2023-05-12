@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.moonways.bridgenet.service.inject.Component;
 import me.moonways.bridgenet.service.inject.InitMethod;
 import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.services.connection.player.OfflinePlayerRepository;
 import net.conveno.jdbc.ConvenoRouter;
 import net.conveno.jdbc.response.ConvenoResponse;
 import net.conveno.jdbc.response.ConvenoResponseLine;

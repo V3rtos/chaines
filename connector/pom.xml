@@ -79,6 +79,31 @@
             <version>3.0.3</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- Internal BridgeNet modules dependencies -->
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>protocol</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>injection-service</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>events-service</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>connection-service</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.api.connection.server;
 
 import lombok.Getter;
-import me.moonways.bridgenet.api.connection.server.lookup.ServerLookupService;
 import me.moonways.bridgenet.api.connection.server.type.SpigotServer;
 import me.moonways.bridgenet.api.connection.server.type.VelocityServer;
 import me.moonways.bridgenet.service.inject.Component;
@@ -19,16 +18,12 @@ public class ServerController {
 
     private final Map<String, Server> serverMap = Collections.synchronizedMap(new HashMap<>());
 
-    @Getter
-    @Inject
-    private ServerLookupService lookupService;
-
     @Inject
     private DependencyInjection dependencyInjection;
 
     private void validateNull(Server server) {
         if (server == null) {
-            throw new NullPointerException("server");
+            throw new NullPointerException("me/moonways/bridgenet/services/connection/server");
         }
     }
 

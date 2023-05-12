@@ -18,5 +18,5 @@ public class ItemDescriptor {
     private final byte data;
     private final int amount;
 
-    private final ActionDescriptor[] actions;
+    private final transient ActionDescriptor[] actions;
 }

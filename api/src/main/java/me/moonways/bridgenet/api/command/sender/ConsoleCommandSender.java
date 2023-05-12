@@ -4,7 +4,7 @@ import me.moonways.bridgenet.service.inject.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Component
-public class ConsoleSender implements Sender {
+public class ConsoleCommandSender implements CommandSender {
 
     private static final String CONSOLE_SENDER_NAME = "BRIDGENET_CONTROL";
 
