@@ -37,7 +37,7 @@ public class CommandContainer {
 
     private void validateNull(@NotNull String name) {
         if (!commandMap.containsKey(name.toLowerCase())) {
-            throw new CommandNotFoundException(String.format("Command %s not found", name));
+            throw new CommandNotFoundException(String.format("Command '%s' not found", name));
         }
     }
 

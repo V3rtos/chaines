@@ -123,7 +123,8 @@ public class DependencyInjection {
         injectDependencies(depend);
         dependencyInstancesMap.put(dependClass, depend);
 
-        log.info("Found dependency: " + dependClass);
+        if (dependClass.isAnnotationPresent(Component.class))
+            log.info("Founded dependency component - " + dependClass.getName());
     }
 
     public void injectDependencies(@NotNull Object instance) {
