@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface MessageComponent {
 
     ProtocolDirection direction();
+
+    MessageState state() default MessageState.EMPTY;
 }

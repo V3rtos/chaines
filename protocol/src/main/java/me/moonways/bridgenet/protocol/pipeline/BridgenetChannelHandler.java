@@ -5,6 +5,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.protocol.ProtocolControl;
+import me.moonways.bridgenet.protocol.message.MessageComponent;
+import me.moonways.bridgenet.protocol.message.MessageState;
 import me.moonways.bridgenet.protocol.message.MessageTriggerHandler;
 import me.moonways.bridgenet.protocol.message.Message;
 import me.moonways.bridgenet.protocol.pipeline.exception.ChannelHandlerException;
@@ -34,9 +36,9 @@ public class BridgenetChannelHandler extends SimpleChannelInboundHandler<Message
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) {
-        if (message.isResponsible()) {
+        if (message.getClass().getDeclaredAnnotation(MessageComponent.class).state().equals(MessageState.RESPONSE)) {
             handleResponse(message.getResponseId(), message);
-            //return;
+            return;
         }
 
         triggerHandler.fireTriggers(message);

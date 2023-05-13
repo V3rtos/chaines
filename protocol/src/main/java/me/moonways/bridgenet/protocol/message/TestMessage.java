@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.moonways.bridgenet.protocol.transfer.ByteTransfer;
 
-@MessageComponent(direction = ProtocolDirection.SERVER)
+@MessageComponent(direction = ProtocolDirection.TO_SERVER, state = MessageState.REQUEST)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

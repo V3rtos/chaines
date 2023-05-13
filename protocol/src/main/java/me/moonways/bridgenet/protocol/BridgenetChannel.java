@@ -3,7 +3,6 @@ package me.moonways.bridgenet.protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import me.moonways.bridgenet.protocol.message.Message;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,11 +18,10 @@ public class BridgenetChannel {
         sendMessage(message, false);
     }
 
-    @SneakyThrows
     public <M extends Message> CompletableFuture<M> sendMessageWithCallback(@NotNull Message message) {
         return sendMessage(message, true);
     }
-    @SneakyThrows
+
     private <M extends Message> CompletableFuture<M> sendMessage(@NotNull Message message, boolean callback) {
         CompletableFuture<M> messageResponseHandler = new CompletableFuture<>();
 
@@ -35,21 +33,26 @@ public class BridgenetChannel {
         }
 
         ChannelFuture channelFuture = channel.writeAndFlush(message);
-        channelFuture.addListener(future -> {
 
-            if (!future.isSuccess()) {
-                messageResponseHandler.completeExceptionally(future.cause());
-                return;
-            }
+        if (!callback) {
+            channelFuture.addListener(future -> {
 
-            messageResponseHandler.complete(null);
-        });
-        
+                if (!future.isSuccess()) {
+                    messageResponseHandler.completeExceptionally(future.cause());
+                    return;
+                }
+
+                messageResponseHandler.complete(null);
+            });
+        }
+
         return messageResponseHandler;
     }
+
     private void saveResponseHandler(int id, @NotNull CompletableFuture<? extends Message> messageResponse) {
         protocolControl.saveResponseHandler(id, messageResponse);
     }
+
     public synchronized void close() {
         channel.closeFuture();
     }

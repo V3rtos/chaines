@@ -30,7 +30,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
             }
 
             int messageId = byteBuf.readIntLE();
-            int responseId = byteBuf.readIntLE();
+            int responseId = byteBuf.readIntLE();;
 
             Message message = createDecodedMessage(messageId, responseId, byteBuf, channelHandlerContext);
             list.add(message);

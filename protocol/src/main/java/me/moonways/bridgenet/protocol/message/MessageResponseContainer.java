@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.protocol.message;
 
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import me.moonways.bridgenet.protocol.exception.ResponseMessageNotFoundException;
 import me.moonways.bridgenet.service.inject.Component;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+
 @NoArgsConstructor
 @Component
 public class MessageResponseContainer {

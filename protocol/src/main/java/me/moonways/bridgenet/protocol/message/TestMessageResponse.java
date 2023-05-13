@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.moonways.bridgenet.protocol.transfer.ByteTransfer;
-import me.moonways.bridgenet.protocol.transfer.provider.TransferSerializeProvider;
 
-@MessageComponent(direction = ProtocolDirection.SERVER)
+@MessageComponent(direction = ProtocolDirection.TO_SERVER, state = MessageState.RESPONSE)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

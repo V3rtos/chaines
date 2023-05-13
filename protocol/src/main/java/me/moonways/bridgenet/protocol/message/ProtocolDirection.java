@@ -2,6 +2,6 @@ package me.moonways.bridgenet.protocol.message;
 
 public enum ProtocolDirection {
 
-    CLIENT,
-    SERVER
+    TO_CLIENT,
+    TO_SERVER
 }

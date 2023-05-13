@@ -81,11 +81,14 @@ public class BridgenetBootstrap {
 
         BridgenetChannel bridgenetChannel = client.connectSync();
         bridgenetChannel.<TestMessageResponse>sendMessageWithCallback(new TestMessage(1, "TESSTT"))
-                .whenComplete((response, throwable) -> System.out.println("ПРИШЁЛ!!!" + response.getMessage()));
+                .whenComplete((response, throwable) -> {
+                    System.out.println("пришёл");
+                    System.out.println(response.getMessage());
+                });
     }
 
     private void registerMessages() {
-        messageRegistrationService.registerAll(ProtocolDirection.SERVER);
+        messageRegistrationService.registerAll(ProtocolDirection.TO_SERVER);
     }
 
     private void registerInternalCommands() {

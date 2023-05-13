@@ -74,7 +74,6 @@ public final class MessageTransfer {
         reflectiveBuf();
     }
 
-    @SneakyThrows()
     private void reflectiveBuf() {
         Class<? extends Message> packetType = messageObject.getClass();
         Field[] declaredFieldsArray = packetType.getDeclaredFields();
@@ -94,7 +93,13 @@ public final class MessageTransfer {
 
             TransferProvider transferProvider = transferAllocator.allocate(provider);
 
-            byte[] bytesArray = transferProvider.toByteArray(BYTE_CODEC, field.get(messageObject));
+            byte[] bytesArray;
+
+            try {
+                bytesArray = transferProvider.toByteArray(BYTE_CODEC, field.get(messageObject));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
 
             System.arraycopy(bytesArray, 0, bytes, lastIndex, bytesArray.length);
             lastIndex += bytesArray.length;
@@ -111,7 +116,6 @@ public final class MessageTransfer {
         reflectiveUnbuf();
     }
 
-    @SneakyThrows
     private void reflectiveUnbuf() {
         Class<? extends Message> packetType = messageObject.getClass();
         Field[] declaredFieldsArray = packetType.getDeclaredFields();
@@ -133,7 +137,12 @@ public final class MessageTransfer {
             Object providedObject = transferProvider.provide(BYTE_CODEC, field.getType(), messageBytes);
 
             field.setAccessible(true);
-            field.set(messageObject, providedObject);
+
+            try {
+                field.set(messageObject, providedObject);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

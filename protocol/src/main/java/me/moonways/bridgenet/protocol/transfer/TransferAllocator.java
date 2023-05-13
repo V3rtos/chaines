@@ -21,9 +21,14 @@ public class TransferAllocator {
         }
     }
 
-    @SneakyThrows
     public <T extends Message> T allocatePacket(Class<?> cls, MessageTransfer messageTransfer) {
-        Object packetObj = UNSAFE.allocateInstance(cls);
+        Object packetObj;
+
+        try {
+            packetObj = UNSAFE.allocateInstance(cls);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        }
 
         @SuppressWarnings("unchecked") T packet = (T) packetObj;
         messageTransfer.unbuf(packet);
@@ -31,8 +36,11 @@ public class TransferAllocator {
     }
 
     @SuppressWarnings("unchecked")
-    @SneakyThrows
     public <T> T allocate(Class<T> cls) {
-        return (T) UNSAFE.allocateInstance(cls);
+        try {
+            return (T) UNSAFE.allocateInstance(cls);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

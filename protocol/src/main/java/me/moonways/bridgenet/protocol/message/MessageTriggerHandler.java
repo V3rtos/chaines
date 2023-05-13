@@ -8,6 +8,7 @@ import me.moonways.bridgenet.service.inject.DependencyInjection;
 import me.moonways.bridgenet.service.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 @Component
@@ -17,7 +18,6 @@ public final class MessageTriggerHandler {
     @Inject
     private DependencyInjection dependencyInjection;
 
-    @SneakyThrows
     public void fireTriggers(@NotNull Message message) {
         for (Object messageHandler : dependencyInjection.getInjectedDependsByAnnotation(MessageHandler.class)) {
             for (Method method : messageHandler.getClass().getDeclaredMethods()) {
@@ -34,7 +34,11 @@ public final class MessageTriggerHandler {
                     Class<?> methodMessageClass = method.getParameterTypes()[0];
 
                     if (messageClass.isAssignableFrom(methodMessageClass)) {
-                        method.invoke(messageHandler, message);
+                        try {
+                            method.invoke(messageHandler, message);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }
