@@ -84,9 +84,15 @@ public class BridgenetBootstrap {
     }
 
     public static void main(String[] args) {
+        // netty connection settings.
         System.setProperty(Bridgenet.DEFAULT_HOST_PROPERTY, "localhost");
         System.setProperty(Bridgenet.DEFAULT_PORT_PROPERTY, "8080");
 
+        // jdbc settings.
+        System.setProperty("system.jdbc.username", "username");
+        System.setProperty("system.jdbc.password", "password");
+
+        // run bridgenet server system.
         BridgenetBootstrap bootstrap = new BridgenetBootstrap();
         bootstrap.start();
     }
