@@ -25,7 +25,7 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
             throw new MessageEncoderPacketIsNullException("Packet in encoder is null");
         }
 
-        int messageId = messageRegistrationService.getIdByMessage(message.getClass());
+        int messageId = messageRegistrationService.getIdByMessageClass(message.getClass());
 
         MessageTransfer messageTransfer = new MessageTransfer(message, null);
         messageTransfer.buf();
