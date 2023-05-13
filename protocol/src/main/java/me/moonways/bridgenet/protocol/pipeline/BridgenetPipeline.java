@@ -41,7 +41,7 @@ public class BridgenetPipeline extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new MessageEncoder(protocolControl.getRegistrationService()));
     }
 
-    public void addLast(@NotNull ChannelHandler channelHandler) {
+    public void addChannelHandler(@NotNull ChannelHandler channelHandler) {
         socketChannel.pipeline().addLast(channelHandler);
     }
 
