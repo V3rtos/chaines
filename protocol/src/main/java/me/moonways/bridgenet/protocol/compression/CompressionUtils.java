@@ -6,7 +6,6 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -14,6 +13,9 @@ import java.util.zip.Inflater;
 @Log4j2
 @UtilityClass
 public class CompressionUtils {
+
+    private static final byte HAS_COMPRESSION_STATE = 1;
+    private static final byte NO_COMPRESSION_STATE = 0;
 
     public byte[] compress(byte[] data) throws IOException {
         Deflater deflater = new Deflater();
@@ -53,19 +55,20 @@ public class CompressionUtils {
 
     public void write(byte[] array, ByteBuf byteBuf) throws IOException {
         byte[] compressedBytes = compress(array);
+
         boolean hasCompression = array.length > compressedBytes.length;
 
-        byteBuf.writeByte(hasCompression ? 1 : 0);
+        byteBuf.writeByte(hasCompression ? HAS_COMPRESSION_STATE : NO_COMPRESSION_STATE);
         byteBuf.writeBytes(hasCompression ? compressedBytes : array);
     }
 
     public byte[] read(ByteBuf byteBuf) throws IOException, DataFormatException {
-        byte compressionState = byteBuf.readByte();
+        byte state = byteBuf.readByte();
         byte[] array = new byte[byteBuf.readableBytes()];
 
         byteBuf.readBytes(array);
 
-        if (compressionState == 1)
+        if (state == HAS_COMPRESSION_STATE)
             return decompress(array);
 
         return array;
