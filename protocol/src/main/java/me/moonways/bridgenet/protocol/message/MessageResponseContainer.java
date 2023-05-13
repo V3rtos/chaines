@@ -8,30 +8,22 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-@SuppressWarnings("unused")
+import java.util.concurrent.CompletableFuture;
 @NoArgsConstructor
 @Component
 public class MessageResponseContainer {
 
-    private final Map<Integer, MessageResponse<?>> responseMessagesMap = new HashMap<>();
+    private final Map<Integer, CompletableFuture<Message>> responseMessagesMap = new HashMap<>();
 
     private int responseId = 0;
 
-    private void validateNull(MessageResponse<?> response) {
+    private void validateNull(CompletableFuture<Message> response) {
         if (response == null) {
             throw new ResponseMessageNotFoundException("response message is not found");
         }
     }
 
-    public void handleResponse(int responseId, @NotNull Message message) {
-        MessageResponse<Message> response = getResponse(responseId);
-        validateNull(response);
-
-        response.complete(message);
-    }
-
-    public int getNextAwaitResponseMessageId() {
+    public int nextIncrementedResponseID() {
         if (responseId == Integer.MAX_VALUE) {
             responseId = 1;
         }
@@ -39,17 +31,25 @@ public class MessageResponseContainer {
         return ++responseId;
     }
 
-    public void addResponse(int id, @NotNull MessageResponse<?> response) {
-        responseMessagesMap.put(id, response);
+    public void handleResponseFuture(int responseId, @NotNull Message message) {
+        CompletableFuture<Message> response = getResponseHandler(responseId);
+        validateNull(response);
+
+        response.complete(message);
     }
 
-    public void removeResponse(int responseId) {
+    @SuppressWarnings("unchecked")
+    public void saveResponseHandler(int id, @NotNull CompletableFuture<? extends Message> response) {
+        responseMessagesMap.put(id, (CompletableFuture<Message>) response);
+    }
+
+    public void removeResponseHandler(int responseId) {
         responseMessagesMap.remove(responseId);
     }
 
     @SuppressWarnings("unchecked")
-    public <M extends Message> MessageResponse<M> getResponse(int responseId) {
-        return (MessageResponse<M>) Optional.ofNullable(responseMessagesMap.get(responseId))
+    public <M extends Message> CompletableFuture<M> getResponseHandler(int responseId) {
+        return (CompletableFuture<M>) Optional.ofNullable(responseMessagesMap.get(responseId))
                 .orElseThrow(() -> new ResponseMessageNotFoundException(String.format("Can't find response message by id %s", responseId)));
     }
 }

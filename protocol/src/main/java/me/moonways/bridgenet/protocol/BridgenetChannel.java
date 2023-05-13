@@ -5,8 +5,9 @@ import io.netty.channel.ChannelFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.protocol.message.Message;
-import me.moonways.bridgenet.protocol.message.MessageResponse;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 public class BridgenetChannel {
@@ -14,48 +15,41 @@ public class BridgenetChannel {
     private final Channel channel;
     private final ProtocolControl protocolControl;
 
+    public void sendMessage(@NotNull Message message) {
+        sendMessage(message, false);
+    }
+
     @SneakyThrows
-    public <M extends Message> MessageResponse<M> sendMessage(@NotNull Message message, boolean callback) {
-        MessageResponse<M> messageResponse;
+    public <M extends Message> CompletableFuture<M> sendMessageWithCallback(@NotNull Message message) {
+        return sendMessage(message, true);
+    }
+    @SneakyThrows
+    private <M extends Message> CompletableFuture<M> sendMessage(@NotNull Message message, boolean callback) {
+        CompletableFuture<M> messageResponseHandler = new CompletableFuture<>();
 
         if (callback) {
-            messageResponse = new MessageResponse<>();
-
-            int responseId = getNextAwaitResponseMessageId();
+            int responseId = protocolControl.nextIncrementedResponseID();
 
             message.setResponseId(responseId);
-            addAwaitResponseMessage(responseId, messageResponse);
-
-        } else {
-            messageResponse = new MessageResponse<>();
+            saveResponseHandler(responseId, messageResponseHandler);
         }
 
         ChannelFuture channelFuture = channel.writeAndFlush(message);
-
-        addChannelListener(channelFuture, messageResponse);
-        return messageResponse;
-    }
-
-    private void addChannelListener(@NotNull ChannelFuture channelFuture, @NotNull MessageResponse<?> messageResponse) {
         channelFuture.addListener(future -> {
-            if (future.isSuccess()) {
-                messageResponse.complete(null);
-            } else {
-                Throwable cause = future.cause();
 
-                messageResponse.throwException(cause);
+            if (!future.isSuccess()) {
+                messageResponseHandler.completeExceptionally(future.cause());
+                return;
             }
+
+            messageResponseHandler.complete(null);
         });
+        
+        return messageResponseHandler;
     }
-
-    private void addAwaitResponseMessage(int id, @NotNull MessageResponse<?> messageResponse) {
-        protocolControl.addResponse(id, messageResponse);
+    private void saveResponseHandler(int id, @NotNull CompletableFuture<? extends Message> messageResponse) {
+        protocolControl.saveResponseHandler(id, messageResponse);
     }
-
-    private int getNextAwaitResponseMessageId() {
-        return protocolControl.getNextAwaitResponseMessageId();
-    }
-
     public synchronized void close() {
         channel.closeFuture();
     }

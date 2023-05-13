@@ -13,7 +13,7 @@ public class BridgenetHandler {
         System.out.println("qwerty");
 
         TestMessageResponse testMessageResponse = new TestMessageResponse(1, "Привет, респонс пришёл!");
-        testMessageResponse.setResponseId(testMessageResponse.getResponseId());
+        testMessageResponse.setResponseId(testMessage.getResponseId());
 
         testMessage.writeResponse(testMessageResponse);
     }

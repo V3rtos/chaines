@@ -5,16 +5,15 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.protocol.compression.CompressionUtils;
+import me.moonways.bridgenet.protocol.exception.MessageDecoderEmptyPacketException;
 import me.moonways.bridgenet.protocol.message.Message;
 import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
-import me.moonways.bridgenet.protocol.exception.MessageDecoderEmptyPacketException;
 import me.moonways.bridgenet.protocol.transfer.MessageTransfer;
 import me.moonways.bridgenet.protocol.transfer.TransferAllocator;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.List;
-import java.util.zip.*;
+import java.util.zip.DataFormatException;
 
 @RequiredArgsConstructor
 public class MessageDecoder extends ByteToMessageDecoder {
@@ -31,28 +30,29 @@ public class MessageDecoder extends ByteToMessageDecoder {
             }
 
             int messageId = byteBuf.readIntLE();
+            int responseId = byteBuf.readIntLE();
 
-            int responseId = 0;
-            boolean response = byteBuf.readBoolean();
-
-            if (response) {
-                responseId = byteBuf.readIntLE();
-            }
-
-            MessageTransfer messageTransfer = createTransfer(byteBuf);
-
-            Class<?> messageClass = messageRegistrationService.getMessageById(messageId);
-
-            Message message = transferAllocator.allocatePacket(messageClass, messageTransfer);
-
-            message.setChannel(channelHandlerContext.channel());
-            message.setMessageId(messageId);
-            message.setResponseId(responseId);
-
+            Message message = createDecodedMessage(messageId, responseId, byteBuf, channelHandlerContext);
             list.add(message);
-        } finally {
+        }
+        finally {
             byteBuf.skipBytes(byteBuf.readableBytes());
         }
+    }
+
+    private Message createDecodedMessage(int messageId, int responseId, ByteBuf byteBuf, ChannelHandlerContext channelHandlerContext) {
+        MessageTransfer messageTransfer = createTransfer(byteBuf);
+
+        // create Message process
+        Class<?> messageClass = messageRegistrationService.getMessageById(messageId);
+        Message message = transferAllocator.allocatePacket(messageClass, messageTransfer);
+
+        // initialize internal Message parameters
+        message.setMessageId(messageId);
+        message.setResponseId(responseId);
+
+        message.setChannel(channelHandlerContext.channel());
+        return message;
     }
 
     private MessageTransfer createTransfer(ByteBuf byteBuf) {

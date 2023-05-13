@@ -19,20 +19,19 @@ public class Message {
     @Setter
     private int responseId = 0;
 
-    public void writeResponse(@NotNull Message message) {
-        if (responseId != message.getResponseId()) {
-            throw new MessageResponseException("wrong response");
-        }
-
-        validateNull();
-
-        channel.writeAndFlush(message);
-    }
-
-    private void validateNull() {
+    private void validateChannelNull() {
         if (channel == null) {
             throw new MessageChannelNullException("channel is null");
         }
+    }
+
+    public void writeResponse(@NotNull Message message) {
+        if (responseId != message.getResponseId()) {
+            throw new MessageResponseException("wrong response id: " + responseId + " != " + message.getResponseId());
+        }
+
+        validateChannelNull();
+        channel.writeAndFlush(message);
     }
 
     public boolean isResponsible() {

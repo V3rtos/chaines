@@ -80,12 +80,8 @@ public class BridgenetBootstrap {
                 .build();
 
         BridgenetChannel bridgenetChannel = client.connectSync();
-
-        MessageResponse<TestMessageResponse> response = bridgenetChannel.sendMessage(new TestMessage(1, "TESSTT"), true);
-
-        response.whenReceived((testMessageResponse, throwable) -> {
-            System.out.println("ПРИШЁЛ!!!" + testMessageResponse.getMessage());
-        });
+        bridgenetChannel.<TestMessageResponse>sendMessageWithCallback(new TestMessage(1, "TESSTT"))
+                .whenComplete((response, throwable) -> System.out.println("ПРИШЁЛ!!!" + response.getMessage()));
     }
 
     private void registerMessages() {

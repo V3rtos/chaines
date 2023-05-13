@@ -34,11 +34,9 @@ public class BridgenetChannelHandler extends SimpleChannelInboundHandler<Message
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) {
-        System.out.println("дошёл");
-
         if (message.isResponsible()) {
-            handleResponse(message.getMessageId(), message);
-            return;
+            handleResponse(message.getResponseId(), message);
+            //return;
         }
 
         triggerHandler.fireTriggers(message);
@@ -50,6 +48,6 @@ public class BridgenetChannelHandler extends SimpleChannelInboundHandler<Message
     }
 
     private void handleResponse(int messageResponseId, @NotNull Message message) {
-        protocolControl.handleResponse(messageResponseId, message);
+        protocolControl.handleResponseFuture(messageResponseId, message);
     }
 }
