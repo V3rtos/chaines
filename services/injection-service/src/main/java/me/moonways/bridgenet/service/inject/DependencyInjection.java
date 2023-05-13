@@ -101,7 +101,8 @@ public class DependencyInjection {
             addDependAnnotated(dependencyClass, componentAnnotation);
         }
 
-        dependencyInstancesMap.forEach((dependencyClass, dependencyInstance) -> {
+        HashMap<Class<?>, Object> clonedInstancesMap = new HashMap<>(dependencyInstancesMap);
+        clonedInstancesMap.forEach((dependencyClass, dependencyInstance) -> {
 
             if (classesByAnnotationList.contains(dependencyClass)) {
                 fireInitMethods(dependencyClass, dependencyInstance);
