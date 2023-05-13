@@ -15,8 +15,7 @@ import net.conveno.jdbc.ConvenoRouter;
 public class BridgenetBootstrap {
 
     @Inject
-    @Getter
-    private BridgenetControl bridgenetControl;
+    private ProtocolControl protocolControl;
 
     @Inject
     private BridgenetConsole bridgenetConsole;
@@ -24,7 +23,17 @@ public class BridgenetBootstrap {
     @Inject
     private MessageRegistrationService messageRegistrationService;
 
+    @Inject
+    @Getter
+    private BridgenetControl bridgenetControl;
+
+// ---------------------------------------------------------------------------------------------------------------- //
+
     private final DependencyInjection dependencyInjection = new DependencyInjection();
+
+    private final Bridgenet bridgenet = Bridgenet.createByProperties();
+
+// ---------------------------------------------------------------------------------------------------------------- //
 
     private void applyDependencyInjection() {
 
@@ -55,11 +64,6 @@ public class BridgenetBootstrap {
 
         bridgenetConsole.start();
     }
-
-    private final Bridgenet bridgenet = Bridgenet.createByProperties();
-
-    @Inject
-    private ProtocolControl protocolControl;
 
     public void startConnection() {
         BridgenetServer server = Bridgenet.newServerBuilder(bridgenet, protocolControl)

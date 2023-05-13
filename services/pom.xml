@@ -16,6 +16,7 @@
         <module>party-service</module>
         <module>reports-service</module>
         <module>friends-service</module>
+        <module>game-service</module>
         <module>guilds-service</module>
         <module>events-service</module>
         <module>connection-service</module>
