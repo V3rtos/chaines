@@ -1,26 +1,32 @@
 package me.moonways.bridgenet.protocol.message;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.protocol.exception.MessageNotFoundException;
 import me.moonways.bridgenet.protocol.message.exception.MessageRegisterException;
 import me.moonways.bridgenet.service.inject.Component;
 import me.moonways.bridgenet.service.inject.DependencyInjection;
 import me.moonways.bridgenet.service.inject.Inject;
+import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-@SuppressWarnings("unused")
 @Log4j2
 @Component
 public class MessageRegistrationService {
 
-    private final Map<Integer, Class<?>> messageIdentifierMap = new HashMap<>();
+    public static final int UNDEFINED_MESSAGE_CLASS_ID = -1;
+
+    private final Map<Integer, Class<?>> messageByIdsMap = new HashMap<>();
 
     @Inject
     private DependencyInjection dependencyInjection;
+
+    private void validateNull(Class<?> messageCls) {
+        if (messageCls == null) {
+            throw new NullPointerException("message class type");
+        }
+    }
 
     public void registerAll(@NotNull ProtocolDirection protocolDirection) {
         int counter = 1;
@@ -29,21 +35,20 @@ public class MessageRegistrationService {
             Class<?> messageClass = message.getClass();
 
             MessageComponent messageComponent = messageClass.getDeclaredAnnotation(MessageComponent.class);
-
             if (messageComponent == null) {
                 continue;
             }
 
-            ProtocolDirection messageProtocolDirection = messageComponent.direction();
+            ProtocolDirection direction = messageComponent.direction();
 
-            if (messageProtocolDirection == null) {
+            if (direction == null) {
                 throw new MessageRegisterException(String.format("Protocol direction is null in message %s",
                         messageClass));
             }
 
-            if (protocolDirection.equals(messageProtocolDirection)) {
+            if (protocolDirection == direction) {
                 if (Message.class.isAssignableFrom(messageClass)) {
-                    addMessage(counter, messageClass);
+                    registerMessage(counter, messageClass);
 
                 } else {
                     throw new MessageRegisterException(String.format("Can't register message %s because not message",
@@ -55,23 +60,27 @@ public class MessageRegistrationService {
         }
     }
 
-    public void addMessage(int id, Class<?> messageClass) {
-        messageIdentifierMap.put(id, messageClass);
+    public void registerMessage(int id, @NotNull Class<?> messageClass) {
+        log.printf(Level.INFO, "Registering protocol Message(ID: %d, Class: %s)", id, messageClass.getName());
 
-        log.info(String.format("Registered message: %s [id:%s]", messageClass, id));
+        validateNull(messageClass);
+        messageByIdsMap.put(id, messageClass);
     }
 
-    public Class<?> getMessageById(int id) {
-        return Optional.ofNullable(messageIdentifierMap.get(id))
-                .orElseThrow(() -> new MessageNotFoundException(
-                        String.format("Can't find registered message by id %s in container", id)));
+    public Class<?> getMessageClassById(int id) {
+        Class<?> messageType = messageByIdsMap.get(id);
+        validateNull(messageType);
+
+        return messageType;
     }
 
-    public int getIdByMessage(Class<? extends Message> messageClass) {
-        Map.Entry<Integer, Class<?>> integerClassEntry = messageIdentifierMap.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(messageClass))
-                .findFirst().orElseThrow(() -> new NullPointerException("message"));
-
-        return integerClassEntry.getKey();
+    public int getIdByMessageClass(@NotNull Class<? extends Message> messageClass) {
+        validateNull(messageClass);
+        return messageByIdsMap
+                .keySet()
+                .stream()
+                .filter(id -> messageByIdsMap.get(id) == messageClass)
+                .findFirst()
+                .orElse(UNDEFINED_MESSAGE_CLASS_ID);
     }
 }
