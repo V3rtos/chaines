@@ -3,10 +3,10 @@ package me.moonways.bridgenet.services.connection.player;
 import net.conveno.jdbc.*;
 import net.conveno.jdbc.response.ConvenoResponse;
 
-@ConvenoTable(name = "users")
 @ConvenoRepository(jdbc = "jdbc:h2:mem:default",
-        username = "root",
-        password = "${system.jdbc.h2.password}")
+        username = "${system.jdbc.username}",
+        password = "${system.jdbc.password}")
+@ConvenoTable(name = "users")
 public interface OfflinePlayerRepository {
 
     @ConvenoQuery(sql = "select * from ${table} where id = ${id}")

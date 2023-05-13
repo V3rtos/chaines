@@ -3,38 +3,36 @@ package me.moonways.bridgenet.service.friend;
 import net.conveno.jdbc.*;
 import net.conveno.jdbc.response.ConvenoResponse;
 
-@ConvenoRepository(jdbc = "",
-        username = "root",
+@ConvenoRepository(jdbc = "jdbc:h2:mem:default",
+        username = "${system.jdbc.username}",
         password = "${system.jdbc.password}")
 @ConvenoTable(name = "friends")
 public interface FriendsDatabaseRepository {
 
     @ConvenoQuery(sql = "create table if not exists ${table} (" +
-            "id int not null primary key," +
-            "friend int not null)")
+            "id int not null," +
+            "friend int not null" +
+            ")")
     @ConvenoNonResponse
     @ConvenoAsynchronous(onlySubmit = true)
     void validateTableExists();
 
-    @ConvenoQuery(sql = "select friend from ${table} where id = ${i0}")
-    @ConvenoAsynchronous(onlySubmit = true)
-    ConvenoResponse getFriendsList(@ConvenoParam("id") int playerID);
+    @ConvenoQuery(sql = "select friend from ${table} where id = ${0}")
+    ConvenoResponse getFriendsList(@ConvenoParam("0") int playerID);
 
-    @ConvenoTransaction({
-            @ConvenoQuery(sql = "insert into ${table} values (${id}, ${friend})"),
-            @ConvenoQuery(sql = "insert into ${table} values (${friend}, ${id})"),
-    })
     @ConvenoNonResponse
-    @ConvenoAsynchronous(onlySubmit = true)
-    void addFriend(@ConvenoParam("id") int playerID,
-                   @ConvenoParam("friend") int friendPlayerID);
+    @ConvenoTransaction({
+            @ConvenoQuery(sql = "insert into ${table} values (${0}, ${1})"),
+            @ConvenoQuery(sql = "insert into ${table} values (${1}, ${0})"),
+    })
+    void addFriend(@ConvenoParam("0") int playerID,
+                   @ConvenoParam("1") int friendPlayerID);
 
-    @ConvenoTransaction({
-            @ConvenoQuery(sql = "delete from ${table} where id = ${id} and friend = ${friend})"),
-            @ConvenoQuery(sql = "delete from ${table} where id = ${friend} and friend = ${id})"),
-    })
     @ConvenoNonResponse
-    @ConvenoAsynchronous(onlySubmit = true)
-    void removeFriend(@ConvenoParam("id") int playerID,
-                      @ConvenoParam("friend") int friendPlayerID);
+    @ConvenoTransaction({
+            @ConvenoQuery(sql = "delete from ${table} where id = ${0} and friend = ${1}"),
+            @ConvenoQuery(sql = "delete from ${table} where id = ${1} and friend = ${0}"),
+    })
+    void removeFriend(@ConvenoParam("0") int playerID,
+                      @ConvenoParam("1") int friendPlayerID);
 }

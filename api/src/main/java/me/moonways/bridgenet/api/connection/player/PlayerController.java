@@ -29,7 +29,7 @@ public final class PlayerController {
     private ConvenoRouter convenoRouter;
 
     @InitMethod
-    private void init() {
+    private void initRepository() {
         offlinePlayerRepository = convenoRouter.getRepository(OfflinePlayerRepository.class);
         offlinePlayerRepository.validateTableExists();
     }

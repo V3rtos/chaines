@@ -49,7 +49,49 @@
 
         <dependency>
             <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>bnmg-service</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>connection-service</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>events-service</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>friends-service</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>guilds-service</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
             <artifactId>injection-service</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>party-service</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet.services</groupId>
+            <artifactId>reports-service</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
