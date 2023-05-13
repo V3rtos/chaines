@@ -44,7 +44,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
         MessageTransfer messageTransfer = createTransfer(byteBuf);
 
         // create Message process
-        Class<?> messageClass = messageRegistrationService.getMessageById(messageId);
+        Class<?> messageClass = messageRegistrationService.getMessageClassById(messageId);
         Message message = transferAllocator.allocatePacket(messageClass, messageTransfer);
 
         // initialize internal Message parameters

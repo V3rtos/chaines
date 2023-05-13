@@ -1,14 +1,17 @@
 package me.moonways.bridgenet;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.BridgenetControl;
 import me.moonways.bridgenet.api.command.Command;
 import me.moonways.bridgenet.api.command.CommandSenderSession;
 import me.moonways.bridgenet.api.command.exception.CommandNotFoundException;
 import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
+import me.moonways.bridgenet.api.minecraft.ChatColor;
 import me.moonways.bridgenet.service.inject.Inject;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
 
+@Log4j2
 @RequiredArgsConstructor
 public class BridgenetConsole extends SimpleTerminalConsole {
 
@@ -35,7 +38,9 @@ public class BridgenetConsole extends SimpleTerminalConsole {
             command.executeCommand(arguments, commandSenderSession);
         }
         catch (CommandNotFoundException exception) {
-            System.out.println("Command not found!");
+
+            log.warn(ChatColor.RED + "Please write 'help' for a list of available commands!");
+            log.warn(ChatColor.RED + exception.toString());
         }
     }
 

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration status="INFO" packages="net.minecrell.terminalconsole">
+    <Properties>
+        <Property name="logfile_pattern">%d{HH:mm:ss.SSS} [%c{0} %level] %msg%n</Property>
+        <Property name="terminal_pattern">§f%d{HH:mm:ss.SSS} §a[%c{1} %level] §r%msg}%n</Property>
+    </Properties>
+
     <Appenders>
         <RollingFile name="InfoLog" fileName="logs/latest.log" filePattern="logs/info-%d{dd-MM-yyyy}-%i.log">
-            <PatternLayout pattern="[%d{dd-mm-YYYY HH:mm:ss} %level] %msg%n"/>
+            <PatternLayout pattern="${logfile_pattern}"/>
 
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -11,7 +16,7 @@
         </RollingFile>
 
         <RollingFile name="ErrorLog" fileName="logs/error.log" filePattern="logs/error-%d{dd-MM-yyyy}-%i.log">
-            <PatternLayout pattern="[%d{dd-mm-YYYY HH:mm:ss} %level] %msg%n"/>
+            <PatternLayout pattern="${logfile_pattern}"/>
 
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -20,7 +25,7 @@
         </RollingFile>
 
         <RollingFile name="DebugLog" fileName="logs/debug.log" filePattern="logs/debug-%d{dd-MM-yyyy}-%i.log">
-            <PatternLayout pattern="[%d{dd-mm-YYYY HH:mm:ss} %level] %msg%n"/>
+            <PatternLayout pattern="${logfile_pattern}"/>
 
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -29,16 +34,16 @@
         </RollingFile>
 
         <TerminalConsole name="TerminalConsole">
-            <PatternLayout pattern="[%d{HH:mm:ss} %level] %minecraftFormatting{%msg}%n"/>
+            <PatternLayout pattern="%minecraftFormatting{${terminal_pattern}"/>
         </TerminalConsole>
     </Appenders>
 
     <Loggers>
         <Root level="debug" additivity="false">
-            <AppenderRef ref="TerminalConsole" level="info"/>
             <AppenderRef ref="ErrorLog" level="error"/>
             <AppenderRef ref="InfoLog" level="info"/>
-            <AppenderRef ref="DebugLog"/>
+            <AppenderRef ref="DebugLog" level="debug"/>
+            <AppenderRef ref="TerminalConsole" level="info"/>
         </Root>
     </Loggers>
 </Configuration>
