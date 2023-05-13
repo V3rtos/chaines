@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.protocol.message.exception.MessageRegisterException;
 import me.moonways.bridgenet.service.inject.Component;
 import me.moonways.bridgenet.service.inject.DependencyInjection;
+import me.moonways.bridgenet.service.inject.InitMethod;
 import me.moonways.bridgenet.service.inject.Inject;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +22,11 @@ public class MessageRegistrationService {
 
     @Inject
     private DependencyInjection dependencyInjection;
+
+    @InitMethod
+    private void initializeMessages() {
+        dependencyInjection.scanDependenciesOfBasicPackage(MessageComponent.class);
+    }
 
     private void validateNull(Class<?> messageCls) {
         if (messageCls == null) {
