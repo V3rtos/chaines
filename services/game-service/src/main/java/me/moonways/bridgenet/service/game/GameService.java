@@ -4,7 +4,7 @@ import me.moonways.bridgenet.service.inject.Component;
 import me.moonways.bridgenet.service.inject.InitMethod;
 
 @Component
-public class GameService {
+public final class GameService {
 
     @InitMethod
     private void init() {
