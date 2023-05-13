@@ -52,7 +52,6 @@ public class BridgenetBootstrap {
         registerMessages();
 
         startConnection();
-        connectToBridgenet();
 
         bridgenetConsole.start();
     }
@@ -70,21 +69,6 @@ public class BridgenetBootstrap {
                 .build();
 
         server.bindSync();
-    }
-
-    public void connectToBridgenet() {
-        BridgenetClient client = Bridgenet.newClientBuilder(bridgenet, protocolControl)
-                .setGroup(BridgenetNetty.createEventLoopGroup(2))
-                .setChannelFactory(BridgenetNetty.createClientChannelFactory())
-                .setChannelInitializer(BridgenetPipeline.newBuilder(protocolControl).build())
-                .build();
-
-        BridgenetChannel bridgenetChannel = client.connectSync();
-        bridgenetChannel.<TestMessageResponse>sendMessageWithCallback(new TestMessage(1, "TESSTT"))
-                .whenComplete((response, throwable) -> {
-                    System.out.println("пришёл");
-                    System.out.println(response.getMessage());
-                });
     }
 
     private void registerMessages() {

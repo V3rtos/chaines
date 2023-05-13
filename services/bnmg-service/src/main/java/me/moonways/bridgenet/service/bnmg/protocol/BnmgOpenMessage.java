@@ -9,7 +9,7 @@ import me.moonways.bridgenet.protocol.transfer.ByteTransfer;
 
 @Getter
 @AllArgsConstructor
-@MessageComponent(direction = ProtocolDirection.SERVER)
+@MessageComponent(direction = ProtocolDirection.TO_CLIENT)
 public class BnmgOpenMessage extends Message {
 
     @ByteTransfer

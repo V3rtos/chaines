@@ -9,7 +9,7 @@ import me.moonways.bridgenet.protocol.transfer.provider.TransferSerializeProvide
 import me.moonways.bridgenet.service.bnmg.descriptor.GuiDescriptor;
 
 @Getter
-@MessageComponent(direction = ProtocolDirection.SERVER)
+@MessageComponent(direction = ProtocolDirection.TO_CLIENT)
 public class BnmgCreateMessage extends Message {
 
     @ByteTransfer(provider = TransferSerializeProvider.class)

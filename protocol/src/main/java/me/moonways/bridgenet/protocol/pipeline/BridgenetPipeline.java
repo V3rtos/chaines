@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.protocol.pipeline;
 
 import io.netty.channel.ChannelConfig;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -25,6 +26,8 @@ public class BridgenetPipeline extends ChannelInitializer<SocketChannel> {
 
     private final ProtocolControl protocolControl;
 
+    private SocketChannel socketChannel;
+
     private Consumer<SocketChannel> initChannelConsumer;
 
     private final Set<ChannelInitializer<? extends SocketChannel>> additionalChannelInitializers = new HashSet<>();
@@ -36,6 +39,10 @@ public class BridgenetPipeline extends ChannelInitializer<SocketChannel> {
     private void initCodec(@NotNull ChannelPipeline pipeline) {
         pipeline.addLast(new MessageDecoder(protocolControl.getRegistrationService()));
         pipeline.addLast(new MessageEncoder(protocolControl.getRegistrationService()));
+    }
+
+    public void addLast(@NotNull ChannelHandler channelHandler) {
+        socketChannel.pipeline().addLast(channelHandler);
     }
 
     private void initOptions(@NotNull ChannelConfig config) {
@@ -56,6 +63,8 @@ public class BridgenetPipeline extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {
+        this.socketChannel = socketChannel;
+
         initCodec(socketChannel.pipeline());
         initHandlers(socketChannel.pipeline());
         initOptions(socketChannel.config());
