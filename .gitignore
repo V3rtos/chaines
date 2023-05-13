@@ -3,6 +3,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### BridgeNet ###
+extensions/
+logs/
+
 ### IntelliJ IDEA ###
 *.idea
 *.iws
