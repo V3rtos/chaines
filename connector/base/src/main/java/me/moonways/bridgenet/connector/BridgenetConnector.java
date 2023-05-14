@@ -1,8 +1,8 @@
-package me.moonways.bridgenet;
+package me.moonways.bridgenet.connector;
 
+import me.moonways.bridgenet.connector.reconnect.BridgenetReconnectHandler;
 import me.moonways.bridgenet.protocol.*;
 import me.moonways.bridgenet.protocol.pipeline.BridgenetPipeline;
-import me.moonways.bridgenet.reconnect.BridgenetReconnectHandler;
 import me.moonways.bridgenet.service.inject.Component;
 import me.moonways.bridgenet.service.inject.Inject;
 import org.jetbrains.annotations.NotNull;

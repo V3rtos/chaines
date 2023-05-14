@@ -1,9 +1,9 @@
-package me.moonways.bridgenet.reconnect;
+package me.moonways.bridgenet.connector.reconnect;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.exception.BridgenetConnectionClosedException;
+import me.moonways.bridgenet.connector.exception.BridgenetConnectionClosedException;
 import me.moonways.bridgenet.protocol.BridgenetClient;
 import me.moonways.bridgenet.protocol.exception.BridgenetConnectionException;
 

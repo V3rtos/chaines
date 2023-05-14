@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.exception;
+package me.moonways.bridgenet.connector.exception;
 
 import org.jetbrains.annotations.NotNull;
 
