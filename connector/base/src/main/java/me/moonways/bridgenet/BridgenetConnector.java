@@ -17,13 +17,13 @@ public class BridgenetConnector {
         BridgenetPipeline bridgenetPipeline = BridgenetPipeline.
                 newBuilder(protocolControl).build();
 
-        bridgenetPipeline.addChannelHandler(new BridgenetReconnectHandler());
-
         BridgenetClient client = Bridgenet.newClientBuilder(bridgenet, protocolControl)
                 .setGroup(BridgenetNetty.createEventLoopGroup(2))
                 .setChannelFactory(BridgenetNetty.createClientChannelFactory())
                 .setChannelInitializer(bridgenetPipeline)
                 .build();
+
+        bridgenetPipeline.addChannelHandler(new BridgenetReconnectHandler(client));
 
         client.connectSync();
     }
