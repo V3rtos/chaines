@@ -51,11 +51,11 @@ public class BridgenetReconnectHandler extends ChannelInboundHandlerAdapter {
 
         try {
             bridgenetClient.connectSync();
+
+            completableFuture.complete(true);
         } catch (BridgenetConnectionException exception) {
             completableFuture.completeExceptionally(new BridgenetConnectionClosedException(exception, "bridgenet try connection was lost"));
         }
-
-        completableFuture.complete(true);
 
         return completableFuture;
     }
