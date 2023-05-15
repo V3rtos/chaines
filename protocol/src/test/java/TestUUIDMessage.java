@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import me.moonways.bridgenet.protocol.message.Message;
 import me.moonways.bridgenet.protocol.transfer.ByteTransfer;
 import me.moonways.bridgenet.protocol.transfer.provider.TransferSerializeProvider;
+import me.moonways.bridgenet.protocol.transfer.provider.TransferUuidProvider;
 
 import java.util.UUID;
 
@@ -12,6 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TestUUIDMessage extends Message {
 
-    @ByteTransfer(provider = TransferSerializeProvider.class)
+    @ByteTransfer(provider = TransferUuidProvider.class)
     private UUID uuid;
 }
