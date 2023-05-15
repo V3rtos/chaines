@@ -4,8 +4,8 @@ import lombok.Getter;
 import me.moonways.bridgenet.api.command.Command;
 import me.moonways.bridgenet.api.command.CommandContainer;
 import me.moonways.bridgenet.api.command.CommandRegistry;
-import me.moonways.bridgenet.api.connection.player.PlayerController;
-import me.moonways.bridgenet.api.connection.server.ServerController;
+import me.moonways.bridgenet.api.connection.player.PlayerManager;
+import me.moonways.bridgenet.api.connection.server.ServerManager;
 import me.moonways.bridgenet.service.event.EventService;
 import me.moonways.bridgenet.api.module.ModuleContainer;
 import me.moonways.bridgenet.api.scheduler.Scheduler;
@@ -31,10 +31,10 @@ public class BridgenetControl {
     private ModuleContainer moduleContainer;
 
     @Inject
-    private ServerController serverController;
+    private ServerManager serverManager;
 
     @Inject
-    private PlayerController playerController;
+    private PlayerManager playerManager;
 
     @InitMethod
     private void init() {
