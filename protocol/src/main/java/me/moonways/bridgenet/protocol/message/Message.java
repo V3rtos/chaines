@@ -3,6 +3,7 @@ package me.moonways.bridgenet.protocol.message;
 import io.netty.channel.Channel;
 import lombok.Getter;
 import lombok.Setter;
+import me.moonways.bridgenet.protocol.BridgenetChannel;
 import me.moonways.bridgenet.protocol.message.exception.MessageChannelNullException;
 import me.moonways.bridgenet.protocol.message.exception.MessageResponseException;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class Message {
 
     @Setter
-    private Channel channel;
+    private BridgenetChannel channel;
 
     @Setter
     private int messageId = 0;
@@ -31,7 +32,7 @@ public class Message {
         }
 
         validateChannelNull();
-        channel.writeAndFlush(message);
+        channel.sendMessage(message);
     }
 
     public boolean isResponsible() {
