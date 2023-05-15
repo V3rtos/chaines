@@ -7,7 +7,7 @@ import me.moonways.bridgenet.protocol.transfer.ByteCodec;
 import me.moonways.bridgenet.protocol.transfer.MessageBytes;
 import org.mockito.internal.util.Primitives;
 
-public class TransferBufferProvider implements TransferProvider {
+public class TransferPrimitiveProvider implements TransferProvider {
 
     private void validateAsPrimitive(Class<?> cls) {
         if (!Primitives.isPrimitiveOrWrapper(cls)) {
