@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public final class PlayerController {
+public final class PlayerManager {
 
     private static final int PLAYER_ID_LABEL_INDEX = 1;
     private static final int PLAYER_NAME_LABEL_INDEX = 2;

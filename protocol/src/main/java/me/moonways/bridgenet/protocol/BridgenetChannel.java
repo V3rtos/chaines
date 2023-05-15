@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.protocol.message.Message;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
@@ -47,6 +48,10 @@ public class BridgenetChannel {
         }
 
         return messageResponseHandler;
+    }
+
+    public InetSocketAddress getInetSocketAddress() {
+        return ((InetSocketAddress) channel.remoteAddress());
     }
 
     private void saveResponseHandler(int id, @NotNull CompletableFuture<? extends Message> messageResponse) {

@@ -14,9 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class ServerController {
+public final class ServerManager {
 
     private final Map<String, Server> serverMap = Collections.synchronizedMap(new HashMap<>());
+
+    @Getter
+    private final ServerChannelMap serverChannelMap = new ServerChannelMap();
 
     @Inject
     private DependencyInjection dependencyInjection;
@@ -37,12 +40,16 @@ public class ServerController {
         validateNull(server);
 
         dependencyInjection.injectDependencies(server);
+
         serverMap.put(server.getName().toLowerCase(), server);
+        serverChannelMap.registerServerChannelPort(server);
     }
 
     public void removeServer(@NotNull Server server) {
         validateNull(server);
+
         serverMap.remove(server.getName().toLowerCase());
+        serverChannelMap.unregisterServerChannelPort(server);
     }
 
     @Nullable
