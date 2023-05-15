@@ -4,6 +4,7 @@ import gnu.trove.TCollections;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 
@@ -51,5 +52,10 @@ public final class ServerChannelMap {
         validateServerNotContains(inetSocketAddress);
 
         serverByChannelPortMap.remove(inetSocketAddress.getPort());
+    }
+
+    @Nullable
+    public Server getServerByChannelPort(int serverPort) {
+        return serverByChannelPortMap.get(serverPort);
     }
 }
