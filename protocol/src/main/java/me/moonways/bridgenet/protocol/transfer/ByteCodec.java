@@ -14,6 +14,7 @@ public final class ByteCodec {
     private static final int DEFAULT_OBJ_BUFFER_SIZE = 256;
 
     public static final ByteBuffer INT_BUFFER = ByteBuffer.allocate(Integer.BYTES);
+    public static final ByteBuffer LONG_BUFFER = ByteBuffer.allocate(Long.BYTES);
 
     private final static Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_MAP = new HashMap<>();
 
@@ -125,11 +126,33 @@ public final class ByteCodec {
         return array;
     }
 
+    public byte[] toByteArray(long value) {
+        LONG_BUFFER.putLong(value);
+
+        byte[] array = LONG_BUFFER.array();
+        LONG_BUFFER.clear();
+
+        return array;
+    }
+
     public int readInt(byte[] array) {
         INT_BUFFER.put(array, 0, array.length);
         INT_BUFFER.flip();
 
-        return INT_BUFFER.getInt();
+        int value = INT_BUFFER.getInt();
+        INT_BUFFER.clear();
+
+        return value;
+    }
+
+    public long readLong(byte[] array) {
+        LONG_BUFFER.put(array, 0, array.length);
+        LONG_BUFFER.flip();
+
+        long value = LONG_BUFFER.getLong();
+        LONG_BUFFER.clear();
+
+        return value;
     }
 
     public String readString(byte[] bytes, Charset charset) {
