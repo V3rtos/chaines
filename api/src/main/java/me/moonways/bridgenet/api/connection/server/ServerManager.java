@@ -26,7 +26,7 @@ public final class ServerManager {
 
     private void validateNull(Server server) {
         if (server == null) {
-            throw new NullPointerException("me/moonways/bridgenet/services/connection/server");
+            throw new NullPointerException("server");
         }
     }
 
