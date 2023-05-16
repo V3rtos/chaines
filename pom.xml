@@ -14,6 +14,7 @@
         <module>bootstrap</module>
         <module>protocol</module>
         <module>api</module>
+        <module>system</module>
     </modules>
 
     <properties>
