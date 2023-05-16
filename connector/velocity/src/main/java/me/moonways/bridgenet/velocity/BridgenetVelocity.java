@@ -4,6 +4,10 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
+import de.dytanic.cloudnet.driver.network.HostAndPort;
+import de.dytanic.cloudnet.driver.service.ServiceId;
+import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
+import de.dytanic.cloudnet.wrapper.Wrapper;
 import lombok.Getter;
 import me.moonways.bridgenet.connector.BridgenetConnector;
 import me.moonways.bridgenet.protocol.*;
@@ -67,8 +71,14 @@ public class BridgenetVelocity {
     }
 
     private void writeConnectMessage() {
-        bridgenetChannel.sendMessage(
-                new VelocityHandshakeMessage());
+        ServiceId serviceId = Wrapper.getInstance().getServiceId();
+        String velocityName = serviceId.getTaskName() + "-" + serviceId.getTaskServiceId();
+
+        ServiceInfoSnapshot serviceInfoSnapshot = Wrapper.getInstance().getCurrentServiceInfoSnapshot();
+        HostAndPort serverAddress = serviceInfoSnapshot.getAddress();
+
+        bridgenetChannel.sendMessage(new VelocityHandshakeMessage(
+                velocityName, serverAddress.getHost(), serverAddress.getPort()));
     }
 
     private void initializeProperty() {
