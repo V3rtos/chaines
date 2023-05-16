@@ -122,6 +122,8 @@ public class DependencyInjection {
         validateDepend(depend);
 
         injectDependencies(depend);
+        fireInitMethods(dependClass, depend);
+
         dependencyInstancesMap.put(dependClass, depend);
 
         if (dependClass.isAnnotationPresent(Component.class))

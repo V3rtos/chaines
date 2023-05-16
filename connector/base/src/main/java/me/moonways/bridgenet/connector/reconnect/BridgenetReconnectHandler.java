@@ -3,60 +3,66 @@ package me.moonways.bridgenet.connector.reconnect;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.connector.BaseBridgenetConnector;
 import me.moonways.bridgenet.connector.exception.BridgenetConnectionClosedException;
+import me.moonways.bridgenet.protocol.BridgenetChannel;
 import me.moonways.bridgenet.protocol.BridgenetClient;
 import me.moonways.bridgenet.protocol.exception.BridgenetConnectionException;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @RequiredArgsConstructor
 public class BridgenetReconnectHandler extends ChannelInboundHandlerAdapter {
 
     private final BridgenetClient bridgenetClient;
+    private final BaseBridgenetConnector bridgenetConnector;
 
-    private final ScheduledExecutorService reconnectScheduler = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledExecutorService reconnectScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+
+    private ScheduledFuture<?> currentReconnectTaskFuture;
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         try {
             startReconnect();
-        } catch (BridgenetConnectionClosedException exception) {
+        }
+        catch (BridgenetConnectionClosedException exception) {
             exception.printStackTrace();
         }
     }
 
     private synchronized void startReconnect() {
-        reconnectScheduler.schedule(() -> {
-            tryReconnect().whenComplete((value, throwable) -> {
-                if (throwable != null) {
-                    throwable.printStackTrace();
-                }
+        if (currentReconnectTaskFuture != null && !currentReconnectTaskFuture.isCancelled()) {
+            throw new UnsupportedOperationException("reconnect operation is not cancelled");
+        }
 
-                if (value) {
-                    completeReconnect();
-                }
-            });
-        }, 10L, TimeUnit.SECONDS);
+        bridgenetConnector.setChannel(null);
+        currentReconnectTaskFuture = reconnectScheduledExecutor.schedule(() -> {
+            if (tryReconnect()) {
+                completeReconnect();
+            }
+
+        }, 10, TimeUnit.SECONDS);
     }
 
     private synchronized void completeReconnect() {
-        reconnectScheduler.shutdown();
-    }
-
-    private synchronized CompletableFuture<Boolean> tryReconnect() {
-        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
-
-        try {
-            bridgenetClient.connectSync();
-
-            completableFuture.complete(true);
-        } catch (BridgenetConnectionException exception) {
-            completableFuture.completeExceptionally(new BridgenetConnectionClosedException(exception, "bridgenet try connection was lost"));
+        if (currentReconnectTaskFuture == null) {
+            throw new UnsupportedOperationException("reconnect operation is not exists");
         }
 
-        return completableFuture;
+        currentReconnectTaskFuture.cancel(true);
+        currentReconnectTaskFuture = null;
+    }
+
+    private synchronized boolean tryReconnect() {
+
+        try {
+            BridgenetChannel bridgenetChannel = bridgenetClient.connectSync();
+            bridgenetConnector.setChannel(bridgenetChannel); // обновляем канал коннектора на только что подключенный
+
+            return true;
+        } catch (BridgenetConnectionException exception) {
+           return false; // ошибку выкидывать незачем, просто пробуем переподключиться вновь
+        }
     }
 }
