@@ -11,6 +11,10 @@ import me.moonways.bridgenet.velocity.exception.ServerConnectException;
 @MessageHandler
 public class VelocityChannelHandler {
 
+    private static final String ALREADY_CONNECTED = "Already connected";
+    private static final String SUCCESSFUL_CONNECTED = "Successful connected";
+    private static final String BAN_RESPONSE = "Bad response";
+
     @Inject
     private BridgenetVelocity bridgenetVelocity;
 
@@ -22,16 +26,16 @@ public class VelocityChannelHandler {
 
         switch (serverConnectResponseType) {
             case SUCCESSFUL_CONNECTED: {
-                bridgenetVelocity.getLogger().info("successful connected");
+                bridgenetVelocity.getLogger().info(ALREADY_CONNECTED);
                 break;
             }
 
             case ALREADY_CONNECTED: {
-                throw new ServerConnectException("already connected");
+                throw new ServerConnectException(SUCCESSFUL_CONNECTED);
             }
 
             case BAD_RESPONSE: {
-                throw new ServerConnectException("bad response");
+                throw new ServerConnectException(BAN_RESPONSE);
             }
         }
     }
