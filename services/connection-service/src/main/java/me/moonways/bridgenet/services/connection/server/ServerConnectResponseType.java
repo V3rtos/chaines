@@ -9,6 +9,7 @@ public enum ServerConnectResponseType {
 
     SUCCESSFUL_CONNECTED(100),
     ALREADY_CONNECTED(200),
+    SERVER_NOT_FOUND(300),
     BAD_RESPONSE(400);
 
     private final int identifier;
