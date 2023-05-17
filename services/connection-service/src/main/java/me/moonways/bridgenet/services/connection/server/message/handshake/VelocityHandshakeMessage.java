@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.services.connection.server.message;
+package me.moonways.bridgenet.services.connection.server.message.handshake;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

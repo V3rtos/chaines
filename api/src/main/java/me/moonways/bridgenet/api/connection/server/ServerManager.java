@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.api.connection.server;
 
 import lombok.Getter;
-import me.moonways.bridgenet.api.connection.server.exception.ArenaAlreadyRegisteredException;
 import me.moonways.bridgenet.api.connection.server.type.SpigotServer;
 import me.moonways.bridgenet.api.connection.server.type.VelocityServer;
 import me.moonways.bridgenet.service.inject.Component;
@@ -22,9 +21,6 @@ public final class ServerManager {
     @Getter
     private final AddressServerMap addressServerMap = new AddressServerMap();
 
-    @Inject
-    private DependencyInjection dependencyInjection;
-
     private void validateNull(Server server) {
         if (server == null) {
             throw new NullPointerException("server");
@@ -39,14 +35,11 @@ public final class ServerManager {
 
     private void validateContains(String serverName) {
         if (serverMap.containsKey(serverName))
-            throw new ArenaAlreadyRegisteredException("server name");
+            throw new NullPointerException("server name");
     }
-
 
     public void addServer(@NotNull Server server) {
         validateContains(server.getName());
-
-        dependencyInjection.injectDependencies(server);
 
         serverMap.put(server.getName().toLowerCase(), server);
         addressServerMap.registerServerAddressPort(server);
@@ -79,5 +72,10 @@ public final class ServerManager {
     private <S extends Server> S getUncheckedServer(String serverName) {
         validateNull(serverName);
         return (S) serverMap.get(serverName.toLowerCase());
+    }
+
+    public boolean hasServer(String serverName) {
+        validateNull(serverName);
+        return serverMap.containsKey(serverName.toLowerCase());
     }
 }

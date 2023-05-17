@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.services.connection.server.message;
+package me.moonways.bridgenet.services.connection.server.message.handshake;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,13 +9,21 @@ import me.moonways.bridgenet.protocol.message.MessageState;
 import me.moonways.bridgenet.protocol.message.ProtocolDirection;
 import me.moonways.bridgenet.protocol.transfer.ByteTransfer;
 
-@MessageComponent(direction = ProtocolDirection.TO_CLIENT, state = MessageState.RESPONSE)
-@AllArgsConstructor
+@MessageComponent(direction = ProtocolDirection.TO_SERVER, state = MessageState.REQUEST)
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
-public class ArenaRegisterResponseMessage extends Message {
+public class GameHandshakeMessage extends Message {
 
     @ByteTransfer
-    private int result;
+    private String serverName;
 
+    @ByteTransfer
+    private String host;
+
+    @ByteTransfer
+    private int port;
+
+    @ByteTransfer
+    private int gameId;
 }

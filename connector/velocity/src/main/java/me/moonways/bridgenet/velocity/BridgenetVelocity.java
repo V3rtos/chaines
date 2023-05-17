@@ -12,7 +12,7 @@ import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
 import me.moonways.bridgenet.protocol.message.ProtocolDirection;
 import me.moonways.bridgenet.service.inject.InitMethod;
 import me.moonways.bridgenet.service.inject.Inject;
-import me.moonways.bridgenet.services.connection.server.message.VelocityHandshakeMessage;
+import me.moonways.bridgenet.services.connection.server.message.handshake.VelocityHandshakeMessage;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
