@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.connection;
+package me.moonways.bridgenet.system;
 
 import me.moonways.bridgenet.protocol.message.MessageHandler;
 
