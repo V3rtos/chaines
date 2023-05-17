@@ -51,7 +51,6 @@ public class MessageDecoder extends ByteToMessageDecoder {
         message.setMessageId(messageId);
         message.setResponseId(responseId);
 
-        message.setChannel(channelHandlerContext.channel());
         return message;
     }
 
