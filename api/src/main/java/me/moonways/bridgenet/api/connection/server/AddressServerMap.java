@@ -5,15 +5,16 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.net.InetSocketAddress;
 
-public final class ServerChannelMap {
+public final class AddressServerMap {
 
     private static final String SERVER_NOT_CONTAINS_ERR_MSG = "Server Port is not contains in ServerChannelMap (%d)";
     private static final String SERVER_ALREADY_CONTAINS_ERR_MSG = "Server Port is already contains in ServerChannelMap (%d)";
 
-    private final TIntObjectMap<Server> serverByChannelPortMap =
+    private final TIntObjectMap<Server> serverByAddressPortMap =
             TCollections.synchronizedMap(new TIntObjectHashMap<>());
 
     private void validateServer(Server server) {
@@ -24,38 +25,44 @@ public final class ServerChannelMap {
 
     private void validateServerNotContains(InetSocketAddress socketAddress) {
         int serverPort = socketAddress.getPort();
-        if (!serverByChannelPortMap.containsKey(serverPort)) {
+        if (!serverByAddressPortMap.containsKey(serverPort)) {
             throw new NullPointerException(String.format(SERVER_NOT_CONTAINS_ERR_MSG, serverPort));
         }
     }
 
     private void validateServerAlreadyContains(InetSocketAddress socketAddress) {
         int serverPort = socketAddress.getPort();
-        if (serverByChannelPortMap.containsKey(serverPort)) {
+        if (serverByAddressPortMap.containsKey(serverPort)) {
             throw new NullPointerException(String.format(SERVER_ALREADY_CONTAINS_ERR_MSG, serverPort));
         }
     }
 
-    public void registerServerChannelPort(@NotNull Server server) {
+    public void registerServerAddressPort(@NotNull Server server) {
         validateServer(server);
 
         InetSocketAddress inetSocketAddress = server.getBridgenetChannel().getInetSocketAddress();
         validateServerAlreadyContains(inetSocketAddress);
 
-        serverByChannelPortMap.put(inetSocketAddress.getPort(), server);
+        serverByAddressPortMap.put(inetSocketAddress.getPort(), server);
     }
 
-    public void unregisterServerChannelPort(@NotNull Server server) {
+    public void unregisterServerAddressPort(@NotNull Server server) {
         validateServer(server);
 
         InetSocketAddress inetSocketAddress = server.getBridgenetChannel().getInetSocketAddress();
         validateServerNotContains(inetSocketAddress);
 
-        serverByChannelPortMap.remove(inetSocketAddress.getPort());
+        serverByAddressPortMap.remove(inetSocketAddress.getPort());
     }
 
     @Nullable
-    public Server getServerByChannelPort(int serverPort) {
-        return serverByChannelPortMap.get(serverPort);
+    public Server getServerByAddressPort(int serverPort) {
+        return serverByAddressPortMap.get(serverPort);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public <S extends Server> S getUncheckedServer(int serverPort) {
+        return (S) serverByAddressPortMap.get(serverPort);
     }
 }
