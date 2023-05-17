@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.api.connection.server;
 
 import lombok.Getter;
+import me.moonways.bridgenet.api.connection.server.exception.ArenaAlreadyRegisteredException;
 import me.moonways.bridgenet.api.connection.server.type.SpigotServer;
 import me.moonways.bridgenet.api.connection.server.type.VelocityServer;
 import me.moonways.bridgenet.service.inject.Component;
@@ -19,7 +20,7 @@ public final class ServerManager {
     private final Map<String, Server> serverMap = Collections.synchronizedMap(new HashMap<>());
 
     @Getter
-    private final ServerChannelMap serverChannelMap = new ServerChannelMap();
+    private final AddressServerMap addressServerMap = new AddressServerMap();
 
     @Inject
     private DependencyInjection dependencyInjection;
@@ -36,20 +37,26 @@ public final class ServerManager {
         }
     }
 
+    private void validateContains(String serverName) {
+        if (serverMap.containsKey(serverName))
+            throw new ArenaAlreadyRegisteredException("server name");
+    }
+
+
     public void addServer(@NotNull Server server) {
-        validateNull(server);
+        validateContains(server.getName());
 
         dependencyInjection.injectDependencies(server);
 
         serverMap.put(server.getName().toLowerCase(), server);
-        serverChannelMap.registerServerChannelPort(server);
+        addressServerMap.registerServerAddressPort(server);
     }
 
     public void removeServer(@NotNull Server server) {
         validateNull(server);
 
         serverMap.remove(server.getName().toLowerCase());
-        serverChannelMap.unregisterServerChannelPort(server);
+        addressServerMap.unregisterServerAddressPort(server);
     }
 
     @Nullable
