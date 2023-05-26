@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.services.connection.server.message.game.arena.response;
+package me.moonways.bridgenet.services.connection.server.protocol.game.arena.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

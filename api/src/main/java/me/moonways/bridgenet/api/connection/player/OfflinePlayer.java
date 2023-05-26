@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.api.connection.player;
 
+import java.util.UUID;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.connection.server.type.SpigotServer;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @RequiredArgsConstructor
 public class OfflinePlayer implements Player {
 
-    private final int playerId;
+    private final UUID uniqueId;
 
     private final String name;
 

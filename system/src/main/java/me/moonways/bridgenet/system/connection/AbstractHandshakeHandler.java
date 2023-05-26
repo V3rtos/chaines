@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.connection.server.Server;
 import me.moonways.bridgenet.api.connection.server.ServerManager;
 import me.moonways.bridgenet.protocol.message.Message;
 import me.moonways.bridgenet.services.connection.server.ServerConnectResponseType;
-import me.moonways.bridgenet.services.connection.server.message.handshake.response.HandshakeResponseMessage;
+import me.moonways.bridgenet.services.connection.server.protocol.handshake.response.HandshakeResponseMessage;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractHandshakeHandler {

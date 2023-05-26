@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.services.connection.server.message.game.arena;
+package me.moonways.bridgenet.services.connection.server.protocol.handshake;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,20 +7,20 @@ import me.moonways.bridgenet.protocol.message.Message;
 import me.moonways.bridgenet.protocol.message.MessageComponent;
 import me.moonways.bridgenet.protocol.message.MessageState;
 import me.moonways.bridgenet.protocol.message.ProtocolDirection;
-
-import java.util.UUID;
+import me.moonways.bridgenet.protocol.transfer.ByteTransfer;
 
 @MessageComponent(direction = ProtocolDirection.TO_SERVER, state = MessageState.REQUEST)
-@Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class ArenaDeleteMessage extends Message {
+@AllArgsConstructor
+@Getter
+public class SpigotHandshakeMessage extends Message {
 
-    private UUID arenaUUID;
-    private String mapName;
+    @ByteTransfer
+    private String serverName;
 
-    private int gameId;
-    private int modeId;
+    @ByteTransfer
+    private String host;
 
-    private int maxPlayers;
+    @ByteTransfer
+    private int port;
 }

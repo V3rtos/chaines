@@ -1,9 +1,11 @@
 package me.moonways.bridgenet.api.connection.player;
 
+import java.util.UUID;
 import lombok.Getter;
 import me.moonways.bridgenet.service.inject.Component;
 import me.moonways.bridgenet.service.inject.InitMethod;
 import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.services.connection.player.OfflinePlayerData;
 import me.moonways.bridgenet.services.connection.player.OfflinePlayerRepository;
 import net.conveno.jdbc.ConvenoRouter;
 import net.conveno.jdbc.response.ConvenoResponse;
@@ -20,7 +22,7 @@ public final class PlayerManager {
     private static final int PLAYER_ID_LABEL_INDEX = 1;
     private static final int PLAYER_NAME_LABEL_INDEX = 2;
 
-    private final Map<Integer, ConnectedPlayer> connectedPlayerByIdMap = Collections.synchronizedMap(new HashMap<>());
+    private final Map<UUID, ConnectedPlayer> connectedPlayerByIdMap = Collections.synchronizedMap(new HashMap<>());
 
     @Getter
     private OfflinePlayerRepository offlinePlayerRepository;
@@ -34,39 +36,36 @@ public final class PlayerManager {
         offlinePlayerRepository.validateTableExists();
     }
 
-    private ConvenoResponseLine getResponseLineByPlayerId(int playerId) {
-        ConvenoResponse offlinePlayerResponse = offlinePlayerRepository.getOfflinePlayerByID(playerId);
+    private OfflinePlayerData getOfflinePlayerDataByUUID(UUID playerUUID) {
+        ConvenoResponse offlinePlayerResponse = offlinePlayerRepository.getByUUID(playerUUID);
         ConvenoResponseLine first = offlinePlayerResponse.first();
 
         if (first == null) {
             throw new NullPointerException("player response by id");
         }
 
-        return first;
+        return OfflinePlayerData.readResponse(first);
     }
 
-    private ConvenoResponseLine getResponseLineByPlayerName(String playerName) {
-        ConvenoResponse offlinePlayerResponse = offlinePlayerRepository.getOfflinePlayerByName(playerName);
+    private OfflinePlayerData getOfflinePlayerDataByName(String playerName) {
+        ConvenoResponse offlinePlayerResponse = offlinePlayerRepository.getByName(playerName);
         ConvenoResponseLine first = offlinePlayerResponse.first();
 
         if (first == null) {
             throw new NullPointerException("player response by name");
         }
 
-        return first;
+        return OfflinePlayerData.readResponse(first);
     }
 
-    public OfflinePlayer getOfflinePlayer(int playerId) {
-        ConvenoResponseLine responseLine = getResponseLineByPlayerId(playerId);
-        return new OfflinePlayer(playerId,
-                responseLine.getNullableString(PLAYER_NAME_LABEL_INDEX));
+    public OfflinePlayer getOfflinePlayer(@NotNull UUID playerUUID) {
+        OfflinePlayerData offlinePlayerData = getOfflinePlayerDataByUUID(playerUUID);
+        return new OfflinePlayer(offlinePlayerData.getUuid(), offlinePlayerData.getName());
     }
 
     public OfflinePlayer getOfflinePlayer(@NotNull String playerName) {
-        ConvenoResponseLine responseLine = getResponseLineByPlayerName(playerName);
-        return new OfflinePlayer(
-                responseLine.getNullableInt(PLAYER_ID_LABEL_INDEX),
-                responseLine.getNullableString(PLAYER_NAME_LABEL_INDEX));
+        OfflinePlayerData offlinePlayerData = getOfflinePlayerDataByName(playerName);
+        return new OfflinePlayer(offlinePlayerData.getUuid(), offlinePlayerData.getName());
     }
 
     private void validateNull(ConnectedPlayer connectedPlayer) {
@@ -83,26 +82,26 @@ public final class PlayerManager {
 
     public void addConnectedPlayer(@NotNull ConnectedPlayer connectedPlayer) {
         validateNull(connectedPlayer);
-        connectedPlayerByIdMap.put(connectedPlayer.getPlayerId(), connectedPlayer);
+        connectedPlayerByIdMap.put(connectedPlayer.getUniqueId(), connectedPlayer);
     }
 
     public void removeConnectedPlayer(@NotNull ConnectedPlayer connectedPlayer) {
         validateNull(connectedPlayer);
-        connectedPlayerByIdMap.remove(connectedPlayer.getPlayerId());
+        connectedPlayerByIdMap.remove(connectedPlayer.getUniqueId());
     }
 
-    public String findPlayerName(int playerId) {
-        ConvenoResponseLine responseLine = getResponseLineByPlayerId(playerId);
-        return responseLine.getNullableString(PLAYER_NAME_LABEL_INDEX);
+    public String findPlayerName(@NotNull UUID playerUUID) {
+        OfflinePlayerData offlinePlayerData = getOfflinePlayerDataByUUID(playerUUID);
+        return offlinePlayerData.getName();
     }
 
-    public int findPlayerId(@NotNull String playerName) {
-        ConvenoResponseLine responseLine = getResponseLineByPlayerName(playerName);
-        return responseLine.getNullableInt(PLAYER_ID_LABEL_INDEX);
+    public UUID findPlayerId(@NotNull String playerName) {
+        OfflinePlayerData offlinePlayerData = getOfflinePlayerDataByName(playerName);
+        return offlinePlayerData.getUuid();
     }
 
-    public ConnectedPlayer getConnectedPlayer(int playerId) {
-        return connectedPlayerByIdMap.get(playerId);
+    public ConnectedPlayer getConnectedPlayer(@NotNull UUID playerUUID) {
+        return connectedPlayerByIdMap.get(playerUUID);
     }
 
     public ConnectedPlayer getConnectedPlayer(@NotNull String name) {

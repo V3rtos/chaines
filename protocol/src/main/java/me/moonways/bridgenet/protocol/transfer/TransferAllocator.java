@@ -2,7 +2,6 @@ package me.moonways.bridgenet.protocol.transfer;
 
 import java.lang.reflect.Field;
 
-import lombok.SneakyThrows;
 import me.moonways.bridgenet.protocol.message.Message;
 import sun.misc.Unsafe;
 

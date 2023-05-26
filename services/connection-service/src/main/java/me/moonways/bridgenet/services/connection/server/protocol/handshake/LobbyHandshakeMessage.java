@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.services.connection.server.message.handshake;
+package me.moonways.bridgenet.services.connection.server.protocol.handshake;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,13 @@ import me.moonways.bridgenet.protocol.transfer.ByteTransfer;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class GameHandshakeMessage extends Message {
+public class LobbyHandshakeMessage extends Message {
+
+    @ByteTransfer
+    private int gameId;
+
+    @ByteTransfer
+    private String gameName;
 
     @ByteTransfer
     private String serverName;
@@ -23,7 +29,4 @@ public class GameHandshakeMessage extends Message {
 
     @ByteTransfer
     private int port;
-
-    @ByteTransfer
-    private int gameId;
 }

@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.api.connection.player;
 
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,8 +18,8 @@ public class ConnectedPlayer extends OfflinePlayer implements Player {
     @Setter(AccessLevel.PRIVATE)
     private SpigotServer spigotServer;
 
-    public ConnectedPlayer(int playerId, String name, VelocityServer velocityServer, SpigotServer spigotServer) {
-        super(playerId, name);
+    public ConnectedPlayer(UUID uuid, String name, VelocityServer velocityServer, SpigotServer spigotServer) {
+        super(uuid, name);
         this.velocityServer = velocityServer;
         this.spigotServer = spigotServer;
     }

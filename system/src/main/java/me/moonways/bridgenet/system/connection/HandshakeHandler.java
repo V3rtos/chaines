@@ -8,7 +8,7 @@ import me.moonways.bridgenet.protocol.message.MessageHandler;
 import me.moonways.bridgenet.protocol.message.MessageTrigger;
 import me.moonways.bridgenet.service.inject.InitMethod;
 import me.moonways.bridgenet.service.inject.Inject;
-import me.moonways.bridgenet.services.connection.server.message.handshake.VelocityHandshakeMessage;
+import me.moonways.bridgenet.services.connection.server.protocol.handshake.VelocityHandshakeMessage;
 
 import java.net.InetSocketAddress;
 

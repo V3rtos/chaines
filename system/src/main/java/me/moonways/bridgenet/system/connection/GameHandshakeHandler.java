@@ -11,8 +11,8 @@ import me.moonways.bridgenet.service.game.GameService;
 import me.moonways.bridgenet.service.game.data.Game;
 import me.moonways.bridgenet.service.inject.InitMethod;
 import me.moonways.bridgenet.service.inject.Inject;
-import me.moonways.bridgenet.services.connection.server.message.handshake.GameHandshakeMessage;
-import me.moonways.bridgenet.services.connection.server.message.handshake.LobbyHandshakeMessage;
+import me.moonways.bridgenet.services.connection.server.protocol.handshake.GameHandshakeMessage;
+import me.moonways.bridgenet.services.connection.server.protocol.handshake.LobbyHandshakeMessage;
 
 import java.net.InetSocketAddress;
 

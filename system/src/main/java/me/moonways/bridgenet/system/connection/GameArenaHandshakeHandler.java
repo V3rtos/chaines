@@ -17,8 +17,8 @@ import me.moonways.bridgenet.service.game.data.Mode;
 import me.moonways.bridgenet.service.inject.InitMethod;
 import me.moonways.bridgenet.service.inject.Inject;
 import me.moonways.bridgenet.services.connection.server.ServerConnectResponseType;
-import me.moonways.bridgenet.services.connection.server.message.game.arena.ArenaCreateMessage;
-import me.moonways.bridgenet.services.connection.server.message.game.arena.response.ArenaCreateResponseMessage;
+import me.moonways.bridgenet.services.connection.server.protocol.game.arena.ArenaCreateMessage;
+import me.moonways.bridgenet.services.connection.server.protocol.game.arena.response.ArenaCreateResponseMessage;
 
 import java.util.UUID;
 
