@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.system.connection;
+package me.moonways.bridgenet.service.receiver;
 
 import lombok.AccessLevel;
 import lombok.Setter;

@@ -20,6 +20,7 @@
         <module>guilds-service</module>
         <module>events-service</module>
         <module>connection-service</module>
+        <module>receiver-service</module>
     </modules>
 
     <properties>

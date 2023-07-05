@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.system.connection;
+package me.moonways.bridgenet.service.receiver;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.connection.server.ServerManager;
