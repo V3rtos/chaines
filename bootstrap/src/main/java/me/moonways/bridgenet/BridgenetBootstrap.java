@@ -1,5 +1,8 @@
 package me.moonways.bridgenet;
 
+import io.netty.channel.ChannelFactory;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.ServerChannel;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.BridgenetControl;
@@ -35,6 +38,40 @@ public class BridgenetBootstrap {
 
 // ---------------------------------------------------------------------------------------------------------------- //
 
+    public void start() {
+        applyDependencyInjection();
+        registerInternalCommands();
+        registerMessages();
+
+        startConnection();
+
+        bridgenetConsole.start();
+    }
+
+    public void startConnection() {
+        ChannelFactory<? extends ServerChannel> serverChannelFactory = BridgenetNetty.createServerChannelFactory();
+        BridgenetPipeline channelInitializer = BridgenetPipeline.newBuilder(protocolControl).build();
+
+        EventLoopGroup parentWorker = BridgenetNetty.createEventLoopGroup(2);
+        EventLoopGroup childWorker = BridgenetNetty.createEventLoopGroup(4);
+
+        BridgenetServer server = Bridgenet.newServerBuilder(bridgenet, protocolControl)
+                .setGroup(parentWorker, childWorker)
+                .setChannelFactory(serverChannelFactory)
+                .setChannelInitializer(channelInitializer)
+                .build();
+
+        server.bindSync();
+    }
+
+    private void registerMessages() {
+        messageRegistrationService.registerAll(ProtocolDirection.TO_SERVER);
+    }
+
+    private void registerInternalCommands() {
+        bridgenetControl.registerCommand(TestCommand.class);
+    }
+
     private void applyDependencyInjection() {
 
         // local system services.
@@ -53,34 +90,6 @@ public class BridgenetBootstrap {
 
         // bridgenet system
         dependencyInjection.addDepend(bridgenet);
-    }
-
-    public void start() {
-        applyDependencyInjection();
-        registerInternalCommands();
-        registerMessages();
-
-        startConnection();
-
-        bridgenetConsole.start();
-    }
-
-    public void startConnection() {
-        BridgenetServer server = Bridgenet.newServerBuilder(bridgenet, protocolControl)
-                .setGroup(BridgenetNetty.createEventLoopGroup(2), BridgenetNetty.createEventLoopGroup(4))
-                .setChannelFactory(BridgenetNetty.createServerChannelFactory())
-                .setChannelInitializer(BridgenetPipeline.newBuilder(protocolControl).build())
-                .build();
-
-        server.bindSync();
-    }
-
-    private void registerMessages() {
-        messageRegistrationService.registerAll(ProtocolDirection.TO_SERVER);
-    }
-
-    private void registerInternalCommands() {
-        bridgenetControl.registerCommand(TestCommand.class);
     }
 
     public static void main(String[] args) {

@@ -12,7 +12,6 @@
 
     <modules>
         <module>bnmg-service</module>
-        <module>injection-service</module>
         <module>party-service</module>
         <module>reports-service</module>
         <module>friends-service</module>

@@ -5,7 +5,6 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.connection.server.exception.ArenaNotFoundException;
 import me.moonways.bridgenet.protocol.BridgenetChannel;
 import me.moonways.bridgenet.service.game.GameArena;
-import me.moonways.bridgenet.service.game.data.Game;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
@@ -21,13 +20,13 @@ public class GameServer extends SpigotServer {
     private static final String ARENA_NOT_FOUND_EXCEPTION_MESSAGE = "Arena not found to deregister";
 
     @Getter
-    private final Game game;
+    //private final Game game;
 
     private final Map<UUID, GameArena> arenas = new ConcurrentHashMap<>();
 
-    public GameServer(Game game, String name, BridgenetChannel bridgenetChannel, InetSocketAddress serverAddress) {
+    public GameServer(/*Game game, */String name, BridgenetChannel bridgenetChannel, InetSocketAddress serverAddress) {
         super(name, bridgenetChannel, serverAddress);
-        this.game = game;
+        //this.game = game;
     }
 
     private void validateNull(@NotNull UUID uuid) {
@@ -58,8 +57,8 @@ public class GameServer extends SpigotServer {
         arenas.remove(arenaUUID);
     }
 
-    public Set<GameArena> getArenasByModeId(int modeId) {
-        return arenas.values().stream().filter(gameArena -> gameArena.getMode().getId() == modeId)
-                .collect(Collectors.toSet());
-    }
+   //public Set<GameArena> getArenasByModeId(int modeId) {
+   //    return arenas.values().stream().filter(gameArena -> gameArena.getMode().getId() == modeId)
+   //            .collect(Collectors.toSet());
+   //}
 }

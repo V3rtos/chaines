@@ -4,6 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.moonways.bridgenet.service.game.type.old.ArcadeModeType;
+import me.moonways.bridgenet.service.game.type.old.GameType;
+import me.moonways.bridgenet.service.game.type.old.ServerModeType;
+import me.moonways.bridgenet.service.game.type.old.ServerType;
 
 import java.util.UUID;
 
@@ -13,12 +17,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class Arena {
 
-    public static Arena create(int maxPlayers, Game game, Mode mode, UUID arenaUUID, String mapName) {
-        return new Arena(game, mode, maxPlayers, arenaUUID, mapName);
+    public static Arena create(int maxPlayers, UUID arenaUUID, String mapName) {
+        return new Arena(GameType.ARCADES, ArcadeModeType.SPEED_BUILDERS, maxPlayers, arenaUUID, mapName);
     }
 
-    private final Game game;
-    private final Mode mode;
+    private final ServerType game;
+    private final ServerModeType mode;
 
     private final int maxPlayers;
 
