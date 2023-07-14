@@ -3,8 +3,8 @@ package me.moonways.bridgenet.velocity.bridgenet;
 import me.moonways.bridgenet.protocol.message.MessageHandler;
 import me.moonways.bridgenet.protocol.message.MessageTrigger;
 import me.moonways.bridgenet.service.inject.Inject;
-import me.moonways.bridgenet.services.connection.server.ServerConnectResponseType;
-import me.moonways.bridgenet.services.connection.server.protocol.handshake.response.HandshakeResponseMessage;
+import me.moonways.service.entity.server.ServerConnectResponseType;
+import me.moonways.service.entity.server.protocol.handshake.response.HandshakeResponseMessage;
 import me.moonways.bridgenet.velocity.BridgenetVelocity;
 import me.moonways.bridgenet.velocity.exception.ServerConnectException;
 

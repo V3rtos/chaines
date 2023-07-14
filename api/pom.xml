@@ -24,28 +24,17 @@
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>protocol</artifactId>
             <version>1.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>dependency-injection</artifactId>
+            <artifactId>inject</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>me.moonways.bridgenet.services</groupId>
-            <artifactId>events-service</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.moonways.bridgenet.services</groupId>
-            <artifactId>connection-service</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.moonways.bridgenet.services</groupId>
-            <artifactId>game-service</artifactId>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>services-api</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>

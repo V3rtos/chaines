@@ -88,27 +88,8 @@
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>dependency-injection</artifactId>
+            <artifactId>services-api</artifactId>
             <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.moonways.bridgenet.services</groupId>
-            <artifactId>events-service</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.moonways.bridgenet.services</groupId>
-            <artifactId>connection-service</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.moonways.bridgenet.services</groupId>
-            <artifactId>game-service</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

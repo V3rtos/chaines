@@ -2,10 +2,10 @@ package me.moonways.bridgenet.api.command;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.command.sender.CommandSender;
+import me.moonways.services.api.entities.CommandSender;
 import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.command.exception.CommandSenderCastException;
-import me.moonways.bridgenet.api.connection.player.Player;
+import me.moonways.services.api.entities.player.EntityPlayer;
 
 @RequiredArgsConstructor
 @Getter
@@ -16,7 +16,7 @@ public class CommandSenderSession {
 
     @SuppressWarnings("unchecked")
     public <T extends CommandSender> T senderCast(Class<T> senderClass)  {
-        if (senderClass.isAssignableFrom(Player.class)) {
+        if (senderClass.isAssignableFrom(EntityPlayer.class)) {
             return (T) commandSender;
         }
 

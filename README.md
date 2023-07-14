@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="drawing" width="500"/>
+<img src=".assets/logo.png" alt="drawing" width="500"/>
 
 # BridgeNet Protocol Manager & APIs
 

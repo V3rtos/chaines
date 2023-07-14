@@ -1,0 +1,28 @@
+#!/bin/bash
+
+SCRIPTS_DIR=.scripts
+BUILD_DIR=.build
+
+APP=$(basename $0)
+
+exec_help() {
+  echo "$PREF Usage: $APP <subcommand> <flags>"
+  echo "$PREF Available subcommands list:"
+  echo "..."
+}
+
+case $1 in
+    "" | "help" | "-h" | "--help")
+        exec_help
+        ;;
+    *)
+        cd $SCRIPTS_DIR
+        source utils.sh
+
+        if [ $? == 127 ]; then
+          echo "$PREF Unknown command: $1"
+          exec_help
+
+          exit 1
+        fi
+esac

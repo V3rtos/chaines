@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>dependency-injection</artifactId>
+            <artifactId>inject</artifactId>
             <version>1.0</version>
         </dependency>
 

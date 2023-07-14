@@ -3,12 +3,17 @@ package me.moonways.bridgenet;
 import io.netty.channel.ChannelFactory;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.ServerChannel;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.BridgenetControl;
 import me.moonways.bridgenet.api.TestCommand;
-import me.moonways.bridgenet.protocol.*;
-import me.moonways.bridgenet.protocol.message.*;
+import me.moonways.bridgenet.api.command.CommandRegistry;
+import me.moonways.bridgenet.protocol.Bridgenet;
+import me.moonways.bridgenet.protocol.BridgenetNetty;
+import me.moonways.bridgenet.protocol.BridgenetServer;
+import me.moonways.bridgenet.protocol.ProtocolControl;
+import me.moonways.bridgenet.protocol.message.MessageComponent;
+import me.moonways.bridgenet.protocol.message.MessageHandler;
+import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
+import me.moonways.bridgenet.protocol.message.ProtocolDirection;
 import me.moonways.bridgenet.protocol.pipeline.BridgenetPipeline;
 import me.moonways.bridgenet.service.inject.DependencyInjection;
 import me.moonways.bridgenet.service.inject.Inject;
@@ -27,8 +32,7 @@ public class BridgenetBootstrap {
     private MessageRegistrationService messageRegistrationService;
 
     @Inject
-    @Getter
-    private BridgenetControl bridgenetControl;
+    private CommandRegistry commandRegistry;
 
 // ---------------------------------------------------------------------------------------------------------------- //
 
@@ -69,7 +73,7 @@ public class BridgenetBootstrap {
     }
 
     private void registerInternalCommands() {
-        bridgenetControl.registerCommand(TestCommand.class);
+        commandRegistry.register(TestCommand.class);
     }
 
     private void applyDependencyInjection() {

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.command.Command;
 import me.moonways.bridgenet.api.command.exception.CommandAccessDeniedException;
 import me.moonways.bridgenet.api.command.exception.ConditionNotFoundException;
-import me.moonways.bridgenet.api.command.sender.CommandSender;
+import me.moonways.services.api.entities.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
