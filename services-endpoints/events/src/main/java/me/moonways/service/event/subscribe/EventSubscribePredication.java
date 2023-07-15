@@ -1,8 +1,8 @@
 package me.moonways.service.event.subscribe;
 
 import lombok.*;
-import me.moonways.services.api.events.Event;
-import me.moonways.services.api.events.EventException;
+import me.moonways.services.api.events.event.Event;
+import me.moonways.services.api.events.exception.EventException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;

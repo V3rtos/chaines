@@ -2,7 +2,7 @@ package me.moonways.service.event.subscribe;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import me.moonways.services.api.events.EventException;
+import me.moonways.services.api.events.exception.EventException;
 
 import java.util.concurrent.TimeUnit;
 

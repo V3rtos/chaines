@@ -3,7 +3,7 @@ package me.moonways.service.event.subscribe;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import me.moonways.services.api.events.Event;
+import me.moonways.services.api.events.event.Event;
 import me.moonways.service.event.EventFollower;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +54,7 @@ public final class EventSubscribeBuilder<E extends Event> {
         return this;
     }
 
-    public EventSubscription<E> build() {
-        return new EventSubscription<>(eventType, expiration, predication, follower);
+    public EventSubscriptionImpl<E> build() {
+        return new EventSubscriptionImpl<>(eventType, expiration, predication, follower);
     }
 }

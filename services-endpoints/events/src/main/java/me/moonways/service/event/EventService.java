@@ -1,11 +1,11 @@
 package me.moonways.service.event;
 
 import me.moonways.bridgenet.service.inject.Component;
-import me.moonways.service.event.subscribe.EventSubscription;
+import me.moonways.service.event.subscribe.EventSubscriptionImpl;
 import me.moonways.service.event.subscribe.EventSubscriptionApplier;
 import me.moonways.bridgenet.service.inject.DependencyInjection;
 import me.moonways.bridgenet.service.inject.Inject;
-import me.moonways.services.api.events.Event;
+import me.moonways.services.api.events.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;
@@ -30,13 +30,13 @@ public final class EventService {
     private DependencyInjection dependencyInjection;
 
     @NotNull
-    public <E extends Event> EventFuture<E> fireEvent(@NotNull E event) {
+    public <E extends Event> EventFutureImpl<E> fireEvent(@NotNull E event) {
         dependencyInjection.injectDependencies(event);
 
-        EventFuture<E> eventFuture = eventExecutor.fireEvent(event);
-        eventSubscriptionApplier.followSubscription(eventFuture);
+        EventFutureImpl<E> eventFutureImpl = eventExecutor.fireEvent(event);
+        eventSubscriptionApplier.followSubscription(eventFutureImpl);
 
-        return eventFuture;
+        return eventFutureImpl;
     }
 
     public void registerHandler(@NotNull Object handler) {
@@ -52,11 +52,11 @@ public final class EventService {
         eventRegistry.unregister(handlerType);
     }
 
-    public void subscribe(@NotNull EventSubscription<?> subscription) {
+    public void subscribe(@NotNull EventSubscriptionImpl<?> subscription) {
         eventSubscriptionApplier.subscribe(subscription);
     }
 
-    public void unsubscribe(@NotNull EventSubscription<?> subscription) {
+    public void unsubscribe(@NotNull EventSubscriptionImpl<?> subscription) {
         eventSubscriptionApplier.unsubscribe(subscription);
     }
 }

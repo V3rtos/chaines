@@ -2,8 +2,9 @@ package me.moonways.service.event;
 
 import lombok.*;
 import me.moonways.services.api.events.EventPriority;
-import me.moonways.services.api.events.Event;
-import me.moonways.services.api.events.EventException;
+import me.moonways.services.api.events.event.Event;
+import me.moonways.services.api.events.exception.EventException;
+import me.moonways.services.api.events.event.EventFuture;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +15,7 @@ import java.util.function.Consumer;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class EventFuture<E extends Event> {
+public class EventFutureImpl<E extends Event> implements EventFuture<E> {
 
     private final EventFollower<E> follower = new EventFollower<>();
 
@@ -47,14 +48,16 @@ public class EventFuture<E extends Event> {
         }
     }
 
-    public EventFuture<E> follow(@NotNull Consumer<E> eventConsumer) {
+    @Override
+    public EventFutureImpl<E> follow(@NotNull Consumer<E> eventConsumer) {
         validateNull(eventConsumer);
         follower.follow(eventConsumer);
 
         return this;
     }
 
-    public EventFuture<E> setTimeout(long timeout, @Nullable Runnable timeoutRunnable) {
+    @Override
+    public EventFutureImpl<E> setTimeout(long timeout, @Nullable Runnable timeoutRunnable) {
         validateTimeout(timeout);
 
         TimeoutHandler timeoutHandler = new TimeoutHandler(timeout, timeoutRunnable);
@@ -62,10 +65,12 @@ public class EventFuture<E extends Event> {
         return follow(__ -> timeoutHandler.breakTimeout());
     }
 
-    public EventFuture<E> setTimeout(long timeout) {
+    @Override
+    public EventFutureImpl<E> setTimeout(long timeout) {
         return setTimeout(timeout, null);
     }
 
+    @Override
     public void complete(@NotNull E event) {
         validateNull(event);
         follower.postComplete(event);

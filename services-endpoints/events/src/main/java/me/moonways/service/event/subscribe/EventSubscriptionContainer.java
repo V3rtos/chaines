@@ -1,34 +1,34 @@
 package me.moonways.service.event.subscribe;
 
-import me.moonways.services.api.events.Event;
+import me.moonways.services.api.events.event.Event;
 
 import java.util.*;
 
 public class EventSubscriptionContainer {
 
-    private final Map<Class<? extends Event>, Set<EventSubscription<?>>> subscriptionMap = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Class<? extends Event>, Set<EventSubscriptionImpl<?>>> subscriptionMap = Collections.synchronizedMap(new HashMap<>());
 
-    public void addSubscription(EventSubscription<?> subscription) {
+    public void addSubscription(EventSubscriptionImpl<?> subscription) {
         registerInternal(subscription);
     }
 
-    public void removeSubscription(EventSubscription<?> subscription) {
+    public void removeSubscription(EventSubscriptionImpl<?> subscription) {
         subscriptionMap.remove(subscription.getEventType());
     }
 
-    public Set<EventSubscription<?>> getSubscriptions(Class<? extends Event> eventType) {
+    public Set<EventSubscriptionImpl<?>> getSubscriptions(Class<? extends Event> eventType) {
         return subscriptionMap.get(eventType);
     }
 
-    private void registerInternal(EventSubscription<?> subscription) {
+    private void registerInternal(EventSubscriptionImpl<?> subscription) {
         Class<? extends Event> eventType = subscription.getEventType();
-        Set<EventSubscription<?>> eventSubscriptions = subscriptionMap.get(eventType);
+        Set<EventSubscriptionImpl<?>> eventSubscriptionImpls = subscriptionMap.get(eventType);
 
-        if (eventSubscriptions == null)
-            eventSubscriptions = new HashSet<>();
+        if (eventSubscriptionImpls == null)
+            eventSubscriptionImpls = new HashSet<>();
 
-        eventSubscriptions.add(subscription);
+        eventSubscriptionImpls.add(subscription);
 
-        subscriptionMap.put(eventType, eventSubscriptions);
+        subscriptionMap.put(eventType, eventSubscriptionImpls);
     }
 }

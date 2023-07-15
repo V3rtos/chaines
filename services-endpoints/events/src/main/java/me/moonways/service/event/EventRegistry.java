@@ -2,8 +2,8 @@ package me.moonways.service.event;
 
 import me.moonways.services.api.events.EventHandle;
 import me.moonways.service.event.handle.EventInvoker;
-import me.moonways.services.api.events.Event;
-import me.moonways.services.api.events.EventException;
+import me.moonways.services.api.events.event.Event;
+import me.moonways.services.api.events.exception.EventException;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.invoke.MethodHandles;
