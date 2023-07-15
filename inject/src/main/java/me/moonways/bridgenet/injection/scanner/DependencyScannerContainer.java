@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.injection.scanner;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.injection.DependencyInjection;
@@ -24,6 +25,9 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public final class DependencyScannerContainer {
 
+    @Getter
+    private String generalPackage;
+
     private final Map<Class<?>, ObjectFactory> objectFactoryMap = new HashMap<>();
     private final Map<Class<?>, ScannerController> scannerControllerMap = new HashMap<>();
 
@@ -36,6 +40,8 @@ public final class DependencyScannerContainer {
 
         storeScanners(xmlConfiguration);
         storeFactories(xmlConfiguration);
+
+        generalPackage = xmlConfiguration.getRootElement().getSearchPackage();
     }
 
     public ObjectFactory getObjectFactory(Class<? extends Annotation> cls) {

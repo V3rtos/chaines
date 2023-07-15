@@ -1,10 +1,12 @@
 package me.moonways.bridgenet.injection.scanner.controller;
 
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.injection.Component;
 import me.moonways.bridgenet.injection.DependencyContainer;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.factory.ObjectFactory;
 import me.moonways.bridgenet.injection.scanner.ScannerFilter;
+import org.jetbrains.annotations.NotNull;
 import org.reflections.Configuration;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -18,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.*;
 
+@Log4j2
 public class ComponentScannerController implements ScannerController {
 
     private final TypeAnnotationsScanner typeAnnotationsScanner = new TypeAnnotationsScanner();
@@ -35,6 +38,8 @@ public class ComponentScannerController implements ScannerController {
     }
 
     private Configuration createConfiguration(ScannerFilter scannerFilter) {
+        log.info("Create scanner configuration by {}", scannerFilter);
+
         List<ClassLoader> classLoadersList = new LinkedList<>();
 
         classLoadersList.add(ClasspathHelper.contextClassLoader());
@@ -53,7 +58,7 @@ public class ComponentScannerController implements ScannerController {
     }
 
     @Override
-    public Set<Class<?>> findAllComponents(ScannerFilter filter) {
+    public Set<Class<?>> findAllComponents(@NotNull ScannerFilter filter) {
         Configuration configuration = createConfiguration(filter);
 
         Reflections reflections = new Reflections(configuration);
@@ -70,24 +75,27 @@ public class ComponentScannerController implements ScannerController {
     }
 
     @Override
-    public void whenFound(DependencyInjection dependencyInjection, Class<?> resource) {
+    public void whenFound(@NotNull DependencyInjection dependencyInjection,
+                          @NotNull Class<?> resource,
+                          @NotNull Class<? extends Annotation> annotation) {
+
         DependencyContainer container = dependencyInjection.getContainer();
 
         if (resource == DependencyInjection.class) {
 
             dependencyInjection.bind(this);
-            container.addComponentWithAnnotation(resource, Component.class);
+            container.addComponentWithAnnotation(resource, annotation);
             return;
         }
 
         if (container.isComponentFound(resource))
             return;
 
-        ObjectFactory objectFactory = dependencyInjection.getScanner().getObjectFactory(Component.class);
+        ObjectFactory objectFactory = dependencyInjection.getScanner().getObjectFactory(annotation);
 
         Object object = objectFactory.create(resource);
 
         dependencyInjection.bind(resource, object);
-        container.addComponentWithAnnotation(resource, Component.class);
+        container.addComponentWithAnnotation(resource, annotation);
     }
 }

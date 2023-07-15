@@ -3,14 +3,13 @@ package me.moonways.bridgenet.injection;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.injection.scanner.DependencyScanner;
+import me.moonways.bridgenet.injection.scanner.ScannerFilter;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 
 @Log4j2
 public class DependencyInjection {
-
-    private static final String GENERAL_PACKAGE = "me.moonways";
 
     @Getter
     private final DependencyContainer container = new DependencyContainer();
@@ -33,6 +32,14 @@ public class DependencyInjection {
         scanner.initContainer();
     }
 
+    public void findComponents(@NotNull Class<? extends Annotation> cls, @NotNull ScannerFilter filter) {
+        scanner.resolve(cls, filter);
+    }
+
+    public void findComponents(@NotNull ScannerFilter filter) {
+        scanner.resolve(Component.class, filter);
+    }
+
     public void findComponents(@NotNull String packageName) {
         scanner.resolve(packageName, Component.class);
     }
@@ -42,11 +49,13 @@ public class DependencyInjection {
     }
 
     public void findComponentsIntoBasePackage() {
-        scanner.resolve(GENERAL_PACKAGE, Component.class);
+        String searchGeneralPackage = scanner.getSearchGeneralPackage();
+        scanner.resolve(searchGeneralPackage, Component.class);
     }
 
     public void findComponentsIntoBasePackage(@NotNull Class<? extends Annotation> cls) {
-        scanner.resolve(GENERAL_PACKAGE, cls);
+        String searchGeneralPackage = scanner.getSearchGeneralPackage();
+        scanner.resolve(searchGeneralPackage, cls);
     }
 
     public void injectFields(@NotNull Object instance) {
@@ -57,7 +66,7 @@ public class DependencyInjection {
         if (!container.hasInjectionMark(cls) && !container.isComponentFound(cls)) {
 
             container.markInjected(cls);
-            log.info("Injected fields for class: §6" + instance.getClass().getName());
+            log.info("Apply injection for instance of §6{}", instance.getClass().getName());
         }
     }
 
@@ -76,7 +85,7 @@ public class DependencyInjection {
         scanner.postFactoryMethods(cls, object);
 
         if (cls.isAnnotationPresent(Component.class)) {
-            log.info("Bind found component: §6" + cls.getName());
+            log.info("Bind instance of §6{}", cls.getName());
         }
     }
 }

@@ -14,6 +14,9 @@ import java.util.List;
 @XmlRootElement(name = "containers")
 public class XMLRootElement {
 
+    @Setter(onMethod_ = @XmlElement)
+    private String searchPackage;
+
     @Setter(onMethod_ = {
             @XmlElementWrapper(name = "scanners"),
             @XmlElement(name = "scanner")

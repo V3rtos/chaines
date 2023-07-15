@@ -49,17 +49,23 @@ public final class DependencyScanner {
                 .collect(Collectors.toList());
     }
 
+    public void resolve(@NotNull Class<? extends Annotation> annotationType,
+                        @NotNull ScannerFilter filter) {
+
+        final ScannerController scannerController = getScannerController(annotationType);
+        List<Class<?>> classesByAnnotationList = findOrdered(scannerController, filter);
+
+        for (Class<?> componentClass : classesByAnnotationList) {
+            scannerController.whenFound(dependencyInjection, componentClass, annotationType);
+        }
+    }
+
     public void resolve(@NotNull String packageName, @NotNull Class<? extends Annotation> annotationType) {
-        ScannerController scannerController = getScannerController(annotationType);
-        ScannerFilter scannerFilter = ScannerFilter.create()
+        final ScannerFilter filter = ScannerFilter.create()
                 .with(packageName)
                 .with(annotationType);
 
-        List<Class<?>> classesByAnnotationList = findOrdered(scannerController, scannerFilter);
-
-        for (Class<?> componentClass : classesByAnnotationList) {
-            scannerController.whenFound(dependencyInjection, componentClass);
-        }
+        resolve(annotationType, filter);
     }
 
     public void postFactoryMethods(Class<?> instanceClass, Object instance) {
@@ -105,5 +111,9 @@ public final class DependencyScanner {
 
     public ScannerController getScannerController(Class<? extends Annotation> cls) {
         return container.getScannerController(cls);
+    }
+
+    public String getSearchGeneralPackage() {
+        return container.getGeneralPackage();
     }
 }

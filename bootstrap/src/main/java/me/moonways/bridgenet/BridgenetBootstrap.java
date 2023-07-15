@@ -6,17 +6,15 @@ import io.netty.channel.ServerChannel;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.TestCommand;
 import me.moonways.bridgenet.api.command.CommandRegistry;
+import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.protocol.Bridgenet;
 import me.moonways.bridgenet.protocol.BridgenetNetty;
 import me.moonways.bridgenet.protocol.BridgenetServer;
 import me.moonways.bridgenet.protocol.ProtocolControl;
-import me.moonways.bridgenet.protocol.message.MessageComponent;
-import me.moonways.bridgenet.protocol.message.MessageHandler;
 import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
 import me.moonways.bridgenet.protocol.message.ProtocolDirection;
 import me.moonways.bridgenet.protocol.pipeline.BridgenetPipeline;
-import me.moonways.bridgenet.injection.DependencyInjection;
-import me.moonways.bridgenet.injection.Inject;
 import net.conveno.jdbc.ConvenoRouter;
 
 @Log4j2
@@ -88,9 +86,6 @@ public class BridgenetBootstrap {
         // inject
         dependencyInjection.findComponentsIntoBasePackage();
         dependencyInjection.injectFields(this);
-
-        dependencyInjection.findComponentsIntoBasePackage(MessageComponent.class);
-        dependencyInjection.findComponentsIntoBasePackage(MessageHandler.class);
 
         // bridgenet system
         dependencyInjection.bind(bridgenet);
