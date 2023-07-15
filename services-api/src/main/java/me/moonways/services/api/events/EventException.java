@@ -1,4 +1,4 @@
-package me.moonways.service.event;
+package me.moonways.services.api.events;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

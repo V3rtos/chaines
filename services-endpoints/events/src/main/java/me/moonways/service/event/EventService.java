@@ -5,6 +5,7 @@ import me.moonways.service.event.subscribe.EventSubscription;
 import me.moonways.service.event.subscribe.EventSubscriptionApplier;
 import me.moonways.bridgenet.service.inject.DependencyInjection;
 import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.services.api.events.Event;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;

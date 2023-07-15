@@ -1,4 +1,4 @@
-package me.moonways.service.event.handle;
+package me.moonways.services.api.events;
 
 public enum EventPriority {
 

@@ -1,5 +1,7 @@
 package me.moonways.service.event;
 
+import me.moonways.services.api.events.Event;
+import me.moonways.services.api.events.EventException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,4 +1,4 @@
-package me.moonways.service.event.handle;
+package me.moonways.services.api.events;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

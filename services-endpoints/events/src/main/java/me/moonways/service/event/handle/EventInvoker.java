@@ -4,8 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import me.moonways.service.event.Event;
-import me.moonways.service.event.EventException;
+import me.moonways.services.api.events.Event;
+import me.moonways.services.api.events.EventException;
+import me.moonways.services.api.events.EventPriority;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.invoke.MethodHandle;

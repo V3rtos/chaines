@@ -2,7 +2,7 @@ package me.moonways.service.event.subscribe;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.service.event.Event;
+import me.moonways.services.api.events.Event;
 import me.moonways.service.event.EventFollower;
 import me.moonways.service.event.EventService;
 import org.jetbrains.annotations.NotNull;

@@ -1,4 +1,4 @@
-package me.moonways.service.event.canсellation;
+package me.moonways.services.api.events;
 
 public interface Cancellable {
 

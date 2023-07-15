@@ -2,6 +2,8 @@ package me.moonways.service.event.subscribe;
 
 import lombok.RequiredArgsConstructor;
 import me.moonways.service.event.*;
+import me.moonways.services.api.events.Event;
+import me.moonways.services.api.events.EventException;
 
 import java.util.Set;
 

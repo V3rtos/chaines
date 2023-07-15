@@ -1,6 +1,6 @@
 package me.moonways.service.event.subscribe;
 
-import me.moonways.service.event.Event;
+import me.moonways.services.api.events.Event;
 
 import java.util.*;
 

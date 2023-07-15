@@ -2,6 +2,7 @@ package me.moonways.service.event.canсellation;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import me.moonways.services.api.events.Cancellable;
 
 @ToString
 @EqualsAndHashCode
