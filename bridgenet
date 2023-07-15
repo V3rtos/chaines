@@ -1,28 +1,22 @@
 #!/bin/bash
 
-SCRIPTS_DIR=.scripts
-BUILD_DIR=.build
-
-APP=$(basename $0)
+source .scripts/utils.sh
 
 exec_help() {
-  echo "$PREF Usage: $APP <subcommand> <flags>"
+  echo "$PREF Usage: ./$APP <subcommand> <flags>"
   echo "$PREF Available subcommands list:"
-  echo "..."
+  echo " > -ep, --endpoints | Build endpoints modules to build"
 }
 
 case $1 in
-    "" | "help" | "-h" | "--help")
+    "" | "-h" | "--help")
         exec_help
         ;;
+    "-ep" | "--endpoints")
+        source .scripts/build_endpoints.sh
+        source .scripts/config_endpoints.sh
+        ;;
     *)
-        cd $SCRIPTS_DIR
-        source utils.sh
-
-        if [ $? == 127 ]; then
-          echo "$PREF Unknown command: $1"
-          exec_help
-
-          exit 1
-        fi
+        echo "$PREF Unknown command: $1"
+        exec_help
 esac

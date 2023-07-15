@@ -111,7 +111,6 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>me.moonways.bridgenet.BridgenetBootstrap</mainClass>
                         </manifest>
                     </archive>
                     <outputDirectory>${project.basedir}/../compiled-connectors</outputDirectory>
