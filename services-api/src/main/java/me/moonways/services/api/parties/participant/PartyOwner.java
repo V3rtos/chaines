@@ -1,8 +1,9 @@
-package me.moonways.bridgenet.service.party;
+package me.moonways.services.api.parties.participant;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import me.moonways.services.api.parties.party.Party;
 
 @Getter
 @ToString

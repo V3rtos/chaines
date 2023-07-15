@@ -2,6 +2,11 @@ package me.moonways.bridgenet.service.party;
 
 import lombok.Getter;
 import me.moonways.bridgenet.injection.Component;
+import me.moonways.services.api.parties.BridgenetPartiesService;
+import me.moonways.services.api.parties.PartyMemberList;
+import me.moonways.services.api.parties.participant.PartyMember;
+import me.moonways.services.api.parties.participant.PartyOwner;
+import me.moonways.services.api.parties.party.Party;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -9,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public final class PartyService {
+public final class PartyService implements BridgenetPartiesService {
 
     @Getter
     private final Set<Party> registeredParties = Collections.synchronizedSet(new HashSet<>());
@@ -26,16 +31,18 @@ public final class PartyService {
         }
     }
 
+    @Override
     public Party createParty(@NotNull String ownerName) {
-        Party party = new Party(null, System.currentTimeMillis());
+        Party party = new PartyImpl(null, System.currentTimeMillis());
         party.setOwner(new PartyOwner(ownerName, party));
 
         return party;
     }
 
+    @Override
     public Party createParty(@NotNull String ownerName, @NotNull String... firstMembersNames) {
         Party createdParty = createParty(ownerName);
-        PartyMemberList membersList = createdParty.getMembersList();
+        PartyMemberList membersList = createdParty.getPartyMemberList();
 
         for (String firstMemberName : firstMembersNames) {
 
@@ -46,16 +53,19 @@ public final class PartyService {
         return createdParty;
     }
 
+    @Override
     public void registerParty(@NotNull Party party) {
         validateNull(party);
         registeredParties.add(party);
     }
 
+    @Override
     public void unregisterParty(@NotNull Party party) {
         validateNull(party);
         registeredParties.remove(party);
     }
 
+    @Override
     public Party getRegisteredParty(@NotNull String memberName) {
         validateNull(memberName);
         return registeredParties
@@ -65,13 +75,15 @@ public final class PartyService {
                 .orElse(null);
     }
 
+    @Override
     public boolean isMemberOf(@NotNull Party party, @NotNull String playerName) {
         validateNull(party);
         validateNull(playerName);
         return party.getOwner().getName().equalsIgnoreCase(playerName)
-                || party.getMembersList().hasMemberByName(playerName);
+                || party.getPartyMemberList().hasMemberByName(playerName);
     }
 
+    @Override
     public boolean hasParty(@NotNull String playerName) {
         validateNull(playerName);
         return getRegisteredParty(playerName) != null;

@@ -1,15 +1,17 @@
 package me.moonways.bridgenet.service.party;
 
 import lombok.RequiredArgsConstructor;
+import me.moonways.services.api.parties.PartyMemberList;
+import me.moonways.services.api.parties.participant.PartyMember;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
 @RequiredArgsConstructor
-public class PartyMemberList extends ArrayList<PartyMember> {
+public class PartyMemberListImpl extends ArrayList<PartyMember> implements PartyMemberList {
 
-    private final Party party;
+    private final PartyImpl partyImpl;
 
     private void validateNull(String playerName) {
         if (playerName == null) {
@@ -18,6 +20,7 @@ public class PartyMemberList extends ArrayList<PartyMember> {
     }
 
     @Nullable
+    @Override
     public PartyMember getMemberByName(@NotNull String name) {
         validateNull(name);
         return stream()
@@ -27,15 +30,17 @@ public class PartyMemberList extends ArrayList<PartyMember> {
     }
 
     @NotNull
+    @Override
     public PartyMember addMember(@NotNull String name) {
         validateNull(name);
-        PartyMember partyMember = new PartyMember(name, party);
+        PartyMember partyMember = new PartyMember(name, partyImpl);
 
         super.add(partyMember);
         return partyMember;
     }
 
     @Nullable
+    @Override
     public PartyMember removeMember(@NotNull String name) {
         validateNull(name);
         PartyMember memberByName = getMemberByName(name);
@@ -48,6 +53,7 @@ public class PartyMemberList extends ArrayList<PartyMember> {
         return memberByName;
     }
 
+    @Override
     public boolean hasMemberByName(@NotNull String name) {
         validateNull(name);
         return getMemberByName(name) == null;

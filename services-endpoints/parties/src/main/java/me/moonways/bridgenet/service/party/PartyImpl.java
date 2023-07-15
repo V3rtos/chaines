@@ -1,18 +1,20 @@
 package me.moonways.bridgenet.service.party;
 
 import lombok.*;
+import me.moonways.services.api.parties.PartyMemberList;
+import me.moonways.services.api.parties.party.Party;
+import me.moonways.services.api.parties.participant.PartyOwner;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class Party {
+public class PartyImpl implements Party {
 
     @Getter
-    private final PartyMemberList membersList = new PartyMemberList(this);
+    private final PartyMemberListImpl membersList = new PartyMemberListImpl(this);
 
     @Getter
     private PartyOwner owner;
@@ -25,6 +27,7 @@ public class Party {
         }
     }
 
+    @Override
     public void setOwner(@NotNull PartyOwner newOwner) {
         validateNull(owner);
 
@@ -39,11 +42,18 @@ public class Party {
         membersList.remove(newOwner);
     }
 
+    @Override
     public long getTimeOfCreated(@NotNull TimeUnit unit) {
         return unit.convert(createdTimeMillis, TimeUnit.MILLISECONDS);
     }
 
+    @Override
     public int getTotalMembersCount() {
         return membersList.size();
+    }
+
+    @Override
+    public PartyMemberList getPartyMemberList() {
+        return membersList;
     }
 }
