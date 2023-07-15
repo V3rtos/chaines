@@ -7,7 +7,6 @@ import io.netty.channel.ChannelFutureListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.protocol.exception.BridgenetConnectionException;
-import me.moonways.bridgenet.service.inject.Inject;
 
 import java.util.concurrent.CompletableFuture;
 

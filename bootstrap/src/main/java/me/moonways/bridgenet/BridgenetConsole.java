@@ -8,7 +8,7 @@ import me.moonways.bridgenet.api.command.CommandSenderSession;
 import me.moonways.bridgenet.api.command.exception.CommandNotFoundException;
 import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.minecraft.ChatColor;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.Inject;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
 
 @Log4j2

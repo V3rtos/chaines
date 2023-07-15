@@ -2,9 +2,9 @@ package me.moonways.service.entity.player;
 
 import java.util.UUID;
 import lombok.Getter;
-import me.moonways.bridgenet.service.inject.Component;
-import me.moonways.bridgenet.service.inject.InitMethod;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.Component;
+import me.moonways.bridgenet.injection.PostFactoryMethod;
+import me.moonways.bridgenet.injection.Inject;
 import me.moonways.services.api.entities.player.BridgenetPlayers;
 import me.moonways.services.api.entities.player.ConnectedEntityPlayer;
 import me.moonways.services.api.entities.player.offline.OfflineEntityPlayer;
@@ -32,7 +32,7 @@ public final class PlayerManager implements BridgenetPlayers {
     @Inject
     private ConvenoRouter convenoRouter;
 
-    @InitMethod
+    @PostFactoryMethod
     private void initRepository() {
         offlinePlayerRepository = convenoRouter.getRepository(OfflinePlayerRepository.class);
         offlinePlayerRepository.validateTableExists();

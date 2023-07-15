@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.service.report;
 
-import me.moonways.bridgenet.service.inject.Component;
+import me.moonways.bridgenet.injection.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

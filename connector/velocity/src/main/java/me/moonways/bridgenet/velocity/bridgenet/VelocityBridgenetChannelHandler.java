@@ -2,7 +2,7 @@ package me.moonways.bridgenet.velocity.bridgenet;
 
 import me.moonways.bridgenet.protocol.message.MessageHandler;
 import me.moonways.bridgenet.protocol.message.MessageTrigger;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.Inject;
 import me.moonways.service.entity.server.ServerConnectResponseType;
 import me.moonways.service.entity.server.protocol.handshake.response.HandshakeResponseMessage;
 import me.moonways.bridgenet.velocity.BridgenetVelocity;

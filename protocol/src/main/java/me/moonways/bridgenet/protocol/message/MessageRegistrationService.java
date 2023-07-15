@@ -2,10 +2,10 @@ package me.moonways.bridgenet.protocol.message;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.protocol.message.exception.MessageRegisterException;
-import me.moonways.bridgenet.service.inject.Component;
-import me.moonways.bridgenet.service.inject.DependencyInjection;
-import me.moonways.bridgenet.service.inject.InitMethod;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.Component;
+import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.injection.PostFactoryMethod;
+import me.moonways.bridgenet.injection.Inject;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,9 +23,9 @@ public class MessageRegistrationService {
     @Inject
     private DependencyInjection dependencyInjection;
 
-    @InitMethod
+    @PostFactoryMethod
     private void initializeMessages() {
-        dependencyInjection.scanDependenciesOfBasicPackage(MessageComponent.class);
+        dependencyInjection.findComponentsIntoBasePackage(MessageComponent.class);
     }
 
     private void validateNull(Class<?> messageCls) {
@@ -37,7 +37,7 @@ public class MessageRegistrationService {
     public void registerAll(@NotNull ProtocolDirection protocolDirection) {
         int counter = 1;
 
-        for (Object message : dependencyInjection.getInjectedDependsByAnnotation(MessageComponent.class)) {
+        for (Object message : dependencyInjection.getContainer().getFoundComponents(MessageComponent.class)) {
             Class<?> messageClass = message.getClass();
 
             MessageComponent messageComponent = messageClass.getDeclaredAnnotation(MessageComponent.class);

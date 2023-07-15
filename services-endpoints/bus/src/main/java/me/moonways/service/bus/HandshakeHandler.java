@@ -5,8 +5,8 @@ import me.moonways.bridgenet.api.connection.server.ServerManager;
 import me.moonways.bridgenet.api.connection.server.type.VelocityServer;
 import me.moonways.bridgenet.protocol.BridgenetChannel;
 import me.moonways.bridgenet.protocol.message.MessageHandler;
-import me.moonways.bridgenet.service.inject.InitMethod;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.PostFactoryMethod;
+import me.moonways.bridgenet.injection.Inject;
 //import me.moonways.service.entity.server.protocol.handshake.VelocityHandshakeMessage;
 
 import java.net.InetSocketAddress;
@@ -18,7 +18,7 @@ public class HandshakeHandler extends AbstractHandshakeHandler {
     @Inject
     private ServerManager serverManager;
 
-    @InitMethod
+    @PostFactoryMethod
     private void init() {
         super.setServerManager(serverManager);
     }

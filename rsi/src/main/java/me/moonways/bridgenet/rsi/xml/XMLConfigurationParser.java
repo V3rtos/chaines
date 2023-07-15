@@ -19,18 +19,18 @@ public final class XMLConfigurationParser {
         return (XMLRootElement) unmarshaller.unmarshal(inputStream);
     }
 
-    public XMLConfigurationInstance parseNewInstance() {
+    public XMLConfiguration parseNewInstance() {
         InputStream resourceInput = getClass().getResourceAsStream("/rsiconfig.xml");
         XMLRootElement rootElement = parseRootElement(resourceInput);
 
-        return new XMLConfigurationInstance(rootElement);
+        return new XMLConfiguration(rootElement);
     }
 
-    public <T extends ModuleConfiguration> T parseModuleConfiguration(XMLConfigurationInstance instance, Class<T> cls) {
+    public <T extends ModuleConfiguration> T parseModuleConfiguration(XMLConfiguration instance, Class<T> cls) {
         return null;
     }
 
-    public <T extends Module<?>> T parseModule(XMLConfigurationInstance instance, Class<T> cls) {
+    public <T extends Module<?>> T parseModule(XMLConfiguration instance, Class<T> cls) {
         return null;
     }
 }

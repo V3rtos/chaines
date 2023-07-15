@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.service.inject;
+package me.moonways.bridgenet.injection;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface InitMethod {
+public @interface PostFactoryMethod {
 
-    boolean asynchronousInitialization() default false;
+    boolean async() default false;
 }

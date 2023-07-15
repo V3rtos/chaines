@@ -10,8 +10,8 @@ import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
 import me.moonways.bridgenet.protocol.ProtocolControl;
 import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
 import me.moonways.bridgenet.protocol.message.ProtocolDirection;
-import me.moonways.bridgenet.service.inject.InitMethod;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.PostFactoryMethod;
+import me.moonways.bridgenet.injection.Inject;
 import me.moonways.service.entity.server.protocol.handshake.VelocityHandshakeMessage;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class BridgenetVelocity extends BaseBridgenetConnector {
         this.logger = logger;
     }
 
-    @InitMethod
+    @PostFactoryMethod
     private void init() {
         super.initializeConnectorData(
                 protocolControl,

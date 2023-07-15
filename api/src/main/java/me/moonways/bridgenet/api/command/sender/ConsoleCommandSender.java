@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.api.command.sender;
 
-import me.moonways.bridgenet.service.inject.Component;
+import me.moonways.bridgenet.injection.Component;
 import me.moonways.services.api.entities.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
