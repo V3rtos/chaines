@@ -1,9 +1,8 @@
 package me.moonways.bridgenet.protocol.message;
 
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import me.moonways.bridgenet.protocol.exception.ResponseMessageNotFoundException;
-import me.moonways.bridgenet.service.inject.Component;
+import me.moonways.bridgenet.injection.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

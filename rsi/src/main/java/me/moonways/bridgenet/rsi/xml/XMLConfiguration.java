@@ -8,7 +8,7 @@ import me.moonways.bridgenet.rsi.xml.element.XMLRootElement;
 
 @ToString
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-public final class XMLConfigurationInstance {
+public final class XMLConfiguration {
 
     @Getter
     private final XMLRootElement rootElement;

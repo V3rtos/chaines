@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.api.command.exception.CommandNotAnnotatedException;
 import me.moonways.bridgenet.api.command.exception.CommandNotIdentifiedException;
-import me.moonways.bridgenet.service.inject.Component;
-import me.moonways.bridgenet.service.inject.DependencyInjection;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.Component;
+import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.injection.Inject;
 import org.jetbrains.annotations.NotNull;
 
 @Component
@@ -27,7 +27,7 @@ public class CommandRegistry {
 
         command.register();
 
-        dependencyInjection.injectDependencies(command);
+        dependencyInjection.injectFields(command);
         commandContainer.addCommand(commandName, command);
     }
 

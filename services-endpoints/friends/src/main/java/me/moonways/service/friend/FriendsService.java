@@ -1,9 +1,9 @@
 package me.moonways.service.friend;
 
 import lombok.Getter;
-import me.moonways.bridgenet.service.inject.Component;
-import me.moonways.bridgenet.service.inject.InitMethod;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.Component;
+import me.moonways.bridgenet.injection.PostFactoryMethod;
+import me.moonways.bridgenet.injection.Inject;
 import net.conveno.jdbc.ConvenoRouter;
 
 @Component
@@ -15,7 +15,7 @@ public final class FriendsService {
     @Inject
     private ConvenoRouter convenoRouter;
 
-    @InitMethod
+    @PostFactoryMethod
     private void initRepository() {
         repository = convenoRouter.getRepository(FriendsDatabaseRepository.class);
         repository.validateTableExists();

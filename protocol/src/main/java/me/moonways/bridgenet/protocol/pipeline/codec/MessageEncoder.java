@@ -9,7 +9,7 @@ import me.moonways.bridgenet.protocol.exception.MessageEncoderPacketIsNullExcept
 import me.moonways.bridgenet.protocol.message.Message;
 import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
 import me.moonways.bridgenet.protocol.transfer.MessageTransfer;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.Inject;
 
 import java.io.IOException;
 

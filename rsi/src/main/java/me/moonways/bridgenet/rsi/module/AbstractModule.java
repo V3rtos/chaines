@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
-import me.moonways.bridgenet.rsi.xml.XMLConfigurationInstance;
+import me.moonways.bridgenet.rsi.xml.XMLConfiguration;
 import me.moonways.bridgenet.rsi.xml.XMLConfigurationParser;
 
 @Getter
@@ -25,7 +25,7 @@ public abstract class AbstractModule<Configuration extends ModuleConfiguration>
     public abstract void init(ServiceInfo serviceInfo, Configuration config);
 
     @Override
-    public void bind(XMLConfigurationInstance instance, ServiceInfo serviceInfo, Class<Configuration> cls) {
+    public void bind(XMLConfiguration instance, ServiceInfo serviceInfo, Class<Configuration> cls) {
         config = XML_CONFIGURATION_PARSER.parseModuleConfiguration(instance, cls);
         init(serviceInfo, config);
     }

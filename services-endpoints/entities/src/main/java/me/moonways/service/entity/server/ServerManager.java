@@ -3,7 +3,7 @@ package me.moonways.service.entity.server;
 import lombok.Getter;
 import me.moonways.service.entity.server.type.SpigotServer;
 import me.moonways.service.entity.server.type.VelocityServer;
-import me.moonways.bridgenet.service.inject.Component;
+import me.moonways.bridgenet.injection.Component;
 import me.moonways.services.api.entities.server.BridgenetServers;
 import me.moonways.services.api.entities.server.EntityServer;
 import org.jetbrains.annotations.NotNull;

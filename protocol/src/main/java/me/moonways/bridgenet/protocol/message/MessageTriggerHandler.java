@@ -1,12 +1,11 @@
 package me.moonways.bridgenet.protocol.message;
 
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import me.moonways.bridgenet.protocol.message.exception.MessageHandleException;
-import me.moonways.bridgenet.service.inject.Component;
-import me.moonways.bridgenet.service.inject.DependencyInjection;
-import me.moonways.bridgenet.service.inject.InitMethod;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.Component;
+import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.injection.PostFactoryMethod;
+import me.moonways.bridgenet.injection.Inject;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,13 +18,13 @@ public final class MessageTriggerHandler {
     @Inject
     private DependencyInjection dependencyInjection;
 
-    @InitMethod
+    @PostFactoryMethod
     private void initializeHandlers() {
-        dependencyInjection.scanDependenciesOfBasicPackage(MessageHandler.class);
+        dependencyInjection.findComponentsIntoBasePackage(MessageHandler.class);
     }
 
     public void fireTriggers(@NotNull Message message) {
-        for (Object messageHandler : dependencyInjection.getInjectedDependsByAnnotation(MessageHandler.class)) {
+        for (Object messageHandler : dependencyInjection.getContainer().getFoundComponents(MessageHandler.class)) {
             for (Method method : messageHandler.getClass().getDeclaredMethods()) {
                 if (method.isAnnotationPresent(MessageTrigger.class)) {
 

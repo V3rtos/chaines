@@ -9,7 +9,7 @@ import me.moonways.bridgenet.protocol.message.MessageComponent;
 import me.moonways.bridgenet.protocol.message.MessageHandler;
 import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
 import me.moonways.bridgenet.protocol.pipeline.BridgenetPipeline;
-import me.moonways.bridgenet.service.inject.DependencyInjection;
+import me.moonways.bridgenet.injection.DependencyInjection;
 import net.conveno.jdbc.ConvenoRouter;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,20 +51,20 @@ public class BaseBridgenetConnector {
         DependencyInjection dependencyInjection = new DependencyInjection();
 
         // local system services.
-        dependencyInjection.addDepend(dependencyInjection);
+        dependencyInjection.bind(dependencyInjection);
 
         // dependencies services.
-        dependencyInjection.addDepend(ConvenoRouter.create());
+        dependencyInjection.bind(ConvenoRouter.create());
 
         // inject
-        dependencyInjection.scanDependenciesOfBasicPackage();
-        dependencyInjection.addDepend(currentConnector);
+        dependencyInjection.findComponentsIntoBasePackage();
+        dependencyInjection.bind(currentConnector);
 
-        dependencyInjection.scanDependenciesOfBasicPackage(MessageComponent.class);
-        dependencyInjection.scanDependenciesOfBasicPackage(MessageHandler.class);
+        dependencyInjection.findComponentsIntoBasePackage(MessageComponent.class);
+        dependencyInjection.findComponentsIntoBasePackage(MessageHandler.class);
 
         // bridgenet system
-        dependencyInjection.addDepend(bridgenet);
+        dependencyInjection.bind(bridgenet);
     }
 
     public void enableBridgenetServicesSync(BaseBridgenetConnector currentConnector) {

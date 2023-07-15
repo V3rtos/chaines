@@ -15,8 +15,8 @@ import me.moonways.bridgenet.protocol.message.MessageHandler;
 import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
 import me.moonways.bridgenet.protocol.message.ProtocolDirection;
 import me.moonways.bridgenet.protocol.pipeline.BridgenetPipeline;
-import me.moonways.bridgenet.service.inject.DependencyInjection;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.injection.Inject;
 import net.conveno.jdbc.ConvenoRouter;
 
 @Log4j2
@@ -79,21 +79,21 @@ public class BridgenetBootstrap {
     private void applyDependencyInjection() {
 
         // local system services.
-        dependencyInjection.addDepend(dependencyInjection);
-        dependencyInjection.addDepend(new BridgenetConsole(this));
+        dependencyInjection.bind(dependencyInjection);
+        dependencyInjection.bind(new BridgenetConsole(this));
 
         // dependencies services.
-        dependencyInjection.addDepend(ConvenoRouter.create());
+        dependencyInjection.bind(ConvenoRouter.create());
 
         // inject
-        dependencyInjection.scanDependenciesOfBasicPackage();
-        dependencyInjection.injectDependencies(this);
+        dependencyInjection.findComponentsIntoBasePackage();
+        dependencyInjection.injectFields(this);
 
-        dependencyInjection.scanDependenciesOfBasicPackage(MessageComponent.class);
-        dependencyInjection.scanDependenciesOfBasicPackage(MessageHandler.class);
+        dependencyInjection.findComponentsIntoBasePackage(MessageComponent.class);
+        dependencyInjection.findComponentsIntoBasePackage(MessageHandler.class);
 
         // bridgenet system
-        dependencyInjection.addDepend(bridgenet);
+        dependencyInjection.bind(bridgenet);
     }
 
     public static void main(String[] args) {

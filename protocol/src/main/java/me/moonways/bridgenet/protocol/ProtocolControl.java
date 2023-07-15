@@ -5,8 +5,8 @@ import lombok.experimental.Delegate;
 import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
 import me.moonways.bridgenet.protocol.message.MessageResponseContainer;
 import me.moonways.bridgenet.protocol.message.MessageTriggerHandler;
-import me.moonways.bridgenet.service.inject.Component;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.Component;
+import me.moonways.bridgenet.injection.Inject;
 
 @Component
 @Getter

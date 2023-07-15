@@ -1,10 +1,10 @@
 package me.moonways.service.event;
 
-import me.moonways.bridgenet.service.inject.Component;
+import me.moonways.bridgenet.injection.Component;
 import me.moonways.service.event.subscribe.EventSubscription;
 import me.moonways.service.event.subscribe.EventSubscriptionApplier;
-import me.moonways.bridgenet.service.inject.DependencyInjection;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.injection.Inject;
 import me.moonways.services.api.events.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +31,7 @@ public final class EventService {
 
     @NotNull
     public <E extends Event> EventFuture<E> fireEvent(@NotNull E event) {
-        dependencyInjection.injectDependencies(event);
+        dependencyInjection.injectFields(event);
 
         EventFuture<E> eventFuture = eventExecutor.fireEvent(event);
         eventSubscriptionApplier.followSubscription(eventFuture);
@@ -40,7 +40,7 @@ public final class EventService {
     }
 
     public void registerHandler(@NotNull Object handler) {
-        dependencyInjection.injectDependencies(handler);
+        dependencyInjection.injectFields(handler);
         eventRegistry.register(handler);
     }
 

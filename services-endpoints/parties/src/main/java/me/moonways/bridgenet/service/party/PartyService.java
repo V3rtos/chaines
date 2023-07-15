@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.service.party;
 
 import lombok.Getter;
-import me.moonways.bridgenet.service.inject.Component;
+import me.moonways.bridgenet.injection.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
