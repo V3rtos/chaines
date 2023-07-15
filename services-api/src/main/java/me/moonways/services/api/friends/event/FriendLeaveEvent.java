@@ -1,10 +1,10 @@
-package me.moonways.service.friend.event;
+package me.moonways.services.api.friends.event;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import me.moonways.service.event.Event;
+import me.moonways.services.api.events.event.Event;
 
 @Getter
 @ToString
