@@ -2,13 +2,14 @@ package me.moonways.service.event.subscribe;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.service.event.EventFollowerImpl;
+import me.moonways.services.api.events.BridgenetEventsService;
 import me.moonways.services.api.events.event.Event;
-import me.moonways.service.event.EventFollower;
-import me.moonways.service.event.EventService;
+import me.moonways.services.api.events.subscribe.EventSubscription;
 import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
-public final class EventSubscriptionImpl<E extends Event> {
+public final class EventSubscriptionImpl<E extends Event> implements EventSubscription<E> {
 
     @Getter
     private final Class<E> eventType;
@@ -17,9 +18,9 @@ public final class EventSubscriptionImpl<E extends Event> {
     private final EventSubscribePredication<E> predication;
 
     @Getter
-    private final EventFollower<E> follower;
+    private final EventFollowerImpl<E> follower;
 
-    public void followExpiration(@NotNull EventService eventService) {
+    public void followExpiration(@NotNull BridgenetEventsService eventService) {
         if (expiration == null || expiration.isTimeoutExpired())
             return;
 

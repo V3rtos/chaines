@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.services.api.events.event.Event;
-import me.moonways.service.event.EventFollower;
+import me.moonways.service.event.EventFollowerImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
@@ -25,7 +25,7 @@ public final class EventSubscribeBuilder<E extends Event> {
     private EventSubscribeExpiration expiration;
     private EventSubscribePredication<E> predication;
 
-    private final EventFollower<E> follower = new EventFollower<>();
+    private final EventFollowerImpl<E> follower = new EventFollowerImpl<>();
 
     public EventSubscribeBuilder<E> expiration(@NotNull EventSubscribeExpiration expiration) {
         this.expiration = expiration;

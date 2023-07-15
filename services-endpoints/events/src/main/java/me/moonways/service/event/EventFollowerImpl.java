@@ -2,12 +2,13 @@ package me.moonways.service.event;
 
 import me.moonways.services.api.events.event.Event;
 import me.moonways.services.api.events.exception.EventException;
+import me.moonways.services.api.events.follower.EventFollower;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public final class EventFollower<E extends Event> {
+public final class EventFollowerImpl<E extends Event> implements EventFollower<E> {
 
     private final Object lock = new Object();
 
@@ -20,10 +21,12 @@ public final class EventFollower<E extends Event> {
         }
     }
 
+    @Override
     public boolean isCompleted() {
         return completed != null;
     }
 
+    @Override
     public void follow(@Nullable Consumer<E> eventConsumer) {
         if (eventConsumer == null)
             return;
@@ -41,6 +44,7 @@ public final class EventFollower<E extends Event> {
         }
     }
 
+    @Override
     public void postComplete(@NotNull E event) {
         validateNull(event);
         completed = event;

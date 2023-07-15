@@ -1,18 +1,20 @@
 package me.moonways.service.event;
 
-import me.moonways.bridgenet.service.inject.Component;
+import me.moonways.bridgenet.injection.Component;
+import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.injection.Inject;
 import me.moonways.service.event.subscribe.EventSubscriptionImpl;
 import me.moonways.service.event.subscribe.EventSubscriptionApplier;
-import me.moonways.bridgenet.service.inject.DependencyInjection;
-import me.moonways.bridgenet.service.inject.Inject;
+import me.moonways.services.api.events.BridgenetEventsService;
 import me.moonways.services.api.events.event.Event;
+import me.moonways.services.api.events.subscribe.EventSubscription;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
-public final class EventService {
+public final class EventService implements BridgenetEventsService {
 
     private final ExecutorService threadsExecutorService = Executors.newCachedThreadPool();
 
@@ -31,7 +33,7 @@ public final class EventService {
 
     @NotNull
     public <E extends Event> EventFutureImpl<E> fireEvent(@NotNull E event) {
-        dependencyInjection.injectDependencies(event);
+        dependencyInjection.injectFields(event);
 
         EventFutureImpl<E> eventFutureImpl = eventExecutor.fireEvent(event);
         eventSubscriptionApplier.followSubscription(eventFutureImpl);
@@ -40,7 +42,7 @@ public final class EventService {
     }
 
     public void registerHandler(@NotNull Object handler) {
-        dependencyInjection.injectDependencies(handler);
+        dependencyInjection.injectFields(handler);
         eventRegistry.register(handler);
     }
 
@@ -52,11 +54,11 @@ public final class EventService {
         eventRegistry.unregister(handlerType);
     }
 
-    public void subscribe(@NotNull EventSubscriptionImpl<?> subscription) {
+    public void subscribe(@NotNull EventSubscription<?> subscription) {
         eventSubscriptionApplier.subscribe(subscription);
     }
 
-    public void unsubscribe(@NotNull EventSubscriptionImpl<?> subscription) {
+    public void unsubscribe(@NotNull EventSubscription<?> subscription) {
         eventSubscriptionApplier.unsubscribe(subscription);
     }
 }

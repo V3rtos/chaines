@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.service.event.*;
 import me.moonways.services.api.events.event.Event;
 import me.moonways.services.api.events.exception.EventException;
+import me.moonways.services.api.events.follower.EventFollower;
+import me.moonways.services.api.events.subscribe.EventSubscription;
 
 import java.util.Set;
 
@@ -14,7 +16,7 @@ public final class EventSubscriptionApplier {
 
     private final EventSubscriptionContainer container = new EventSubscriptionContainer();
 
-    private void validateNull(EventSubscriptionImpl<?> subscription) {
+    private void validateNull(EventSubscription<?> subscription) {
         if (subscription == null) {
             throw new EventException("subscription is null");
         }
@@ -24,12 +26,12 @@ public final class EventSubscriptionApplier {
     public <E extends Event> void followSubscription(EventFutureImpl<E> future) {
         future.follow(event -> {
 
-            Set<EventSubscriptionImpl<?>> subscriptionsAll = container.getSubscriptions(event.getClass());
+            Set<EventSubscription<?>> subscriptionsAll = container.getSubscriptions(event.getClass());
 
             if (subscriptionsAll != null) {
-                for (EventSubscriptionImpl<?> eventSubscriptionImpl : subscriptionsAll) {
+                for (EventSubscription<?> eventSubscriptionImpl : subscriptionsAll) {
 
-                    EventSubscriptionImpl<E> genericSubscription = (EventSubscriptionImpl<E>) eventSubscriptionImpl;
+                    EventSubscription<E> genericSubscription = (EventSubscription<E>) eventSubscriptionImpl;
                     genericSubscription.followExpiration(eventService);
 
                     EventFollower<E> follower = genericSubscription.getFollower();
@@ -39,12 +41,12 @@ public final class EventSubscriptionApplier {
         });
     }
 
-    public void subscribe(EventSubscriptionImpl<?> subscription) {
+    public void subscribe(EventSubscription<?> subscription) {
         validateNull(subscription);
         container.addSubscription(subscription);
     }
 
-    public void unsubscribe(EventSubscriptionImpl<?> subscription) {
+    public void unsubscribe(EventSubscription<?> subscription) {
         validateNull(subscription);
         container.removeSubscription(subscription);
     }

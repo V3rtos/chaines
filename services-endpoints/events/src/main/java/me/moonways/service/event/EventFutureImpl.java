@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class EventFutureImpl<E extends Event> implements EventFuture<E> {
 
-    private final EventFollower<E> follower = new EventFollower<>();
+    private final EventFollowerImpl<E> follower = new EventFollowerImpl<>();
 
 // ----------------------------------------------------------------------------------- //
 
