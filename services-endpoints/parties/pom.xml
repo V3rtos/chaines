@@ -17,22 +17,4 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>inject</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>events</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>api</artifactId>
-            <version>1.0</version>
-        </dependency>
-    </dependencies>
 </project>

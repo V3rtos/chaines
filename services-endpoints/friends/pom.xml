@@ -21,16 +21,6 @@
     <dependencies>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>inject</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>events</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>me.moonways.bridgenet</groupId>
             <artifactId>api</artifactId>
             <version>1.0</version>
         </dependency>
