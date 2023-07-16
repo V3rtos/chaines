@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.service.report;
+package me.moonways.service.api.reports;
 
 public enum ReportReason {
 

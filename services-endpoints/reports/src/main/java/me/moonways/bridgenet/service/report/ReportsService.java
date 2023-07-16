@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.service.report;
 
 import me.moonways.bridgenet.injection.Component;
+import me.moonways.service.api.reports.ReportReason;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +13,7 @@ public final class ReportsService {
 
     private final List<ReportedPlayer> reportedPlayersList = Collections.synchronizedList(new ArrayList<>());
 
-    private void validateNull(Report report) {
+    private void validateNull(ReportImpl report) {
         if (report == null) {
             throw new NullPointerException("report");
         }
@@ -30,24 +31,24 @@ public final class ReportsService {
         }
     }
 
-    public Report createReport(@NotNull ReportReason reason,
-                               @NotNull String whoReportedName,
-                               @NotNull String intruderName,
-                               @Nullable String comment,
-                               @NotNull String whereServerName) {
+    public ReportImpl createReport(@NotNull ReportReason reason,
+                                   @NotNull String whoReportedName,
+                                   @NotNull String intruderName,
+                                   @Nullable String comment,
+                                   @NotNull String whereServerName) {
         validateNull(reason);
 
         validateNameNull(whoReportedName, "reporter name");
         validateNameNull(whoReportedName, "intruder name");
         validateNameNull(whoReportedName, "server name");
 
-        return new Report(reason, whoReportedName, intruderName, comment, whereServerName, System.currentTimeMillis());
+        return new ReportImpl(reason, whoReportedName, intruderName, comment, whereServerName, System.currentTimeMillis());
     }
 
-    public Report createReport(@NotNull ReportReason reason,
-                               @NotNull String whoReportedName,
-                               @NotNull String intruderName,
-                               @NotNull String whereServerName) {
+    public ReportImpl createReport(@NotNull ReportReason reason,
+                                   @NotNull String whoReportedName,
+                                   @NotNull String intruderName,
+                                   @NotNull String whereServerName) {
         validateNull(reason);
 
         validateNameNull(whoReportedName, "reporter name");
@@ -69,11 +70,11 @@ public final class ReportsService {
         return reportedPlayersList;
     }
 
-    public List<Report> getTotalReports() {
+    public List<ReportImpl> getTotalReports() {
         return reportedPlayersList.stream().flatMap(reportedPlayer -> reportedPlayer.getTotalReports().stream()).collect(Collectors.toList());
     }
 
-    public List<Report> getTotalReportsByIntruder(@NotNull String intruderName) {
+    public List<ReportImpl> getTotalReportsByIntruder(@NotNull String intruderName) {
         ReportedPlayer reportedPlayer = reportedPlayersList
                 .stream()
                 .filter(intruder -> intruder.getName().equals(intruderName))
@@ -87,7 +88,7 @@ public final class ReportsService {
         return reportedPlayer.getTotalReports();
     }
 
-    public ReportedPlayer getReportedPlayer(@NotNull Report report) {
+    public ReportedPlayer getReportedPlayer(@NotNull ReportImpl report) {
         validateNull(report);
         ReportedPlayer cached = reportedPlayersList
                 .stream()
@@ -104,14 +105,14 @@ public final class ReportsService {
         return cached;
     }
 
-    public void registerReport(@NotNull Report report) {
+    public void registerReport(@NotNull ReportImpl report) {
         validateNull(report);
 
         ReportedPlayer reportedPlayer = getReportedPlayer(report);
         reportedPlayer.addReport(report);
     }
 
-    public void unregisterReport(@NotNull Report report) {
+    public void unregisterReport(@NotNull ReportImpl report) {
         validateNull(report);
 
         ReportedPlayer reportedPlayer = getReportedPlayer(report);
@@ -123,10 +124,10 @@ public final class ReportsService {
     }
 
     @Nullable
-    public Report getLastReportByReporter(@NotNull String reporterName) {
+    public ReportImpl getLastReportByReporter(@NotNull String reporterName) {
         validateNameNull(reporterName, "reporter name");
 
-        List<Report> collect = getTotalReports()
+        List<ReportImpl> collect = getTotalReports()
                 .stream()
                 .filter(report -> report.getWhoReportedName().equalsIgnoreCase(reporterName))
                 .collect(Collectors.toList());
@@ -142,11 +143,11 @@ public final class ReportsService {
     }
 
     @Nullable
-    public Report getLastReportByReporterAndIntruder(@NotNull String reporterName, @NotNull String intruderName) {
+    public ReportImpl getLastReportByReporterAndIntruder(@NotNull String reporterName, @NotNull String intruderName) {
         validateNameNull(reporterName, "reporter name");
         validateNameNull(intruderName, "intruder name");
 
-        List<Report> collect = getTotalReports()
+        List<ReportImpl> collect = getTotalReports()
                 .stream()
                 .filter(report -> report.getIntruderName().equalsIgnoreCase(intruderName))
                 .filter(report -> report.getWhoReportedName().equalsIgnoreCase(reporterName))

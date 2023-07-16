@@ -4,12 +4,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.moonways.service.api.reports.Report;
+import me.moonways.service.api.reports.ReportReason;
 
-@Getter
 @ToString
+@Getter
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class Report {
+public class ReportImpl implements Report {
 
     private final ReportReason reason;
 

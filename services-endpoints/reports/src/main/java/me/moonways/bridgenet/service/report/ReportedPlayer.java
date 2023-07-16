@@ -15,28 +15,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportedPlayer {
 
-    private final List<Report> reportsList = Collections.synchronizedList(new ArrayList<>());
+    private final List<ReportImpl> reportsList = Collections.synchronizedList(new ArrayList<>());
 
     @Getter
     private final String name;
 
-    private void validateNull(Report report) {
+    private void validateNull(ReportImpl report) {
         if (report == null) {
             throw new NullPointerException("report");
         }
     }
 
-    public void addReport(@NotNull Report report) {
+    public void addReport(@NotNull ReportImpl report) {
         validateNull(report);
         reportsList.add(report);
     }
 
-    public void removeReport(@NotNull Report report) {
+    public void removeReport(@NotNull ReportImpl report) {
         validateNull(report);
         reportsList.remove(report);
     }
 
-    public boolean hasReport(@NotNull Report report) {
+    public boolean hasReport(@NotNull ReportImpl report) {
         validateNull(report);
         return reportsList.contains(report);
     }
@@ -45,7 +45,7 @@ public class ReportedPlayer {
         return reportsList.size();
     }
 
-    public List<Report> getTotalReports() {
+    public List<ReportImpl> getTotalReports() {
         return Collections.unmodifiableList(reportsList);
     }
 }
