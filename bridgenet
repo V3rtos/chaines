@@ -26,9 +26,9 @@ case $1 in
         source .scripts/build_project.sh
         ;;
     "-f" | "--fullbuild")
+        source .scripts/build_project.sh
         source .scripts/build_endpoints.sh
         source .scripts/config_endpoints.sh
-        source .scripts/build_project.sh
         ;;
     *)
         echo "$PREF Unknown command: $1"
