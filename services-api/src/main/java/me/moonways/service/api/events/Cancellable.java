@@ -1,10 +1,13 @@
 package me.moonways.service.api.events;
 
-public interface Cancellable {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-    boolean isCancelled();
+public interface Cancellable extends Remote {
 
-    void makeCancelled();
+    boolean isCancelled() throws RemoteException;
 
-    void makeNotCancelled();
+    void makeCancelled() throws RemoteException;
+
+    void makeNotCancelled() throws RemoteException;
 }
