@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class EventException extends RuntimeException {
 
+    private static final long serialVersionUID = -244215571470405751L;
+
     private static String formatMessage(String message, Object[] parameters) {
         String formattedMessage = String.format(message, parameters);
 

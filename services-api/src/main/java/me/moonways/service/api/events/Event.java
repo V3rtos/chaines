@@ -1,4 +1,6 @@
 package me.moonways.service.api.events;
 
-public interface Event {
+import java.rmi.Remote;
+
+public interface Event extends Remote {
 }
