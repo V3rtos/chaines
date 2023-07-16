@@ -1,11 +1,11 @@
 package me.moonways.service.event;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.services.api.events.Cancellable;
-import me.moonways.services.api.events.EventPriority;
-import me.moonways.services.api.events.event.AsyncEvent;
-import me.moonways.services.api.events.event.Event;
-import me.moonways.services.api.events.exception.EventException;
+import me.moonways.service.api.events.Cancellable;
+import me.moonways.service.api.events.EventPriority;
+import me.moonways.service.api.events.AsyncEvent;
+import me.moonways.service.api.events.Event;
+import me.moonways.service.api.events.exception.EventException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;

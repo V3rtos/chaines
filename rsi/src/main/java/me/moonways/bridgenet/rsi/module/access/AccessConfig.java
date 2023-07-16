@@ -11,5 +11,5 @@ import me.moonways.bridgenet.rsi.module.ModuleConfiguration;
 @AllArgsConstructor
 public class AccessConfig implements ModuleConfiguration {
 
-    private String host;
+    private String remoteHost;
 }

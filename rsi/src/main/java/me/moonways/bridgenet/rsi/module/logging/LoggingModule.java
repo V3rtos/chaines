@@ -8,7 +8,7 @@ import me.moonways.bridgenet.rsi.module.ModuleConsts;
 public class LoggingModule extends AbstractModule<LoggingConfig> {
 
     public LoggingModule() {
-        super(ModuleID.of(ModuleConsts.LOGGING_ID, "logging"));
+        super(ModuleID.of(ModuleConsts.LOGGING_ID, "loggingModule"));
     }
 
     @Override

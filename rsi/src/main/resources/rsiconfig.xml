@@ -23,7 +23,7 @@
             <!-- Service direction name -->
             <name>bnmg</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.services.api.bnmg.BridgenetBnmgService</targetType>
+            <targetType>me.moonways.service.api.bnmg.BridgenetBnmgService</targetType>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
@@ -31,7 +31,7 @@
             <!-- Service direction name -->
             <name>bus</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.services.api.bus.BridgenetBusService</targetType>
+            <targetType>me.moonways.service.api.bus.BridgenetBusService</targetType>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
@@ -39,7 +39,7 @@
             <!-- Service direction name -->
             <name>entities</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.services.api.entities.BridgenetEntitiesService</targetType>
+            <targetType>me.moonways.service.api.entities.BridgenetEntitiesService</targetType>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
@@ -47,7 +47,7 @@
             <!-- Service direction name -->
             <name>events</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.services.api.events.BridgenetEventsService</targetType>
+            <targetType>me.moonways.service.api.events.BridgenetEventsService</targetType>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
@@ -55,7 +55,7 @@
             <!-- Service direction name -->
             <name>friends</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.services.api.friends.BridgenetFriendsService</targetType>
+            <targetType>me.moonways.service.api.friends.BridgenetFriendsService</targetType>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
@@ -63,7 +63,7 @@
             <!-- Service direction name -->
             <name>games</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.services.api.games.BridgenetGamesService</targetType>
+            <targetType>me.moonways.service.api.games.BridgenetGamesService</targetType>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
@@ -71,7 +71,7 @@
             <!-- Service direction name -->
             <name>guilds</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.services.api.guilds.BridgenetGuildsService</targetType>
+            <targetType>me.moonways.service.api.guilds.BridgenetGuildsService</targetType>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
@@ -79,7 +79,7 @@
             <!-- Service direction name -->
             <name>parties</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.services.api.parties.BridgenetPartiesService</targetType>
+            <targetType>me.moonways.service.api.parties.BridgenetPartiesService</targetType>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
@@ -87,7 +87,7 @@
             <!-- Service direction name -->
             <name>reports</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.services.api.reports.BridgenetReportsService</targetType>
+            <targetType>me.moonways.service.api.reports.BridgenetReportsService</targetType>
         </service>
     </services>
 </configuration>

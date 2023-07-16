@@ -26,7 +26,7 @@ public abstract class AbstractModule<Configuration extends ModuleConfiguration>
 
     @Override
     public void bind(XMLConfiguration instance, ServiceInfo serviceInfo, Class<Configuration> cls) {
-        config = XML_CONFIGURATION_PARSER.parseModuleConfiguration(instance, cls);
+        config = XML_CONFIGURATION_PARSER.parseModuleConfiguration(instance, id, cls);
         init(serviceInfo, config);
     }
 }

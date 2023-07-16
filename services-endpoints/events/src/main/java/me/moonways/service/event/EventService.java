@@ -3,11 +3,10 @@ package me.moonways.service.event;
 import me.moonways.bridgenet.injection.Component;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.Inject;
-import me.moonways.service.event.subscribe.EventSubscriptionImpl;
 import me.moonways.service.event.subscribe.EventSubscriptionApplier;
-import me.moonways.services.api.events.BridgenetEventsService;
-import me.moonways.services.api.events.event.Event;
-import me.moonways.services.api.events.subscribe.EventSubscription;
+import me.moonways.service.api.events.BridgenetEventsService;
+import me.moonways.service.api.events.Event;
+import me.moonways.service.api.events.subscribe.EventSubscription;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;

@@ -6,15 +6,28 @@ exec_help() {
   echo "$PREF Usage: ./$APP <subcommand> <flags>"
   echo "$PREF Available subcommands list:"
   echo " > -ep, --endpoints | Build endpoints modules to build"
+  echo " > -b, --build | Build only maintained project modules"
+  echo " > -f, --fullbuild | Run full build of all modules with endpoints"
 }
 
 case $1 in
     "" | "-h" | "--help")
         exec_help
         ;;
+    "-epc" | "--endpointsconfig")
+        source .scripts/config_endpoints.sh
+        ;;
     "-ep" | "--endpoints")
         source .scripts/build_endpoints.sh
         source .scripts/config_endpoints.sh
+        ;;
+    "-b" | "--build")
+        source .scripts/build_project.sh
+        ;;
+    "-f" | "--fullbuild")
+        source .scripts/build_endpoints.sh
+        source .scripts/config_endpoints.sh
+        source .scripts/build_project.sh
         ;;
     *)
         echo "$PREF Unknown command: $1"

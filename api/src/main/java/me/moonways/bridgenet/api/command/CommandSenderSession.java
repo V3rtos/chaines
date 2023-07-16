@@ -2,10 +2,10 @@ package me.moonways.bridgenet.api.command;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.services.api.entities.CommandSender;
+import me.moonways.service.api.entities.CommandSender;
 import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.command.exception.CommandSenderCastException;
-import me.moonways.services.api.entities.player.EntityPlayer;
+import me.moonways.service.api.entities.player.EntityPlayer;
 
 @RequiredArgsConstructor
 @Getter

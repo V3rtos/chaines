@@ -2,11 +2,11 @@ package me.moonways.bridgenet.service.party;
 
 import lombok.Getter;
 import me.moonways.bridgenet.injection.Component;
-import me.moonways.services.api.parties.BridgenetPartiesService;
-import me.moonways.services.api.parties.PartyMemberList;
-import me.moonways.services.api.parties.participant.PartyMember;
-import me.moonways.services.api.parties.participant.PartyOwner;
-import me.moonways.services.api.parties.party.Party;
+import me.moonways.service.api.parties.BridgenetPartiesService;
+import me.moonways.service.api.parties.PartyMemberList;
+import me.moonways.service.api.parties.participant.PartyMember;
+import me.moonways.service.api.parties.participant.PartyOwner;
+import me.moonways.service.api.parties.party.Party;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

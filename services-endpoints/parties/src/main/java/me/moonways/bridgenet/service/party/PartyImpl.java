@@ -1,9 +1,9 @@
 package me.moonways.bridgenet.service.party;
 
 import lombok.*;
-import me.moonways.services.api.parties.PartyMemberList;
-import me.moonways.services.api.parties.party.Party;
-import me.moonways.services.api.parties.participant.PartyOwner;
+import me.moonways.service.api.parties.PartyMemberList;
+import me.moonways.service.api.parties.party.Party;
+import me.moonways.service.api.parties.participant.PartyOwner;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;

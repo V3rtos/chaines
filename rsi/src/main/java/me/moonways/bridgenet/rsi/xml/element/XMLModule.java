@@ -23,6 +23,6 @@ public class XMLModule {
     @Setter(onMethod_ = @XmlAttribute)
     private String configClass;
 
-    @Setter(onMethod_ = @XmlElement(name = "value"))
-    private List<XMLModuleValue> configurationProperties;
+    @Setter(onMethod_ = @XmlElement(name = "property"))
+    private List<XMLModuleProperty> properties;
 }

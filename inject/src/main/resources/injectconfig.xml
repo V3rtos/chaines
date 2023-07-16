@@ -20,5 +20,13 @@
             <annotationClass>me.moonways.bridgenet.injection.Component</annotationClass>
             <targetClass>me.moonways.bridgenet.injection.factory.ComponentObjectFactory</targetClass>
         </factory>
+        <factory>
+            <annotationClass>me.moonways.bridgenet.protocol.message.MessageComponent</annotationClass>
+            <targetClass>me.moonways.bridgenet.injection.factory.ComponentObjectFactory</targetClass>
+        </factory>
+        <factory>
+            <annotationClass>me.moonways.bridgenet.protocol.message.MessageHandler</annotationClass>
+            <targetClass>me.moonways.bridgenet.injection.factory.ComponentObjectFactory</targetClass>
+        </factory>
     </factories>
 </containers>

@@ -1,10 +1,10 @@
 package me.moonways.service.event;
 
 import lombok.*;
-import me.moonways.services.api.events.EventPriority;
-import me.moonways.services.api.events.event.Event;
-import me.moonways.services.api.events.exception.EventException;
-import me.moonways.services.api.events.event.EventFuture;
+import me.moonways.service.api.events.EventPriority;
+import me.moonways.service.api.events.Event;
+import me.moonways.service.api.events.exception.EventException;
+import me.moonways.service.api.events.EventFuture;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

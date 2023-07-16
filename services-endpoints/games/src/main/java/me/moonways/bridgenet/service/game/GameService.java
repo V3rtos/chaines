@@ -3,7 +3,7 @@ package me.moonways.bridgenet.service.game;
 import gnu.trove.TCollections;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
-import me.moonways.services.api.games.data.Arena;
+import me.moonways.service.api.games.data.Arena;
 import me.moonways.bridgenet.injection.Component;
 
 import java.util.Set;

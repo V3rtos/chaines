@@ -2,6 +2,9 @@ package me.moonways.bridgenet.rsi.service;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.rsi.endpoint.Endpoint;
+import me.moonways.bridgenet.rsi.endpoint.EndpointController;
+import me.moonways.bridgenet.rsi.endpoint.EndpointLoader;
 import me.moonways.bridgenet.rsi.module.*;
 import me.moonways.bridgenet.rsi.xml.XMLConfiguration;
 import me.moonways.bridgenet.rsi.xml.XMLConfigurationParser;
@@ -15,10 +18,7 @@ import me.moonways.bridgenet.injection.Inject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Getter
@@ -28,14 +28,27 @@ public final class RemoteServiceRegistry {
 
     private XMLConfiguration configurationInstance;
 
-    private final Map<ServiceInfo, RemoteService> services = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, ServiceInfo> servicesInfos = Collections.synchronizedMap(new HashMap<>());
+    private final Map<ServiceInfo, RemoteService> servicesImplements = Collections.synchronizedMap(new HashMap<>());
+
     private final Map<ModuleID, ModuleFactory> modulesFactories = Collections.synchronizedMap(new HashMap<>());
+
+    private final Map<ServiceInfo, ServiceModulesContainer> modulesContainerMap = Collections.synchronizedMap(new HashMap<>());
 
     @Inject
     private DependencyInjection dependencyInjection;
 
+    private final EndpointController endpointController = new EndpointController();
+
     @PostFactoryMethod
     void init() {
+        dependencyInjection.injectFields(endpointController);
+
+        initializeXmlConfiguration();
+        initializeEndpointsController();
+    }
+
+    private void initializeXmlConfiguration() {
         XMLConfigurationParser parser = new XMLConfigurationParser();
         configurationInstance = parser.parseNewInstance();
 
@@ -54,6 +67,27 @@ public final class RemoteServiceRegistry {
         }
     }
 
+    private void initializeEndpointsController() {
+        endpointController.injectInternalComponents();
+        endpointController.findEndpoints();
+
+        List<Endpoint> endpointsList = endpointController.getEndpoints();
+
+        for (Endpoint endpoint : endpointsList) {
+
+            ServiceInfo serviceInfo = endpoint.getServiceInfo();
+            ServiceModulesContainer serviceModulesContainer = new ServiceModulesContainer(serviceInfo);
+
+            for (ModuleFactory moduleFactory : modulesFactories.values()) {
+                serviceModulesContainer.injectModule(moduleFactory);
+            }
+
+            modulesContainerMap.put(serviceInfo, serviceModulesContainer);
+        }
+
+        endpointController.bindEndpoints();
+    }
+
     private void initXmlModules(List<XMLModule> xmlModulesList) {
         log.info("§e{} §rmodules found", xmlModulesList.size());
         log.info("Running modules registration process...");
@@ -64,7 +98,7 @@ public final class RemoteServiceRegistry {
             String configClass = xmlService.getConfigClass();
             String targetClass = xmlService.getTargetClass();
 
-            log.info("Registering module: §f{} §r(targetClass={}, configClass={})", name, targetClass, configClass);
+            log.info("Register module: §f{} §r(targetClass={}, configClass={})", name, targetClass, configClass);
             registerModule(xmlService);
         }
     }
@@ -79,8 +113,9 @@ public final class RemoteServiceRegistry {
             String bindPort = xmlService.getBindPort();
             String targetType = xmlService.getTargetType();
 
-            log.info("Registering remote service: §f{} §r(port={}, class={})", name, bindPort, targetType);
-            registerService(xmlService);
+            log.info("Register service: §f{} §r(port={}, class={})", name, bindPort, targetType);
+
+            servicesInfos.put(name.toLowerCase(), createServiceInfo(xmlService));
         }
     }
 
@@ -110,22 +145,14 @@ public final class RemoteServiceRegistry {
     }
 
     private RemoteService findServiceInstance(ServiceInfo serviceInfo) {
-        return new RemoteService() {
-        }; // todo
+        return servicesImplements.get(serviceInfo);
     }
 
-    private void registerService(XMLService wrapper) {
-        ServiceInfo serviceInfo = createServiceInfo(wrapper);
-        RemoteService service = findServiceInstance(serviceInfo);
-
-        if (service == null) {
-            throw new ServiceException("Service " + serviceInfo + " is null");
-        }
-
-        dependencyInjection.injectFields(service);
+    private void registerService(ServiceInfo serviceInfo, RemoteService remoteService) {
+        dependencyInjection.injectFields(remoteService);
 
         log.info("Service {} was registered", serviceInfo.getName());
-        services.put(serviceInfo, service);
+        servicesImplements.put(serviceInfo, remoteService);
     }
 
     private ModuleID getModuleID(Class<? extends Module> cls) {
@@ -161,15 +188,18 @@ public final class RemoteServiceRegistry {
         Function<ServiceInfo, Module<?>> factoryFunc = (serviceInfo) -> {
             try {
                 Module<?> module = checkedModuleClass.newInstance();
-
                 dependencyInjection.injectFields(module);
 
-                Method bindMethod = checkedModuleClass.getMethod("bind", XMLConfiguration.class, ServiceInfo.class, Class.class);
+                Method bindMethod = Arrays.stream(checkedModuleClass.getMethods())
+                        .filter(method -> method.getName().equals("bind"))
+                        .findFirst()
+                        .orElse(null);
+
                 bindMethod.invoke(module, configurationInstance, serviceInfo, configClass);
 
                 return (Module<?>) module;
             }
-            catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException exception) {
+            catch (InvocationTargetException | InstantiationException | IllegalAccessException exception) {
                 throw new ServiceException(exception);
             }
         };

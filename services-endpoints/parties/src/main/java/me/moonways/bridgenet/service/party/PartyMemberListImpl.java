@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.service.party;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.services.api.parties.PartyMemberList;
-import me.moonways.services.api.parties.participant.PartyMember;
+import me.moonways.service.api.parties.PartyMemberList;
+import me.moonways.service.api.parties.participant.PartyMember;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

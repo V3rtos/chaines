@@ -1,7 +1,7 @@
 package me.moonways.service.event.subscribe;
 
-import me.moonways.services.api.events.event.Event;
-import me.moonways.services.api.events.subscribe.EventSubscription;
+import me.moonways.service.api.events.Event;
+import me.moonways.service.api.events.subscribe.EventSubscription;
 
 import java.util.*;
 

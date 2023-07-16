@@ -11,7 +11,7 @@ function except_code() {
     if [ $? -eq 0 ]; then
       echo "$PREF [Success completed]"
     else
-      echo "$PREF [Abort process: failed]"
+      echo "$PREF [Process aborted: failed]"
       exit 1
     fi
 }

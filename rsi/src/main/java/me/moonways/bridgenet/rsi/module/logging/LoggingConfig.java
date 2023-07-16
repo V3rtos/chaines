@@ -11,5 +11,5 @@ import me.moonways.bridgenet.rsi.module.ModuleConfiguration;
 @AllArgsConstructor
 public class LoggingConfig implements ModuleConfiguration {
 
-    private int poolSize;
+    private String poolSize;
 }

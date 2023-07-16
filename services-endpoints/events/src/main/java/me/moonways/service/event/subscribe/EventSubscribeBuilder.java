@@ -3,7 +3,7 @@ package me.moonways.service.event.subscribe;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import me.moonways.services.api.events.event.Event;
+import me.moonways.service.api.events.Event;
 import me.moonways.service.event.EventFollowerImpl;
 import org.jetbrains.annotations.NotNull;
 

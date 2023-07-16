@@ -3,10 +3,12 @@ package me.moonways.service.event.subscribe;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.service.event.EventFollowerImpl;
-import me.moonways.services.api.events.BridgenetEventsService;
-import me.moonways.services.api.events.event.Event;
-import me.moonways.services.api.events.subscribe.EventSubscription;
+import me.moonways.service.api.events.BridgenetEventsService;
+import me.moonways.service.api.events.Event;
+import me.moonways.service.api.events.subscribe.EventSubscription;
 import org.jetbrains.annotations.NotNull;
+
+import java.rmi.RemoteException;
 
 @RequiredArgsConstructor
 public final class EventSubscriptionImpl<E extends Event> implements EventSubscription<E> {
@@ -27,7 +29,11 @@ public final class EventSubscriptionImpl<E extends Event> implements EventSubscr
         follower.follow(event -> {
 
             if (expiration.isTimeoutExpired()) {
-                eventService.unsubscribe(this);
+                try {
+                    eventService.unsubscribe(this);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }

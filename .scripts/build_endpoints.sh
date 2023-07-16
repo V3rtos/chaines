@@ -1,9 +1,13 @@
 #!/bin/bash
 ENDPOINTS_MODULE_PATH=services-endpoints
-ENDPOINTS_TARGET_PATH=$BUILD_DIR
+ENDPOINTS_TARGET_PATH=$BUILD_DIR/services
 
 rm -rf "$ENDPOINTS_TARGET_PATH"
 mkdir "$ENDPOINTS_TARGET_PATH"
+
+cd "services-api"
+mvn clean install -Dmaven.test.skip || exit
+cd ../
 
 function compile() {
   if [ -z "$1" ]; then
@@ -30,7 +34,7 @@ function copy_compiled_endpoint() {
   local endpoint_path="$ENDPOINTS_MODULE_PATH/$1"
 
   cd ../../
-  cp -R $endpoint_path/endpoint/. .build/$1
+  cp -R $endpoint_path/endpoint/. "$target_path"
   rm -rf $endpoint_path/endpoint
 
   except_code
