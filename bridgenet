@@ -5,9 +5,10 @@ source .scripts/utils.sh
 exec_help() {
   echo "$PREF Usage: ./$APP <subcommand> <flags>"
   echo "$PREF Available subcommands list:"
-  echo " > -ep, --endpoints | Build endpoints modules to build"
-  echo " > -b, --build | Build only maintained project modules"
-  echo " > -f, --fullbuild | Run full build of all modules with endpoints"
+  echo " > -ep, --endpoints             Build endpoints modules to build."
+  echo " > -epc, --endpointsconfig      Configure endpoints modules before build."
+  echo " > -b, --build                  Build only maintained project modules."
+  echo " > -f, --fullbuild              Run full build of all modules with endpoints."
 }
 
 case $1 in

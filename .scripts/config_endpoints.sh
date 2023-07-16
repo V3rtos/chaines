@@ -5,8 +5,8 @@ ENDPOINT_ETC_PATH=$SCRIPTS_DIR/etc
 ENDPOINTS_TARGET_PATH=$BUILD_DIR/services
 
 function apply() {
-  copy_endpoint_confs $1
-  edit_endpoint_name $1
+  copy_endpoint_confs "$1"
+  edit_endpoint_name "$1"
 }
 
 function copy_endpoint_confs() {
