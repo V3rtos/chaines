@@ -1,17 +1,26 @@
 package me.moonways.bridgenet.service.report;
 
-import me.moonways.bridgenet.injection.Component;
+import me.moonways.service.api.reports.BridgenetReportsService;
+import me.moonways.service.api.reports.Report;
 import me.moonways.service.api.reports.ReportReason;
+import me.moonways.service.api.reports.ReportedPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
-public final class ReportsService {
+public final class BridgenetReportsServiceImpl extends UnicastRemoteObject implements BridgenetReportsService {
 
-    private final List<ReportedPlayer> reportedPlayersList = Collections.synchronizedList(new ArrayList<>());
+    private static final long serialVersionUID = 8862521493276490323L;
+
+    private final List<ReportedPlayer> reportedPlayersList = new ArrayList<>();
+
+    public BridgenetReportsServiceImpl() throws RemoteException {
+        super();
+    }
 
     private void validateNull(ReportImpl report) {
         if (report == null) {
@@ -42,7 +51,11 @@ public final class ReportsService {
         validateNameNull(whoReportedName, "intruder name");
         validateNameNull(whoReportedName, "server name");
 
-        return new ReportImpl(reason, whoReportedName, intruderName, comment, whereServerName, System.currentTimeMillis());
+        try {
+            return new ReportImpl(reason, whoReportedName, intruderName, comment, whereServerName, System.currentTimeMillis());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public ReportImpl createReport(@NotNull ReportReason reason,
@@ -70,11 +83,11 @@ public final class ReportsService {
         return reportedPlayersList;
     }
 
-    public List<ReportImpl> getTotalReports() {
+    public List<Report> getTotalReports() {
         return reportedPlayersList.stream().flatMap(reportedPlayer -> reportedPlayer.getTotalReports().stream()).collect(Collectors.toList());
     }
 
-    public List<ReportImpl> getTotalReportsByIntruder(@NotNull String intruderName) {
+    public List<Report> getTotalReportsByIntruder(@NotNull String intruderName) {
         ReportedPlayer reportedPlayer = reportedPlayersList
                 .stream()
                 .filter(intruder -> intruder.getName().equals(intruderName))
@@ -124,12 +137,18 @@ public final class ReportsService {
     }
 
     @Nullable
-    public ReportImpl getLastReportByReporter(@NotNull String reporterName) {
+    public Report getLastReportByReporter(@NotNull String reporterName) {
         validateNameNull(reporterName, "reporter name");
 
-        List<ReportImpl> collect = getTotalReports()
+        List<Report> collect = getTotalReports()
                 .stream()
-                .filter(report -> report.getWhoReportedName().equalsIgnoreCase(reporterName))
+                .filter(report -> {
+                    try {
+                        return report.getWhoReportedName().equalsIgnoreCase(reporterName);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .collect(Collectors.toList());
 
         if (collect.isEmpty()) {
@@ -143,14 +162,26 @@ public final class ReportsService {
     }
 
     @Nullable
-    public ReportImpl getLastReportByReporterAndIntruder(@NotNull String reporterName, @NotNull String intruderName) {
+    public Report getLastReportByReporterAndIntruder(@NotNull String reporterName, @NotNull String intruderName) {
         validateNameNull(reporterName, "reporter name");
         validateNameNull(intruderName, "intruder name");
 
-        List<ReportImpl> collect = getTotalReports()
+        List<Report> collect = getTotalReports()
                 .stream()
-                .filter(report -> report.getIntruderName().equalsIgnoreCase(intruderName))
-                .filter(report -> report.getWhoReportedName().equalsIgnoreCase(reporterName))
+                .filter(report -> {
+                    try {
+                        return report.getIntruderName().equalsIgnoreCase(intruderName);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .filter(report -> {
+                    try {
+                        return report.getWhoReportedName().equalsIgnoreCase(reporterName);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .collect(Collectors.toList());
 
         if (collect.isEmpty()) {

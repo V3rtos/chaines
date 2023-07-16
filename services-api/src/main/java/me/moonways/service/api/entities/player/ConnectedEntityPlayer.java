@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -39,7 +40,14 @@ public class ConnectedEntityPlayer extends OfflineEntityPlayer implements Entity
 
     @Override
     public void redirect(@NotNull EntityServer server) {
-        CompletableFuture<Boolean> connectFuture = server.connect(this);
+        CompletableFuture<Boolean> connectFuture;
+
+        try {
+            connectFuture = server.connect(this);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
         connectFuture.whenComplete((isSuccess, throwable) -> {
 
             if (isSuccess) {

@@ -3,20 +3,29 @@ package me.moonways.bridgenet.service.game;
 import gnu.trove.TCollections;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import me.moonways.service.api.games.BridgenetGamesService;
 import me.moonways.service.api.games.data.Arena;
 import me.moonways.bridgenet.injection.Component;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
 
 @Component
-public final class GameService {
+public final class BridgenetGameServiceImpl extends UnicastRemoteObject implements BridgenetGamesService {
+
+    private static final long serialVersionUID = -1131200912946923881L;
 
     //private final TIntObjectMap<Game> registeredGamesMap = TCollections.synchronizedMap(new TIntObjectHashMap<>());
     //private final TIntObjectMap<Mode> registeredModesMap = TCollections.synchronizedMap(new TIntObjectHashMap<>());
 
     private final TIntObjectMap<Set<Arena>> registeredArenasMap = TCollections.synchronizedMap(new TIntObjectHashMap<>());
 
-   //public void registerGame(@NotNull Game game) {
+    public BridgenetGameServiceImpl() throws RemoteException {
+        super();
+    }
+
+    //public void registerGame(@NotNull Game game) {
    //    registeredGamesMap.put(game.getId(), game);
    //}
 

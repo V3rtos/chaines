@@ -1,6 +1,8 @@
 package me.moonways.service.api.reports;
 
-public enum ReportReason {
+import java.io.Serializable;
+
+public enum ReportReason implements Serializable {
 
     CHAT_INSULTS,
     CHAT_SABOTAGE,

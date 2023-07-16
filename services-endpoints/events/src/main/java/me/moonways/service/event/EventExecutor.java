@@ -8,6 +8,7 @@ import me.moonways.service.api.events.Event;
 import me.moonways.service.api.events.exception.EventException;
 import org.jetbrains.annotations.NotNull;
 
+import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
@@ -54,8 +55,13 @@ public final class EventExecutor {
 
     private boolean canCancellations(Event event) {
         boolean result = (event instanceof Cancellable);
-        if (result)
-            ((Cancellable) event).makeNotCancelled();
+        if (result) {
+            try {
+                ((Cancellable) event).makeNotCancelled();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         return result;
     }

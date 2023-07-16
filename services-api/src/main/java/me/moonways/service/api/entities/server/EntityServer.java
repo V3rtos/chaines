@@ -5,20 +5,22 @@ import me.moonways.service.api.entities.player.ConnectedEntityPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public interface EntityServer {
+public interface EntityServer extends Remote {
 
-    String getName();
+    String getName() throws RemoteException;
 
-    BridgenetChannel getBridgenetChannel();
+    BridgenetChannel getBridgenetChannel() throws RemoteException;
 
-    InetSocketAddress getServerAddress();
+    InetSocketAddress getServerAddress() throws RemoteException;
 
-    Collection<ConnectedEntityPlayer> getConnectedPlayers();
+    Collection<ConnectedEntityPlayer> getConnectedPlayers() throws RemoteException;
 
-    int getTotalOnline();
+    int getTotalOnline() throws RemoteException;
 
-    CompletableFuture<Boolean> connect(@NotNull ConnectedEntityPlayer player);
+    CompletableFuture<Boolean> connect(@NotNull ConnectedEntityPlayer player) throws RemoteException;
 }

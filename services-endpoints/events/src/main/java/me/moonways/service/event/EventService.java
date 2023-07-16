@@ -9,15 +9,18 @@ import me.moonways.service.api.events.Event;
 import me.moonways.service.api.events.subscribe.EventSubscription;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
-public final class EventService implements BridgenetEventsService {
+public final class EventService extends UnicastRemoteObject implements BridgenetEventsService {
+
+    private static final long serialVersionUID = 6386120101311957390L;
 
     private final ExecutorService threadsExecutorService = Executors.newCachedThreadPool();
-
-// ----------------------------------------------------------------------------------------------------- //
 
     private final EventRegistry eventRegistry = new EventRegistry();
 
@@ -25,10 +28,12 @@ public final class EventService implements BridgenetEventsService {
 
     private final EventSubscriptionApplier eventSubscriptionApplier = new EventSubscriptionApplier(this);
 
-// ----------------------------------------------------------------------------------------------------- //
-
     @Inject
     private DependencyInjection dependencyInjection;
+
+    public EventService() throws RemoteException {
+        super();
+    }
 
     @NotNull
     public <E extends Event> EventFutureImpl<E> fireEvent(@NotNull E event) {

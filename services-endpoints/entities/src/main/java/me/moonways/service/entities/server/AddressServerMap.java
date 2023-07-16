@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.rmi.RemoteException;
 
 public final class AddressServerMap implements Serializable {
 
@@ -43,7 +44,14 @@ public final class AddressServerMap implements Serializable {
     public void registerServerAddressPort(@NotNull EntityServer server) {
         validateServer(server);
 
-        InetSocketAddress inetSocketAddress = server.getBridgenetChannel().getInetSocketAddress();
+        InetSocketAddress inetSocketAddress;
+
+        try {
+            inetSocketAddress = server.getBridgenetChannel().getInetSocketAddress();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
         validateServerAlreadyContains(inetSocketAddress);
 
         serverByAddressPortMap.put(inetSocketAddress.getPort(), server);
@@ -52,7 +60,14 @@ public final class AddressServerMap implements Serializable {
     public void unregisterServerAddressPort(@NotNull EntityServer server) {
         validateServer(server);
 
-        InetSocketAddress inetSocketAddress = server.getBridgenetChannel().getInetSocketAddress();
+        InetSocketAddress inetSocketAddress;
+
+        try {
+            inetSocketAddress = server.getBridgenetChannel().getInetSocketAddress();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
         validateServerNotContains(inetSocketAddress);
 
         serverByAddressPortMap.remove(inetSocketAddress.getPort());

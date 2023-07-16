@@ -43,16 +43,27 @@ public final class ServerManager extends UnicastRemoteObject implements Bridgene
     }
 
     public void addServer(@NotNull EntityServer server) {
-        validateContains(server.getName());
 
-        serverMap.put(server.getName().toLowerCase(), server);
+        try {
+            validateContains(server.getName());
+
+            serverMap.put(server.getName().toLowerCase(), server);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
         addressServerMap.registerServerAddressPort(server);
     }
 
     public void removeServer(@NotNull EntityServer server) {
         validateNull(server);
 
-        serverMap.remove(server.getName().toLowerCase());
+        try {
+            serverMap.remove(server.getName().toLowerCase());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
         addressServerMap.unregisterServerAddressPort(server);
     }
 
@@ -78,7 +89,7 @@ public final class ServerManager extends UnicastRemoteObject implements Bridgene
         return (S) serverMap.get(serverName.toLowerCase());
     }
 
-    public boolean hasServer(String serverName) {
+    public boolean hasServer(@NotNull String serverName) {
         validateNull(serverName);
         return serverMap.containsKey(serverName.toLowerCase());
     }

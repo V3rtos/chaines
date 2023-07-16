@@ -9,15 +9,23 @@ import me.moonways.service.api.parties.participant.PartyOwner;
 import me.moonways.service.api.parties.party.Party;
 import org.jetbrains.annotations.NotNull;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public final class PartyService implements BridgenetPartiesService {
+public final class BridgenetPartyServiceImpl extends UnicastRemoteObject implements BridgenetPartiesService {
+
+    private static final long serialVersionUID = 4320252037235387938L;
 
     @Getter
     private final Set<Party> registeredParties = Collections.synchronizedSet(new HashSet<>());
+
+    public BridgenetPartyServiceImpl() throws RemoteException {
+        super();
+    }
 
     private void validateNull(Party party) {
         if (party == null) {
@@ -32,16 +40,22 @@ public final class PartyService implements BridgenetPartiesService {
     }
 
     @Override
-    public Party createParty(@NotNull String ownerName) {
-        Party party = new PartyImpl(null, System.currentTimeMillis());
-        party.setOwner(new PartyOwner(ownerName, party));
+    public PartyImpl createParty(@NotNull String ownerName) {
+        PartyImpl party;
 
+        try {
+            party = new PartyImpl();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
+        party.setOwner(new PartyOwner(ownerName, party));
         return party;
     }
 
     @Override
     public Party createParty(@NotNull String ownerName, @NotNull String... firstMembersNames) {
-        Party createdParty = createParty(ownerName);
+        PartyImpl createdParty = createParty(ownerName);
         PartyMemberList membersList = createdParty.getPartyMemberList();
 
         for (String firstMemberName : firstMembersNames) {
@@ -79,8 +93,13 @@ public final class PartyService implements BridgenetPartiesService {
     public boolean isMemberOf(@NotNull Party party, @NotNull String playerName) {
         validateNull(party);
         validateNull(playerName);
-        return party.getOwner().getName().equalsIgnoreCase(playerName)
-                || party.getPartyMemberList().hasMemberByName(playerName);
+
+        try {
+            return party.getOwner().getName().equalsIgnoreCase(playerName)
+                    || party.getPartyMemberList().hasMemberByName(playerName);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

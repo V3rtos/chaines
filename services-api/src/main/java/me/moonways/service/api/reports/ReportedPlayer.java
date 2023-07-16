@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.service.report;
+package me.moonways.service.api.reports;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,30 +14,32 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class ReportedPlayer {
+public class ReportedPlayer implements Serializable {
 
-    private final List<ReportImpl> reportsList = Collections.synchronizedList(new ArrayList<>());
+    private static final long serialVersionUID = 3816836769485556160L;
+
+    private final List<Report> reportsList = Collections.synchronizedList(new ArrayList<>());
 
     @Getter
     private final String name;
 
-    private void validateNull(ReportImpl report) {
+    private void validateNull(Report report) {
         if (report == null) {
             throw new NullPointerException("report");
         }
     }
 
-    public void addReport(@NotNull ReportImpl report) {
+    public void addReport(@NotNull Report report) {
         validateNull(report);
         reportsList.add(report);
     }
 
-    public void removeReport(@NotNull ReportImpl report) {
+    public void removeReport(@NotNull Report report) {
         validateNull(report);
         reportsList.remove(report);
     }
 
-    public boolean hasReport(@NotNull ReportImpl report) {
+    public boolean hasReport(@NotNull Report report) {
         validateNull(report);
         return reportsList.contains(report);
     }
@@ -45,7 +48,7 @@ public class ReportedPlayer {
         return reportsList.size();
     }
 
-    public List<ReportImpl> getTotalReports() {
+    public List<Report> getTotalReports() {
         return Collections.unmodifiableList(reportsList);
     }
 }

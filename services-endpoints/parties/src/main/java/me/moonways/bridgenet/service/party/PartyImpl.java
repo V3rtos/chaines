@@ -6,12 +6,16 @@ import me.moonways.service.api.parties.party.Party;
 import me.moonways.service.api.parties.participant.PartyOwner;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeUnit;
 
 @ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public class PartyImpl implements Party {
+@EqualsAndHashCode(callSuper = false)
+public class PartyImpl extends UnicastRemoteObject implements Party {
+
+    private static final long serialVersionUID = 3205875496897748444L;
 
     @Getter
     private final PartyMemberListImpl membersList = new PartyMemberListImpl(this);
@@ -19,7 +23,11 @@ public class PartyImpl implements Party {
     @Getter
     private PartyOwner owner;
 
-    private final long createdTimeMillis;
+    private final long createdTimeMillis = System.currentTimeMillis();
+
+    public PartyImpl() throws RemoteException {
+        super();
+    }
 
     private void validateNull(PartyOwner owner) {
         if (owner == null) {
@@ -29,7 +37,7 @@ public class PartyImpl implements Party {
 
     @Override
     public void setOwner(@NotNull PartyOwner newOwner) {
-        validateNull(owner);
+        validateNull(newOwner);
 
         PartyOwner previousOwner = this.owner;
         this.owner = newOwner;
