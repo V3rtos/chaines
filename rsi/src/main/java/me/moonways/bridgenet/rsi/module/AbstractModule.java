@@ -4,9 +4,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.moonways.bridgenet.rsi.service.ServiceException;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
-import me.moonways.bridgenet.rsi.xml.XMLConfiguration;
-import me.moonways.bridgenet.rsi.xml.XMLConfigurationParser;
+import me.moonways.bridgenet.rsi.xml.XmlModule;
+import me.moonways.bridgenet.rsi.xml.XmlModuleProperty;
+import me.moonways.bridgenet.rsi.xml.XmlConfiguration;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 @Getter
 @ToString(onlyExplicitlyIncluded = true)
@@ -14,8 +20,6 @@ import me.moonways.bridgenet.rsi.xml.XMLConfigurationParser;
 @RequiredArgsConstructor
 public abstract class AbstractModule<Configuration extends ModuleConfiguration>
         implements Module<Configuration> {
-
-    private static final XMLConfigurationParser XML_CONFIGURATION_PARSER = new XMLConfigurationParser();
 
     @ToString.Include
     private final ModuleID id;
@@ -25,8 +29,44 @@ public abstract class AbstractModule<Configuration extends ModuleConfiguration>
     public abstract void init(ServiceInfo serviceInfo, Configuration config);
 
     @Override
-    public void bind(XMLConfiguration instance, ServiceInfo serviceInfo, Class<Configuration> cls) {
-        config = XML_CONFIGURATION_PARSER.parseModuleConfiguration(instance, id, cls);
+    public void bind(XmlConfiguration xmlConfiguration, ServiceInfo serviceInfo, Class<Configuration> cls) {
+        config = parseModuleConfiguration(xmlConfiguration, id, cls);
         init(serviceInfo, config);
+    }
+
+    public <T extends ModuleConfiguration> T parseModuleConfiguration(XmlConfiguration xmlConfiguration, ModuleID moduleID, Class<T> cls) {
+        XmlModule xmlModule = xmlConfiguration.getModulesList()
+                .stream()
+                .filter(xml -> xml.getName().equals(moduleID.getNamespace()))
+                .findFirst()
+                .orElse(null);
+
+        T config = createEmptyInstance(cls);
+        List<XmlModuleProperty> properties = xmlModule.getProperties();
+
+        for (XmlModuleProperty property : properties) {
+            Class<? extends ModuleConfiguration> configClass = config.getClass();
+
+            try {
+                Field propertyField = configClass.getDeclaredField(property.getName());
+
+                propertyField.setAccessible(true);
+                propertyField.set(config, property.getValue());
+            }
+            catch (IllegalAccessException | NoSuchFieldException exception) {
+                throw new ServiceException(exception);
+            }
+        }
+
+        return config;
+    }
+
+    private <T extends ModuleConfiguration> T createEmptyInstance(Class<T> cls) {
+        try {
+            return cls.getConstructor().newInstance();
+        }
+        catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
+            throw new ServiceException(exception);
+        }
     }
 }

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
-import me.moonways.bridgenet.rsi.service.ServiceException;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +30,7 @@ public class EndpointLoader {
 
     private EndpointConfig parseJsonConfig(@NotNull String endpointName, @NotNull File file) {
         if (!Files.exists(file.toPath())) {
-            log.error("§cJson config for '{}' endpoint is not found", endpointName);
+            log.error("§4Json config for '{}' endpoint is not found", endpointName);
             return null;
         }
 
@@ -40,8 +39,7 @@ public class EndpointLoader {
             return GSON.fromJson(jsonContent, EndpointConfig.class);
         }
         catch (IOException exception) {
-            log.error("§cCannot be inject endpoint config of {}", endpointName,
-                    new ServiceException(exception));
+            log.error("§4Cannot be inject endpoint config of '{}': §c{}", endpointName, exception.toString());
             return null;
         }
     }
@@ -74,7 +72,7 @@ public class EndpointLoader {
         Path servicesContentPath = Paths.get(servicesContentPathname);
 
         if (!Files.exists(servicesContentPath) || !Files.isDirectory(servicesContentPath)) {
-            log.warn("§cDirectory '{}' for services content was not found", servicesContentPathname);
+            log.warn("§4Directory '{}' for services content was not found", servicesContentPathname);
             return Collections.emptyList();
         }
 
@@ -88,7 +86,7 @@ public class EndpointLoader {
                             ServiceInfo serviceInfo = findServiceInfo(name);
 
                             if (serviceInfo == null) {
-                                log.warn("§cDirectory '{}' not loaded as endpoint", name);
+                                log.warn("§4Directory '{}' not loaded as endpoint", name);
                                 return;
                             }
 
@@ -100,7 +98,7 @@ public class EndpointLoader {
 
             return list;
         } catch (IOException exception) {
-            log.error("§cCannot be lookup endpoints content", new ServiceException(exception));
+            log.error("§4Cannot be lookup endpoints content: §c{}", exception.toString());
         }
 
         return Collections.emptyList();

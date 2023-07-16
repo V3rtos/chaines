@@ -4,8 +4,6 @@ import io.netty.channel.ChannelFactory;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.ServerChannel;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.TestCommand;
-import me.moonways.bridgenet.api.command.CommandRegistry;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.protocol.Bridgenet;
@@ -29,9 +27,6 @@ public class BridgenetBootstrap {
     @Inject
     private MessageRegistrationService messageRegistrationService;
 
-    @Inject
-    private CommandRegistry commandRegistry;
-
 // ---------------------------------------------------------------------------------------------------------------- //
 
     private final DependencyInjection dependencyInjection = new DependencyInjection();
@@ -42,7 +37,6 @@ public class BridgenetBootstrap {
 
     public void start() {
         applyDependencyInjection();
-        registerInternalCommands();
         registerMessages();
 
         startConnection();
@@ -68,10 +62,6 @@ public class BridgenetBootstrap {
 
     private void registerMessages() {
         messageRegistrationService.registerAll(ProtocolDirection.TO_SERVER);
-    }
-
-    private void registerInternalCommands() {
-        commandRegistry.register(TestCommand.class);
     }
 
     private void applyDependencyInjection() {

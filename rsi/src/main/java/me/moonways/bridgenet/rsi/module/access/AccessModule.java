@@ -60,7 +60,7 @@ public class AccessModule extends AbstractModule<AccessConfig> {
                 log.info("Endpoint '{}' was success exported: §f{}", name, object);
             }
             catch (RemoteException exception) {
-                log.error("§4Cannot be export endpoint uri {}: §f{}", uri, exception.toString());
+                log.error("§4Cannot be export endpoint uri {}: §c{}", uri, exception.toString());
             }
         }
         catch (Exception exception) {

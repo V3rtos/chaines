@@ -2,11 +2,11 @@ package me.moonways.bridgenet;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.command.Command;
-import me.moonways.bridgenet.api.command.CommandRegistry;
-import me.moonways.bridgenet.api.command.CommandSenderSession;
-import me.moonways.bridgenet.api.command.exception.CommandNotFoundException;
-import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
+import me.moonways.service.api.command.Command;
+import me.moonways.service.api.command.CommandRegistry;
+import me.moonways.service.api.command.CommandSenderSession;
+import me.moonways.service.api.command.exception.CommandNotFoundException;
+import me.moonways.service.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.minecraft.ChatColor;
 import me.moonways.bridgenet.injection.Inject;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;

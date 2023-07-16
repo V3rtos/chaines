@@ -4,16 +4,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.xml.XmlJaxbParser;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.injection.InjectionErrorMessages;
 import me.moonways.bridgenet.injection.factory.ObjectFactory;
 import me.moonways.bridgenet.injection.scanner.controller.ScannerController;
-import me.moonways.bridgenet.injection.xml.XMLConfiguration;
-import me.moonways.bridgenet.injection.xml.XMLConfigurationParser;
-import me.moonways.bridgenet.injection.xml.element.XMLObjectFactory;
-import me.moonways.bridgenet.injection.xml.element.XMLRootElement;
-import me.moonways.bridgenet.injection.xml.element.XMLScanController;
+import me.moonways.bridgenet.injection.xml.XmlObjectFactory;
+import me.moonways.bridgenet.injection.xml.XmlContainers;
+import me.moonways.bridgenet.injection.xml.XmlScanController;
 import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.message.MessageFactory;
 
@@ -35,13 +34,13 @@ public final class DependencyScannerContainer {
     private DependencyInjection dependencyInjection;
 
     void initMaps() {
-        XMLConfigurationParser parser = new XMLConfigurationParser();
-        XMLConfiguration xmlConfiguration = parser.parseNewInstance();
+        XmlJaxbParser parser = new XmlJaxbParser();
+        XmlContainers xmlContainers = parser.parseCopiedResource(getClass().getClassLoader(), "injectconfig.xml", XmlContainers.class);
 
-        storeScanners(xmlConfiguration);
-        storeFactories(xmlConfiguration);
+        storeScanners(xmlContainers);
+        storeFactories(xmlContainers);
 
-        generalPackage = xmlConfiguration.getRootElement().getSearchPackage();
+        generalPackage = xmlContainers.getSearchPackage();
     }
 
     public ObjectFactory getObjectFactory(Class<? extends Annotation> cls) {
@@ -52,11 +51,10 @@ public final class DependencyScannerContainer {
         return scannerControllerMap.get(cls);
     }
 
-    private void storeScanners(XMLConfiguration xmlConfiguration) {
-        XMLRootElement rootElement = xmlConfiguration.getRootElement();
-        List<XMLScanController> scannersList = rootElement.getScannersList();
+    private void storeScanners(XmlContainers xmlContainers) {
+        List<XmlScanController> scannersList = xmlContainers.getScannersList();
 
-        for (XMLScanController xmlScanController : scannersList) {
+        for (XmlScanController xmlScanController : scannersList) {
 
             String annotationClassName = xmlScanController.getAnnotationClass();
             String targetClassName = xmlScanController.getTargetClass();
@@ -84,11 +82,10 @@ public final class DependencyScannerContainer {
         }
     }
 
-    private void storeFactories(XMLConfiguration xmlConfiguration) {
-        XMLRootElement rootElement = xmlConfiguration.getRootElement();
-        List<XMLObjectFactory> factoriesList = rootElement.getFactoriesList();
+    private void storeFactories(XmlContainers xmlContainers) {
+        List<XmlObjectFactory> factoriesList = xmlContainers.getFactoriesList();
 
-        for (XMLObjectFactory xmlObjectFactory : factoriesList) {
+        for (XmlObjectFactory xmlObjectFactory : factoriesList) {
 
             String annotationClassName = xmlObjectFactory.getAnnotationClass();
             String targetClassName = xmlObjectFactory.getTargetClass();
