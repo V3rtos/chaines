@@ -4,17 +4,19 @@ import me.moonways.service.api.parties.participant.PartyOwner;
 import me.moonways.service.api.parties.PartyMemberList;
 import org.jetbrains.annotations.NotNull;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.concurrent.TimeUnit;
 
-public interface Party {
+public interface Party extends Remote {
 
-    PartyOwner getOwner();
+    PartyOwner getOwner() throws RemoteException;
 
-    PartyMemberList getPartyMemberList();
+    PartyMemberList getPartyMemberList() throws RemoteException;
 
-    void setOwner(@NotNull PartyOwner newOwner);
+    void setOwner(@NotNull PartyOwner newOwner) throws RemoteException;
 
-    long getTimeOfCreated(@NotNull TimeUnit unit);
+    long getTimeOfCreated(@NotNull TimeUnit unit) throws RemoteException;
 
-    int getTotalMembersCount();
+    int getTotalMembersCount() throws RemoteException;
 }
