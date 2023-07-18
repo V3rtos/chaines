@@ -17,8 +17,8 @@ public final class BootstrapHookContainer {
     private static final String BOOTSTRAP_XML_CONFIGURATION_NAME = "bootstrap.xml";
 
     private final Map<Class<? extends BootstrapHook>, BootstrapHook> instancesByHooksTypesMap = new HashMap<>();
-    private final Map<Class<?>, XmlHook> xmlByHooksTypesMap = new HashMap<>();
     private final Map<Class<?>, BootstrapHookPriority> prioririesByHooksTypesMap = new HashMap<>();
+    private final Map<Class<?>, XmlHook> xmlByHooksTypesMap = new HashMap<>();
 
     @Inject
     private DependencyInjection dependencyInjection;
@@ -44,6 +44,7 @@ public final class BootstrapHookContainer {
                 continue;
 
             log.info("Hook '{}' was success parsed", xmlHook.getDisplayName());
+            dependencyInjection.injectFields(bootstrapHook);
 
             Class<? extends BootstrapHook> cls = bootstrapHook.getClass();
 
@@ -109,5 +110,33 @@ public final class BootstrapHookContainer {
                 .filter(cls -> Objects.equals(findHookPriority(cls), scope))
                 .map(this::findHookInstance)
                 .collect(Collectors.toSet());
+    }
+
+    public Collection<BootstrapHook> findOrderedHooks(@NotNull BootstrapHookPriority priority) {
+        Collection<BootstrapHook> registeredHooks = getRegisteredHooks(priority);
+
+        if (registeredHooks.size() > 1) {
+            if (registeredHooks.stream()
+                    .filter(hook -> findHookPriorityID(hook.getClass()) >= 0)
+                    .count() != registeredHooks.size()) {
+
+                log.error("§4Registered hooks ({}) is not marked by priority ID", joinHooksToNamesLine(registeredHooks));
+                return null;
+            }
+
+            Comparator<BootstrapHook> comparator = Comparator.comparingInt(
+                    hook -> findHookPriorityID(hook.getClass()));
+
+            registeredHooks = registeredHooks.stream().sorted(comparator).collect(Collectors.toList());
+        }
+
+        log.info("Found §6{} §rregistered hooks: [{}]", registeredHooks.size(), joinHooksToNamesLine(registeredHooks));
+        return registeredHooks;
+    }
+
+    private String joinHooksToNamesLine(Collection<BootstrapHook> registeredHooks) {
+        return registeredHooks.stream()
+                .map(instance -> findHookName(instance.getClass()))
+                .collect(Collectors.joining(", "));
     }
 }
