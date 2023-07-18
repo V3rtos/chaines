@@ -19,8 +19,6 @@ public class AppBootstrap {
     @Getter
     private final BootstrapHookContainer hooksContainer = new BootstrapHookContainer();
 
-    private final DependencyInjection dependencyInjection = new DependencyInjection();
-
     private void forceShutdown() {
         System.exit(1);
     }
@@ -64,7 +62,6 @@ public class AppBootstrap {
         hooksByPriority.forEach(bootstrapHook -> {
 
             String namespace = hooksContainer.findHookName(bootstrapHook.getClass());
-            dependencyInjection.injectFields(bootstrapHook);
 
             bootstrapHook.setProperties();
             bootstrapHook.execute(this, namespace);
@@ -75,6 +72,8 @@ public class AppBootstrap {
 
     private void injectProject() {
         log.info("Running Dependency Injection search & bind processes");
+
+        final DependencyInjection dependencyInjection = new DependencyInjection();
 
         dependencyInjection.bind(this);
 
