@@ -7,9 +7,12 @@ import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.injection.InjectionException;
 import me.moonways.bridgenet.injection.PostFactoryMethod;
 import me.moonways.bridgenet.injection.factory.ObjectFactory;
+import me.moonways.bridgenet.injection.proxy.intercept.ProxiedObjectInterceptor;
 import me.moonways.bridgenet.injection.scanner.controller.ScannerController;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -69,6 +72,10 @@ public final class DependencyScanner {
     }
 
     public void postFactoryMethods(Class<?> instanceClass, Object instance) {
+        postProxiedFactoryMethods(instanceClass, instance, null);
+    }
+
+    public void postProxiedFactoryMethods(Class<?> instanceClass, Object instance, @Nullable ProxiedObjectInterceptor interceptor) {
         Method[] methods = instanceClass.getDeclaredMethods();
 
         for (Method method : methods) {
@@ -81,17 +88,20 @@ public final class DependencyScanner {
             method.setAccessible(true);
 
             boolean useAsync = annotation.async();
-
-            invokeNativeInit(useAsync, method, instance);
-            method.setAccessible(false);
+            invokeNativeInit(useAsync, method, instance, interceptor);
         }
     }
 
-    private void invokeNativeInit(boolean useAsync, Method method, Object instance) {
+    private void invokeNativeInit(boolean useAsync, Method method, Object instance, ProxiedObjectInterceptor interceptor) {
         Runnable invocationRunner = () -> {
 
             try {
-                method.invoke(instance);
+                if (interceptor != null) {
+                    interceptor.invoke(instance, method, method, new Object[0]);
+                }
+                else {
+                    method.invoke(instance);
+                }
             }
             catch (Exception exception) {
                 throw new InjectionException(exception);

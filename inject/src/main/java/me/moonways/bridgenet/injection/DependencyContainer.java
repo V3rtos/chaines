@@ -3,8 +3,6 @@ package me.moonways.bridgenet.injection;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.injection.InjectionErrorMessages;
-import me.moonways.bridgenet.injection.InjectionException;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
@@ -57,6 +55,10 @@ public class DependencyContainer {
         }
 
         instancesMap.put(cls, object);
+    }
+
+    public void remove(@NotNull Class<?> cls) {
+        instancesMap.remove(cls);
     }
 
     public void executeComponentsEach(BiConsumer<Class<?>, Object> foreachConsumer) {

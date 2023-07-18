@@ -58,6 +58,6 @@ public class BridgenetConsole extends SimpleTerminalConsole {
 
     @Override
     protected void shutdown() {
-        // TODO: 09.05.2023
+        bootstrap.shutdown();
     }
 }

@@ -2,6 +2,8 @@ package me.moonways.bridgenet.injection;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.injection.proxy.ProxiedObject;
+import me.moonways.bridgenet.injection.proxy.intercept.ProxiedObjectInterceptor;
 import me.moonways.bridgenet.injection.scanner.DependencyScanner;
 import me.moonways.bridgenet.injection.scanner.ScannerFilter;
 import org.jetbrains.annotations.NotNull;
@@ -64,9 +66,9 @@ public class DependencyInjection {
         injector.injectFields(instance);
 
         if (!container.hasInjectionMark(cls) && !container.isComponentFound(cls)) {
-
             container.markInjected(cls);
-            log.info("Apply injection for instance of §6{}", instance.getClass().getName());
+
+            log.info("Applied injection for instance of §6{}", instance.getClass().getName());
         }
     }
 
@@ -79,13 +81,27 @@ public class DependencyInjection {
             return;
         }
 
-        container.store(cls, object);
-        injectFields(object);
-
-        scanner.postFactoryMethods(cls, object);
+        postBind(cls, object);
 
         if (cls.isAnnotationPresent(Component.class)) {
-            log.info("Bind instance of §6{}", cls.getName());
+            log.info("Bind component instance of §6{}", cls.getName());
+        }
+    }
+
+    private void postBind(Class<?> cls, Object object) {
+        if (cls.isAnnotationPresent(ProxiedObject.class)) {
+            injectFields(object);
+
+            ProxiedObjectInterceptor interceptor = ProxiedObjectInterceptor.intercept(object);
+
+            container.store(cls, interceptor.createProxy());
+            scanner.postProxiedFactoryMethods(cls, object, interceptor);
+        }
+        else {
+            container.store(cls, object);
+            injectFields(object);
+
+            scanner.postFactoryMethods(cls, object);
         }
     }
 }

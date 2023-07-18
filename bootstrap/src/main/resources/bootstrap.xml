@@ -12,11 +12,6 @@
             <executorPath>me.moonways.bridgenet.bootstrap.hook.console.ApacheConsoleStartHook</executorPath>
         </hook>
         <hook>
-            <displayName>ConsoleStop</displayName>
-            <priority>PRE_SHUTDOWN</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.console.ApacheConsoleStopHook</executorPath>
-        </hook>
-        <hook>
             <displayName>Goodbye</displayName>
             <priority>SHUTDOWN</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.goodbye.GoodbyeHook</executorPath>

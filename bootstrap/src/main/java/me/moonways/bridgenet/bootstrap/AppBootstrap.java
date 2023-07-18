@@ -6,6 +6,8 @@ import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookContainer;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookPriority;
 import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.injection.proxy.ProxiedKeepTimeMethod;
+import me.moonways.bridgenet.injection.proxy.ProxiedObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -54,7 +56,7 @@ public class AppBootstrap {
         executeHooks(BootstrapHookPriority.RUNNER);
         executeHooks(BootstrapHookPriority.POST_RUNNER);
 
-        Runtime runtime = Runtime.getRuntime();
+        final Runtime runtime = Runtime.getRuntime();
 
         runtime.addShutdownHook(new Thread(this::shutdown));
     }
