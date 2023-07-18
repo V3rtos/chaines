@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<bootstrap>
+    <hooks>
+        <hook>
+            <displayName>Protocol</displayName>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.protocol.ProtocolHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>ConsoleStart</displayName>
+            <priority>POST_RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.console.ApacheConsoleStartHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>ConsoleStop</displayName>
+            <priority>PRE_SHUTDOWN</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.console.ApacheConsoleStopHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>Goodbye</displayName>
+            <priority>SHUTDOWN</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.goodbye.GoodbyeHook</executorPath>
+        </hook>
+    </hooks>
+</bootstrap>

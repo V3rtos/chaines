@@ -1,5 +1,6 @@
 #!/bin/bash
 application_jarfile="bridgenet-server.jar"
+bootstrap_file="bootstrap.xml";
 rsiconfig_file="rsiconfig.xml";
 injectconfig_file="injectconfig.xml";
 
@@ -9,6 +10,8 @@ function cleanup() {
   # shellcheck disable=SC2115
   rm -f "$BUILD_DIR/$application_jarfile"
   # shellcheck disable=SC2115
+    rm -f "$BUILD_DIR/$bootstrap_file"
+  # shellcheck disable=SC2115
   rm -f "$BUILD_DIR/$rsiconfig_file"
   # shellcheck disable=SC2115
   rm -f "$BUILD_DIR/$injectconfig_file"
@@ -16,6 +19,7 @@ function cleanup() {
 
 function application() {
   cp -R bootstrap/target/$application_jarfile "$BUILD_DIR"
+  cp -R bootstrap/src/main/resources/$bootstrap_file "$BUILD_DIR"
   cp -R rsi/src/main/resources/$rsiconfig_file "$BUILD_DIR"
   cp -R inject/src/main/resources/$injectconfig_file "$BUILD_DIR"
 }

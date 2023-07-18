@@ -14,29 +14,29 @@ import java.net.SocketAddress;
 
 @Getter
 @RequiredArgsConstructor
-public class Bridgenet {
+public class BridgenetTCP {
 
     public static final String DEFAULT_HOST_PROPERTY = "bridgenet.address.host";
     public static final String DEFAULT_PORT_PROPERTY = "bridgenet.address.port";
 
-    public static Bridgenet createByProperties(@NotNull String hostProperty, @NotNull String portProperty) {
+    public static BridgenetTCP createByProperties(@NotNull String hostProperty, @NotNull String portProperty) {
         String host = System.getProperty(hostProperty);
         Integer port = Integer.getInteger(portProperty);
 
         SocketAddress socketAddress = new InetSocketAddress(host, port);
-        return new Bridgenet(socketAddress);
+        return new BridgenetTCP(socketAddress);
     }
 
-    public static Bridgenet createByProperties() {
+    public static BridgenetTCP createByProperties() {
         return createByProperties(DEFAULT_HOST_PROPERTY, DEFAULT_PORT_PROPERTY);
     }
 
-    public static ServerBuilder newServerBuilder(@NotNull Bridgenet bridgenet, @NotNull ProtocolControl protocolControl) {
-        return new ServerBuilder(bridgenet, protocolControl);
+    public static ServerBuilder newServerBuilder(@NotNull BridgenetTCP bridgenetTCP, @NotNull ProtocolControl protocolControl) {
+        return new ServerBuilder(bridgenetTCP, protocolControl);
     }
 
-    public static ClientBuilder newClientBuilder(@NotNull Bridgenet bridgenet, @NotNull ProtocolControl protocolControl) {
-        return new ClientBuilder(bridgenet, protocolControl);
+    public static ClientBuilder newClientBuilder(@NotNull BridgenetTCP bridgenetTCP, @NotNull ProtocolControl protocolControl) {
+        return new ClientBuilder(bridgenetTCP, protocolControl);
     }
 
     @Getter
@@ -45,7 +45,7 @@ public class Bridgenet {
     @RequiredArgsConstructor
     public static class ServerBuilder {
 
-        private final Bridgenet bridgenet;
+        private final BridgenetTCP bridgenetTCP;
         private final ProtocolControl protocolControl;
 
         private final ServerBootstrap serverBootstrap = new ServerBootstrap();
@@ -82,7 +82,7 @@ public class Bridgenet {
         }
 
         public BridgenetServer build() {
-            serverBootstrap.localAddress(bridgenet.getSocketAddress());
+            serverBootstrap.localAddress(bridgenetTCP.getSocketAddress());
             return new BridgenetServer(serverBootstrap, protocolControl);
         }
     }
@@ -90,7 +90,7 @@ public class Bridgenet {
     @RequiredArgsConstructor
     public static class ClientBuilder {
 
-        private final Bridgenet bridgenet;
+        private final BridgenetTCP bridgenetTCP;
         private final ProtocolControl protocolControl;
 
         private final Bootstrap bootstrap = new Bootstrap();
@@ -116,7 +116,7 @@ public class Bridgenet {
         }
 
         public BridgenetClient build() {
-            bootstrap.remoteAddress(bridgenet.getSocketAddress());
+            bootstrap.remoteAddress(bridgenetTCP.getSocketAddress());
             return new BridgenetClient(bootstrap, protocolControl);
         }
     }

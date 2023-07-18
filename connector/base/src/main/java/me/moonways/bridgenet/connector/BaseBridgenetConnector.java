@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class BaseBridgenetConnector {
 
-    private Bridgenet bridgenet;
+    private BridgenetTCP bridgenetTCP;
 
     private ProtocolControl protocolControl;
     private MessageRegistrationService messageRegistrationService;
@@ -39,8 +39,8 @@ public class BaseBridgenetConnector {
 
     public void setProperties() {
         // netty connection settings.
-        System.setProperty(Bridgenet.DEFAULT_HOST_PROPERTY, "localhost");
-        System.setProperty(Bridgenet.DEFAULT_PORT_PROPERTY, "8080");
+        System.setProperty(BridgenetTCP.DEFAULT_HOST_PROPERTY, "localhost");
+        System.setProperty(BridgenetTCP.DEFAULT_PORT_PROPERTY, "8080");
 
         // jdbc settings.
         System.setProperty("system.jdbc.username", "username");
@@ -64,24 +64,24 @@ public class BaseBridgenetConnector {
         dependencyInjection.findComponentsIntoBasePackage(MessageHandler.class);
 
         // bridgenet system
-        dependencyInjection.bind(bridgenet);
+        dependencyInjection.bind(bridgenetTCP);
     }
 
     public void enableBridgenetServicesSync(BaseBridgenetConnector currentConnector) {
         setProperties();
-        bridgenet = Bridgenet.createByProperties();
+        bridgenetTCP = BridgenetTCP.createByProperties();
 
         applyDependencyInjection(currentConnector);
 
         registerBridgenetMessages(messageRegistrationService);
-        syncBridgenetConnection(bridgenet);
+        syncBridgenetConnection(bridgenetTCP);
     }
 
-    public void syncBridgenetConnection(@NotNull Bridgenet bridgenet) {
+    public void syncBridgenetConnection(@NotNull BridgenetTCP bridgenetTCP) {
         BridgenetPipeline bridgenetPipeline = BridgenetPipeline.
                 newBuilder(protocolControl).build();
 
-        BridgenetClient client = Bridgenet.newClientBuilder(bridgenet, protocolControl)
+        BridgenetClient client = BridgenetTCP.newClientBuilder(bridgenetTCP, protocolControl)
                 .setGroup(BridgenetNetty.createEventLoopGroup(2))
                 .setChannelFactory(BridgenetNetty.createClientChannelFactory())
                 .setChannelInitializer(bridgenetPipeline)
