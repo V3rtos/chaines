@@ -6,13 +6,16 @@ import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.message.MessageFactory;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
 @Log4j2
 @RequiredArgsConstructor
-public class FieldInjectManager {
+public class FieldInjectManager implements Serializable {
+
+    private static final long serialVersionUID = -8750667413607682309L;
 
     private final DependencyContainer container;
 

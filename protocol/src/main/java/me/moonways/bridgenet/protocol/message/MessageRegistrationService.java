@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.protocol.message;
 
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.injection.proxy.ProxiedAsyncMethod;
+import me.moonways.bridgenet.injection.proxy.ProxiedKeepTimeMethod;
+import me.moonways.bridgenet.injection.proxy.ProxiedObject;
 import me.moonways.bridgenet.protocol.message.exception.MessageRegisterException;
 import me.moonways.bridgenet.injection.Component;
 import me.moonways.bridgenet.injection.DependencyInjection;
@@ -14,6 +17,7 @@ import java.util.Map;
 
 @Log4j2
 @Component
+@ProxiedObject
 public class MessageRegistrationService {
 
     public static final int UNDEFINED_MESSAGE_CLASS_ID = -1;
@@ -24,6 +28,7 @@ public class MessageRegistrationService {
     private DependencyInjection dependencyInjection;
 
     @PostFactoryMethod
+    @ProxiedKeepTimeMethod
     private void initializeMessages() {
         dependencyInjection.findComponentsIntoBasePackage(MessageComponent.class);
     }

@@ -41,12 +41,9 @@ public final class RemoteServiceRegistry {
     @PostFactoryMethod
     void init() {
         dependencyInjection.injectFields(endpointController);
-
-        initializeXmlConfiguration();
-        initializeEndpointsController();
     }
 
-    private void initializeXmlConfiguration() {
+    public void initializeXmlConfiguration() {
         XmlJaxbParser parser = new XmlJaxbParser();
         xmlConfiguration = parser.parseCopiedResource(getClass().getClassLoader(), "rsiconfig.xml", XmlConfiguration.class);
 
@@ -64,7 +61,7 @@ public final class RemoteServiceRegistry {
         }
     }
 
-    private void initializeEndpointsController() {
+    public void initializeEndpointsController() {
         endpointController.injectInternalComponents();
         endpointController.findEndpoints();
 

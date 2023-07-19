@@ -2,6 +2,7 @@ package me.moonways.bridgenet.rsi.endpoint;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.rsi.module.ServiceModulesContainer;
 import me.moonways.bridgenet.rsi.module.access.AccessModule;
@@ -11,14 +12,12 @@ import me.moonways.bridgenet.rsi.service.ServiceInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -31,6 +30,9 @@ public class EndpointRunner {
 
     @Inject
     private RemoteServiceRegistry remoteServiceRegistry;
+
+    @Inject
+    private DependencyInjection dependencyInjection;
 
     public void start(Endpoint endpoint) {
         String name = endpoint.getServiceInfo().getName();

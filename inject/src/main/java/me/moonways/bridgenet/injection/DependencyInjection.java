@@ -76,32 +76,34 @@ public class DependencyInjection {
         this.bind(object.getClass(), object);
     }
 
-    public void bind(@NotNull Class<?> cls, @NotNull Object object) {
-        if (container.isComponentFound(cls)) {
+    public void bind(@NotNull Class<?> bindClass, @NotNull Object object) {
+        if (container.isComponentFound(bindClass)) {
             return;
         }
 
-        postBind(cls, object);
+        postBind(bindClass, object);
 
-        if (cls.isAnnotationPresent(Component.class)) {
-            log.info("Bind component instance of §6{}", cls.getName());
+        if (bindClass.isAnnotationPresent(Component.class)) {
+            log.info("Bind component instance of §6{}", bindClass.getName());
         }
     }
 
-    private void postBind(Class<?> cls, Object object) {
-        if (cls.isAnnotationPresent(ProxiedObject.class)) {
+    private void postBind(Class<?> bindClass, Object object) {
+        Class<?> objectClass = object.getClass();
+
+        if (bindClass.isAnnotationPresent(ProxiedObject.class)) {
             injectFields(object);
 
             ProxiedObjectInterceptor interceptor = ProxiedObjectInterceptor.intercept(object);
 
-            container.store(cls, interceptor.createProxy());
-            scanner.postProxiedFactoryMethods(cls, object, interceptor);
+            container.store(bindClass, interceptor.createProxy());
+            scanner.postProxiedFactoryMethods(objectClass, object, interceptor);
         }
         else {
-            container.store(cls, object);
+            container.store(bindClass, object);
             injectFields(object);
 
-            scanner.postFactoryMethods(cls, object);
+            scanner.postFactoryMethods(objectClass, object);
         }
     }
 }

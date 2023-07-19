@@ -2,9 +2,22 @@
 <bootstrap>
     <hooks>
         <hook>
+            <displayName>DatabaseHook</displayName>
+            <priorityID>1</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.database.ConvenoDatabaseHook</executorPath>
+        </hook>
+        <hook>
             <displayName>Protocol</displayName>
+            <priorityID>2</priorityID>
             <priority>RUNNER</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.protocol.ProtocolHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>RSI</displayName>
+            <priorityID>3</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.rsi.ServiceInitHook</executorPath>
         </hook>
         <hook>
             <displayName>ConsoleStart</displayName>

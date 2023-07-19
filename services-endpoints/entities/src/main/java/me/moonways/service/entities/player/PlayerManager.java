@@ -27,20 +27,19 @@ public final class PlayerManager extends UnicastRemoteObject implements Bridgene
     private final Map<UUID, ConnectedEntityPlayer> connectedPlayerByIdMap = new HashMap<>();
 
     @Getter
-    private OfflinePlayerRepository offlinePlayerRepository;
-
-    @Inject
-    private ConvenoRouter convenoRouter;
+    private OfflinePlayerRepository repository;
 
     public PlayerManager() throws RemoteException {
         super();
+    }
 
-        //offlinePlayerRepository = convenoRouter.getRepository(OfflinePlayerRepository.class);
-        //offlinePlayerRepository.validateTableExists();
+    public void injectRepository(ConvenoRouter convenoRouter) {
+        repository = convenoRouter.getRepository(OfflinePlayerRepository.class);
+        repository.validateTableExists();
     }
 
     private OfflinePlayerData getOfflinePlayerDataByUUID(UUID playerUUID) {
-        ConvenoResponse offlinePlayerResponse = offlinePlayerRepository.getByUUID(playerUUID);
+        ConvenoResponse offlinePlayerResponse = repository.getByUUID(playerUUID);
         ConvenoResponseLine first = offlinePlayerResponse.first();
 
         if (first == null) {
@@ -51,7 +50,7 @@ public final class PlayerManager extends UnicastRemoteObject implements Bridgene
     }
 
     private OfflinePlayerData getOfflinePlayerDataByName(String playerName) {
-        ConvenoResponse offlinePlayerResponse = offlinePlayerRepository.getByName(playerName);
+        ConvenoResponse offlinePlayerResponse = repository.getByName(playerName);
         ConvenoResponseLine first = offlinePlayerResponse.first();
 
         if (first == null) {

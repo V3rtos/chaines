@@ -2,9 +2,12 @@ package me.moonways.bridgenet.rsi.module.access;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.rsi.module.AbstractModule;
 import me.moonways.bridgenet.rsi.module.ModuleConsts;
 import me.moonways.bridgenet.rsi.module.ModuleID;
+import me.moonways.bridgenet.rsi.service.RemoteService;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +25,9 @@ public class AccessModule extends AbstractModule<AccessConfig> {
 
     @Setter
     private Class<?> endpointClass;
+
+    @Inject
+    private DependencyInjection dependencyInjection;
 
     public AccessModule() {
         super(ModuleID.of(ModuleConsts.REMOTE_ACCESS_ID, "accessModule"));
@@ -47,17 +53,19 @@ public class AccessModule extends AbstractModule<AccessConfig> {
 
     public void exportStub(@NotNull ServiceInfo serviceInfo) {
         String name = serviceInfo.getName();
-        Class<? extends Remote> subclass = endpointClass.asSubclass(Remote.class);
+        Class<? extends RemoteService> subclass = endpointClass.asSubclass(RemoteService.class);
 
         try {
-            Constructor<? extends Remote> constructor = subclass.getConstructor();
-            Remote object = constructor.newInstance();
+            Constructor<? extends RemoteService> constructor = subclass.getConstructor();
+            RemoteService stub = constructor.newInstance();
+
+            dependencyInjection.bind(serviceInfo.getTarget(), stub);
 
             try {
                 LocateRegistry.createRegistry(serviceInfo.getPort());
-                Naming.rebind(uri, object);
+                Naming.rebind(uri, stub);
 
-                log.info("Endpoint '{}' was success exported: §f{}", name, object);
+                log.info("Endpoint '{}' was success exported: §f{}", name, stub);
             }
             catch (RemoteException exception) {
                 log.error("§4Cannot be export endpoint uri {}: §c{}", uri, exception.toString());
@@ -65,6 +73,7 @@ public class AccessModule extends AbstractModule<AccessConfig> {
         }
         catch (Exception exception) {
             log.error("§4Cannot be allocate endpoint '{}': §c{}", name, exception.toString());
+            exception.printStackTrace();
         }
     }
 

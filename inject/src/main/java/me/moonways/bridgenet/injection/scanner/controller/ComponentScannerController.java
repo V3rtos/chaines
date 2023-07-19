@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.injection.scanner.controller;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.injection.Component;
 import me.moonways.bridgenet.injection.DependencyContainer;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.factory.ObjectFactory;
@@ -92,8 +91,17 @@ public class ComponentScannerController implements ScannerController {
             return;
 
         ObjectFactory objectFactory = dependencyInjection.getScanner().getObjectFactory(annotation);
-
         Object object = objectFactory.create(resource);
+
+        bind(dependencyInjection, resource, object, annotation);
+    }
+
+    public final void bind(@NotNull DependencyInjection dependencyInjection,
+                     @NotNull Class<?> resource,
+                     @NotNull Object object,
+                     @NotNull Class<? extends Annotation> annotation) {
+
+        DependencyContainer container = dependencyInjection.getContainer();
 
         dependencyInjection.bind(resource, object);
         container.addComponentWithAnnotation(resource, annotation);
