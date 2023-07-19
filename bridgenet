@@ -25,7 +25,7 @@ case $1 in
     "-b" | "--build")
         source .scripts/build_project.sh
         ;;
-    "-f" | "--fullbuild")
+    "-fb" | "--fullbuild")
         source .scripts/build_project.sh
         source .scripts/build_endpoints.sh
         source .scripts/config_endpoints.sh
