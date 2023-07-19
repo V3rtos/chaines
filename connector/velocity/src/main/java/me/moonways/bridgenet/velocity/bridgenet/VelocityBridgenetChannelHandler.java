@@ -1,12 +1,8 @@
 package me.moonways.bridgenet.velocity.bridgenet;
 
-import me.moonways.bridgenet.protocol.message.MessageHandler;
-import me.moonways.bridgenet.protocol.message.MessageTrigger;
 import me.moonways.bridgenet.injection.Inject;
-import me.moonways.service.api.entities.server.ServerConnectResponseType;
-import me.moonways.service.entities.server.protocol.handshake.response.HandshakeResponseMessage;
+import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 import me.moonways.bridgenet.velocity.BridgenetVelocity;
-import me.moonways.bridgenet.velocity.exception.ServerConnectException;
 
 @MessageHandler
 public class VelocityBridgenetChannelHandler {
@@ -18,25 +14,25 @@ public class VelocityBridgenetChannelHandler {
     @Inject
     private BridgenetVelocity bridgenetVelocity;
 
-    @MessageTrigger
-    public void handle(HandshakeResponseMessage responseMessage) {
-        int result = responseMessage.getResult();
+   //@MessageTrigger
+   //public void handle(HandshakeResponseMessage responseMessage) {
+   //    int result = responseMessage.getResult();
 
-        ServerConnectResponseType serverConnectResponseType = ServerConnectResponseType.of(result);
+   //    ServerConnectResponseType serverConnectResponseType = ServerConnectResponseType.of(result);
 
-        switch (serverConnectResponseType) {
-            case SUCCESSFUL_CONNECTED: {
-                bridgenetVelocity.getLogger().info(ALREADY_CONNECTED);
-                break;
-            }
+   //    switch (serverConnectResponseType) {
+   //        case SUCCESSFUL_CONNECTED: {
+   //            bridgenetVelocity.getLogger().info(ALREADY_CONNECTED);
+   //            break;
+   //        }
 
-            case ALREADY_CONNECTED: {
-                throw new ServerConnectException(SUCCESSFUL_CONNECTED);
-            }
+   //        case ALREADY_CONNECTED: {
+   //            throw new ServerConnectException(SUCCESSFUL_CONNECTED);
+   //        }
 
-            case BAD_RESPONSE: {
-                throw new ServerConnectException(BAD_RESPONSE);
-            }
-        }
-    }
+   //        case BAD_RESPONSE: {
+   //            throw new ServerConnectException(BAD_RESPONSE);
+   //        }
+   //    }
+   //}
 }

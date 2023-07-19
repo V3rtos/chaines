@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.service.api.entities.player.ConnectedEntityPlayer;
 import me.moonways.service.api.entities.server.EntityServer;
-import me.moonways.bridgenet.protocol.BridgenetChannel;
+import me.moonways.bridgenet.mtp.MTPChannel;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 public class VelocityServer implements EntityServer {
 
     private final String name;
-    private final BridgenetChannel bridgenetChannel;
+    private final MTPChannel bridgenetChannel;
 
     private final InetSocketAddress serverAddress;
 

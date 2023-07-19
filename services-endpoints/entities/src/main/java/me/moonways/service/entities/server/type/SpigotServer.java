@@ -3,7 +3,7 @@ package me.moonways.service.entities.server.type;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.service.api.entities.player.ConnectedEntityPlayer;
-import me.moonways.bridgenet.protocol.BridgenetChannel;
+import me.moonways.bridgenet.mtp.MTPChannel;
 import me.moonways.service.api.entities.server.EntityServer;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 public class SpigotServer implements EntityServer {
 
     private final String name;
-    private final BridgenetChannel bridgenetChannel;
+    private final MTPChannel bridgenetChannel;
 
     private final InetSocketAddress serverAddress;
 

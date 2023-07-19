@@ -2,7 +2,7 @@ package me.moonways.service.entities.server.type;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.service.api.entities.exception.ArenaNotFoundException;
-import me.moonways.bridgenet.protocol.BridgenetChannel;
+import me.moonways.bridgenet.mtp.MTPChannel;
 import me.moonways.service.api.games.GameArena;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +23,7 @@ public class GameServer extends SpigotServer {
 
     private final Map<UUID, GameArena> arenas = new ConcurrentHashMap<>();
 
-    public GameServer(/*Game game, */String name, BridgenetChannel bridgenetChannel, InetSocketAddress serverAddress) {
+    public GameServer(/*Game game, */String name, MTPChannel bridgenetChannel, InetSocketAddress serverAddress) {
         super(name, bridgenetChannel, serverAddress);
         //this.game = game;
     }

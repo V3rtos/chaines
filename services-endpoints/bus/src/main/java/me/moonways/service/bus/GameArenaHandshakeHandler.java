@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 //import me.moonways.bridgenet.api.connection.server.AddressServerMap;
 //import me.moonways.bridgenet.api.connection.server.ServerManager;
 //import me.moonways.bridgenet.api.connection.server.type.GameServer;
-import me.moonways.bridgenet.protocol.message.MessageHandler;
+import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 //import me.moonways.bridgenet.service.game.GameArena;
 //import me.moonways.bridgenet.service.game.GameService;
 //import me.moonways.services.api.games.data.Arena;

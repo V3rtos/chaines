@@ -42,7 +42,7 @@
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>protocol</artifactId>
+            <artifactId>mtp</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>

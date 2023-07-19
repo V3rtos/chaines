@@ -5,16 +5,16 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.connector.BaseBridgenetConnector;
 import me.moonways.bridgenet.connector.exception.BridgenetConnectionClosedException;
-import me.moonways.bridgenet.protocol.BridgenetChannel;
-import me.moonways.bridgenet.protocol.BridgenetClient;
-import me.moonways.bridgenet.protocol.exception.BridgenetConnectionException;
+import me.moonways.bridgenet.mtp.MTPChannel;
+import me.moonways.bridgenet.mtp.MTPClient;
+import me.moonways.bridgenet.mtp.exception.ChannelException;
 
 import java.util.concurrent.*;
 
 @RequiredArgsConstructor
 public class BridgenetReconnectHandler extends ChannelInboundHandlerAdapter {
 
-    private final BridgenetClient bridgenetClient;
+    private final MTPClient MTPClient;
     private final BaseBridgenetConnector bridgenetConnector;
 
     private final ScheduledExecutorService reconnectScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -57,11 +57,11 @@ public class BridgenetReconnectHandler extends ChannelInboundHandlerAdapter {
     private synchronized boolean tryReconnect() {
 
         try {
-            BridgenetChannel bridgenetChannel = bridgenetClient.connectSync();
+            MTPChannel bridgenetChannel = MTPClient.connectSync();
             bridgenetConnector.setChannel(bridgenetChannel); // обновляем канал коннектора на только что подключенный
 
             return true;
-        } catch (BridgenetConnectionException exception) {
+        } catch (ChannelException exception) {
            return false; // ошибку выкидывать незачем, просто пробуем переподключиться вновь
         }
     }

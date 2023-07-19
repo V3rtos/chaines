@@ -1,14 +1,9 @@
 package me.moonways.bridgenet.connector.exception;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.experimental.StandardException;
 
+@StandardException
 public class BridgenetConnectionClosedException extends RuntimeException {
 
-    public BridgenetConnectionClosedException(@NotNull Exception exception, @NotNull String message) {
-        super(message, exception);
-    }
-
-    public BridgenetConnectionClosedException(@NotNull String message) {
-        super(message);
-    }
+    private static final long serialVersionUID = -7490890987451685809L;
 }

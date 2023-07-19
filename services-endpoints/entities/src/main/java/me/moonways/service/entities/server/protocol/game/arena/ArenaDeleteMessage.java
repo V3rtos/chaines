@@ -3,24 +3,31 @@ package me.moonways.service.entities.server.protocol.game.arena;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.moonways.bridgenet.protocol.message.Message;
-import me.moonways.bridgenet.protocol.message.MessageComponent;
-import me.moonways.bridgenet.protocol.message.MessageState;
-import me.moonways.bridgenet.protocol.message.ProtocolDirection;
+import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
+import me.moonways.bridgenet.mtp.message.MessageWrapper;
+import me.moonways.bridgenet.mtp.ProtocolDirection;
+import me.moonways.bridgenet.mtp.message.inject.ServerMessage;
+import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
+import me.moonways.bridgenet.mtp.transfer.provider.TransferUuidProvider;
 
 import java.util.UUID;
 
-@MessageComponent(direction = ProtocolDirection.TO_SERVER, state = MessageState.REQUEST)
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArenaDeleteMessage extends Message {
+@ServerMessage
+public class ArenaDeleteMessage {
 
+    @ByteTransfer(provider = TransferUuidProvider.class)
     private UUID arenaUUID;
+
+    @ByteTransfer
     private String mapName;
 
+    @ByteTransfer
     private int gameId;
+    @ByteTransfer
     private int modeId;
-
+    @ByteTransfer
     private int maxPlayers;
 }

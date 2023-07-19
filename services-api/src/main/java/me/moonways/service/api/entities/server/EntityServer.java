@@ -1,6 +1,6 @@
 package me.moonways.service.api.entities.server;
 
-import me.moonways.bridgenet.protocol.BridgenetChannel;
+import me.moonways.bridgenet.mtp.MTPChannel;
 import me.moonways.service.api.entities.player.ConnectedEntityPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +14,7 @@ public interface EntityServer extends Remote {
 
     String getName() throws RemoteException;
 
-    BridgenetChannel getBridgenetChannel() throws RemoteException;
+    MTPChannel getBridgenetChannel() throws RemoteException;
 
     InetSocketAddress getServerAddress() throws RemoteException;
 

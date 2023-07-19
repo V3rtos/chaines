@@ -5,7 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.rsi.module.AbstractModule;
-import me.moonways.bridgenet.rsi.module.ModuleConsts;
+import me.moonways.bridgenet.rsi.module.ModuleConst;
 import me.moonways.bridgenet.rsi.module.ModuleID;
 import me.moonways.bridgenet.rsi.service.RemoteService;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
@@ -30,7 +30,7 @@ public class AccessModule extends AbstractModule<AccessConfig> {
     private DependencyInjection dependencyInjection;
 
     public AccessModule() {
-        super(ModuleID.of(ModuleConsts.REMOTE_ACCESS_ID, "accessModule"));
+        super(ModuleID.of(ModuleConst.REMOTE_ACCESS_ID, "accessModule"));
     }
 
     @SuppressWarnings("deprecation")

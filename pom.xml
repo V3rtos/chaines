@@ -12,7 +12,7 @@
 
     <modules>
         <module>bootstrap</module>
-        <module>protocol</module>
+        <module>mtp</module>
         <module>api</module>
     </modules>
 

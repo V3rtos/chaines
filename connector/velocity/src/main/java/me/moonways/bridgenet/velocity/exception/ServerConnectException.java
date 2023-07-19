@@ -1,10 +1,9 @@
 package me.moonways.bridgenet.velocity.exception;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.experimental.StandardException;
 
+@StandardException
 public class ServerConnectException extends RuntimeException {
 
-    public ServerConnectException(@NotNull String message) {
-        super(message);
-    }
+    private static final long serialVersionUID = 7827333190915166586L;
 }

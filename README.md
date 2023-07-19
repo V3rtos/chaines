@@ -1,5 +1,6 @@
 <div align="center">
 
+<!--suppress CheckImageSize -->
 <img src=".assets/logo.png" alt="drawing" width="500"/>
 
 # MOONWAYS BRIDGE NET

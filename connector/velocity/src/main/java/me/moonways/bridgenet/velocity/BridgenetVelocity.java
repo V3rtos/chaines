@@ -7,12 +7,10 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Getter;
 import me.moonways.bridgenet.connector.BaseBridgenetConnector;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
-import me.moonways.bridgenet.protocol.ProtocolControl;
-import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
-import me.moonways.bridgenet.protocol.message.ProtocolDirection;
+import me.moonways.bridgenet.mtp.MTPDriver;
+import me.moonways.bridgenet.mtp.message.MessageRegistry;
 import me.moonways.bridgenet.injection.PostFactoryMethod;
 import me.moonways.bridgenet.injection.Inject;
-import me.moonways.service.entities.server.protocol.handshake.VelocityHandshakeMessage;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -20,9 +18,9 @@ import org.slf4j.Logger;
 public class BridgenetVelocity extends BaseBridgenetConnector {
 
     @Inject
-    private ProtocolControl protocolControl;
+    private MTPDriver driver;
     @Inject
-    private MessageRegistrationService messageRegistrationService;
+    private MessageRegistry messageRegistry;
     @Inject
     private CloudnetWrapper cloudnetWrapper;
 
@@ -42,13 +40,13 @@ public class BridgenetVelocity extends BaseBridgenetConnector {
     @PostFactoryMethod
     private void init() {
         super.initializeConnectorData(
-                protocolControl,
-                messageRegistrationService);
+                driver,
+                messageRegistry);
     }
 
     @Override
-    protected void registerBridgenetMessages(@NotNull MessageRegistrationService registry) {
-        registry.registerAll(ProtocolDirection.TO_CLIENT);
+    protected void registerBridgenetMessages(@NotNull MessageRegistry registry) {
+        //registry.registerAll(ProtocolDirection.TO_CLIENT);
     }
 
     @Subscribe
@@ -63,7 +61,7 @@ public class BridgenetVelocity extends BaseBridgenetConnector {
         String currentSnapshotHost = cloudnetWrapper.getCurrentSnapshotHost();
         int currentSnapshotPort = cloudnetWrapper.getCurrentSnapshotPort();
 
-        VelocityHandshakeMessage velocityHandshakeMessage = new VelocityHandshakeMessage(fullCurrentServiceName, currentSnapshotHost, currentSnapshotPort);
-        sendMessage(velocityHandshakeMessage);
+        //VelocityHandshakeMessage velocityHandshakeMessage = new VelocityHandshakeMessage(fullCurrentServiceName, currentSnapshotHost, currentSnapshotPort);
+        //sendMessage(velocityHandshakeMessage);
     }
 }

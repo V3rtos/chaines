@@ -2,6 +2,8 @@ package me.moonways.bridgenet.api.scheduler;
 
 public class ScheduleException extends RuntimeException {
 
+    private static final long serialVersionUID = -3654662519868522763L;
+
     private static String formatMessage(String message, Object[] parameters) {
         String formattedMessage = String.format(message, parameters);
 

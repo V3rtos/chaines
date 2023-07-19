@@ -1,46 +1,49 @@
 package me.moonways.bridgenet.connector;
 
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFactory;
+import io.netty.channel.EventLoopGroup;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Synchronized;
 import me.moonways.bridgenet.connector.reconnect.BridgenetReconnectHandler;
-import me.moonways.bridgenet.protocol.*;
-import me.moonways.bridgenet.protocol.message.Message;
-import me.moonways.bridgenet.protocol.message.MessageComponent;
-import me.moonways.bridgenet.protocol.message.MessageHandler;
-import me.moonways.bridgenet.protocol.message.MessageRegistrationService;
-import me.moonways.bridgenet.protocol.pipeline.BridgenetPipeline;
+import me.moonways.bridgenet.mtp.*;
+import me.moonways.bridgenet.mtp.MTPClient;
+import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
+import me.moonways.bridgenet.mtp.message.MessageWrapper;
+import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
+import me.moonways.bridgenet.mtp.message.MessageRegistry;
+import me.moonways.bridgenet.mtp.pipeline.NettyPipeline;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import net.conveno.jdbc.ConvenoRouter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.CompletableFuture;
-
 public class BaseBridgenetConnector {
 
-    private BridgenetTCP bridgenetTCP;
+    private MTPConnectionFactory connectionProperties;
 
-    private ProtocolControl protocolControl;
-    private MessageRegistrationService messageRegistrationService;
+    private MTPDriver driver;
+    private MessageRegistry messageRegistry;
 
     @Setter
     @Getter
-    private BridgenetChannel channel;
+    private MTPChannel channel;
 
-    protected void initializeConnectorData(ProtocolControl protocolControl,
-                                           MessageRegistrationService messageRegistrationService) {
+    protected void initializeConnectorData(MTPDriver driver,
+                                           MessageRegistry messageRegistry) {
 
-        this.protocolControl = protocolControl;
-        this.messageRegistrationService = messageRegistrationService;
+        this.driver = driver;
+        this.messageRegistry = messageRegistry;
     }
 
-    protected void registerBridgenetMessages(@NotNull MessageRegistrationService messageRegistrationService) {
+    protected void registerBridgenetMessages(@NotNull MessageRegistry messageRegistry) {
         // override me.
     }
 
     public void setProperties() {
         // netty connection settings.
-        System.setProperty(BridgenetTCP.DEFAULT_HOST_PROPERTY, "localhost");
-        System.setProperty(BridgenetTCP.DEFAULT_PORT_PROPERTY, "8080");
+        System.setProperty(MTPConnectionFactory.HOST_PROPERTY_KEY, "localhost");
+        System.setProperty(MTPConnectionFactory.PORT_PROPERTY_KEY, "8080");
 
         // jdbc settings.
         System.setProperty("system.jdbc.username", "username");
@@ -48,7 +51,7 @@ public class BaseBridgenetConnector {
     }
 
     private void applyDependencyInjection(BaseBridgenetConnector currentConnector) {
-        DependencyInjection dependencyInjection = new DependencyInjection();
+        DependencyInjection dependencyInjection = new DependencyInjection(); // TODO - Забрать из модуля bootstrap
 
         // local system services.
         dependencyInjection.bind(dependencyInjection);
@@ -60,42 +63,41 @@ public class BaseBridgenetConnector {
         dependencyInjection.findComponentsIntoBasePackage();
         dependencyInjection.bind(currentConnector);
 
-        dependencyInjection.findComponentsIntoBasePackage(MessageComponent.class);
+        dependencyInjection.findComponentsIntoBasePackage(ClientMessage.class);
         dependencyInjection.findComponentsIntoBasePackage(MessageHandler.class);
 
         // bridgenet system
-        dependencyInjection.bind(bridgenetTCP);
+        dependencyInjection.bind(connectionProperties);
     }
 
     public void enableBridgenetServicesSync(BaseBridgenetConnector currentConnector) {
         setProperties();
-        bridgenetTCP = BridgenetTCP.createByProperties();
+        connectionProperties = MTPConnectionFactory.createFromSystemProperties();
 
         applyDependencyInjection(currentConnector);
 
-        registerBridgenetMessages(messageRegistrationService);
-        syncBridgenetConnection(bridgenetTCP);
+        registerBridgenetMessages(messageRegistry);
+        connectToMTPServer(connectionProperties);
     }
 
-    public void syncBridgenetConnection(@NotNull BridgenetTCP bridgenetTCP) {
-        BridgenetPipeline bridgenetPipeline = BridgenetPipeline.
-                newBuilder(protocolControl).build();
+    public void connectToMTPServer(@NotNull MTPConnectionFactory connectionProperties) {
+        ChannelFactory<? extends Channel> clientChannelFactory = NettyFactory.createClientChannelFactory();
 
-        BridgenetClient client = BridgenetTCP.newClientBuilder(bridgenetTCP, protocolControl)
-                .setGroup(BridgenetNetty.createEventLoopGroup(2))
-                .setChannelFactory(BridgenetNetty.createClientChannelFactory())
-                .setChannelInitializer(bridgenetPipeline)
+        NettyPipeline channelInitializer = NettyPipeline.create(driver);
+        EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(2);
+
+        MTPClient client = MTPConnectionFactory.newClientBuilder(connectionProperties)
+                .setGroup(parentWorker)
+                .setChannelFactory(clientChannelFactory)
+                .setChannelInitializer(channelInitializer)
                 .build();
 
-        bridgenetPipeline.addChannelHandler(new BridgenetReconnectHandler(client, this));
+        channelInitializer.addChannelHandler(new BridgenetReconnectHandler(client, this));
         channel = client.connectSync();
     }
 
-    public void sendMessage(Message message) {
+    @Synchronized
+    public void sendMessage(MessageWrapper message) {
         channel.sendMessage(message);
-    }
-
-    public <M extends Message> CompletableFuture<M> sendMessageWithCallback(Message message) {
-        return channel.sendMessageWithCallback(message);
     }
 }

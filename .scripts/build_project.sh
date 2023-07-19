@@ -34,7 +34,7 @@ function install() {
 
 cleanup
 # shellcheck disable=SC2054
-declare -a modules_array=("api" "inject" "rsi" "protocol" "rest" "bootstrap")
+declare -a modules_array=("api" "inject" "rsi" "mtp" "rest" "bootstrap")
 
 # shellcheck disable=SC2128
 for module in "${modules_array[@]}"

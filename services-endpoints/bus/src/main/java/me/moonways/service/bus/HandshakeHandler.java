@@ -3,7 +3,7 @@ package me.moonways.service.bus;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.injection.PostFactoryMethod;
-import me.moonways.bridgenet.protocol.message.MessageHandler;
+import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 import me.moonways.service.api.entities.server.BridgenetServers;
 
 @MessageHandler

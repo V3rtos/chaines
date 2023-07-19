@@ -47,7 +47,7 @@ public final class AddressServerMap implements Serializable {
         InetSocketAddress inetSocketAddress;
 
         try {
-            inetSocketAddress = server.getBridgenetChannel().getInetSocketAddress();
+            inetSocketAddress = server.getBridgenetChannel().address();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -63,7 +63,7 @@ public final class AddressServerMap implements Serializable {
         InetSocketAddress inetSocketAddress;
 
         try {
-            inetSocketAddress = server.getBridgenetChannel().getInetSocketAddress();
+            inetSocketAddress = server.getBridgenetChannel().address();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
