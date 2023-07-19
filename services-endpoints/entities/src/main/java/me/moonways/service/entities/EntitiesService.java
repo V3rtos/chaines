@@ -6,8 +6,6 @@ import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.injection.PostFactoryMethod;
 import me.moonways.service.api.bus.BridgenetBusService;
 import me.moonways.service.api.entities.BridgenetEntitiesService;
-import me.moonways.service.api.entities.player.BridgenetPlayers;
-import me.moonways.service.api.entities.server.BridgenetServers;
 import me.moonways.service.entities.player.PlayerManager;
 import me.moonways.service.entities.server.ServerManager;
 import net.conveno.jdbc.ConvenoRouter;
