@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.injection.DependencyContainer;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.injection.proxy.ProxiedKeepTimeMethod;
 import me.moonways.bridgenet.mtp.ProtocolDirection;
 import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
 import me.moonways.bridgenet.mtp.message.inject.ServerMessage;
@@ -32,6 +33,7 @@ public class MessageRegistry {
         return toWrapper(direction, messageClass);
     }
 
+    @ProxiedKeepTimeMethod
     public void bindMessages() {
         Class<ClientMessage> clientAnnotation = ClientMessage.class;
         Class<ServerMessage> serverAnnotation = ServerMessage.class;

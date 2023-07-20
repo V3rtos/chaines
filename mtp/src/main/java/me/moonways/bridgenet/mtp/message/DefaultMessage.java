@@ -1,5 +1,7 @@
 package me.moonways.bridgenet.mtp.message;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.Synchronized;
 import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
 import me.moonways.bridgenet.mtp.message.inject.ServerMessage;
@@ -10,6 +12,7 @@ import java.util.Properties;
 
 @ClientMessage
 @ServerMessage
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DefaultMessage {
 
     public static DefaultMessage empty() {
