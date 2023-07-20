@@ -11,6 +11,9 @@ import me.moonways.bridgenet.mtp.message.inject.MessageTrigger;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -28,6 +31,7 @@ public final class MessageHandlerList {
 
     public void detectHandlers() {
         dependencyInjection.findComponentsIntoBasePackage(MessageHandler.class);
+
         messageHandlers = dependencyInjection.getContainer().getFoundComponents(MessageHandler.class)
                 .stream()
                 .flatMap(object -> Arrays.stream(object.getClass().getDeclaredMethods())
@@ -35,6 +39,29 @@ public final class MessageHandlerList {
                 .filter(method -> method.hasAnnotation(MessageTrigger.class))
                 .collect(Collectors.toSet());
     }
+
+    //public void handle(@NotNull MessageWrapper message) {
+    //    for (HandlerMethodWrapper wrapper : messageHandlers) {
+//
+    //        Method method = wrapper.getMethod();
+    //        Class<?> messageClass = message.getClass();
+//
+    //        if (method.getParameterCount() != 1) {
+    //            throw new MessageHandleException(
+    //                    String.format("Can't handle message %s in handler %s", messageClass.getName(),
+    //                            wrapper.getSourceClass().getName()));
+    //        }
+//
+    //        Class<?> methodMessageClass = method.getParameterTypes()[0];
+    //        if (messageClass.equals(methodMessageClass)) {
+    //            try {
+    //                method.invoke(wrapper.getSource(), message);
+    //            } catch (IllegalAccessException | InvocationTargetException e) {
+    //                throw new RuntimeException(e);
+    //            }
+    //        }
+    //    }
+    //}
 
     public void handle(@NotNull MessageWrapper message) {
         for (HandlerMethodWrapper wrapper : messageHandlers) {
@@ -48,11 +75,17 @@ public final class MessageHandlerList {
                                 wrapper.getSourceClass().getName()));
             }
 
+            MethodHandles.Lookup lookup = MethodHandles.publicLookup();
+            MethodType methodType = MethodType.methodType(Void.class, Object.class);
+
             Class<?> methodMessageClass = method.getParameterTypes()[0];
+
             if (messageClass.equals(methodMessageClass)) {
                 try {
-                    method.invoke(wrapper.getSource(), message);
-                } catch (IllegalAccessException | InvocationTargetException e) {
+                    MethodHandle methodHandle = lookup.findVirtual(messageClass, method.getName(), methodType);
+
+                    methodHandle.invoke(wrapper.getSource(), message);
+                } catch (Throwable e) {
                     throw new RuntimeException(e);
                 }
             }
