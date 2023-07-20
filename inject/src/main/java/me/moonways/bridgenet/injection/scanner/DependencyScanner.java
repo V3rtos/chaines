@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public final class DependencyScanner {
 
-    private static final ExecutorService ASYNC_EXECUTOR = Executors.newCachedThreadPool();
-
     @Inject
     private DependencyInjection dependencyInjection;
 
