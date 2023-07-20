@@ -8,7 +8,7 @@ exec_help() {
   echo " > -ep, --endpoints             Build endpoints modules to build."
   echo " > -epc, --endpointsconfig      Configure endpoints modules before build."
   echo " > -b, --build                  Build only maintained project modules."
-  echo " > -f, --fullbuild              Run full build of all modules with endpoints."
+  echo " > -fb, --fullbuild              Run full build of all modules with endpoints."
 }
 
 case $1 in
