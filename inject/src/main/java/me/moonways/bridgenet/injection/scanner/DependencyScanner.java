@@ -86,32 +86,21 @@ public final class DependencyScanner {
             }
 
             method.setAccessible(true);
-
-            boolean useAsync = annotation.async();
-            invokeNativeInit(useAsync, method, instance, interceptor);
+            invokeNativeInit(method, instance, interceptor);
         }
     }
 
-    private void invokeNativeInit(boolean useAsync, Method method, Object instance, ProxiedObjectInterceptor interceptor) {
-        Runnable invocationRunner = () -> {
-
-            try {
-                if (interceptor != null) {
-                    interceptor.invoke(instance, method, method, new Object[0]);
-                }
-                else {
-                    method.invoke(instance);
-                }
+    private void invokeNativeInit(Method method, Object instance, ProxiedObjectInterceptor interceptor) {
+        try {
+            if (interceptor != null) {
+                interceptor.invoke(instance, method, method, new Object[0]);
             }
-            catch (Exception exception) {
-                throw new InjectionException(exception);
+            else {
+                method.invoke(instance);
             }
-        };
-
-        if (useAsync) {
-            ASYNC_EXECUTOR.execute(invocationRunner);
-        } else {
-            invocationRunner.run();
+        }
+        catch (Exception exception) {
+            throw new InjectionException(exception);
         }
     }
 
