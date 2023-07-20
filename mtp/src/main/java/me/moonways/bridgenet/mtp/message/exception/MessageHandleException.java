@@ -1,10 +1,9 @@
 package me.moonways.bridgenet.mtp.message.exception;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.experimental.StandardException;
 
+@StandardException
 public class MessageHandleException extends RuntimeException {
 
-    public MessageHandleException(@NotNull String message) {
-        super(message);
-    }
+    private static final long serialVersionUID = -8279351367409434315L;
 }

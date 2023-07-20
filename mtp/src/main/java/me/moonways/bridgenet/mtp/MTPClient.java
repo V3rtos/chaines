@@ -30,14 +30,14 @@ public class MTPClient implements MTPConnection {
             }
         }
         else {
-            ChannelException exception = new ChannelException(channelFuture.cause(), "Internal asynchronous connect error");
-            log.error("§4Client connection proceed with exception: §c{}", exception.toString());
+            Throwable cause = channelFuture.cause();
+            log.error("§4Client connection proceed with exception: §c{}", cause.toString());
 
             if (completableFuture != null) {
-                completableFuture.completeExceptionally(exception);
+                completableFuture.completeExceptionally(cause);
             }
             else {
-                log.error(exception);
+                log.error("Internal asynchronous connect error", cause);
             }
         }
     }
@@ -54,8 +54,6 @@ public class MTPClient implements MTPConnection {
 
     @Override
     public MTPChannel connectSync() {
-        log.info("Trying synchronized connect to server netty channel");
-
         ChannelFuture channelFuture = bootstrap.connect().syncUninterruptibly();
         handleChannelFuture(channelFuture, null);
 
@@ -64,8 +62,6 @@ public class MTPClient implements MTPConnection {
 
     @Override
     public CompletableFuture<MTPChannel> connect() {
-        log.info("Trying asynchronous connect to server netty channel");
-
         CompletableFuture<MTPChannel> completableFuture = new CompletableFuture<>();
         bootstrap.connect().addListener((ChannelFutureListener) future -> handleChannelFuture(future, completableFuture));
 

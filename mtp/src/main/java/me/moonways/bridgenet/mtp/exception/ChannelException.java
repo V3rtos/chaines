@@ -1,14 +1,9 @@
 package me.moonways.bridgenet.mtp.exception;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.experimental.StandardException;
 
+@StandardException
 public class ChannelException extends RuntimeException {
 
-    public ChannelException(@NotNull String message) {
-        super(message);
-    }
-
-    public ChannelException(@NotNull Throwable cause, @NotNull String message) {
-        super(message, cause);
-    }
+    private static final long serialVersionUID = -6200611845253445930L;
 }

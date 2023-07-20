@@ -9,6 +9,7 @@ import lombok.*;
 public class Settings {
 
     private final String host;
+
     private final int port;
 
     private final ExecutorWorkers workers;

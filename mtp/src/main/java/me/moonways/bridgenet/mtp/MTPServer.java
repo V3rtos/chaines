@@ -33,22 +33,20 @@ public class MTPServer implements MTPConnection {
             }
         }
         else {
-            ChannelException exception = new ChannelException(channelFuture.cause(), "Internal asynchronous bind error");
-            log.error("§4Server bind proceed with exception: §c{}", exception.toString());
+            Throwable cause = channelFuture.cause();
+            log.error("§4Server bind proceed with exception: §c{}", cause.toString());
 
             if (completableFuture != null) {
-                completableFuture.completeExceptionally(exception);
+                completableFuture.completeExceptionally(cause);
             }
             else {
-                log.error(exception);
+                log.error("Internal asynchronous bind error", cause);
             }
         }
     }
 
     @Override
     public MTPChannel bindSync() {
-        log.info("Trying netty channel bind synchronized");
-
         ChannelFuture channelFuture = serverBootstrap.bind().syncUninterruptibly();
         handleChannelFuture(channelFuture, null);
 
@@ -57,8 +55,6 @@ public class MTPServer implements MTPConnection {
 
     @Override
     public CompletableFuture<MTPChannel> bind() {
-        log.info("Trying netty channel bind asynchronous");
-
         CompletableFuture<MTPChannel> completableFuture = new CompletableFuture<>();
         serverBootstrap.bind().addListener((ChannelFutureListener) future -> handleChannelFuture(future, completableFuture));
 
