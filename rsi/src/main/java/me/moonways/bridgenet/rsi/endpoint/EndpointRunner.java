@@ -12,7 +12,6 @@ import me.moonways.bridgenet.rsi.service.ServiceInfo;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -37,7 +36,7 @@ public class EndpointRunner {
     public void start(Endpoint endpoint) {
         String name = endpoint.getServiceInfo().getName();
 
-        boolean integrationStatus = integrate(endpoint);
+        boolean integrationStatus = validate(endpoint);
 
         if (!integrationStatus) {
             log.warn("§4Endpoint '{}' integration aborted: §cfailed", name);
@@ -48,7 +47,7 @@ public class EndpointRunner {
     }
 
     @SneakyThrows
-    private boolean integrate(Endpoint endpoint) {
+    private boolean validate(Endpoint endpoint) {
         final String name = endpoint.getServiceInfo().getName();
         final EndpointConfig config = endpoint.getConfig();
         Path applicationJarPath = endpoint.getPath().resolve(config.getApplicationJarName());
