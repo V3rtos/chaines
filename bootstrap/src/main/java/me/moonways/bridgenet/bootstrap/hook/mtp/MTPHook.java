@@ -27,14 +27,8 @@ public class MTPHook extends BootstrapHook {
     private BridgenetConsole bridgenetConsole;
 
     @Override
-    public void setProperties() {
-        System.setProperty(MTPConnectionFactory.HOST_PROPERTY_KEY, "localhost");
-        System.setProperty(MTPConnectionFactory.PORT_PROPERTY_KEY, "8080");
-    }
-
-    @Override
     protected void postExecute(@NotNull AppBootstrap bootstrap) {
-        MTPConnectionFactory connectionProperties = MTPConnectionFactory.createFromSystemProperties();
+        MTPConnectionFactory connectionProperties = MTPConnectionFactory.createConnectionFactory(dependencyInjection);
         dependencyInjection.bind(connectionProperties);
 
         startConnection(connectionProperties);

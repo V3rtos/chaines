@@ -1,0 +1,52 @@
+package me.moonways.bridgenet.mtp.config;
+
+import com.google.gson.Gson;
+import lombok.Getter;
+import lombok.SneakyThrows;
+import lombok.Synchronized;
+import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.injection.Inject;
+
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+@Log4j2
+public final class MTPConfiguration {
+
+    private static final String CONFIG_FILENAME = "credentials.json";
+
+    @Getter
+    private Credentials credentials;
+
+    @Inject
+    private Gson gson;
+
+    @Synchronized
+    public void reload() {
+        String configurationContent = readContent();
+        credentials = gson.fromJson(configurationContent, Credentials.class);
+
+        log.info("Json configuration parsed from {} to {}", CONFIG_FILENAME, credentials);
+    }
+
+    @SuppressWarnings({"DataFlowIssue", "resource", "ResultOfMethodCallIgnored"})
+    @SneakyThrows
+    private String readContent() {
+        Path path = Paths.get(CONFIG_FILENAME);
+
+        if (!Files.exists(path)) {
+
+            InputStream inputStream = MTPConfiguration.class.getResourceAsStream("/" + CONFIG_FILENAME);
+            byte[] arr = new byte[inputStream.available()];
+
+            inputStream.read(arr);
+
+            return new String(arr);
+        }
+
+        byte[] bytes = Files.readAllBytes(path);
+        return new String(bytes);
+    }
+}

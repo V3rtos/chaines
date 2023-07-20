@@ -5,6 +5,9 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.mtp.config.Credentials;
+import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipeline;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,28 +19,30 @@ import java.net.SocketAddress;
 @RequiredArgsConstructor
 public class MTPConnectionFactory {
 
-    public static final String HOST_PROPERTY_KEY = "mtp.connection.host";
-    public static final String PORT_PROPERTY_KEY = "mtp.connection.port";
+    public static MTPConnectionFactory createConnectionFactory(DependencyInjection dependencyInjection) {
+        MTPConfiguration configuration = new MTPConfiguration();
+        dependencyInjection.injectFields(configuration);
 
-    public static MTPConnectionFactory create(@NotNull String hostProperty, @NotNull String portProperty) {
-        String host = System.getProperty(hostProperty);
-        Integer port = Integer.getInteger(portProperty);
+        configuration.reload();
 
-        SocketAddress socketAddress = new InetSocketAddress(host, port);
-        return new MTPConnectionFactory(socketAddress);
+        Credentials credentials = configuration.getCredentials();
+
+        return new MTPConnectionFactory(
+                credentials,
+                new InetSocketAddress(credentials.getHost(), credentials.getPort())
+        );
     }
 
-    public static MTPConnectionFactory createFromSystemProperties() {
-        return create(HOST_PROPERTY_KEY, PORT_PROPERTY_KEY);
+    public static ServerBuilder newServerBuilder(@NotNull MTPConnectionFactory factory) {
+        return new ServerBuilder(factory);
     }
 
-    public static ServerBuilder newServerBuilder(@NotNull MTPConnectionFactory connectionProperties) {
-        return new ServerBuilder(connectionProperties);
+    public static ClientBuilder newClientBuilder(@NotNull MTPConnectionFactory factory) {
+        return new ClientBuilder(factory);
     }
 
-    public static ClientBuilder newClientBuilder(@NotNull MTPConnectionFactory connectionProperties) {
-        return new ClientBuilder(connectionProperties);
-    }
+    @Getter
+    private final Credentials credentials;
 
     @Getter
     private final SocketAddress socketAddress;

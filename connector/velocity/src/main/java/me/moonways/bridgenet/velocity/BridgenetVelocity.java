@@ -7,6 +7,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Getter;
 import me.moonways.bridgenet.connector.BaseBridgenetConnector;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
+import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.mtp.MTPDriver;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
 import me.moonways.bridgenet.injection.PostFactoryMethod;
@@ -23,6 +24,8 @@ public class BridgenetVelocity extends BaseBridgenetConnector {
     private MessageRegistry messageRegistry;
     @Inject
     private CloudnetWrapper cloudnetWrapper;
+    @Inject
+    private DependencyInjection dependencyInjection;
 
 
     @Getter
@@ -51,7 +54,7 @@ public class BridgenetVelocity extends BaseBridgenetConnector {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        enableBridgenetServicesSync(this);
+        enableBridgenetServicesSync(dependencyInjection, this);
         sendHandshakeRequest();
     }
 

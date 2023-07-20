@@ -19,14 +19,15 @@ import java.util.List;
 @Log4j2
 public class EndpointLoader {
 
-    private static final Gson GSON = new Gson();
-
     private static final String LOCAL_BUILD_DIR = ".build/services";
     private static final String DEDICATED_BUILD_DIR = "services";
     private static final String CONFIG_FILE_NAME = "endpoint_config.json";
 
     @Inject
     private RemoteServiceRegistry remoteServiceRegistry;
+
+    @Inject
+    private Gson gson;
 
     private EndpointConfig parseJsonConfig(@NotNull String endpointName, @NotNull File file) {
         if (!Files.exists(file.toPath())) {
@@ -36,7 +37,7 @@ public class EndpointLoader {
 
         try {
             String jsonContent = String.join("", Files.readAllLines(file.toPath()));
-            return GSON.fromJson(jsonContent, EndpointConfig.class);
+            return gson.fromJson(jsonContent, EndpointConfig.class);
         }
         catch (IOException exception) {
             log.error("§4Cannot be inject endpoint config of '{}': §c{}", endpointName, exception.toString());

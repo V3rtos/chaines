@@ -43,10 +43,10 @@ public class MessageRegistry {
         DependencyContainer dependencyContainer = dependencyInjection.getContainer();
 
         for (Object message : dependencyContainer.getFoundComponents(clientAnnotation))
-            messageWrapperSet.add(toWrapper(clientAnnotation, message.getClass()));
+            register(message.getClass());
 
         for (Object message : dependencyContainer.getFoundComponents(serverAnnotation))
-            messageWrapperSet.add(toWrapper(serverAnnotation, message.getClass()));
+            register(message.getClass());
     }
 
     private Class<? extends Annotation> findMessageAnnotation(Class<?> messageClass) {

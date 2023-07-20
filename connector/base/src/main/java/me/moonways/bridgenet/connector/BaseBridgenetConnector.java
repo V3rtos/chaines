@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class BaseBridgenetConnector {
 
-    private MTPConnectionFactory connectionProperties;
+    private MTPConnectionFactory connectionFactory;
 
     private MTPDriver driver;
     private MessageRegistry messageRegistry;
@@ -41,10 +41,6 @@ public class BaseBridgenetConnector {
     }
 
     public void setProperties() {
-        // netty connection settings.
-        System.setProperty(MTPConnectionFactory.HOST_PROPERTY_KEY, "localhost");
-        System.setProperty(MTPConnectionFactory.PORT_PROPERTY_KEY, "8080");
-
         // jdbc settings.
         System.setProperty("system.jdbc.username", "username");
         System.setProperty("system.jdbc.password", "password");
@@ -67,17 +63,17 @@ public class BaseBridgenetConnector {
         dependencyInjection.findComponentsIntoBasePackage(MessageHandler.class);
 
         // bridgenet system
-        dependencyInjection.bind(connectionProperties);
+        dependencyInjection.bind(connectionFactory);
     }
 
-    public void enableBridgenetServicesSync(BaseBridgenetConnector currentConnector) {
+    public void enableBridgenetServicesSync(DependencyInjection dependencyInjection, BaseBridgenetConnector currentConnector) {
         setProperties();
-        connectionProperties = MTPConnectionFactory.createFromSystemProperties();
+        connectionFactory = MTPConnectionFactory.createConnectionFactory(dependencyInjection);
 
         applyDependencyInjection(currentConnector);
 
         registerBridgenetMessages(messageRegistry);
-        connectToMTPServer(connectionProperties);
+        connectToMTPServer(connectionFactory);
     }
 
     public void connectToMTPServer(@NotNull MTPConnectionFactory connectionProperties) {

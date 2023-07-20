@@ -13,9 +13,8 @@ import me.moonways.bridgenet.injection.Inject;
 @Component
 public class MTPDriver {
 
-    @Inject // todo - избавится
     @Delegate
-    private MessageRegistry messages;
+    private final MessageRegistry messages = new MessageRegistry();
 
     @Delegate
     private final MessageHandlerList handlerList = new MessageHandlerList();
