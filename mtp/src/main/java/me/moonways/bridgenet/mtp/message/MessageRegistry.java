@@ -87,7 +87,7 @@ public class MessageRegistry {
         return null;
     }
 
-    public MessageWrapper lookupWrapperByClass(@NotNull Class<? extends MessageWrapper> messageClass) {
+    public MessageWrapper lookupWrapperByClass(@NotNull Class<?> messageClass) {
         for (MessageWrapper wrapper : messageWrapperSet) {
 
             if (wrapper.matchesSimilar(messageClass)) {
@@ -95,5 +95,10 @@ public class MessageRegistry {
             }
         }
         return null;
+    }
+
+    public synchronized ExportedMessage export(@NotNull Object message) {
+        MessageWrapper wrapper = lookupWrapperByClass(message.getClass());
+        return new ExportedMessage(wrapper, message);
     }
 }

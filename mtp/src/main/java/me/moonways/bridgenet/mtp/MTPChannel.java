@@ -3,6 +3,8 @@ package me.moonways.bridgenet.mtp;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
+import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.MessageWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,13 +17,17 @@ public class MTPChannel {
 
     private final Channel channel;
 
+    @Inject
+    private MTPDriver driver;
+
     public InetSocketAddress address() {
         return ((InetSocketAddress) channel.remoteAddress());
     }
 
     @Synchronized
-    public void sendMessage(@NotNull MessageWrapper message) {
-        channel.writeAndFlush(message);
+    public void sendMessage(@NotNull Object message) {
+        ExportedMessage exported = driver.export(message);
+        channel.writeAndFlush(exported);
     }
 
     @Synchronized

@@ -10,6 +10,14 @@
             <annotationClass>me.moonways.bridgenet.mtp.message.inject.MessageHandler</annotationClass>
             <targetClass>me.moonways.bridgenet.injection.scanner.controller.ComponentScannerController</targetClass>
         </scanner>
+        <scanner>
+            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ServerMessage</annotationClass>
+            <targetClass>me.moonways.bridgenet.injection.scanner.controller.ComponentScannerController</targetClass>
+        </scanner>
+        <scanner>
+            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ClientMessage</annotationClass>
+            <targetClass>me.moonways.bridgenet.injection.scanner.controller.ComponentScannerController</targetClass>
+        </scanner>
     </scanners>
     <factories>
         <factory>
@@ -19,6 +27,14 @@
         <factory>
             <annotationClass>me.moonways.bridgenet.mtp.message.inject.MessageHandler</annotationClass>
             <targetClass>me.moonways.bridgenet.injection.factory.ComponentObjectFactory</targetClass>
+        </factory>
+        <factory>
+            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ServerMessage</annotationClass>
+            <targetClass>me.moonways.bridgenet.injection.factory.UnsafeObjectFactory</targetClass>
+        </factory>
+        <factory>
+            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ClientMessage</annotationClass>
+            <targetClass>me.moonways.bridgenet.injection.factory.UnsafeObjectFactory</targetClass>
         </factory>
     </factories>
 </containers>

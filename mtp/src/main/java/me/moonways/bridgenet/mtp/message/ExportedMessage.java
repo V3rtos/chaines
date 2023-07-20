@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class DecodedMessage {
+public class ExportedMessage {
 
     private final MessageWrapper wrapper;
     private final Object message;

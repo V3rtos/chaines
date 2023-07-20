@@ -10,8 +10,8 @@ import me.moonways.bridgenet.mtp.exception.ChannelException;
 
 import java.util.concurrent.CompletableFuture;
 
-@RequiredArgsConstructor
 @Log4j2
+@RequiredArgsConstructor
 public class MTPClient implements MTPConnection {
 
     private final Bootstrap bootstrap;
@@ -23,8 +23,10 @@ public class MTPClient implements MTPConnection {
             Channel channel = channelFuture.channel();
             log.info("Successful connected to {}", channel);
 
+            this.channel = new MTPChannel(channel);
+
             if (completableFuture != null) {
-                completableFuture.complete(this.channel = new MTPChannel(channel));
+                completableFuture.complete(this.channel);
             }
         }
         else {

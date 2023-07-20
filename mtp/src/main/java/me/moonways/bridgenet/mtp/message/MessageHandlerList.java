@@ -55,8 +55,14 @@ public class MessageHandlerList {
             if (messageClass.equals(methodMessageClass)) {
                 try {
                     method.invoke(triggerMethod.getSource(), message);
-                } catch (IllegalAccessException | InvocationTargetException exception) {
-                    log.error(exception);
+                }
+                catch (IllegalAccessException | InvocationTargetException exception) {
+                    Throwable cause = exception.getCause();
+                    if (cause == null) {
+                        cause = exception;
+                    }
+
+                    cause.printStackTrace();
                 }
             }
         }

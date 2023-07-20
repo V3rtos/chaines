@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.mtp.test;
+package me.moonways.bridgenet.mtp.test.transfer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

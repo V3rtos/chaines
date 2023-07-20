@@ -28,7 +28,7 @@ public class MTPConnectionFactory {
         Credentials credentials = configuration.getCredentials();
 
         return new MTPConnectionFactory(
-                credentials,
+                configuration,
                 new InetSocketAddress(credentials.getHost(), credentials.getPort())
         );
     }
@@ -42,7 +42,7 @@ public class MTPConnectionFactory {
     }
 
     @Getter
-    private final Credentials credentials;
+    private final MTPConfiguration configuration;
 
     @Getter
     private final SocketAddress socketAddress;

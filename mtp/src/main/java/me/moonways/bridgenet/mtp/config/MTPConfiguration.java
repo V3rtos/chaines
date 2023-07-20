@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.mtp.message.encryption.MessageEncryption;
 
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -20,15 +21,20 @@ public final class MTPConfiguration {
     @Getter
     private Credentials credentials;
 
+    @Getter
+    private MessageEncryption encryption;
+
     @Inject
     private Gson gson;
 
     @Synchronized
     public void reload() {
         String configurationContent = readContent();
-        credentials = gson.fromJson(configurationContent, Credentials.class);
 
-        log.info("Json configuration parsed from {} to {}", CONFIG_FILENAME, credentials);
+        credentials = gson.fromJson(configurationContent, Credentials.class);
+        encryption = new MessageEncryption(credentials.getSecurity());
+
+        log.info("Json configuration parsed from {}", CONFIG_FILENAME);
     }
 
     @SuppressWarnings({"DataFlowIssue", "resource", "ResultOfMethodCallIgnored"})

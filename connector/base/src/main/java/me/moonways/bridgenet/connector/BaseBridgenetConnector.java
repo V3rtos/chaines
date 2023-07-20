@@ -9,6 +9,7 @@ import lombok.Synchronized;
 import me.moonways.bridgenet.connector.reconnect.BridgenetReconnectHandler;
 import me.moonways.bridgenet.mtp.*;
 import me.moonways.bridgenet.mtp.MTPClient;
+import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
 import me.moonways.bridgenet.mtp.message.MessageWrapper;
 import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
@@ -76,13 +77,15 @@ public class BaseBridgenetConnector {
         connectToMTPServer(connectionFactory);
     }
 
-    public void connectToMTPServer(@NotNull MTPConnectionFactory connectionProperties) {
+    public void connectToMTPServer(@NotNull MTPConnectionFactory connectionFactory) {
         ChannelFactory<? extends Channel> clientChannelFactory = NettyFactory.createClientChannelFactory();
 
-        NettyPipeline channelInitializer = NettyPipeline.create(driver);
-        EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(2);
+        MTPConfiguration configuration = connectionFactory.getConfiguration();
+        NettyPipeline channelInitializer = NettyPipeline.create(driver, configuration);
 
-        MTPClient client = MTPConnectionFactory.newClientBuilder(connectionProperties)
+        EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(configuration.getCredentials().getWorkers().getBossThreads());
+
+        MTPClient client = MTPConnectionFactory.newClientBuilder(connectionFactory)
                 .setGroup(parentWorker)
                 .setChannelFactory(clientChannelFactory)
                 .setChannelInitializer(channelInitializer)

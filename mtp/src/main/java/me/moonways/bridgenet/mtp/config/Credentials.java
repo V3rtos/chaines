@@ -11,5 +11,6 @@ public class Credentials {
     private final String host;
     private final int port;
 
+    private final ExecutorWorkers workers;
     private final CipherSecurity security;
 }

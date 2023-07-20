@@ -1,14 +1,11 @@
 package me.moonways.bridgenet.mtp.pipeline;
 
-import io.netty.channel.ChannelConfig;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.mtp.MTPDriver;
+import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.message.codec.MessageDecoder;
 import me.moonways.bridgenet.mtp.message.codec.MessageEncoder;
 import org.jetbrains.annotations.NotNull;
@@ -19,48 +16,44 @@ import java.util.function.Consumer;
 
 @Log4j2
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class NettyPipeline extends ChannelInitializer<SocketChannel> {
+public class NettyPipeline extends ChannelInitializer<Channel> {
 
     private static final String ADDITIONAL_CHANNEL_INITIALIZER_ID = "additional_channel_initializer_%d";
 
-    public static NettyPipeline create(MTPDriver driver) {
-        return new NettyPipeline(driver);
+    public static NettyPipeline create(MTPDriver driver, MTPConfiguration configuration) {
+        return new NettyPipeline(driver, configuration);
     }
 
     private final MTPDriver driver;
+    private final MTPConfiguration configuration;
 
-    private SocketChannel socketChannel;
+    private Channel channel;
+    private Consumer<Channel> initChannelConsumer;
 
-    private Consumer<SocketChannel> initChannelConsumer;
-
-    private final Set<ChannelInitializer<? extends SocketChannel>> additionalChannelInitializers = new HashSet<>();
+    private final Set<ChannelInitializer<? extends Channel>> additionalChannelInitializers = new HashSet<>();
 
     private void initHandlers(@NotNull ChannelPipeline pipeline) {
-        log.info("Initialized channel handlers");
-
-        pipeline.addLast(new NettyChannelHandler(driver));
+        pipeline.addLast(new MTPChannelHandler(driver));
     }
 
     private void initCodec(@NotNull ChannelPipeline pipeline) {
-        log.info("Initialized messages channel codecs");
-
-        pipeline.addLast(new MessageDecoder(driver.getMessages()));
-        pipeline.addLast(new MessageEncoder(driver.getMessages()));
+        pipeline.addLast(new MessageDecoder(driver.getMessages(), configuration));
+        pipeline.addLast(new MessageEncoder(configuration));
     }
 
     public void addChannelHandler(@NotNull ChannelHandler channelHandler) {
-        socketChannel.pipeline().addLast(channelHandler);
+        channel.pipeline().addLast(channelHandler);
     }
 
     private void initOptions(@NotNull ChannelConfig config) {
         // todo
     }
 
-    private void initAdditionalInitializers(@NotNull SocketChannel socketChannel) {
-        ChannelPipeline pipeline = socketChannel.pipeline();
+    private void initAdditionalInitializers(@NotNull Channel channel) {
+        ChannelPipeline pipeline = channel.pipeline();
 
         int initializerIndex = 0;
-        for (ChannelInitializer<? extends SocketChannel> channelInitializer : additionalChannelInitializers) {
+        for (ChannelInitializer<? extends Channel> channelInitializer : additionalChannelInitializers) {
             initializerIndex++;
 
             String identifier = String.format(ADDITIONAL_CHANNEL_INITIALIZER_ID, initializerIndex);
@@ -69,24 +62,25 @@ public class NettyPipeline extends ChannelInitializer<SocketChannel> {
     }
 
     @Override
-    protected void initChannel(SocketChannel socketChannel) {
-        log.info("Running SocketChannel initialization");
+    protected void initChannel(Channel channel) {
+        log.info("Running channel {} initialization", channel);
+        this.channel = channel;
 
-        this.socketChannel = socketChannel;
+        configuration.getEncryption().generateKeys();
 
-        initCodec(socketChannel.pipeline());
-        initHandlers(socketChannel.pipeline());
-        initOptions(socketChannel.config());
+        initCodec(channel.pipeline());
+        initHandlers(channel.pipeline());
+        initOptions(channel.config());
 
         if (initChannelConsumer != null)
-            initChannelConsumer.accept(socketChannel);
+            initChannelConsumer.accept(channel);
 
-        initAdditionalInitializers(socketChannel);
+        initAdditionalInitializers(channel);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @NotNull
-    public NettyPipeline thenComplete(@NotNull Consumer<SocketChannel> initChannelConsumer) {
+    public NettyPipeline thenComplete(@NotNull Consumer<Channel> initChannelConsumer) {
         if (this.initChannelConsumer == null)
             this.initChannelConsumer = initChannelConsumer;
         else
@@ -95,7 +89,7 @@ public class NettyPipeline extends ChannelInitializer<SocketChannel> {
     }
 
     @NotNull
-    public NettyPipeline addNext(@NotNull ChannelInitializer<? extends SocketChannel> additional) {
+    public NettyPipeline addNext(@NotNull ChannelInitializer<? extends Channel> additional) {
         additionalChannelInitializers.add(additional);
         return this;
     }

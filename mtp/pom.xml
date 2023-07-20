@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--suppress VulnerableLibrariesLocal -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -19,17 +20,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.50.Final</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Internal Bridgenet dependencies -->
+        <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>inject</artifactId>
             <version>1.0</version>
-        </dependency>
-
-        <!-- TCP Protocol management dependency -->
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.92.Final</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

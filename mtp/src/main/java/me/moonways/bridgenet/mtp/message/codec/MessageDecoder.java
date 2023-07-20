@@ -4,7 +4,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.mtp.message.DecodedMessage;
+import me.moonways.bridgenet.mtp.config.MTPConfiguration;
+import me.moonways.bridgenet.mtp.message.ExportedMessage;
+import me.moonways.bridgenet.mtp.message.encryption.MessageEncryption;
 import me.moonways.bridgenet.mtp.transfer.ByteCompression;
 import me.moonways.bridgenet.mtp.exception.CompressionException;
 import me.moonways.bridgenet.mtp.message.MessageWrapper;
@@ -20,6 +22,7 @@ import java.util.zip.DataFormatException;
 public class MessageDecoder extends ByteToMessageDecoder {
 
     private final MessageRegistry registry;
+    private final MTPConfiguration configuration;
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
@@ -30,7 +33,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
             int messageId = byteBuf.readIntLE();
 
-            DecodedMessage message = decodeMessage(messageId, byteBuf);
+            ExportedMessage message = decodeMessage(messageId, byteBuf);
             list.add(message);
         }
         finally {
@@ -38,19 +41,26 @@ public class MessageDecoder extends ByteToMessageDecoder {
         }
     }
 
-    private DecodedMessage decodeMessage(int messageId, ByteBuf byteBuf) {
-        MessageTransfer messageTransfer = createTransfer(byteBuf);
+    private ExportedMessage decodeMessage(int messageId, ByteBuf byteBuf) {
         MessageWrapper wrapper = registry.lookupWrapperByID(messageId);
+        MessageTransfer messageTransfer = createTransfer(byteBuf, wrapper);
 
         Object message = wrapper.allocate();
         messageTransfer.unbuf(message);
 
-        return new DecodedMessage(wrapper, message);
+        return new ExportedMessage(wrapper, message);
     }
 
-    private MessageTransfer createTransfer(ByteBuf byteBuf) {
+    private MessageTransfer createTransfer(ByteBuf byteBuf, MessageWrapper wrapper) {
         try {
             byte[] array = ByteCompression.read(byteBuf);
+
+            if (wrapper.needsEncryption()) {
+
+                MessageEncryption encryption = configuration.getEncryption();
+                array = encryption.decode(array);
+            }
+
             return new MessageTransfer(null, array);
         }
         catch (DataFormatException | IOException exception) {

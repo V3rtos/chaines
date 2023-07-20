@@ -8,6 +8,10 @@ import lombok.*;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CipherSecurity {
 
-    private final String salt;
-    private final String code;
+    private final String publicKey;
+    private final String privateKey;
+
+    public boolean isFilled() {
+        return (publicKey != null && !publicKey.isEmpty()) && (privateKey != null && !privateKey.isEmpty());
+    }
 }

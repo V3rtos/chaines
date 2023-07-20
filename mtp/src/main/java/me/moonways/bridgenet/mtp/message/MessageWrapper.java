@@ -7,6 +7,7 @@ import lombok.ToString;
 import me.moonways.bridgenet.injection.factory.ObjectFactory;
 import me.moonways.bridgenet.injection.factory.UnsafeObjectFactory;
 import me.moonways.bridgenet.mtp.ProtocolDirection;
+import me.moonways.bridgenet.mtp.message.encryption.EncryptedMessage;
 
 @Getter
 @ToString(includeFieldNames = false)
@@ -27,6 +28,10 @@ public class MessageWrapper {
 
     public boolean isServerSide() {
         return direction == ProtocolDirection.TO_SERVER;
+    }
+
+    public boolean needsEncryption() {
+        return messageType.isAnnotationPresent(EncryptedMessage.class);
     }
 
     public boolean matchesSimilar(MessageWrapper wrapper) {

@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.mtp.test;
+package me.moonways.bridgenet.mtp.test.transfer;
 
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 
