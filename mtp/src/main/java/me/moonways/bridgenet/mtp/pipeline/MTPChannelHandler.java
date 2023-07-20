@@ -32,7 +32,7 @@ public class MTPChannelHandler extends SimpleChannelInboundHandler<ExportedMessa
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ExportedMessage message) {
-        log.info("§9[Client[ID={}] -> BridgeNet]: §r{}", ctx.channel().id(), message);
+        log.info("§9[Client[ID={}] -> Server]: §r{}", ctx.channel().id(), message.getMessage());
         driver.handle(message.getWrapper(), message.getMessage());
     }
 

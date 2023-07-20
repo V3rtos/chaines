@@ -3,6 +3,7 @@ package me.moonways.bridgenet.mtp;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.MessageWrapper;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
 
+@Log4j2
 @RequiredArgsConstructor
 public class MTPChannel {
 
@@ -27,6 +29,8 @@ public class MTPChannel {
     @Synchronized
     public void sendMessage(@NotNull Object message) {
         ExportedMessage exported = driver.export(message);
+
+        log.info("§9[Server -> Client[ID={}]]: §r{}", channel.id(), message);
         channel.writeAndFlush(exported);
     }
 
