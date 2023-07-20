@@ -6,7 +6,7 @@ import io.netty.channel.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.injection.DependencyInjection;
-import me.moonways.bridgenet.mtp.config.Credentials;
+import me.moonways.bridgenet.mtp.config.Settings;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipeline;
 import org.jetbrains.annotations.NotNull;
@@ -25,11 +25,11 @@ public class MTPConnectionFactory {
 
         configuration.reload();
 
-        Credentials credentials = configuration.getCredentials();
+        Settings settings = configuration.getSettings();
 
         return new MTPConnectionFactory(
                 configuration,
-                new InetSocketAddress(credentials.getHost(), credentials.getPort())
+                new InetSocketAddress(settings.getHost(), settings.getPort())
         );
     }
 

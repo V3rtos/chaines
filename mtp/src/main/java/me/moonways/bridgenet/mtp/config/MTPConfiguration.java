@@ -16,10 +16,10 @@ import java.nio.file.Paths;
 @Log4j2
 public final class MTPConfiguration {
 
-    private static final String CONFIG_FILENAME = "credentials.json";
+    private static final String CONFIG_FILENAME = "mtp_settings.json";
 
     @Getter
-    private Credentials credentials;
+    private Settings settings;
 
     @Getter
     private MessageEncryption encryption;
@@ -31,8 +31,8 @@ public final class MTPConfiguration {
     public void reload() {
         String configurationContent = readContent();
 
-        credentials = gson.fromJson(configurationContent, Credentials.class);
-        encryption = new MessageEncryption(credentials.getSecurity());
+        settings = gson.fromJson(configurationContent, Settings.class);
+        encryption = new MessageEncryption(settings.getSecurity());
 
         log.info("Json configuration parsed from {}", CONFIG_FILENAME);
     }

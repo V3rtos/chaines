@@ -11,7 +11,6 @@ import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.mtp.*;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
-import me.moonways.bridgenet.mtp.message.DefaultMessage;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipeline;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,8 +41,8 @@ public class MTPHook extends BootstrapHook {
         MTPConfiguration configuration = connectionFactory.getConfiguration();
         NettyPipeline channelInitializer = NettyPipeline.create(driver, configuration);
 
-        EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(configuration.getCredentials().getWorkers().getBossThreads());
-        EventLoopGroup childWorker = NettyFactory.createEventLoopGroup(configuration.getCredentials().getWorkers().getChildThreads());
+        EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(configuration.getSettings().getWorkers().getBossThreads());
+        EventLoopGroup childWorker = NettyFactory.createEventLoopGroup(configuration.getSettings().getWorkers().getChildThreads());
 
         MTPServer server = MTPConnectionFactory.newServerBuilder(connectionFactory)
                 .setChildOption(ChannelOption.TCP_NODELAY, true)

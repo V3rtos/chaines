@@ -6,7 +6,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class Credentials {
+public class Settings {
 
     private final String host;
     private final int port;

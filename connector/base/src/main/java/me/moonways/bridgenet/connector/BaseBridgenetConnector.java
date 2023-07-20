@@ -83,7 +83,7 @@ public class BaseBridgenetConnector {
         MTPConfiguration configuration = connectionFactory.getConfiguration();
         NettyPipeline channelInitializer = NettyPipeline.create(driver, configuration);
 
-        EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(configuration.getCredentials().getWorkers().getBossThreads());
+        EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(configuration.getSettings().getWorkers().getBossThreads());
 
         MTPClient client = MTPConnectionFactory.newClientBuilder(connectionFactory)
                 .setGroup(parentWorker)
