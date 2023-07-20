@@ -13,7 +13,6 @@ import me.moonways.bridgenet.mtp.message.inject.MessageTrigger;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -22,8 +21,6 @@ import java.util.stream.Collectors;
 
 @Log4j2
 public class MessageHandlerList {
-
-    private static final MethodHandles.Lookup PUBLIC_LOOKUP = MethodHandles.publicLookup();
 
     @Getter
     private Set<HandlerMethodWrapper> messageHandlers;
@@ -58,38 +55,12 @@ public class MessageHandlerList {
             if (messageClass.equals(methodMessageClass)) {
                 try {
                     method.invoke(handlerMethod.getSource(), message);
-                }
-                catch (IllegalAccessException | InvocationTargetException exception) {
+                } catch (IllegalAccessException | InvocationTargetException exception) {
                     log.error(exception);
                 }
             }
         }
     }
-
-   //@ProxiedKeepTimeMethod
-   //public void handle(@NotNull MessageWrapper wrapper, @NotNull Object message) {
-   //    for (HandlerMethodWrapper handlerMethod : messageHandlers) {
-
-   //        Method method = handlerMethod.getMethod();
-   //        Class<?> messageClass = wrapper.getMessageType();
-
-   //        //if (method.getParameterCount() != 1) {
-   //        //    throw new MessageHandleException(
-   //        //            String.format("Can't handle message %s in handler %s", messageClass.getName(),
-   //        //                    handlerMethod.getSourceClass().getName()));
-   //        //}
-
-   //        try {
-   //            MethodType methodType = MethodType.methodType(void.class, messageClass);
-
-   //            MethodHandle methodHandle = PUBLIC_LOOKUP.findVirtual(handlerMethod.getSourceClass(), method.getName(), methodType);
-   //            methodHandle.invoke(handlerMethod.getSource(), message);
-   //        }
-   //        catch (Throwable exception) {
-   //            log.error(exception);
-   //        }
-   //    }
-   //}
 
     @Getter
     @ToString
