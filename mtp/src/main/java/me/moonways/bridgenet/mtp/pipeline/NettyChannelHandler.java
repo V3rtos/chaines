@@ -5,12 +5,13 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.mtp.MTPDriver;
+import me.moonways.bridgenet.mtp.message.DecodedMessage;
 import me.moonways.bridgenet.mtp.message.MessageWrapper;
 import me.moonways.bridgenet.mtp.pipeline.exception.ChannelPipelineException;
 
 @RequiredArgsConstructor
 @Log4j2
-public class NettyChannelHandler extends SimpleChannelInboundHandler<MessageWrapper> {
+public class NettyChannelHandler extends SimpleChannelInboundHandler<DecodedMessage> {
 
     private final MTPDriver driver;
 
@@ -30,8 +31,8 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<MessageWrap
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, MessageWrapper message) {
-        driver.handle(message);
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, DecodedMessage message) {
+        driver.handle(message.getWrapper(), message.getMessage());
     }
 
     @Override

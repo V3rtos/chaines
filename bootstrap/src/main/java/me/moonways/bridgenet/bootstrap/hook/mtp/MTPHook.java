@@ -8,10 +8,10 @@ import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
 import me.moonways.bridgenet.bootstrap.hook.console.BridgenetConsole;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.Inject;
-import me.moonways.bridgenet.mtp.NettyFactory;
-import me.moonways.bridgenet.mtp.MTPServer;
-import me.moonways.bridgenet.mtp.MTPConnectionFactory;
-import me.moonways.bridgenet.mtp.MTPDriver;
+import me.moonways.bridgenet.mtp.*;
+import me.moonways.bridgenet.mtp.message.DefaultMessage;
+import me.moonways.bridgenet.mtp.message.MessageWrapper;
+import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipeline;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,5 +49,10 @@ public class MTPHook extends BootstrapHook {
 
         dependencyInjection.bind(server.bindSync());
         // TODO - 17.07.2023 - Перенести в bus endpoint
+
+        for (int i = 0; i < 15; i++) {
+            driver.handle(new MessageWrapper(1, DefaultMessage.class, ProtocolDirection.TO_SERVER),
+                    new DefaultMessage());
+        }
     }
 }

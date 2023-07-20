@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.mtp.message.DecodedMessage;
 import me.moonways.bridgenet.mtp.transfer.ByteCompression;
 import me.moonways.bridgenet.mtp.exception.CompressionException;
 import me.moonways.bridgenet.mtp.message.MessageWrapper;
@@ -29,7 +30,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
             int messageId = byteBuf.readIntLE();
 
-            Object message = decodeMessage(messageId, byteBuf);
+            DecodedMessage message = decodeMessage(messageId, byteBuf);
             list.add(message);
         }
         finally {
@@ -37,14 +38,14 @@ public class MessageDecoder extends ByteToMessageDecoder {
         }
     }
 
-    private Object decodeMessage(int messageId, ByteBuf byteBuf) {
+    private DecodedMessage decodeMessage(int messageId, ByteBuf byteBuf) {
         MessageTransfer messageTransfer = createTransfer(byteBuf);
         MessageWrapper wrapper = registry.lookupWrapperByID(messageId);
 
         Object message = wrapper.allocate();
         messageTransfer.unbuf(message);
 
-        return message;
+        return new DecodedMessage(wrapper, message);
     }
 
     private MessageTransfer createTransfer(ByteBuf byteBuf) {

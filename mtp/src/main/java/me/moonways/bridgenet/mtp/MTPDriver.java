@@ -17,7 +17,8 @@ public class MTPDriver {
     private final MessageRegistry messages = new MessageRegistry();
 
     @Delegate
-    private final MessageHandlerList handlerList = new MessageHandlerList();
+    @Inject
+    private MessageHandlerList handlerList;
 
     @Inject
     private DependencyInjection dependencyInjection;
