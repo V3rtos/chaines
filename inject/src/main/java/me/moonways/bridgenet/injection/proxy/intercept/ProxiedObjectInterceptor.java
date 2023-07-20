@@ -20,6 +20,11 @@ public class ProxiedObjectInterceptor implements MethodHandler {
         return new ProxiedObjectInterceptor(source);
     }
 
+    public static <T> T interceptProxy(T source) {
+        //noinspection unchecked
+        return (T) new ProxiedObjectInterceptor(source).createProxy();
+    }
+
     private final Object source;
 
     private final ProxiedMethodScanner proxiedMethodScanner = new ProxiedMethodScanner();

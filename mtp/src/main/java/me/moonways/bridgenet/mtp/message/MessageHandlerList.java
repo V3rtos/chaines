@@ -1,24 +1,19 @@
 package me.moonways.bridgenet.mtp.message;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.injection.Component;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.injection.proxy.ProxiedKeepTimeMethod;
-import me.moonways.bridgenet.injection.proxy.ProxiedObject;
 import me.moonways.bridgenet.mtp.message.exception.MessageHandleException;
 import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 import me.moonways.bridgenet.mtp.message.inject.MessageTrigger;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
-import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -26,8 +21,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Log4j2
-@Component
-@ProxiedObject
 public class MessageHandlerList {
 
     private static final MethodHandles.Lookup PUBLIC_LOOKUP = MethodHandles.publicLookup();
