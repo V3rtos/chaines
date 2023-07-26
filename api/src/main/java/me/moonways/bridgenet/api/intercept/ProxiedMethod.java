@@ -3,6 +3,7 @@ package me.moonways.bridgenet.api.intercept;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +30,7 @@ public class ProxiedMethod {
 
     private final Method declare;
 
+    @Setter
     private Object lastCallReturnObject;
 
     public synchronized Object call(@Nullable Object[] args) {

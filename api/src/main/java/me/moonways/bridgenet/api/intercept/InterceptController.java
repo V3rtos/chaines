@@ -24,7 +24,7 @@ public class InterceptController {
 
     private void prepareInterceptor() {
         Arrays.stream(interceptor.getClass().getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(MethodInterceptorFactoryMethod.class))
+                .filter(method -> method.isAnnotationPresent(InterceptionFactory.class))
                 .forEachOrdered(method -> {
 
                     ProxiedMethod proxiedMethod = ProxiedMethod.create(interceptor, method);

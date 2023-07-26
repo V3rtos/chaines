@@ -62,6 +62,7 @@ public class ProxyManager {
 
             if (!proxiedMethodHandler.isVoid()) {
                 returnValue = proxiedMethodHandler.getLastCallReturnObject();
+                method.setLastCallReturnObject(returnValue);
             }
         }
 

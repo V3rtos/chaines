@@ -2,7 +2,7 @@ package me.moonways.bridgenet.injection.proxy.intercept;
 
 import me.moonways.bridgenet.api.intercept.MethodHandler;
 import me.moonways.bridgenet.api.intercept.MethodInterceptor;
-import me.moonways.bridgenet.api.intercept.MethodInterceptorFactoryMethod;
+import me.moonways.bridgenet.api.intercept.InterceptionFactory;
 import me.moonways.bridgenet.api.intercept.ProxiedMethod;
 
 import java.lang.annotation.Annotation;
@@ -12,7 +12,7 @@ public class ProxiedObjectProxy {
 
     private final ProxiedMethodScanner proxiedMethodScanner = new ProxiedMethodScanner();
 
-    @MethodInterceptorFactoryMethod
+    @InterceptionFactory
     void onInit() {
         proxiedMethodScanner.injectProxiedHandlers();
     }
