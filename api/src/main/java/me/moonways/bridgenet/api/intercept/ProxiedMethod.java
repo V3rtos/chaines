@@ -29,16 +29,26 @@ public class ProxiedMethod {
 
     private final Method declare;
 
+    private Object lastCallReturnObject;
+
     public synchronized Object call(@Nullable Object[] args) {
         if (source == null || source.getClass().isInterface()) {
             return null;
         }
         try {
             declare.setAccessible(true);
-            return declare.invoke(source, args);
+            return lastCallReturnObject = declare.invoke(source, args);
         }
         catch (IllegalAccessException | InvocationTargetException exception) {
             log.error("§4Cannot be invoke proxied method {}: §c{}", this, exception.toString());
+
+            Throwable cause = exception.getCause();
+
+            if (cause == null) {
+                cause = exception;
+            }
+
+            cause.printStackTrace();
             return null;
         }
     }
@@ -53,6 +63,10 @@ public class ProxiedMethod {
 
     public synchronized boolean hasAnnotation(Class<? extends Annotation> cls) {
         return declare.isAnnotationPresent(cls);
+    }
+
+    public synchronized <A extends Annotation> A findAnnotation(Class<A> cls) {
+        return declare.getDeclaredAnnotation(cls);
     }
 
     @Override

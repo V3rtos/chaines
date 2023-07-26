@@ -1,19 +1,14 @@
 package me.moonways.bridgenet.api.intercept.proxy;
 
 import lombok.ToString;
-import me.moonways.bridgenet.api.intercept.InterceptionException;
-import me.moonways.bridgenet.api.intercept.MethodHandler;
-import me.moonways.bridgenet.api.intercept.MethodInterceptor;
-import me.moonways.bridgenet.api.intercept.ProxiedMethod;
+import me.moonways.bridgenet.api.intercept.*;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 @ToString
@@ -58,20 +53,48 @@ public class ProxyManager {
             throw new InterceptionException("Proxy object " + interceptor.getClass() + " is not marked of @MethodInterceptor annotation");
         }
 
-        Set<ProxiedMethod> methodHandlers = findMethodHandlers(interceptor, method);
-        if (methodHandlers.stream().filter(m -> !m.isVoid()).count() > 1) {
-            throw new InterceptionException("Count of method-handlers with return type must be 0 or 1 only");
-        }
+        Object returnValue = null;
+        List<ProxiedMethod> methodHandlers = validateMethodsHandlersOrdered(
+                this.findMethodHandlers(interceptor, method));
 
         for (ProxiedMethod proxiedMethodHandler : methodHandlers) {
-            Object returnValue = proxiedMethodHandler.call(new Object[]{method, args});
+            proxiedMethodHandler.call(new Object[]{method, args});
 
             if (!proxiedMethodHandler.isVoid()) {
-                return returnValue;
+                returnValue = proxiedMethodHandler.getLastCallReturnObject();
             }
         }
 
-        return null;
+        return returnValue;
+    }
+
+    private List<ProxiedMethod> validateMethodsHandlersOrdered(Set<ProxiedMethod> methodHandlers) {
+        List<ProxiedMethod> methodHandlersList = new ArrayList<>(methodHandlers);
+        //if (methodHandlers.stream().filter(m -> !m.isVoid()).count() > 1) {
+        //    throw new InterceptionException("Count of method-handlers with return type must be 0 or 1 only");
+        //}
+
+        Predicate<ProxiedMethod> withVoidPredicate = (m -> !m.isVoid());
+
+        long withVoidMethodsCount = methodHandlersList.stream().filter(withVoidPredicate).count();
+        long withPriorityMethodsCount = methodHandlersList.stream().filter(withVoidPredicate).filter(m -> m.hasAnnotation(MethodPriority.class)).count();
+
+        if (withVoidMethodsCount > withPriorityMethodsCount) {
+            throw new InterceptionException("Found several methods with return-type and without annotation @MethodPriority");
+        }
+
+        ToIntFunction<ProxiedMethod> prioritySortFunction = (m -> {
+
+            MethodPriority annotation = m.findAnnotation(MethodPriority.class);
+            return annotation != null ? annotation.value() : 0;
+        });
+
+        methodHandlersList = methodHandlersList.stream()
+                .sorted(Comparator.comparingInt(prioritySortFunction))
+                .sorted(Comparator.comparingInt(m -> m.isVoid() ? 0 : 1))
+                .collect(Collectors.toList());
+
+        return methodHandlersList;
     }
 
     private Set<ProxiedMethod> findMethodHandlers(Object interceptor, ProxiedMethod method) {
