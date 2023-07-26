@@ -80,7 +80,7 @@ public class ProxyManager {
         long withVoidMethodsCount = methodHandlersList.stream().filter(withVoidPredicate).count();
         long withPriorityMethodsCount = methodHandlersList.stream().filter(withVoidPredicate).filter(m -> m.hasAnnotation(MethodPriority.class)).count();
 
-        if (withVoidMethodsCount > withPriorityMethodsCount) {
+        if (withVoidMethodsCount > 1 && withVoidMethodsCount > withPriorityMethodsCount) {
             throw new InterceptionException("Found several methods with return-type and without annotation @MethodPriority");
         }
 
