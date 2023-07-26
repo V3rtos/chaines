@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.injection.test;
 
+import me.moonways.bridgenet.api.intercept.AnnotationInterceptor;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.injection.PostFactoryMethod;
 
@@ -14,6 +15,8 @@ public class CalculateEmulator {
     private CalcService calcService;
 
     public void sum(int a, int b) {
+        System.out.println("calcService: " + calcService.getClass().getName() + " -> " + calcService);
+
         int sum = calcService.sum(a, b);
         storedResults.add(sum);
     }

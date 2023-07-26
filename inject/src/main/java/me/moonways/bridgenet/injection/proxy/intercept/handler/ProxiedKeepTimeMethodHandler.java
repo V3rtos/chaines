@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.injection.proxy.intercept.handler;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.injection.proxy.intercept.ProxiedMethod;
+import me.moonways.bridgenet.api.intercept.ProxiedMethod;
 import me.moonways.bridgenet.injection.proxy.intercept.ProxiedMethodHandler;
 
 @Log4j2

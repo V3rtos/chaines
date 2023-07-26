@@ -2,9 +2,10 @@ package me.moonways.bridgenet.mtp;
 
 import lombok.Getter;
 import lombok.experimental.Delegate;
+import me.moonways.bridgenet.api.intercept.AnnotationInterceptor;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.PostFactoryMethod;
-import me.moonways.bridgenet.injection.proxy.intercept.ProxiedObjectInterceptor;
+import me.moonways.bridgenet.injection.proxy.intercept.ProxiedObjectProxy;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
 import me.moonways.bridgenet.mtp.message.MessageHandlerList;
 import me.moonways.bridgenet.injection.Component;
@@ -23,13 +24,16 @@ public class MTPDriver {
     @Inject
     private DependencyInjection dependencyInjection;
 
+    @Inject
+    private AnnotationInterceptor interceptor;
+
     @PostFactoryMethod
     void init() {
         dependencyInjection.injectFields(messages);
         dependencyInjection.injectFields(handlerList);
 
-        messages = ProxiedObjectInterceptor.interceptProxy(messages);
-        handlerList = ProxiedObjectInterceptor.interceptProxy(handlerList);
+        messages = interceptor.createProxyChecked(messages, new ProxiedObjectProxy());
+        handlerList = interceptor.createProxyChecked(handlerList, new ProxiedObjectProxy());
 
         handlerList.detectHandlers();
     }

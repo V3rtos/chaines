@@ -2,22 +2,18 @@ package me.moonways.bridgenet.injection.scanner;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.intercept.AnnotationInterceptor;
 import me.moonways.bridgenet.injection.DependencyInjection;
 import me.moonways.bridgenet.injection.Inject;
 import me.moonways.bridgenet.injection.InjectionException;
 import me.moonways.bridgenet.injection.PostFactoryMethod;
 import me.moonways.bridgenet.injection.factory.ObjectFactory;
-import me.moonways.bridgenet.injection.proxy.intercept.ProxiedObjectInterceptor;
 import me.moonways.bridgenet.injection.scanner.controller.ScannerController;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -26,6 +22,9 @@ public final class DependencyScanner {
 
     @Inject
     private DependencyInjection dependencyInjection;
+
+    @Inject
+    private AnnotationInterceptor annotationInterceptor;
 
     private final DependencyScannerContainer container = new DependencyScannerContainer();
 
@@ -73,7 +72,7 @@ public final class DependencyScanner {
         postProxiedFactoryMethods(instanceClass, instance, null);
     }
 
-    public void postProxiedFactoryMethods(Class<?> instanceClass, Object instance, @Nullable ProxiedObjectInterceptor interceptor) {
+    public void postProxiedFactoryMethods(Class<?> instanceClass, Object instance, Object proxy) {
         Method[] methods = instanceClass.getDeclaredMethods();
 
         for (Method method : methods) {
@@ -84,14 +83,14 @@ public final class DependencyScanner {
             }
 
             method.setAccessible(true);
-            invokeNativeInit(method, instance, interceptor);
+            invokeNativeInit(method, instance, proxy);
         }
     }
 
-    private void invokeNativeInit(Method method, Object instance, ProxiedObjectInterceptor interceptor) {
+    private void invokeNativeInit(Method method, Object instance, Object proxy) {
         try {
-            if (interceptor != null) {
-                interceptor.invoke(instance, method, method, new Object[0]);
+            if (proxy != null) {
+                annotationInterceptor.callProxiedSuperclassMethod(instance, proxy, method, new Object[0]);
             }
             else {
                 method.invoke(instance);

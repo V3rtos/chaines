@@ -8,7 +8,7 @@ public class TestApp {
 
     public static void main(String[] args) {
         DependencyInjection dependencyInjection = new DependencyInjection();
-        dependencyInjection.findComponents("me.moonways.bridgenet.injection.test");
+        dependencyInjection.bind(new CalcService());
 
         CalculateEmulator emulator = new CalculateEmulator();
 

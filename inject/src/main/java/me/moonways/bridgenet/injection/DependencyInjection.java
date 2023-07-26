@@ -2,8 +2,9 @@ package me.moonways.bridgenet.injection;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.intercept.AnnotationInterceptor;
 import me.moonways.bridgenet.injection.proxy.ProxiedObject;
-import me.moonways.bridgenet.injection.proxy.intercept.ProxiedObjectInterceptor;
+import me.moonways.bridgenet.injection.proxy.intercept.ProxiedObjectProxy;
 import me.moonways.bridgenet.injection.scanner.DependencyScanner;
 import me.moonways.bridgenet.injection.scanner.ScannerFilter;
 import org.jetbrains.annotations.NotNull;
@@ -22,9 +23,13 @@ public class DependencyInjection {
     @Getter
     private final FieldInjectManager injector = new FieldInjectManager(container);
 
+    @Inject
+    private AnnotationInterceptor annotationInterceptor;
+
     { bindSelf(); }
 
     private void bindSelf() {
+        bind(new AnnotationInterceptor());
         bind(this);
 
         injectFields(container);
@@ -94,9 +99,10 @@ public class DependencyInjection {
         if (bindClass.isAnnotationPresent(ProxiedObject.class)) {
             injectFields(object);
 
-            ProxiedObjectInterceptor interceptor = ProxiedObjectInterceptor.intercept(object);
+            ProxiedObjectProxy interceptor = new ProxiedObjectProxy();
+            Object proxy = annotationInterceptor.createProxy(object, interceptor);
 
-            container.store(bindClass, interceptor.createProxy());
+            container.store(bindClass, proxy);
             scanner.postProxiedFactoryMethods(objectClass, object, interceptor);
         }
         else {
