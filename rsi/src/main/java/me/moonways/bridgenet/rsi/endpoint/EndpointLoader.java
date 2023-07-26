@@ -2,7 +2,7 @@ package me.moonways.bridgenet.rsi.endpoint;
 
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.api.injection.Inject;
 import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import org.jetbrains.annotations.NotNull;

@@ -2,8 +2,8 @@ package me.moonways.bridgenet.rsi.endpoint;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.injection.DependencyInjection;
-import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.api.injection.DependencyInjection;
+import me.moonways.bridgenet.api.injection.Inject;
 import me.moonways.bridgenet.rsi.module.ServiceModulesContainer;
 import me.moonways.bridgenet.rsi.module.access.AccessModule;
 import me.moonways.bridgenet.rsi.service.RemoteService;

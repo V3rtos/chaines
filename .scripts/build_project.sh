@@ -21,7 +21,7 @@ function application() {
   cp -R bootstrap/target/$application_jarfile "$BUILD_DIR"
   cp -R bootstrap/src/main/resources/$bootstrap_file "$BUILD_DIR"
   cp -R rsi/src/main/resources/$rsiconfig_file "$BUILD_DIR"
-  cp -R inject/src/main/resources/$injectconfig_file "$BUILD_DIR"
+  cp -R api/src/main/resources/$injectconfig_file "$BUILD_DIR"
 }
 
 function install() {
@@ -34,7 +34,7 @@ function install() {
 
 cleanup
 # shellcheck disable=SC2054
-declare -a modules_array=("api" "inject" "rsi" "mtp" "rest" "bootstrap")
+declare -a modules_array=("api" "rsi" "mtp" "rest" "bootstrap")
 
 # shellcheck disable=SC2128
 for module in "${modules_array[@]}"

@@ -4,7 +4,7 @@ import de.dytanic.cloudnet.driver.network.HostAndPort;
 import de.dytanic.cloudnet.driver.service.ServiceId;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import de.dytanic.cloudnet.wrapper.Wrapper;
-import me.moonways.bridgenet.injection.Component;
+import me.moonways.bridgenet.api.injection.Component;
 
 import java.net.InetSocketAddress;
 

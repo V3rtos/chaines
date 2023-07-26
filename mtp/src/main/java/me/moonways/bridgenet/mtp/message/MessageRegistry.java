@@ -1,10 +1,10 @@
 package me.moonways.bridgenet.mtp.message;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.injection.DependencyContainer;
-import me.moonways.bridgenet.injection.DependencyInjection;
-import me.moonways.bridgenet.injection.Inject;
-import me.moonways.bridgenet.injection.proxy.ProxiedKeepTimeMethod;
+import me.moonways.bridgenet.api.injection.DependencyContainer;
+import me.moonways.bridgenet.api.injection.DependencyInjection;
+import me.moonways.bridgenet.api.injection.Inject;
+import me.moonways.bridgenet.api.injection.proxy.ProxiedKeepTimeMethod;
 import me.moonways.bridgenet.mtp.ProtocolDirection;
 import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
 import me.moonways.bridgenet.mtp.message.inject.ServerMessage;

@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Arrays;
 
 @Log4j2
 @Getter
@@ -69,6 +71,14 @@ public class ProxiedMethod {
 
     public synchronized <A extends Annotation> A findAnnotation(Class<A> cls) {
         return declare.getDeclaredAnnotation(cls);
+    }
+
+    public synchronized Parameter[] getParameters() {
+        return declare.getParameters();
+    }
+
+    public synchronized Parameter[] getParametersByAnnotation(Class<? extends Annotation> cls) {
+        return Arrays.stream(declare.getParameters()).filter(param -> param.isAnnotationPresent(cls)).toArray(Parameter[]::new);
     }
 
     @Override

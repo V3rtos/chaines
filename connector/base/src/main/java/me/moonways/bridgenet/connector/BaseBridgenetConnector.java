@@ -15,7 +15,7 @@ import me.moonways.bridgenet.mtp.message.MessageWrapper;
 import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipeline;
-import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.api.injection.DependencyInjection;
 import net.conveno.jdbc.ConvenoRouter;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<containers>
+    <searchPackage>me.moonways</searchPackage>
+    <scanners>
+        <scanner>
+            <annotationClass>me.moonways.bridgenet.api.injection.Component</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.injection.scanner.controller.ComponentScannerController</targetClass>
+        </scanner>
+        <scanner>
+            <annotationClass>me.moonways.bridgenet.mtp.message.inject.MessageHandler</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.injection.scanner.controller.ComponentScannerController</targetClass>
+        </scanner>
+        <scanner>
+            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ServerMessage</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.injection.scanner.controller.ComponentScannerController</targetClass>
+        </scanner>
+        <scanner>
+            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ClientMessage</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.injection.scanner.controller.ComponentScannerController</targetClass>
+        </scanner>
+    </scanners>
+    <factories>
+        <factory>
+            <annotationClass>me.moonways.bridgenet.api.injection.Component</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.injection.factory.ComponentObjectFactory</targetClass>
+        </factory>
+        <factory>
+            <annotationClass>me.moonways.bridgenet.mtp.message.inject.MessageHandler</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.injection.factory.ComponentObjectFactory</targetClass>
+        </factory>
+        <factory>
+            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ServerMessage</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.injection.factory.UnsafeObjectFactory</targetClass>
+        </factory>
+        <factory>
+            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ClientMessage</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.injection.factory.UnsafeObjectFactory</targetClass>
+        </factory>
+    </factories>
+</containers>

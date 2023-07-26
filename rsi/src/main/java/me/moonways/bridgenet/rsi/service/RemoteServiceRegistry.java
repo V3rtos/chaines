@@ -9,10 +9,10 @@ import me.moonways.bridgenet.rsi.module.*;
 import me.moonways.bridgenet.rsi.xml.XmlModule;
 import me.moonways.bridgenet.rsi.xml.XmlConfiguration;
 import me.moonways.bridgenet.rsi.xml.XmlService;
-import me.moonways.bridgenet.injection.Component;
-import me.moonways.bridgenet.injection.DependencyInjection;
-import me.moonways.bridgenet.injection.PostFactoryMethod;
-import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.api.injection.Component;
+import me.moonways.bridgenet.api.injection.DependencyInjection;
+import me.moonways.bridgenet.api.injection.PostFactoryMethod;
+import me.moonways.bridgenet.api.injection.Inject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

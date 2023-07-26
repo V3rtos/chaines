@@ -2,8 +2,8 @@ package me.moonways.bridgenet.bootstrap.hook.jdbc;
 
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
-import me.moonways.bridgenet.injection.DependencyInjection;
-import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.api.injection.DependencyInjection;
+import me.moonways.bridgenet.api.injection.Inject;
 import net.conveno.jdbc.ConvenoRouter;
 import org.jetbrains.annotations.NotNull;
 

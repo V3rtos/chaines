@@ -2,8 +2,8 @@ package me.moonways.bridgenet.rsi.module.access;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.injection.DependencyInjection;
-import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.api.injection.DependencyInjection;
+import me.moonways.bridgenet.api.injection.Inject;
 import me.moonways.bridgenet.rsi.module.AbstractModule;
 import me.moonways.bridgenet.rsi.module.ModuleConst;
 import me.moonways.bridgenet.rsi.module.ModuleID;

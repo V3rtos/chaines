@@ -1,15 +1,14 @@
 package me.moonways.service.event;
 
-import me.moonways.bridgenet.injection.Component;
-import me.moonways.bridgenet.injection.DependencyInjection;
-import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.api.injection.Component;
+import me.moonways.bridgenet.api.injection.DependencyInjection;
+import me.moonways.bridgenet.api.injection.Inject;
 import me.moonways.service.event.subscribe.EventSubscriptionApplier;
 import me.moonways.service.api.events.BridgenetEventsService;
 import me.moonways.service.api.events.Event;
 import me.moonways.service.api.events.subscribe.EventSubscription;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;

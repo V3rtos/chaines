@@ -3,7 +3,6 @@ package me.moonways.service.entities.player;
 import me.moonways.service.api.entities.player.BridgenetPlayers;
 import me.moonways.service.api.entities.player.ConnectedEntityPlayer;
 import lombok.Getter;
-import me.moonways.bridgenet.injection.Inject;
 import me.moonways.service.api.entities.player.offline.OfflineEntityPlayer;
 import me.moonways.service.api.entities.player.offline.OfflinePlayerData;
 import net.conveno.jdbc.ConvenoRouter;

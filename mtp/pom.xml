@@ -25,12 +25,11 @@
             <version>4.1.50.Final</version>
             <scope>compile</scope>
         </dependency>
-
-        <!-- Internal Bridgenet dependencies -->
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>inject</artifactId>
+            <artifactId>api</artifactId>
             <version>1.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

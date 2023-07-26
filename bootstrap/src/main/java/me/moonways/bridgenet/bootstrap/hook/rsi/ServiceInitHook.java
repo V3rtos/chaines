@@ -2,7 +2,7 @@ package me.moonways.bridgenet.bootstrap.hook.rsi;
 
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
-import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.api.injection.Inject;
 import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
 import org.jetbrains.annotations.NotNull;
 

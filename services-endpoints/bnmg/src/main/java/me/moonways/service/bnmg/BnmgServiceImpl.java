@@ -2,7 +2,7 @@ package me.moonways.service.bnmg;
 
 import lombok.experimental.Delegate;
 import me.moonways.service.bnmg.descriptor.GuiDescriptor;
-import me.moonways.bridgenet.injection.Component;
+import me.moonways.bridgenet.api.injection.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

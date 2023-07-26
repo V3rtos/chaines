@@ -1,9 +1,9 @@
 package me.moonways.service.friend;
 
 import lombok.Getter;
-import me.moonways.bridgenet.injection.Component;
-import me.moonways.bridgenet.injection.PostFactoryMethod;
-import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.api.injection.Component;
+import me.moonways.bridgenet.api.injection.PostFactoryMethod;
+import me.moonways.bridgenet.api.injection.Inject;
 import net.conveno.jdbc.ConvenoRouter;
 
 @Component

@@ -7,11 +7,11 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Getter;
 import me.moonways.bridgenet.connector.BaseBridgenetConnector;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
-import me.moonways.bridgenet.injection.DependencyInjection;
+import me.moonways.bridgenet.api.injection.DependencyInjection;
 import me.moonways.bridgenet.mtp.MTPDriver;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
-import me.moonways.bridgenet.injection.PostFactoryMethod;
-import me.moonways.bridgenet.injection.Inject;
+import me.moonways.bridgenet.api.injection.PostFactoryMethod;
+import me.moonways.bridgenet.api.injection.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 

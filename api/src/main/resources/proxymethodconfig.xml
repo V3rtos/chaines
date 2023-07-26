@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<interceptor>
+    <methodHandlers>
+        <methodHandler>
+            <annotation>me.moonways.bridgenet.api.injection.proxy.ProxiedAsyncMethod</annotation>
+            <path>me.moonways.bridgenet.api.injection.proxy.intercept.handler.ProxiedAsyncMethodHandler</path>
+        </methodHandler>
+        <methodHandler>
+            <annotation>me.moonways.bridgenet.api.injection.proxy.ProxiedKeepTimeMethod</annotation>
+            <path>me.moonways.bridgenet.api.injection.proxy.intercept.handler.ProxiedKeepTimeMethodHandler</path>
+        </methodHandler>
+    </methodHandlers>
+</interceptor>
