@@ -1,11 +1,11 @@
 package me.moonways.bridgenet.bootstrap.hook;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.xml.XmlJaxbParser;
+import me.moonways.bridgenet.api.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.bootstrap.xml.XmlBootstrap;
 import me.moonways.bridgenet.bootstrap.xml.XmlHook;
-import me.moonways.bridgenet.api.injection.DependencyInjection;
-import me.moonways.bridgenet.api.injection.Inject;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

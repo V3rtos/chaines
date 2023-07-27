@@ -5,7 +5,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.injection.DependencyInjection;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.mtp.config.Settings;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipeline;

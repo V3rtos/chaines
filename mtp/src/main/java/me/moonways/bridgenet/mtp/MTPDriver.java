@@ -2,14 +2,13 @@ package me.moonways.bridgenet.mtp;
 
 import lombok.Getter;
 import lombok.experimental.Delegate;
-import me.moonways.bridgenet.api.intercept.AnnotationInterceptor;
-import me.moonways.bridgenet.api.injection.DependencyInjection;
-import me.moonways.bridgenet.api.injection.PostFactoryMethod;
-import me.moonways.bridgenet.api.injection.proxy.intercept.ProxiedObjectProxy;
+import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.PostFactoryMethod;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
 import me.moonways.bridgenet.mtp.message.MessageHandlerList;
-import me.moonways.bridgenet.api.injection.Component;
-import me.moonways.bridgenet.api.injection.Inject;
+import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.Inject;
 
 @Getter
 @Component

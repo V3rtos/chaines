@@ -3,8 +3,8 @@ package me.moonways.bridgenet.bootstrap.hook.gson;
 import com.google.gson.Gson;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
-import me.moonways.bridgenet.api.injection.DependencyInjection;
-import me.moonways.bridgenet.api.injection.Inject;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
 public class GsonHook extends BootstrapHook {

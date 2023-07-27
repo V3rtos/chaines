@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import me.moonways.bridgenet.api.injection.factory.UnsafeObjectFactory;
+import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 
 @AllArgsConstructor

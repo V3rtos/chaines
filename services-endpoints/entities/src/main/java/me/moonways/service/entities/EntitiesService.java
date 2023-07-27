@@ -1,9 +1,9 @@
 package me.moonways.service.entities;
 
 import lombok.Getter;
-import me.moonways.bridgenet.api.injection.DependencyInjection;
-import me.moonways.bridgenet.api.injection.Inject;
-import me.moonways.bridgenet.api.injection.PostFactoryMethod;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.PostFactoryMethod;
 import me.moonways.service.api.bus.BridgenetBusService;
 import me.moonways.service.api.entities.BridgenetEntitiesService;
 import me.moonways.service.entities.player.PlayerManager;

@@ -2,17 +2,17 @@ package me.moonways.bridgenet.rsi.service;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.xml.XmlJaxbParser;
+import me.moonways.bridgenet.api.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
 import me.moonways.bridgenet.rsi.endpoint.EndpointController;
 import me.moonways.bridgenet.rsi.module.*;
 import me.moonways.bridgenet.rsi.xml.XmlModule;
 import me.moonways.bridgenet.rsi.xml.XmlConfiguration;
 import me.moonways.bridgenet.rsi.xml.XmlService;
-import me.moonways.bridgenet.api.injection.Component;
-import me.moonways.bridgenet.api.injection.DependencyInjection;
-import me.moonways.bridgenet.api.injection.PostFactoryMethod;
-import me.moonways.bridgenet.api.injection.Inject;
+import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.PostFactoryMethod;
+import me.moonways.bridgenet.api.inject.Inject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.service.party;
 
 import lombok.Getter;
-import me.moonways.bridgenet.api.injection.Component;
+import me.moonways.bridgenet.api.inject.Component;
 import me.moonways.service.api.parties.BridgenetPartiesService;
 import me.moonways.service.api.parties.PartyMemberList;
 import me.moonways.service.api.parties.participant.PartyMember;

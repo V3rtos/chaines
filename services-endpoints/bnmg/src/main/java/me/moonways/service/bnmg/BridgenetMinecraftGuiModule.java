@@ -1,6 +1,6 @@
 package me.moonways.service.bnmg;
 
-import me.moonways.bridgenet.api.injection.Inject;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.service.bnmg.content.BnmgContentConstructor;
 import me.moonways.service.bnmg.descriptor.GuiDescriptor;
 

@@ -5,7 +5,7 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import me.moonways.service.api.games.BridgenetGamesService;
 import me.moonways.service.api.games.data.Arena;
-import me.moonways.bridgenet.api.injection.Component;
+import me.moonways.bridgenet.api.inject.Component;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;

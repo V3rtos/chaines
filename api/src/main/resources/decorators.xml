@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<interceptor>
+    <methodHandlers>
+        <methodHandler>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.Async</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.handler.AsyncMethodHandler</path>
+        </methodHandler>
+        <methodHandler>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.KeepTime</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.handler.KeepTimeMethodHandler</path>
+        </methodHandler>
+        <methodHandler>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.LateExecution</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.handler.LateExecutionMethodHandler</path>
+        </methodHandler>
+        <methodHandler>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.Singleton</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.handler.SingletonMethodHandler</path>
+        </methodHandler>
+        <methodHandler>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.RequiredNotNull</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.handler.RequiredNotNullMethodHandler</path>
+        </methodHandler>
+    </methodHandlers>
+</interceptor>

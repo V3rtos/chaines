@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.rsi.endpoint;
 
-import me.moonways.bridgenet.api.injection.DependencyInjection;
-import me.moonways.bridgenet.api.injection.Inject;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
 
 import java.util.Collections;
 import java.util.List;

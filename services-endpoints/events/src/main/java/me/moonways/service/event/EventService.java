@@ -1,8 +1,8 @@
 package me.moonways.service.event;
 
-import me.moonways.bridgenet.api.injection.Component;
-import me.moonways.bridgenet.api.injection.DependencyInjection;
-import me.moonways.bridgenet.api.injection.Inject;
+import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.service.event.subscribe.EventSubscriptionApplier;
 import me.moonways.service.api.events.BridgenetEventsService;
 import me.moonways.service.api.events.Event;

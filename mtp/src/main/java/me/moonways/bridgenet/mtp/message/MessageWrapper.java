@@ -4,8 +4,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import me.moonways.bridgenet.api.injection.factory.ObjectFactory;
-import me.moonways.bridgenet.api.injection.factory.UnsafeObjectFactory;
+import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
+import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
 import me.moonways.bridgenet.mtp.ProtocolDirection;
 import me.moonways.bridgenet.mtp.message.encryption.EncryptedMessage;
 

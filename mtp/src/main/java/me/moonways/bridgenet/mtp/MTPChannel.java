@@ -4,7 +4,7 @@ import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.injection.Inject;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import org.jetbrains.annotations.NotNull;
 

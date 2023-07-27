@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.injection.DependencyInjection;
-import me.moonways.bridgenet.api.injection.Inject;
-import me.moonways.bridgenet.api.injection.proxy.ProxiedKeepTimeMethod;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.decorator.definition.KeepTime;
 import me.moonways.bridgenet.mtp.message.exception.MessageHandleException;
 import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 import me.moonways.bridgenet.mtp.message.inject.MessageTrigger;
@@ -38,7 +38,7 @@ public class MessageHandlerList {
                 .collect(Collectors.toSet());
     }
 
-    @ProxiedKeepTimeMethod
+    @KeepTime
     public void handle(@NotNull MessageWrapper wrapper, @NotNull Object message) {
         for (TriggerMethodWrapper triggerMethod : messageHandlers) {
 

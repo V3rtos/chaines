@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.service.guild;
 
-import me.moonways.bridgenet.api.injection.Component;
+import me.moonways.bridgenet.api.inject.Component;
 import me.moonways.service.api.guilds.BridgenetGuildsService;
 
 import java.rmi.RemoteException;

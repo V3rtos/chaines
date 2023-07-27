@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.velocity.bridgenet;
 
-import me.moonways.bridgenet.api.injection.Inject;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 import me.moonways.bridgenet.velocity.BridgenetVelocity;
 
