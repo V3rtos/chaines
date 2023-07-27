@@ -41,10 +41,7 @@ public class MTPConnectionFactory {
         return new ClientBuilder(factory);
     }
 
-    @Getter
     private final MTPConfiguration configuration;
-
-    @Getter
     private final SocketAddress socketAddress;
 
     @RequiredArgsConstructor
