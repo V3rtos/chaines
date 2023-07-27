@@ -72,12 +72,7 @@ public final class DependencyScannerContainer {
             }
             catch (InvocationTargetException | InstantiationException | IllegalAccessException |
                    NoSuchMethodException | ClassNotFoundException exception) {
-
-                MessageFactory messageFactory = log.getMessageFactory();
-                Message message = messageFactory.newMessage(InjectionErrorMessages.CANNOT_CREATE_OBJECT_INSTANCE,
-                        targetClassName);
-
-                log.error(message, exception);
+                log.error(InjectionErrorMessages.CANNOT_CREATE_OBJECT_INSTANCE, targetClassName, exception.toString());
             }
         }
     }
@@ -104,11 +99,7 @@ public final class DependencyScannerContainer {
             catch (InvocationTargetException | InstantiationException | IllegalAccessException |
                    NoSuchMethodException | ClassNotFoundException exception) {
 
-                MessageFactory messageFactory = log.getMessageFactory();
-                Message message = messageFactory.newMessage(InjectionErrorMessages.CANNOT_CREATE_OBJECT_INSTANCE,
-                        targetClassName);
-
-                log.error(message, exception);
+                log.error(InjectionErrorMessages.CANNOT_CREATE_OBJECT_INSTANCE, targetClassName, exception.toString());
             }
         }
     }

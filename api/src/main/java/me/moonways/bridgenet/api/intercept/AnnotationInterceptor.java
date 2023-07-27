@@ -6,11 +6,11 @@ import java.lang.reflect.Method;
 
 public final class AnnotationInterceptor {
 
-    private InterceptController createController(ClassLoader classLoader, Class<?> cls, Object interceptor) {
+    public InterceptController createController(ClassLoader classLoader, Class<?> cls, Object interceptor) {
         return new InterceptController(classLoader, cls, null, interceptor);
     }
 
-    private InterceptController createController(ClassLoader classLoader, Object source, Object interceptor) {
+    public InterceptController createController(ClassLoader classLoader, Object source, Object interceptor) {
         return new InterceptController(classLoader, source.getClass(), source, interceptor);
     }
 

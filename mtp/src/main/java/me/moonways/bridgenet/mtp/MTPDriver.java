@@ -32,8 +32,8 @@ public class MTPDriver {
         dependencyInjection.injectFields(messages);
         dependencyInjection.injectFields(handlerList);
 
-        messages = interceptor.createProxyChecked(messages, new ProxiedObjectProxy());
-        handlerList = interceptor.createProxyChecked(handlerList, new ProxiedObjectProxy());
+        //messages = interceptor.createProxyChecked(messages, new ProxiedObjectProxy());
+        //handlerList = interceptor.createProxyChecked(handlerList, new ProxiedObjectProxy());
 
         handlerList.detectHandlers();
     }

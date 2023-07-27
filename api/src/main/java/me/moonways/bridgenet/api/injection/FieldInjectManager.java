@@ -36,11 +36,7 @@ public class FieldInjectManager implements Serializable {
                 field.set(instance, dependInstance);
             }
             catch (IllegalAccessException exception) {
-
-                MessageFactory messageFactory = log.getMessageFactory();
-                Message message = messageFactory.newMessage(InjectionErrorMessages.CANNOT_INJECT_FIELD_TYPE, field);
-
-                log.error(message, exception);
+                log.error(InjectionErrorMessages.CANNOT_INJECT_FIELD_TYPE, field, exception.toString());
             }
         }
     }

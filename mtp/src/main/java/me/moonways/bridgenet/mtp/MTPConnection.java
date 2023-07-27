@@ -1,7 +1,5 @@
 package me.moonways.bridgenet.mtp;
 
-import me.moonways.bridgenet.mtp.MTPChannel;
-
 import java.util.concurrent.CompletableFuture;
 
 public interface MTPConnection {

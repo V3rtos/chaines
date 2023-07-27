@@ -54,7 +54,6 @@ public class ClientTest {
         dependencyInjection.bind(channel);
 
         parentWorker.schedule(() -> {
-
             DefaultMessage message = DefaultMessage.empty();
             message.setProperty("value", "itzstonlex govnokoder!!!");
 
