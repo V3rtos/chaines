@@ -95,9 +95,9 @@ public class DependencyInjection {
 
     private void postBind(Class<?> bindClass, Object object) {
         Class<?> objectClass = object.getClass();
+        injectFields(object);
 
         if (bindClass.isAnnotationPresent(DecoratedObject.class)) {
-            injectFields(object);
 
             DecoratedObjectProxy interceptor = new DecoratedObjectProxy();
             Object proxy = annotationInterceptor.createProxy(object, interceptor);
@@ -107,8 +107,6 @@ public class DependencyInjection {
         }
         else {
             container.store(bindClass, object);
-            injectFields(object);
-
             scanner.postFactoryMethods(objectClass, object);
         }
     }
