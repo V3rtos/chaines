@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.api.inject.decorator.handler;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.decorator.proxy.DecoratedMethodHandler;
-import me.moonways.bridgenet.api.proxy.ProxiedMethod;
+import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
+import me.moonways.bridgenet.api.inject.decorator.DecoratedMethodHandler;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -16,14 +16,14 @@ public class AsyncMethodHandler implements DecoratedMethodHandler {
             = Executors.newCachedThreadPool();
 
     @Override
-    public Object handleProxyInvocation(ProxiedMethod proxiedMethod, Object[] args) {
+    public Object handleProxyInvocation(DecoratorInvocation invocation) {
         Supplier<Object> asyncExecutorCommand = () -> {
 
-            log.info("§3Running decorated {} asynchronous execution: [thread={}]", proxiedMethod, Thread.currentThread().getName());
-            return proxiedMethod.call(args);
+            log.info("§3Running decorated {} asynchronous execution: [thread={}]", invocation, Thread.currentThread().getName());
+            return invocation.proceed();
         };
 
-        if (!proxiedMethod.isVoid()) {
+        if (!invocation.isVoid()) {
             CompletableFuture<Object> objectCompletableFuture
                     = CompletableFuture.supplyAsync(asyncExecutorCommand, ASYNC_POOL_EXECUTOR);
 

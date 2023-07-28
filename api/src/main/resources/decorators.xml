@@ -2,24 +2,45 @@
 <interceptor>
     <methodHandlers>
         <methodHandler>
+            <name>Async</name>
             <annotation>me.moonways.bridgenet.api.inject.decorator.definition.Async</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.handler.AsyncMethodHandler</path>
         </methodHandler>
         <methodHandler>
+            <name>KeepTime</name>
             <annotation>me.moonways.bridgenet.api.inject.decorator.definition.KeepTime</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.handler.KeepTimeMethodHandler</path>
+            <inherits>
+                <input>Async</input>
+            </inherits>
         </methodHandler>
         <methodHandler>
+            <name>LateExecution</name>
             <annotation>me.moonways.bridgenet.api.inject.decorator.definition.LateExecution</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.handler.LateExecutionMethodHandler</path>
+            <conflicts>
+                <input>Async</input>
+                <input>Singleton</input>
+            </conflicts>
+            <inherits>
+                <input>KeepTime</input>
+            </inherits>
         </methodHandler>
         <methodHandler>
+            <name>Singleton</name>
             <annotation>me.moonways.bridgenet.api.inject.decorator.definition.Singleton</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.handler.SingletonMethodHandler</path>
+            <inherits>
+                <input>KeepTime</input>
+            </inherits>
         </methodHandler>
         <methodHandler>
+            <name>RequiredNotNull</name>
             <annotation>me.moonways.bridgenet.api.inject.decorator.definition.RequiredNotNull</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.handler.RequiredNotNullMethodHandler</path>
+            <inherits>
+                <input>KeepTime</input>
+            </inherits>
         </methodHandler>
     </methodHandlers>
 </interceptor>

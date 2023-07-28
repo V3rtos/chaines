@@ -33,7 +33,7 @@ public class ProxiedMethod {
     private final Method declare;
 
     @Setter
-    private Object lastCallReturnObject;
+    private Object lastCallReturnedValue;
 
     public synchronized Object call(@Nullable Object[] args) {
         if (source == null || source.getClass().isInterface()) {
@@ -41,7 +41,7 @@ public class ProxiedMethod {
         }
         try {
             declare.setAccessible(true);
-            return lastCallReturnObject = declare.invoke(source, args);
+            return lastCallReturnedValue = declare.invoke(source, args);
         }
         catch (IllegalAccessException | InvocationTargetException exception) {
             log.error("§4Cannot be invoke proxied method {}: §c{}", this, exception.toString());

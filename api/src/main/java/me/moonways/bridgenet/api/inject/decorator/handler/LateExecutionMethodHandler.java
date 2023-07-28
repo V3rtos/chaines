@@ -6,10 +6,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.decorator.definition.Async;
+import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
 import me.moonways.bridgenet.api.inject.decorator.definition.LateExecution;
-import me.moonways.bridgenet.api.inject.decorator.proxy.DecoratedMethodHandler;
-import me.moonways.bridgenet.api.proxy.ProxiedMethod;
+import me.moonways.bridgenet.api.inject.decorator.DecoratedMethodHandler;
 
 @Log4j2
 public class LateExecutionMethodHandler implements DecoratedMethodHandler {
@@ -19,20 +18,15 @@ public class LateExecutionMethodHandler implements DecoratedMethodHandler {
 
     @SneakyThrows
     @Override
-    public Object handleProxyInvocation(ProxiedMethod proxiedMethod, Object[] args) {
-        if (proxiedMethod.hasAnnotation(Async.class)) {
-            log.error("§4Decorated method {} cannot invoke: §cFounded conflict @LateExecution with @Async", proxiedMethod);
-            return null;
-        }
-
-        LateExecution annotation = proxiedMethod.findAnnotation(LateExecution.class);
+    public Object handleProxyInvocation(DecoratorInvocation invocation) {
+        LateExecution annotation = invocation.findAnnotation(LateExecution.class);
         CompletableFuture<Object> completableFuture = new CompletableFuture<>();
 
-        SCHEDULER.schedule((Runnable) () -> completableFuture.complete(proxiedMethod.call(args)), annotation.delay(), annotation.unit());
-        log.info("§3Running decorated {} scheduled execution: [info={}]", proxiedMethod,
+        SCHEDULER.schedule((Runnable) () -> completableFuture.complete(invocation.proceed()), annotation.delay(), annotation.unit());
+        log.info("§3Running decorated {} scheduled execution: [info={}]", invocation,
             annotation.toString().substring(annotation.annotationType().getName().length() + 1));
 
-        if (proxiedMethod.isVoid())
+        if (invocation.isVoid())
             return null;
 
         long beginTime = System.currentTimeMillis();

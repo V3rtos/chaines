@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.decorator.proxy;
+package me.moonways.bridgenet.api.inject.decorator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

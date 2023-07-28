@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.api.inject.Component;
 import me.moonways.bridgenet.api.inject.decorator.definition.Async;
-import me.moonways.bridgenet.api.inject.decorator.proxy.DecoratedObject;
+import me.moonways.bridgenet.api.inject.decorator.DecoratedObject;
 import me.moonways.bridgenet.api.inject.decorator.definition.KeepTime;
 import me.moonways.bridgenet.api.inject.decorator.definition.LateExecution;
 import me.moonways.bridgenet.api.inject.decorator.definition.RequiredNotNull;

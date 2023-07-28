@@ -3,8 +3,8 @@ package me.moonways.bridgenet.api.inject.decorator.handler;
 import java.util.Map;
 import java.util.WeakHashMap;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.decorator.proxy.DecoratedMethodHandler;
-import me.moonways.bridgenet.api.proxy.ProxiedMethod;
+import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
+import me.moonways.bridgenet.api.inject.decorator.DecoratedMethodHandler;
 
 @Log4j2
 public class SingletonMethodHandler implements DecoratedMethodHandler {
@@ -12,15 +12,15 @@ public class SingletonMethodHandler implements DecoratedMethodHandler {
     private static final Map<String, Object> SINGLETONS = new WeakHashMap<>();
 
     @Override
-    public Object handleProxyInvocation(ProxiedMethod proxiedMethod, Object[] args) {
-        if (proxiedMethod.isVoid()) {
-            log.info("§4Cannot invoke @Singleton decorator for {}: §cConflict with VOID return-type", proxiedMethod);
+    public Object handleProxyInvocation(DecoratorInvocation invocation) {
+        if (invocation.isVoid()) {
+            log.info("§4Cannot invoke @Singleton decorator for {}: §cConflict with VOID return-type", invocation);
 
-            return proxiedMethod.call(args);
+            return null;
         }
 
-        Object value = SINGLETONS.computeIfAbsent(proxiedMethod.toString(), (k) -> proxiedMethod.call(args));
-        log.info("§3Decorated method {} returned Singleton object value", proxiedMethod);
+        Object value = SINGLETONS.computeIfAbsent(invocation.toString(), (k) -> invocation.proceed());
+        log.info("§3Decorated method {} returned Singleton object value", invocation);
 
         return value;
     }

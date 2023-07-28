@@ -62,10 +62,10 @@ public final class DependencyScanner {
     }
 
     public void postFactoryMethods(Class<?> instanceClass, Object instance) {
-        postProxiedFactoryMethods(instanceClass, instance, null);
+        postProxiedFactoryMethods(instanceClass, instance);
     }
 
-    public void postProxiedFactoryMethods(Class<?> instanceClass, Object instance, Object proxy) {
+    public void postProxiedFactoryMethods(Class<?> instanceClass, Object instance) {
         Method[] methods = instanceClass.getDeclaredMethods();
 
         for (Method method : methods) {
@@ -76,18 +76,13 @@ public final class DependencyScanner {
             }
 
             method.setAccessible(true);
-            invokeNativeInit(method, instance, proxy);
+            invokeNativeInit(method, instance);
         }
     }
 
-    private void invokeNativeInit(Method method, Object instance, Object proxy) {
+    private void invokeNativeInit(Method method, Object instance) {
         try {
-            if (proxy != null) {
-                annotationInterceptor.callProxiedSuperclassMethod(instance, proxy, method, new Object[0]);
-            }
-            else {
-                method.invoke(instance);
-            }
+            method.invoke(instance);
         }
         catch (Exception exception) {
             throw new InjectionException(exception);

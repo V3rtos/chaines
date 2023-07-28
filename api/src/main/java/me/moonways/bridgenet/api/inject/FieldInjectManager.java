@@ -46,6 +46,7 @@ public class FieldInjectManager implements Serializable {
     }
 
     private void injectDependency(@NotNull Object instance, @NotNull Field field, @NotNull Object dependInstance) {
+        //System.out.println("INJECT " + field.getName() + " FOR " + instance.getClass().getSimpleName() + " AS " + dependInstance.getClass().getSimpleName());
         try {
             field.setAccessible(true);
             field.set(instance, dependInstance);
