@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +36,7 @@ public class FieldInjectManager implements Serializable {
                 injectDependency(instance, field, container.findInstance(returnType));
             }
             else {
-                queue.add(new FieldQueueState(field, instance));
+                queue.offer(new FieldQueueState(field, instance));
             }
         }
 
@@ -87,6 +88,7 @@ public class FieldInjectManager implements Serializable {
             .toArray(FieldQueueState[]::new);
     }
 
+    @ToString
     @RequiredArgsConstructor
     private static class FieldQueueState {
 

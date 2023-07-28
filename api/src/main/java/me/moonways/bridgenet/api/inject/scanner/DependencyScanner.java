@@ -1,20 +1,19 @@
 package me.moonways.bridgenet.api.inject.scanner;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.scanner.controller.ScannerController;
-import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.InjectionException;
 import me.moonways.bridgenet.api.inject.PostFactoryMethod;
 import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
+import me.moonways.bridgenet.api.inject.scanner.controller.ScannerController;
+import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -33,27 +32,21 @@ public final class DependencyScanner {
         container.initMaps();
     }
 
-    private List<Class<?>> findOrdered(ScannerController scannerController, ScannerFilter scannerFilter) {
+    private Set<Class<?>> findOrdered(ScannerController scannerController, ScannerFilter scannerFilter) {
         if (scannerController == null) {
 
             log.error("§4Cannot be found dependencies for {}", scannerFilter);
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
-        Set<Class<?>> componentsSet = scannerController.findAllComponents(scannerFilter);
-        return componentsSet.stream()
-                .sorted(Comparator.comparingLong(cls ->
-                        Arrays.stream(cls.getDeclaredFields())
-                                .filter(field -> field.isAnnotationPresent(Inject.class))
-                                .count()))
-                .collect(Collectors.toList());
+        return scannerController.findAllComponents(scannerFilter);
     }
 
     public void resolve(@NotNull Class<? extends Annotation> annotationType,
                         @NotNull ScannerFilter filter) {
 
         final ScannerController scannerController = getScannerController(annotationType);
-        List<Class<?>> classesByAnnotationList = findOrdered(scannerController, filter);
+        Set<Class<?>> classesByAnnotationList = findOrdered(scannerController, filter);
 
         for (Class<?> componentClass : classesByAnnotationList) {
             scannerController.whenFound(dependencyInjection, componentClass, annotationType);
