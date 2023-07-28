@@ -1,0 +1,31 @@
+image: maven:3.3.9-jdk-8
+
+stages:
+  - build
+  - unit-tests
+
+variables:
+  DOCKER_DRIVER: overlay2
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+
+build:
+  timeout: 5m
+  retry: 2
+  stage: build
+  only:
+    - main
+  script:
+    - "echo 'Start building process'"
+    - './bridgenet -fb'
+
+unit-tests:
+  timeout: 5m
+  retry: 2
+  stage: unit-tests
+  needs:
+    - "build"
+  only:
+    - main
+  script:
+    - "echo Unit tests will be integrated into CI/CD soon"
+    - "echo If this is strongly needed right now, please write to @xxcoldinme personally to request it'"
