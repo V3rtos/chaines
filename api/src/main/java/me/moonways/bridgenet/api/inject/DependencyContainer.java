@@ -16,6 +16,7 @@ public class DependencyContainer {
 
     private final Map<Class<?>, Object> instancesMap = Collections.synchronizedMap(new HashMap<>());
     private final Set<Class<?>> injectedClasses = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Class<?>> ignoredInterfaces = Collections.synchronizedSet(new HashSet<>());
 
     private final Map<Class<?>, Class<? extends Annotation>> annotationsByComponentTypeMap = new HashMap<>();
 
@@ -55,6 +56,22 @@ public class DependencyContainer {
         }
 
         instancesMap.put(cls, object);
+
+        Class<?>[] interfaces = cls.getInterfaces();
+        if (interfaces.length == 1 && !interfaces[0].getPackage().getName().contains("java")) {
+
+            Class<?> anInterface = interfaces[0];
+            if (ignoredInterfaces.contains(anInterface)) {
+                return;
+            }
+
+            if (isComponentFound(anInterface)) {
+                instancesMap.remove(anInterface);
+                ignoredInterfaces.add(anInterface);
+            } else {
+                instancesMap.put(interfaces[0], object);
+            }
+        }
     }
 
     public void remove(@NotNull Class<?> cls) {
