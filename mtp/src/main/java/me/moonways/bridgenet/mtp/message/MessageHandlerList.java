@@ -28,7 +28,7 @@ public class MessageHandlerList {
     @Inject
     private DependencyInjection dependencyInjection;
 
-    public void detectHandlers() {
+    public void bindHandlers() {
         dependencyInjection.findComponentsIntoBasePackage(MessageHandler.class);
         messageHandlers = dependencyInjection.getContainer().getFoundComponents(MessageHandler.class)
                 .stream()
@@ -38,7 +38,6 @@ public class MessageHandlerList {
                 .collect(Collectors.toSet());
     }
 
-    @KeepTime
     public void handle(@NotNull MessageWrapper wrapper, @NotNull Object message) {
         for (TriggerMethodWrapper triggerMethod : messageHandlers) {
 

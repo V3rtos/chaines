@@ -31,6 +31,7 @@ public class MTPHook extends BootstrapHook {
         dependencyInjection.bind(connectionFactory);
 
         driver.bindMessages();
+        driver.bindHandlers();
 
         startConnection(connectionFactory);
     }

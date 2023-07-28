@@ -33,7 +33,6 @@ public class MessageRegistry {
         return toWrapper(direction, messageClass);
     }
 
-    @KeepTime
     public void bindMessages() {
         Class<ClientMessage> clientAnnotation = ClientMessage.class;
         Class<ServerMessage> serverAnnotation = ServerMessage.class;
@@ -97,7 +96,7 @@ public class MessageRegistry {
         return null;
     }
 
-    public synchronized ExportedMessage export(@NotNull Object message) {
+    public ExportedMessage export(@NotNull Object message) {
         MessageWrapper wrapper = lookupWrapperByClass(message.getClass());
         return new ExportedMessage(wrapper, message);
     }
