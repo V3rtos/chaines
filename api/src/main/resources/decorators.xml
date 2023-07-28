@@ -7,14 +7,6 @@
             <path>me.moonways.bridgenet.api.inject.decorator.handler.AsyncMethodHandler</path>
         </methodHandler>
         <methodHandler>
-            <name>KeepTime</name>
-            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.KeepTime</annotation>
-            <path>me.moonways.bridgenet.api.inject.decorator.handler.KeepTimeMethodHandler</path>
-            <inherits>
-                <input>Async</input>
-            </inherits>
-        </methodHandler>
-        <methodHandler>
             <name>LateExecution</name>
             <annotation>me.moonways.bridgenet.api.inject.decorator.definition.LateExecution</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.handler.LateExecutionMethodHandler</path>
@@ -22,8 +14,14 @@
                 <input>Async</input>
                 <input>Singleton</input>
             </conflicts>
+        </methodHandler>
+        <methodHandler>
+            <name>KeepTime</name>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.KeepTime</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.handler.KeepTimeMethodHandler</path>
             <inherits>
-                <input>KeepTime</input>
+                <input>Async</input>
+                <input>LateExecution</input>
             </inherits>
         </methodHandler>
         <methodHandler>
@@ -31,7 +29,8 @@
             <annotation>me.moonways.bridgenet.api.inject.decorator.definition.Singleton</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.handler.SingletonMethodHandler</path>
             <inherits>
-                <input>KeepTime</input>
+                <input>Async</input>
+                <input>LateExecution</input>
             </inherits>
         </methodHandler>
         <methodHandler>
@@ -39,7 +38,8 @@
             <annotation>me.moonways.bridgenet.api.inject.decorator.definition.RequiredNotNull</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.handler.RequiredNotNullMethodHandler</path>
             <inherits>
-                <input>KeepTime</input>
+                <input>Async</input>
+                <input>LateExecution</input>
             </inherits>
         </methodHandler>
     </methodHandlers>
