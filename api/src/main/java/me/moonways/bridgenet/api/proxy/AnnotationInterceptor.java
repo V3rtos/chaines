@@ -3,6 +3,7 @@ package me.moonways.bridgenet.api.proxy;
 import me.moonways.bridgenet.api.proxy.proxy.ProxyManager;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public final class AnnotationInterceptor {
 
@@ -34,9 +35,20 @@ public final class AnnotationInterceptor {
         return (T) createProxy(object, interceptor);
     }
 
-    public void callProxiedSuperclassMethod(Object source, Object proxy, Method method, Object[] args) {
+    public Object callMethodFromProxy(Object source, Object proxy, Method method, Object[] args) {
         ProxyManager proxyManager = new ProxyManager(source, source.getClass());
-        proxyManager.fireMethodHandler(proxy,
+        return proxyManager.fireMethodHandler(proxy,
                 ProxiedMethod.create(source, method), args);
+    }
+
+    public Object callProxiedMethod(Object proxy, Method method, Object[] args) {
+        Method nativeProxyMethod = Arrays.stream(proxy.getClass().getDeclaredMethods())
+                .filter(m -> m.getName().equals(method.getName()))
+                .filter(m -> Arrays.equals(m.getParameterTypes(), method.getParameterTypes()))
+                .findFirst()
+                .orElse(null);
+
+        ProxiedMethod proxiedMethod = ProxiedMethod.create(proxy, nativeProxyMethod);
+        return proxiedMethod.call(args);
     }
 }
