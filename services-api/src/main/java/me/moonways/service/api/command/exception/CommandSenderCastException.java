@@ -1,10 +1,9 @@
 package me.moonways.service.api.command.exception;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.experimental.StandardException;
 
+@StandardException
 public class CommandSenderCastException extends RuntimeException {
 
-    public CommandSenderCastException(@NotNull String message) {
-        super(message);
-    }
+    private static final long serialVersionUID = -2984224737747564841L;
 }

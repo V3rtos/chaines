@@ -1,54 +1,84 @@
 package me.moonways.service.api.command;
 
-import lombok.Getter;
-import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
+import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
+import me.moonways.service.api.command.annotation.Command;
+import me.moonways.service.api.command.children.CommandChild;
 import me.moonways.service.api.command.exception.CommandNotAnnotatedException;
-import me.moonways.service.api.command.exception.CommandNotIdentifiedException;
+import me.moonways.service.api.command.exception.CommandNotFoundException;
+import me.moonways.service.api.command.children.CommandChildrenScanner;
 import org.jetbrains.annotations.NotNull;
 
-public class CommandRegistry {
+import java.util.*;
 
-    @Getter
-    private final CommandContainer commandContainer = new CommandContainer();
+@Log4j2
+public final class CommandRegistry {
 
-    //@Inject
-    //private DependencyInjection dependencyInjection;
+    private static final String COMMAND_NOT_ANNOTATED_ERROR = "Command %s is not annotated";
 
-    @SneakyThrows
-    public void register(@NotNull Class<? extends Command> commandClass) {
-        String commandName = getName(commandClass);
+    private final Map<String, CommandWrapper> commandWrapperMap = new HashMap<>();
 
-        Command command = commandClass.newInstance();
-        command.setCommandName(commandName);
+    private final CommandChildrenScanner childService = new CommandChildrenScanner();
 
-        command.register();
+    @Inject
+    private AnnotationInterceptor interceptor;
 
-        //dependencyInjection.injectFields(command);
-        commandContainer.addCommand(commandName, command);
+    @Inject
+    private DependencyInjection dependencyInjection;
+
+    private boolean matchAnnotation(@NotNull Object object) {
+        return object.getClass().isAnnotationPresent(Command.class);
     }
 
-    private String getName(@NotNull Class<? extends Command> commandClass) {
-        CommandIdentifier commandIdentifier = commandClass.getAnnotation(CommandIdentifier.class);
-
-        String commandClassName = commandClass.getName();
-
-        validateAnnotationNull(commandClassName, commandIdentifier);
-        validateAnnotationName(commandClassName, commandIdentifier);
-
-        return commandIdentifier.name();
-    }
-
-    private void validateAnnotationNull(@NotNull String commandClassName, CommandIdentifier commandIdentifier) {
-        if (commandIdentifier == null) {
-            throw new CommandNotAnnotatedException(
-                    String.format("Can't find identifier annotation in command %s", commandClassName));
+    public void registerCommand(@NotNull Object object) {
+        if (!matchAnnotation(object)) {
+            log.error(new CommandNotAnnotatedException(String.format(COMMAND_NOT_ANNOTATED_ERROR, object.getClass().getName())));
+            return;
         }
+
+        Command command = object.getClass().getDeclaredAnnotation(Command.class);
+        String commandName = command.value();
+
+        List<CommandChild> childrenList = createChildren(object);
+
+        dependencyInjection.injectFields(object);
+
+        Object proxiedObject = interceptor.createProxy(object, new DecoratedObjectProxy());
+
+        CommandWrapper commandWrapper = new CommandWrapper(commandName, object, proxiedObject, childrenList);
+        commandWrapperMap.put(commandName, commandWrapper);
+
+        log.info("Command §7'{}' §rwas success registered", object.getClass().getSimpleName());
     }
 
-    private void validateAnnotationName(@NotNull String commandClassName, @NotNull CommandIdentifier commandIdentifier) {
-        if (commandIdentifier.name() == null) {
-            throw new CommandNotIdentifiedException(
-                    String.format("Can't find name by command %s", commandIdentifier));
+    public CommandWrapper getCommandWrapper(@NotNull String name) {
+        try {
+            return commandWrapperMap.get(name.toLowerCase());
+        } catch (CommandNotFoundException exception) {
+            log.error(exception);
         }
+
+        return null;
+    }
+
+    private List<CommandChild> createChildren(@NotNull Object object) {
+        List<CommandChild> childrenList = new ArrayList<>();
+
+        childrenList.addAll(childService.findProducerChildren(object));
+        childrenList.addAll(childService.findPredicateChildren(object));
+
+        CommandChild mentorChild = childService.findMentorChild(object);
+
+        if (mentorChild == null) {
+            log.error("§4Mentor command child is not found in {}", object.getClass().getName());
+
+            return Collections.emptyList();
+        }
+
+        childrenList.add(mentorChild);
+        return childrenList;
     }
 }

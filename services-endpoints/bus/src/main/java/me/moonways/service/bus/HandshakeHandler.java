@@ -29,4 +29,13 @@ public class HandshakeHandler extends AbstractHandshakeHandler {
 
    //    log.info("Velocity {} successful registered", serverName);
    //}
+
+    //private EntityServer createVelocityServer(BridgenetChannel channel, String serverName,
+    //                                          String host, int port) {
+    //
+    //    InetSocketAddress serverAddress = new InetSocketAddress(host, port);
+    //    return new VelocityServer(serverName,
+    //            channel,
+    //            serverAddress);
+    //}
 }

@@ -18,6 +18,10 @@
             <annotationClass>me.moonways.bridgenet.mtp.message.inject.ClientMessage</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.ComponentScannerController</targetClass>
         </scanner>
+        <scanner>
+            <annotationClass>me.moonways.service.api.command.annotation.Command</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.ComponentScannerController</targetClass>
+        </scanner>
     </scanners>
     <factories>
         <factory>
@@ -35,6 +39,10 @@
         <factory>
             <annotationClass>me.moonways.bridgenet.mtp.message.inject.ClientMessage</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory</targetClass>
+        </factory>
+        <factory>
+            <annotationClass>me.moonways.service.api.command.annotation.Command</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.inject.factory.ComponentObjectFactory</targetClass>
         </factory>
     </factories>
 </containers>
