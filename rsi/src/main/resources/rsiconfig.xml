@@ -45,21 +45,13 @@
             <!-- RMI Protocol service bind port -->
             <bindPort>7004</bindPort>
             <!-- Service direction name -->
-            <name>events</name>
-            <!-- Target service class type -->
-            <targetType>me.moonways.service.api.events.BridgenetEventsService</targetType>
-        </service>
-        <service>
-            <!-- RMI Protocol service bind port -->
-            <bindPort>7005</bindPort>
-            <!-- Service direction name -->
             <name>friends</name>
             <!-- Target service class type -->
             <targetType>me.moonways.service.api.friends.BridgenetFriendsService</targetType>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
-            <bindPort>7006</bindPort>
+            <bindPort>7005</bindPort>
             <!-- Service direction name -->
             <name>games</name>
             <!-- Target service class type -->
@@ -67,7 +59,7 @@
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
-            <bindPort>7007</bindPort>
+            <bindPort>7006</bindPort>
             <!-- Service direction name -->
             <name>guilds</name>
             <!-- Target service class type -->
@@ -75,7 +67,7 @@
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
-            <bindPort>7008</bindPort>
+            <bindPort>7007</bindPort>
             <!-- Service direction name -->
             <name>parties</name>
             <!-- Target service class type -->
@@ -83,7 +75,7 @@
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
-            <bindPort>7009</bindPort>
+            <bindPort>7008</bindPort>
             <!-- Service direction name -->
             <name>reports</name>
             <!-- Target service class type -->

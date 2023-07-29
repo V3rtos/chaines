@@ -1,6 +1,5 @@
 package me.moonways.service.api.command;
 
-import me.moonways.bridgenet.api.inject.decorator.definition.Async;
 import me.moonways.service.api.command.annotation.*;
 
 @Command("user")
@@ -29,15 +28,12 @@ public class TestCommand {
 
     @Predicate
     public boolean predicate_one(CommandSession session) {
-        System.out.println(session);
-        System.out.println(session.getSender());
         return true;
     }
 
-    @Predicate
-    public boolean predicate_two(CommandSession session) {
-        EntityCommandSender sender = session.getSender();
-
-        return true;
-    }
+   //@Predicate
+   //public boolean predicate_two(CommandSession session) {
+   //    EntityCommandSender sender = session.getSender();
+   //    return true;
+   //}
 }

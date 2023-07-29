@@ -15,7 +15,6 @@ public final class CommandWrapper {
 
     private final String commandName;
     private final Object source;
-    private final Object proxiedSource;
 
     private final List<CommandChild> childrenList;
 

@@ -5,6 +5,7 @@ import me.moonways.bridgenet.api.inject.Component;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostFactoryMethod;
+import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import me.moonways.service.api.command.annotation.Command;
 import me.moonways.service.api.command.annotation.Mentor;
@@ -56,9 +57,8 @@ public class CommandExecutor {
             if (commandArgs.length == 0) {
                 MentorChild mentorChild = (MentorChild) commandWrapper.find(Mentor.class).findFirst().orElse(null);
 
-                invokeMethod(
-                        session,
-                        commandWrapper.getProxiedSource(),
+                invokeMethod(session,
+                        commandWrapper.getSource(),
                         mentorChild.getMethod());
                 return;
             }
@@ -71,9 +71,8 @@ public class CommandExecutor {
             String permission = producerChild.getPermission();
 
             if (sender.hasPermission(permission)) {
-                invokeMethod(
-                        session,
-                        commandWrapper.getProxiedSource(),
+                invokeMethod(session,
+                        commandWrapper.getSource(),
                         producerChild.getMethod());
             }
         }
@@ -81,21 +80,22 @@ public class CommandExecutor {
 
     private boolean matches(@NotNull CommandSession session, @NotNull CommandWrapper wrapper) {
         long numberOfUnauthorizedAccesses = wrapper.find(Predicate.class).filter(predicate ->
-                Boolean.FALSE.equals(invokeMethod(session, wrapper.getProxiedSource(), predicate.getMethod()))).count();
+                Boolean.FALSE.equals(invokeMethod(session, wrapper.getSource(), predicate.getMethod()))).count();
 
         return numberOfUnauthorizedAccesses == 0;
     }
 
     private Object invokeMethod(@NotNull CommandSession session,
-                                @NotNull Object proxiedSource,
+                                @NotNull Object source,
                                 @NotNull Method method) {
-        return interceptor.callProxiedMethod(proxiedSource, method, new Object[]{session});
+
+        return interceptor.callProxiedMethod(source, method, new Object[]{session});
     }
 
     private CommandSession createSession(@NotNull EntityCommandSender sender,
                                          @NotNull String[] args) {
-        ArgumentArrayWrapper argumentArrayWrapper = createWrapper(args);
 
+        ArgumentArrayWrapper argumentArrayWrapper = createWrapper(args);
         return new CommandSession(sender, argumentArrayWrapper);
     }
 

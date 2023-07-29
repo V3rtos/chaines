@@ -28,9 +28,13 @@ public class DecoratedObjectProxy {
             .filter(invocation::hasAnnotation)
             .collect(Collectors.toSet());
 
-        if (annotationsTypes.size() <= 1) {
+        if (annotationsTypes.isEmpty()) {
+            return invocation.callNative();
+        }
+
+        if (annotationsTypes.size() == 1) {
             Class<?> first = annotationsTypes.stream().findFirst().orElse(null);
-            return first != null ? handleAnnotation(first, invocation) : null;
+            return handleAnnotation(first, invocation);
         }
 
         List<Class<?>> orderedInherits = findOrderedInherits(annotationsTypes);

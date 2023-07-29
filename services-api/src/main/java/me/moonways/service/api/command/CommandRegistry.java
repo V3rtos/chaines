@@ -45,11 +45,10 @@ public final class CommandRegistry {
         List<CommandChild> childrenList = createChildren(object);
 
         dependencyInjection.injectFields(object);
-
         Object proxiedObject = interceptor.createProxy(object, new DecoratedObjectProxy());
 
-        CommandWrapper commandWrapper = new CommandWrapper(commandName, object, proxiedObject, childrenList);
-        commandWrapperMap.put(commandName, commandWrapper);
+        commandWrapperMap.put(commandName,
+                new CommandWrapper(commandName, proxiedObject, childrenList));
 
         log.info("Command §7'{}' §rwas success registered", object.getClass().getSimpleName());
     }
@@ -57,7 +56,8 @@ public final class CommandRegistry {
     public CommandWrapper getCommandWrapper(@NotNull String name) {
         try {
             return commandWrapperMap.get(name.toLowerCase());
-        } catch (CommandNotFoundException exception) {
+        }
+        catch (CommandNotFoundException exception) {
             log.error(exception);
         }
 

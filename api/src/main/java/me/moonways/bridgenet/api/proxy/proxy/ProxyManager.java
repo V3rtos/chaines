@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.api.proxy.proxy;
 
+import lombok.SneakyThrows;
 import lombok.ToString;
 import me.moonways.bridgenet.api.proxy.*;
 
@@ -129,12 +130,15 @@ public class ProxyManager {
         return methodHandlers;
     }
 
+    @SneakyThrows
     public Object invoke(Method method, Object interceptor, Object[] args) {
-        AtomicReference<Object> returnValue = new AtomicReference<>();
-        findMethodByName(method.getName())
-                .ifPresent(proxiedMethod ->
-                        returnValue.set(fireMethodHandler(interceptor, proxiedMethod, args)));
+        Optional<ProxiedMethod> methodByName = findMethodByName(method.getName());
+        ProxiedMethod proxiedMethod = methodByName.orElse(null);
 
-        return returnValue.get();
+        if (proxiedMethod != null) {
+            return fireMethodHandler(interceptor, proxiedMethod, args);
+        }
+
+        return method.invoke(source, args);
     }
 }

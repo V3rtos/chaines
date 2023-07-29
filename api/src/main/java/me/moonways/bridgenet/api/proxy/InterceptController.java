@@ -35,6 +35,7 @@ public class InterceptController {
     public synchronized Object createProxy() {
         if (cls.isInterface()) {
             prepareInterceptor();
+
             return createInterfaceProxy();
         }
         else {
