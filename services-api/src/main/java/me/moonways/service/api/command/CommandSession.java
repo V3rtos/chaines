@@ -13,7 +13,7 @@ import me.moonways.service.api.entities.player.EntityPlayer;
 public final class CommandSession {
 
     private final EntityCommandSender sender;
-    private final ArgumentArrayWrapper argumentWrapper;
+    private final ArgumentArrayWrapper arguments;
 
     @SuppressWarnings("unchecked")
     public <T extends EntityCommandSender> T cast(Class<T> objectCast) {

@@ -39,43 +39,55 @@ public class CommandExecutor {
                 .forEach(commandRegistry::registerCommand);
     }
 
-    @SuppressWarnings("DataFlowIssue")
     public void execute(@NotNull EntityCommandSender sender, @NotNull String label) {
-        String commandName = lookupName(label);
-        String[] commandArgs = lookupArguments(label, 1);
+        String name = lookupName(label);
+        String[] args = lookupArguments(label, 1);
 
-        CommandWrapper commandWrapper = commandRegistry.getCommandWrapper(commandName);
+        CommandWrapper commandWrapper = commandRegistry.getCommandWrapper(name);
 
         if (commandWrapper == null) {
             sender.sendMessage("Command not found");
             return;
         }
 
-        CommandSession session = createSession(sender, commandArgs);
+        final CommandSession mentorSession = createSession(sender, args);
 
-        if (matches(session, commandWrapper)) { //if access is allowed
-            if (commandArgs.length == 0) {
-                MentorChild mentorChild = (MentorChild) commandWrapper.find(Mentor.class).findFirst().orElse(null);
-
-                invokeMethod(session,
-                        commandWrapper.getSource(),
-                        mentorChild.getMethod());
+        if (matches(mentorSession, commandWrapper)) { //if access is allowed
+            if (mentorSession.getArguments().isEmpty()) {
+                fireMentor(commandWrapper, mentorSession);
                 return;
             }
 
-            String childName = commandArgs[0];
-
             ProducerChild producerChild = commandWrapper.<ProducerChild>find(Producer.class)
-                    .filter(producer -> producer.getName().equalsIgnoreCase(childName)).findFirst().orElse(null);
+                    .filter(producer -> producer.getName().equalsIgnoreCase(args[0]))
+                    .findFirst()
+                    .orElse(null);
 
-            String permission = producerChild.getPermission();
+            if (producerChild == null) {
+                fireMentor(commandWrapper, mentorSession);
+                return;
+            }
 
-            if (sender.hasPermission(permission)) {
-                invokeMethod(session,
-                        commandWrapper.getSource(),
-                        producerChild.getMethod());
+            final String permission = producerChild.getPermission();
+
+            if (permission != null && sender.hasPermission(permission)) {
+
+                final CommandSession childSession = createSession(sender, Arrays.copyOfRange(args, 1, args.length));
+                fireChild(producerChild, commandWrapper, childSession);
             }
         }
+    }
+
+    private void fireMentor(CommandWrapper commandWrapper, CommandSession session) {
+        MentorChild mentorChild = commandWrapper.<MentorChild>find(Mentor.class)
+                .findFirst()
+                .orElse(null);
+
+        invokeMethod(session, commandWrapper.getSource(), mentorChild.getMethod());
+    }
+
+    private void fireChild(ProducerChild child, CommandWrapper commandWrapper, CommandSession session) {
+        invokeMethod(session, commandWrapper.getSource(), child.getMethod());
     }
 
     private boolean matches(@NotNull CommandSession session, @NotNull CommandWrapper wrapper) {

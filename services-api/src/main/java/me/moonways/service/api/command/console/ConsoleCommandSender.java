@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConsoleCommandSender implements EntityCommandSender {
 
     @Override
-    public void sendMessage(@NotNull String message) {
+    public void sendMessage(String message) {
         log.info(message);
     }
 

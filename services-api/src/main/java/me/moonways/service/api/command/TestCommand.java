@@ -11,6 +11,7 @@ public class TestCommand {
         EntityCommandSender sender = session.getSender();
 
         sender.sendMessage("Дефолтное сообщение");
+        sender.sendMessage(session.getArguments().getFirst().orElse(null));
     }
 
     @Permission("test.info")
@@ -23,7 +24,8 @@ public class TestCommand {
             return;
         }
 
-        ArgumentArrayWrapper wrapper = session.getArgumentWrapper();
+        ArgumentArrayWrapper wrapper = session.getArguments();
+        sender.sendMessage("Arguments count: " + wrapper.getSize());
     }
 
     @Predicate

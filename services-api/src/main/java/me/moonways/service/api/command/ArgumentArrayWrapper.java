@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -11,33 +12,45 @@ import java.util.stream.Stream;
 @Getter
 public class ArgumentArrayWrapper {
 
-    private final String[] args;
+    private final String[] nativeArray;
 
     public Stream<String> stream() {
-        return Arrays.stream(args);
+        return Arrays.stream(nativeArray);
     }
 
     public <R> R map(int position, Function<String, R> mapper) {
-        return mapper.apply(args[position]);
+        return mapper.apply(lookup(position));
+    }
+
+    private String lookup(int position) {
+        if (isEmpty() || getSize() < position) {
+            return null;
+        }
+
+        return nativeArray[position];
     }
 
     public String get(int position) {
-        return args[position];
+        return lookup(position);
     }
 
-    public String getFirst() {
-        return args[0];
+    public Optional<String> getFirst() {
+        return Optional.ofNullable(lookup(0));
     }
 
-    public String getSecond() {
-        return args[1];
+    public Optional<String> getSecond() {
+        return Optional.ofNullable(lookup(1));
     }
 
-    public String getThird() {
-        return args[2];
+    public Optional<String> getLast() {
+        return Optional.ofNullable(isEmpty() ? null : nativeArray[getSize() - 1]);
     }
 
-    public String getLast() {
-        return args[args.length - 1];
+    public boolean isEmpty() {
+        return nativeArray.length == 0;
+    }
+
+    public int getSize() {
+        return nativeArray.length;
     }
 }
