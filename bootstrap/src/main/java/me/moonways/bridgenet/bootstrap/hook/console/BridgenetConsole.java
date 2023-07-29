@@ -2,7 +2,7 @@ package me.moonways.bridgenet.bootstrap.hook.console;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.minecraft.ChatColor;
+import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.service.api.command.Command;

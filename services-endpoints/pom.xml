@@ -17,7 +17,6 @@
         <module>friends</module>
         <module>games</module>
         <module>guilds</module>
-        <module>events</module>
         <module>entities</module>
         <module>bus</module>
     </modules>

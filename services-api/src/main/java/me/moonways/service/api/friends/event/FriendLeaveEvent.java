@@ -1,6 +1,6 @@
 package me.moonways.service.api.friends.event;
 
-import me.moonways.service.api.events.Event;
+import me.moonways.bridgenet.api.event.Event;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

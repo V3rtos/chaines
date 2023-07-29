@@ -1,6 +1,6 @@
 package me.moonways.service.api.parties.event;
 
-import me.moonways.service.api.events.Event;
+import me.moonways.bridgenet.api.event.Event;
 import me.moonways.service.api.parties.party.Party;
 import lombok.RequiredArgsConstructor;
 

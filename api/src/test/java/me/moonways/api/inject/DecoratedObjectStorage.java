@@ -8,6 +8,6 @@ import me.moonways.bridgenet.api.inject.Inject;
 @Component
 public class DecoratedObjectStorage {
 
-  @Inject
-  private TestDecoratedObject testProxiedObject;
+    @Inject
+    private TestDecoratedObject testProxiedObject;
 }
