@@ -40,15 +40,14 @@ public final class CommandExecutor {
                 .forEach(commandRegistry::registerCommand);
     }
 
-    public void execute(@NotNull EntityCommandSender sender, @NotNull String label) {
+    public void execute(@NotNull EntityCommandSender sender, @NotNull String label) throws CommandExecutionException {
         String name = lookupName(label);
         String[] args = lookupArguments(label, 1);
 
         CommandWrapper commandWrapper = commandRegistry.getCommandWrapper(name);
 
         if (commandWrapper == null) {
-            sender.sendMessage("§cCommand not found");
-            return;
+            throw new CommandExecutionException("Label cannot be contains command was exists");
         }
 
         CommandSession mentorSession = createSession(sender, args);
