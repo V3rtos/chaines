@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.event.subscribe;
 
 import lombok.*;
 import me.moonways.bridgenet.api.event.Event;
-import me.moonways.bridgenet.api.event.exception.EventException;
+import me.moonways.bridgenet.api.event.EventException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;

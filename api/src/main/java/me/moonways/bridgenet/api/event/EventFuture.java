@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.api.event;
 
 import lombok.*;
-import me.moonways.bridgenet.api.event.exception.EventException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

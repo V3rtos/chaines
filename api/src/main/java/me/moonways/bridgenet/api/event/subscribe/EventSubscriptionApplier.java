@@ -5,7 +5,7 @@ import me.moonways.bridgenet.api.event.EventFollower;
 import me.moonways.bridgenet.api.event.EventFuture;
 import me.moonways.bridgenet.api.event.EventManager;
 import me.moonways.bridgenet.api.event.Event;
-import me.moonways.bridgenet.api.event.exception.EventException;
+import me.moonways.bridgenet.api.event.EventException;
 
 import java.util.Set;
 

@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.event.subscribe;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.event.exception.EventException;
+import me.moonways.bridgenet.api.event.EventException;
 
 import java.util.concurrent.TimeUnit;
 

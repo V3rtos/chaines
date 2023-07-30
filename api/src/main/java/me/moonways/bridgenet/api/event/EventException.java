@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.event.exception;
+package me.moonways.bridgenet.api.event;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
