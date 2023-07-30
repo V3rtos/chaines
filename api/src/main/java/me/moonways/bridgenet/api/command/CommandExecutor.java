@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 @Component
 @Log4j2
-public class CommandExecutor {
+public final class CommandExecutor {
 
     private static final String MENTOR_CHILD_NOT_FOUND_MESSAGE = "Couldn't find @Mentor in command {}";
 
