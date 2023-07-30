@@ -44,13 +44,14 @@ function copy_compiled_endpoint() {
 for endpoint in $ENDPOINTS_MODULE_PATH/*
 do
   tmp=$(echo "$endpoint" | cut -d'/' -f 3)
+  if [ "$tmp" != "target" ]; then
 
-  echo "$PREF Found endpoint $tmp"
-  echo "$PREF Begin installing and compile..."
+    echo "$PREF Found endpoint $tmp"
+    echo "$PREF Begin installing and compile..."
 
-  if [ -d "$endpoint" ]; then
-
-    compile "$tmp"
-    except_code
+    if [ -d "$endpoint" ]; then
+      compile "$tmp"
+      except_code
+    fi
   fi
 done
