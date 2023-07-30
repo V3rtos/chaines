@@ -54,12 +54,8 @@ public final class CommandExecutor {
 
         CommandSession mentorSession = factory.createSession(wrapper.getHelpMessageView(), sender, arguments);
 
-        if (matchesBeforeExecute(mentorSession, wrapper)) { //if access is allowed
+        if (matchesPermission(sender, wrapper.getPermission()) && matchesBeforeExecute(mentorSession, wrapper)) { //if access is allowed
             if (mentorSession.getArguments().isEmpty()) {
-                if (!matchesPermission(sender, wrapper.getPermission())) {
-                    return;
-                }
-
                 fireMentor(wrapper, mentorSession);
                 return;
             }
