@@ -1,4 +1,4 @@
-package me.moonways.endpoint.players;
+package me.moonways.endpoint.players.offline;
 
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public interface OfflinePlayerRepository {
         "primary key (uuid, name))")
     @ConvenoNonResponse
     @ConvenoAsynchronous(onlySubmit = true)
-    void validateTableExists();
+    void executeTableValid();
 
     @ConvenoQuery(sql = "select * from ${table} where id = ${uuid}")
     ConvenoResponse getByUUID(@ConvenoParam("uuid") UUID uuid);

@@ -1,7 +1,7 @@
 package me.moonways.model.servers;
 
 import me.moonways.bridgenet.mtp.MTPChannel;
-import me.moonways.model.players.ConnectedEntityPlayer;
+import me.moonways.model.players.connection.ConnectedEntityPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;

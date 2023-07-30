@@ -2,7 +2,7 @@ package me.moonways.endpoint.servers.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.model.players.ConnectedEntityPlayer;
+import me.moonways.model.players.connection.ConnectedEntityPlayer;
 import me.moonways.model.servers.EntityServer;
 import me.moonways.bridgenet.mtp.MTPChannel;
 import org.jetbrains.annotations.NotNull;

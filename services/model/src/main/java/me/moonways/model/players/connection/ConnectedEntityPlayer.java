@@ -1,5 +1,6 @@
-package me.moonways.model.players;
+package me.moonways.model.players.connection;
 
+import me.moonways.model.players.EntityPlayer;
 import me.moonways.model.players.offline.OfflineEntityPlayer;
 import me.moonways.model.servers.EntityServer;
 import lombok.AccessLevel;
