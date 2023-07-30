@@ -5,7 +5,7 @@ import me.moonways.bridgenet.api.command.children.definition.PredicateChild;
 import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
 import me.moonways.bridgenet.api.command.annotation.Mentor;
 import me.moonways.bridgenet.api.command.annotation.Permission;
-import me.moonways.bridgenet.api.command.annotation.Predicate;
+import me.moonways.bridgenet.api.command.annotation.Matcher;
 import me.moonways.bridgenet.api.command.annotation.Producer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,8 +28,8 @@ public class CommandChildrenScanner {
     }
 
     public List<CommandChild> findPredicateChildren(@NotNull Object object) {
-        return findChildren(object, Predicate.class)
-                .sorted(Comparator.comparing(method -> method.getDeclaredAnnotation(Predicate.class).priority()))
+        return findChildren(object, Matcher.class)
+                .sorted(Comparator.comparing(method -> method.getDeclaredAnnotation(Matcher.class).priority()))
                 .map(method -> createPredicate(object, method))
                 .collect(Collectors.toList());
     }

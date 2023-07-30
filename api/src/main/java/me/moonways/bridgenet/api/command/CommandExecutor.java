@@ -2,8 +2,8 @@ package me.moonways.bridgenet.api.command;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.command.annotation.Command;
+import me.moonways.bridgenet.api.command.annotation.Matcher;
 import me.moonways.bridgenet.api.command.annotation.Mentor;
-import me.moonways.bridgenet.api.command.annotation.Predicate;
 import me.moonways.bridgenet.api.command.annotation.Producer;
 import me.moonways.bridgenet.api.command.children.definition.MentorChild;
 import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
@@ -20,6 +20,8 @@ import java.util.Arrays;
 @Component
 @Log4j2
 public class CommandExecutor {
+
+    private static final String MENTOR_CHILD_NOT_FOUND_MESSAGE = "Couldn't find @Mentor in command {}";
 
     private final CommandRegistry commandRegistry = new CommandRegistry();
 
@@ -45,35 +47,47 @@ public class CommandExecutor {
         CommandWrapper commandWrapper = commandRegistry.getCommandWrapper(name);
 
         if (commandWrapper == null) {
-            sender.sendMessage("Command not found");
+            sender.sendMessage("§cCommand not found");
             return;
         }
 
-        final CommandSession mentorSession = createSession(sender, args);
+        CommandSession mentorSession = createSession(sender, args);
 
-        if (matches(mentorSession, commandWrapper)) { //if access is allowed
+        if (matchesBeforeExecute(mentorSession, commandWrapper)) { //if access is allowed
             if (mentorSession.getArguments().isEmpty()) {
+                if (!matchesPermission(sender, commandWrapper.getPermission())) {
+                    return;
+                }
+
                 fireMentor(commandWrapper, mentorSession);
                 return;
             }
 
-            ProducerChild producerChild = commandWrapper.<ProducerChild>find(Producer.class)
-                    .filter(producer -> producer.getName().equalsIgnoreCase(args[0]))
-                    .findFirst()
-                    .orElse(null);
+            fireProducer(commandWrapper, mentorSession, args);
+        }
+    }
 
-            if (producerChild == null) {
-                fireMentor(commandWrapper, mentorSession);
-                return;
-            }
+    private void fireProducer(@NotNull CommandWrapper commandWrapper,
+                              @NotNull CommandSession commandSession,
+                              @NotNull String[] args) {
+        EntityCommandSender sender = commandSession.getSender();
 
-            final String permission = producerChild.getPermission();
+        ProducerChild producerChild = commandWrapper.<ProducerChild>find(Producer.class)
+                .filter(producer -> producer.getName().equalsIgnoreCase(args[0]))
+                .findFirst()
+                .orElse(null);
 
-            if (permission != null && sender.hasPermission(permission)) {
+        if (producerChild == null) {
+            fireMentor(commandWrapper, commandSession);
+            return;
+        }
 
-                final CommandSession childSession = createSession(sender, Arrays.copyOfRange(args, 1, args.length));
-                fireChild(producerChild, commandWrapper, childSession);
-            }
+        String permission = producerChild.getPermission();
+
+        CommandSession childSession = createSession(sender, lookupArguments(args, 1));
+
+        if (permission == null || matchesPermission(sender, permission)) {
+            fireChild(producerChild, commandWrapper, childSession);
         }
     }
 
@@ -82,6 +96,11 @@ public class CommandExecutor {
                 .findFirst()
                 .orElse(null);
 
+        if (mentorChild == null) {
+            log.error(MENTOR_CHILD_NOT_FOUND_MESSAGE, commandWrapper.getCommandName());
+            return;
+        }
+
         invokeMethod(session, commandWrapper.getSource(), mentorChild.getMethod());
     }
 
@@ -89,8 +108,17 @@ public class CommandExecutor {
         invokeMethod(session, commandWrapper.getSource(), child.getMethod());
     }
 
-    private boolean matches(@NotNull CommandSession session, @NotNull CommandWrapper wrapper) {
-        long numberOfUnauthorizedAccesses = wrapper.find(Predicate.class).filter(predicate ->
+    private boolean matchesPermission(@NotNull EntityCommandSender sender, @NotNull String permission) {
+        boolean hasPermission = sender.hasPermission(permission);
+
+        if (!hasPermission)
+            sender.sendMessage("§cYou do not have permission to execute this command");
+
+        return hasPermission;
+    }
+
+    private boolean matchesBeforeExecute(@NotNull CommandSession session, @NotNull CommandWrapper wrapper) {
+        long numberOfUnauthorizedAccesses = wrapper.find(Matcher.class).filter(predicate ->
                 Boolean.FALSE.equals(invokeMethod(session, wrapper.getSource(), predicate.getMethod()))).count();
 
         return numberOfUnauthorizedAccesses == 0;
@@ -122,9 +150,14 @@ public class CommandExecutor {
         return label.split(" ");
     }
 
+    @SuppressWarnings("SameParameterValue")
     private String[] lookupArguments(@NotNull String label, int copyOfRange) {
         String[] args = lookupArguments(label);
 
+        return lookupArguments(args, copyOfRange);
+    }
+
+    private String[] lookupArguments(@NotNull String[] args, int copyOfRange) {
         return Arrays.copyOfRange(args, copyOfRange, args.length);
     }
 }

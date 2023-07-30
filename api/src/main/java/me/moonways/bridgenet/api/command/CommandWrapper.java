@@ -14,6 +14,8 @@ import java.util.stream.Stream;
 public final class CommandWrapper {
 
     private final String commandName;
+    private final String permission;
+
     private final Object source;
 
     private final List<CommandChild> childrenList;

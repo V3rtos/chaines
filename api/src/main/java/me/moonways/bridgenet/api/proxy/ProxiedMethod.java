@@ -41,6 +41,7 @@ public class ProxiedMethod {
         }
         try {
             declare.setAccessible(true);
+
             return lastCallReturnedValue = declare.invoke(source, args);
         }
         catch (IllegalAccessException | InvocationTargetException exception) {
