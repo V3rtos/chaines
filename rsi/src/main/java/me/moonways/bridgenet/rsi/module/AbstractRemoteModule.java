@@ -18,8 +18,8 @@ import java.util.List;
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public abstract class AbstractModule<Configuration extends ModuleConfiguration>
-        implements Module<Configuration> {
+public abstract class AbstractRemoteModule<Configuration extends ModuleConfiguration>
+        implements RemoteModule<Configuration> {
 
     @ToString.Include
     private final ModuleID id;

@@ -149,10 +149,10 @@ public final class RemoteServiceRegistry {
         servicesImplements.put(serviceInfo, remoteService);
     }
 
-    private ModuleID getModuleID(Class<? extends Module> cls) {
+    private ModuleID getModuleID(Class<? extends RemoteModule> cls) {
         ModuleID moduleID;
         try {
-            Module<?> module = cls.newInstance();
+            RemoteModule<?> module = cls.newInstance();
             moduleID = module.getId();
         }
         catch (InstantiationException | IllegalAccessException exception) {
@@ -176,12 +176,12 @@ public final class RemoteServiceRegistry {
             throw new ServiceException(exception);
         }
 
-        final Class<? extends Module> checkedModuleClass = targetClass.asSubclass(Module.class);
+        final Class<? extends RemoteModule> checkedModuleClass = targetClass.asSubclass(RemoteModule.class);
         final ModuleID moduleID = getModuleID(checkedModuleClass);
 
-        Function<ServiceInfo, Module<?>> factoryFunc = (serviceInfo) -> {
+        Function<ServiceInfo, RemoteModule<?>> factoryFunc = (serviceInfo) -> {
             try {
-                Module<?> module = checkedModuleClass.newInstance();
+                RemoteModule<?> module = checkedModuleClass.newInstance();
                 dependencyInjection.injectFields(module);
 
                 Method bindMethod = Arrays.stream(checkedModuleClass.getMethods())
@@ -191,7 +191,7 @@ public final class RemoteServiceRegistry {
 
                 bindMethod.invoke(module, xmlConfiguration, serviceInfo, configClass);
 
-                return (Module<?>) module;
+                return (RemoteModule<?>) module;
             }
             catch (InvocationTargetException | InstantiationException | IllegalAccessException exception) {
                 throw new ServiceException(exception);

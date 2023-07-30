@@ -5,7 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.rsi.module.ServiceModulesContainer;
-import me.moonways.bridgenet.rsi.module.access.AccessModule;
+import me.moonways.bridgenet.rsi.module.access.AccessRemoteModule;
 import me.moonways.bridgenet.rsi.service.RemoteService;
 import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
@@ -109,7 +109,7 @@ public class EndpointRunner {
         Class<?> serviceImplementClass = servicesImplementsMap.remove(endpoint);
         ServiceModulesContainer serviceModulesContainer = remoteServiceRegistry.getModulesContainerMap().get(serviceInfo);
 
-        AccessModule accessModule = serviceModulesContainer.getModuleInstance(AccessModule.class);
+        AccessRemoteModule accessModule = serviceModulesContainer.getModuleInstance(AccessRemoteModule.class);
 
         if (accessModule == null) {
             log.error("§4Cannot bind endpoint '{}': AccessModule is not injected", serviceInfo.getName());

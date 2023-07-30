@@ -11,9 +11,9 @@ public final class ModuleFactory {
 
     @Getter
     private final ModuleID id;
-    private final Function<ServiceInfo, Module<?>> factoryFunc;
+    private final Function<ServiceInfo, RemoteModule<?>> factoryFunc;
 
-    public Module<?> create(ServiceInfo serviceInfo) {
+    public RemoteModule<?> create(ServiceInfo serviceInfo) {
         return factoryFunc.apply(serviceInfo);
     }
 }

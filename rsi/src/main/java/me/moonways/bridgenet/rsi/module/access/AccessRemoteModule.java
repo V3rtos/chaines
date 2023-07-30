@@ -4,7 +4,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.rsi.module.AbstractModule;
+import me.moonways.bridgenet.rsi.module.AbstractRemoteModule;
 import me.moonways.bridgenet.rsi.module.ModuleConst;
 import me.moonways.bridgenet.rsi.module.ModuleID;
 import me.moonways.bridgenet.rsi.service.RemoteService;
@@ -17,7 +17,7 @@ import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 
 @Log4j2
-public class AccessModule extends AbstractModule<AccessConfig> {
+public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
 
     private static final String URI_FORMAT = "rmi://%s:%d/%s";
 
@@ -29,7 +29,7 @@ public class AccessModule extends AbstractModule<AccessConfig> {
     @Inject
     private DependencyInjection dependencyInjection;
 
-    public AccessModule() {
+    public AccessRemoteModule() {
         super(ModuleID.of(ModuleConst.REMOTE_ACCESS_ID, "accessModule"));
     }
 

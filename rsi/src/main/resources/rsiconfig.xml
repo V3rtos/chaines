@@ -2,14 +2,14 @@
 <configuration>
     <modules>
         <module name="loggingModule"
-                targetClass="me.moonways.bridgenet.rsi.module.logging.LoggingModule"
+                targetClass="me.moonways.bridgenet.rsi.module.logging.LoggingRemoteModule"
                 configClass="me.moonways.bridgenet.rsi.module.logging.LoggingConfig">
 
             <!-- Logs pool size limit for logs-module -->
             <property name="poolSize" value="1024"/>
         </module>
         <module name="accessModule"
-                targetClass="me.moonways.bridgenet.rsi.module.access.AccessModule"
+                targetClass="me.moonways.bridgenet.rsi.module.access.AccessRemoteModule"
                 configClass="me.moonways.bridgenet.rsi.module.access.AccessConfig">
 
             <!-- RMI Protocol basically services bind host -->
