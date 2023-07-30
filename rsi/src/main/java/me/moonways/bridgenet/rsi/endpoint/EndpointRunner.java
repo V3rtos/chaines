@@ -57,7 +57,7 @@ public class EndpointRunner {
             return false;
         }
 
-        Class<? extends RemoteService> interfaceClass = endpoint.getServiceInfo().getTarget();
+        Class<? extends RemoteService> interfaceClass = endpoint.getServiceInfo().getModelClass();
         Class<?> serviceImplementClass = findServiceImplementClass(name, applicationJarPath, interfaceClass);
 
         if (serviceImplementClass == null) {

@@ -105,9 +105,9 @@ public final class RemoteServiceRegistry {
 
             String name = xmlService.getName().toUpperCase();
             String bindPort = xmlService.getBindPort();
-            String targetType = xmlService.getTargetType();
+            String modelPath = xmlService.getModelPath();
 
-            log.info("Register service: §f{} §r(port={}, class={})", name, bindPort, targetType);
+            log.info("Register service: §f{} §r(port={}, class={})", name, bindPort, modelPath);
 
             servicesInfos.put(name.toLowerCase(), createServiceInfo(xmlService));
         }
@@ -115,24 +115,24 @@ public final class RemoteServiceRegistry {
 
     private ServiceInfo createServiceInfo(XmlService wrapper) {
         String name = wrapper.getName();
-        Class<?> serviceTargetClass;
+        Class<?> modelClass;
 
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            serviceTargetClass = classLoader.loadClass(wrapper.getTargetType());
+            modelClass = classLoader.loadClass(wrapper.getModelPath());
         }
         catch (ClassNotFoundException exception) {
             throw new ServiceException(exception);
         }
 
-        if (!RemoteService.class.isAssignableFrom(serviceTargetClass) || !serviceTargetClass.isInterface()) {
-            throw new ServiceException("service " + name + " is not valid");
+        if (!RemoteService.class.isAssignableFrom(modelClass) || !modelClass.isInterface()) {
+            throw new ServiceException("model of service " + name + " is not valid");
         }
 
         int port = Integer.parseInt(wrapper.getBindPort());
 
         @SuppressWarnings("unchecked") ServiceInfo serviceInfo = new ServiceInfo(
-                name, port, (Class<? extends RemoteService>) serviceTargetClass
+                name, port, (Class<? extends RemoteService>) modelClass
         );
 
         return serviceInfo;

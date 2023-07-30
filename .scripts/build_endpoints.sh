@@ -1,13 +1,13 @@
 #!/bin/bash
-ENDPOINTS_MODULE_PATH=services-endpoints
+ENDPOINTS_MODULE_PATH=services/endpoint
 ENDPOINTS_TARGET_PATH=$BUILD_DIR/services
 
 rm -rf "$ENDPOINTS_TARGET_PATH"
 mkdir "$ENDPOINTS_TARGET_PATH"
 
-cd "services-api"
+cd "services/model"
 mvn clean install -Dmaven.test.skip || exit
-cd ../
+cd ../../
 
 function compile() {
   if [ -z "$1" ]; then
@@ -33,7 +33,7 @@ function copy_compiled_endpoint() {
   local target_path="$ENDPOINTS_TARGET_PATH/$1"
   local endpoint_path="$ENDPOINTS_MODULE_PATH/$1"
 
-  cd ../../
+  cd ../../../
   cp -R $endpoint_path/endpoint/. "$target_path"
   rm -rf $endpoint_path/endpoint
 
@@ -43,7 +43,7 @@ function copy_compiled_endpoint() {
 # shellcheck disable=SC2231
 for endpoint in $ENDPOINTS_MODULE_PATH/*
 do
-  tmp=$(echo "$endpoint" | cut -d'/' -f 2)
+  tmp=$(echo "$endpoint" | cut -d'/' -f 3)
 
   echo "$PREF Found endpoint $tmp"
   echo "$PREF Begin installing and compile..."

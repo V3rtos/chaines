@@ -21,9 +21,9 @@
             <!-- RMI Protocol service bind port -->
             <bindPort>7001</bindPort>
             <!-- Service direction name -->
-            <name>bnmg</name>
+            <name>gui</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.service.api.bnmg.BridgenetBnmgService</targetType>
+            <modelPath>me.moonways.model.gui.GuiServiceModel</modelPath>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
@@ -31,55 +31,63 @@
             <!-- Service direction name -->
             <name>bus</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.service.api.bus.BridgenetBusService</targetType>
+            <modelPath>me.moonways.model.bus.BusServiceModel</modelPath>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
             <bindPort>7003</bindPort>
             <!-- Service direction name -->
-            <name>entities</name>
+            <name>players</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.service.api.entities.BridgenetEntitiesService</targetType>
+            <modelPath>me.moonways.model.players.PlayersServiceModel</modelPath>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
             <bindPort>7004</bindPort>
             <!-- Service direction name -->
-            <name>friends</name>
+            <name>servers</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.service.api.friends.BridgenetFriendsService</targetType>
+            <modelPath>me.moonways.model.servers.ServersServiceModel</modelPath>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
             <bindPort>7005</bindPort>
             <!-- Service direction name -->
-            <name>games</name>
+            <name>friends</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.service.api.games.BridgenetGamesService</targetType>
+            <modelPath>me.moonways.model.friends.FriendsServiceModel</modelPath>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
             <bindPort>7006</bindPort>
             <!-- Service direction name -->
-            <name>guilds</name>
+            <name>games</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.service.api.guilds.BridgenetGuildsService</targetType>
+            <modelPath>me.moonways.model.games.GamesServiceModel</modelPath>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
             <bindPort>7007</bindPort>
             <!-- Service direction name -->
-            <name>parties</name>
+            <name>guilds</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.service.api.parties.BridgenetPartiesService</targetType>
+            <modelPath>me.moonways.model.guilds.GuildsServiceModel</modelPath>
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
             <bindPort>7008</bindPort>
             <!-- Service direction name -->
+            <name>parties</name>
+            <!-- Target service class type -->
+            <modelPath>me.moonways.model.parties.PartiesServiceModel</modelPath>
+        </service>
+        <service>
+            <!-- RMI Protocol service bind port -->
+            <bindPort>7009</bindPort>
+            <!-- Service direction name -->
             <name>reports</name>
             <!-- Target service class type -->
-            <targetType>me.moonways.service.api.reports.BridgenetReportsService</targetType>
+            <modelPath>me.moonways.model.reports.ReportsServiceModel</modelPath>
         </service>
     </services>
 </configuration>

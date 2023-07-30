@@ -88,7 +88,7 @@
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>services-api</artifactId>
+            <artifactId>model</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>

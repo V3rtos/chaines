@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
-import me.moonways.service.api.command.CommandExecutor;
-import me.moonways.service.api.command.console.ConsoleCommandSender;
+import me.moonways.model.command.CommandExecutor;
+import me.moonways.model.command.console.ConsoleCommandSender;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
 
 @Log4j2

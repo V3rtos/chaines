@@ -14,5 +14,5 @@ public final class ServiceInfo {
     private final String name;
     private final int port;
 
-    private final Class<? extends RemoteService> target;
+    private final Class<? extends RemoteService> modelClass;
 }

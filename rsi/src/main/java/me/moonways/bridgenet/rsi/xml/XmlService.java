@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @Getter
 @ToString
-@XmlType(propOrder = {"bindPort", "name", "targetType"})
+@XmlType(propOrder = {"bindPort", "name", "modelPath"})
 @XmlRootElement(name = "service")
 public class XmlService {
 
@@ -21,5 +21,5 @@ public class XmlService {
     private String name;
 
     @Setter(onMethod_ = @XmlElement)
-    private String targetType;
+    private String modelPath;
 }

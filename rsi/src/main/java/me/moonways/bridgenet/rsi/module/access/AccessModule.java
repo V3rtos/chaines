@@ -59,7 +59,7 @@ public class AccessModule extends AbstractModule<AccessConfig> {
             Constructor<? extends RemoteService> constructor = subclass.getConstructor();
             RemoteService stub = constructor.newInstance();
 
-            dependencyInjection.bind(serviceInfo.getTarget(), stub);
+            dependencyInjection.bind(serviceInfo.getModelClass(), stub);
 
             try {
                 LocateRegistry.createRegistry(serviceInfo.getPort());
