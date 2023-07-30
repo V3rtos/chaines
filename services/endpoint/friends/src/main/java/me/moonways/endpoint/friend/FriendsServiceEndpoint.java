@@ -22,12 +22,12 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+@Getter
 @Component
 public final class FriendsServiceEndpoint extends AbstractEndpointDefinition implements FriendsServiceModel {
 
     private static final long serialVersionUID = 6945343361490533671L;
 
-    @Getter
     private FriendsRepository repository;
 
     @Inject
@@ -41,8 +41,8 @@ public final class FriendsServiceEndpoint extends AbstractEndpointDefinition imp
 
     private final Map<UUID, FriendsList> playerFriendsMap = new HashMap<>();
 
-    private Consumer<FriendJoinEvent> friendJoinEventConsumer;
-    private Consumer<FriendLeaveEvent> friendLeaveEventConsumer;
+    private Consumer<FriendJoinEvent> friendJoinEventConsumer = (event) -> {};
+    private Consumer<FriendLeaveEvent> friendLeaveEventConsumer = (event) -> {};
 
     public FriendsServiceEndpoint() throws RemoteException {
         super();
@@ -104,19 +104,13 @@ public final class FriendsServiceEndpoint extends AbstractEndpointDefinition imp
 
     @Override
     public FriendsServiceModel subscribeJoin(Consumer<FriendJoinEvent> eventHandler) {
-        if (friendJoinEventConsumer == null) {
-            friendJoinEventConsumer = eventHandler;
-        }
-        else friendJoinEventConsumer = friendJoinEventConsumer.andThen(eventHandler);
+        friendJoinEventConsumer = friendJoinEventConsumer.andThen(eventHandler);
         return this;
     }
 
     @Override
     public FriendsServiceModel subscribeLeave(Consumer<FriendLeaveEvent> eventHandler) {
-        if (friendLeaveEventConsumer == null) {
-            friendLeaveEventConsumer = eventHandler;
-        }
-        else friendLeaveEventConsumer = friendLeaveEventConsumer.andThen(eventHandler);
+        friendLeaveEventConsumer = friendLeaveEventConsumer.andThen(eventHandler);
         return this;
     }
 }
