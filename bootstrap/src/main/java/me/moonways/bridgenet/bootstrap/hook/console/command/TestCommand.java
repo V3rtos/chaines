@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.bootstrap.hook.console;
+package me.moonways.bridgenet.bootstrap.hook.console.command;
 
 import me.moonways.bridgenet.api.command.CommandSession;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
