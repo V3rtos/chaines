@@ -9,11 +9,11 @@ import java.util.UUID;
         username = "${system.jdbc.username}",
         password = "${system.jdbc.password}")
 @ConvenoTable(name = "friends")
-public interface FriendsDatabaseRepository {
+public interface FriendsRepository {
 
     @ConvenoQuery(sql = "create table if not exists ${table} (" +
-            "uuid varchar(25) not null," +
-            "friend varchar(25) not null)")
+            "uuid varchar(40) not null," +
+            "friend varchar(40) not null)")
     @ConvenoNonResponse
     @ConvenoAsynchronous(onlySubmit = true)
     void executeTableValid();

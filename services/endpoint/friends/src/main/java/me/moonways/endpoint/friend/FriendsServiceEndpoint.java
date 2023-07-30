@@ -13,12 +13,14 @@ import me.moonways.model.friends.event.FriendJoinEvent;
 import me.moonways.model.friends.event.FriendLeaveEvent;
 import me.moonways.model.players.PlayersServiceModel;
 import net.conveno.jdbc.ConvenoRouter;
+import net.conveno.jdbc.response.ConvenoResponse;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Component
 public final class FriendsServiceEndpoint extends AbstractEndpointDefinition implements FriendsServiceModel {
@@ -26,7 +28,7 @@ public final class FriendsServiceEndpoint extends AbstractEndpointDefinition imp
     private static final long serialVersionUID = 6945343361490533671L;
 
     @Getter
-    private FriendsDatabaseRepository repository;
+    private FriendsRepository repository;
 
     @Inject
     private ConvenoRouter convenoRouter;
@@ -48,7 +50,7 @@ public final class FriendsServiceEndpoint extends AbstractEndpointDefinition imp
 
     @PostFactoryMethod
     private void init() {
-        repository = convenoRouter.getRepository(FriendsDatabaseRepository.class);
+        repository = convenoRouter.getRepository(FriendsRepository.class);
         repository.executeTableValid();
 
         eventManager.subscribe(EventSubscribeBuilder.newBuilder(FriendJoinEvent.class)
@@ -59,13 +61,28 @@ public final class FriendsServiceEndpoint extends AbstractEndpointDefinition imp
                 .build());
     }
 
-    private FriendsList lookupPlayerFriends(UUID playerUUID) {
-        return null;
+    private FriendsList lookupPlayerFriends(UUID playerUUID) throws RemoteException {
+        ConvenoResponse friendsListResponse = repository.findFriendsList(playerUUID);
+        return new FriendsListStub(
+                playerUUID,
+                playersModel,
+                repository,
+                friendsListResponse.stream()
+                        .map(line -> UUID.fromString(line.getNullableString("uuid")))
+                        .collect(Collectors.toSet())
+        );
     }
 
     @Override
     public FriendsList findFriends(UUID playerUUID) throws RemoteException {
-        return playerFriendsMap.computeIfAbsent(playerUUID, this::lookupPlayerFriends);
+        if (playerFriendsMap.containsKey(playerUUID)) {
+            return playerFriendsMap.get(playerUUID);
+        }
+
+        FriendsList friendsList = lookupPlayerFriends(playerUUID);
+        playerFriendsMap.put(playerUUID, friendsList);
+
+        return friendsList;
     }
 
     @Override
