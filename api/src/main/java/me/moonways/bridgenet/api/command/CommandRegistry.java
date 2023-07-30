@@ -1,24 +1,25 @@
 package me.moonways.bridgenet.api.command;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.command.annotation.Command;
 import me.moonways.bridgenet.api.command.annotation.Permission;
 import me.moonways.bridgenet.api.command.children.CommandChild;
 import me.moonways.bridgenet.api.command.children.CommandChildrenScanner;
-import me.moonways.bridgenet.api.command.exception.CommandNotAnnotatedException;
-import me.moonways.bridgenet.api.command.exception.CommandNotFoundException;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
-import me.moonways.bridgenet.api.command.annotation.Command;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
 
 @Log4j2
 public final class CommandRegistry {
 
-    private static final String COMMAND_NOT_ANNOTATED_ERROR = "Command %s is not annotated";
+    private static final String COMMAND_NOT_ANNOTATED_ERROR_MESSAGE = "Command {} is not annotated by @Command";
 
     private final Map<String, CommandWrapper> commandWrapperMap = new HashMap<>();
 
@@ -36,7 +37,7 @@ public final class CommandRegistry {
 
     public void registerCommand(@NotNull Object object) {
         if (!matchAnnotation(object)) {
-            log.error(new CommandNotAnnotatedException(String.format(COMMAND_NOT_ANNOTATED_ERROR, object.getClass().getName())));
+            log.error(COMMAND_NOT_ANNOTATED_ERROR_MESSAGE, object.getClass().getSimpleName());
             return;
         }
 
@@ -60,13 +61,7 @@ public final class CommandRegistry {
     }
 
     public CommandWrapper getCommandWrapper(@NotNull String name) {
-        try {
-            return commandWrapperMap.get(name.toLowerCase());
-        } catch (CommandNotFoundException exception) {
-            log.error(exception);
-        }
-
-        return null;
+        return commandWrapperMap.get(name.toLowerCase());
     }
 
     private List<CommandChild> createChildren(@NotNull Object object) {
