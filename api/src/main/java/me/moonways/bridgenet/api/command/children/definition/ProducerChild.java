@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 @Getter
 @RequiredArgsConstructor
-public class ProducerChild implements CommandChild {
+public final class ProducerChild implements CommandChild {
 
     private final Object parent;
     private final Method method;

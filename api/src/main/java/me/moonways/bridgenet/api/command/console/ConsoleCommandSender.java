@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Log4j2
 @Component
-public class ConsoleCommandSender implements EntityCommandSender {
+public final class ConsoleCommandSender implements EntityCommandSender {
 
     @Override
     public void sendMessage(String message) {

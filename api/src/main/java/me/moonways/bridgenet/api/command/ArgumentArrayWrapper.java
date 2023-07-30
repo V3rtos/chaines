@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Getter
-public class ArgumentArrayWrapper {
+public final class ArgumentArrayWrapper {
 
     private final String[] nativeArray;
 
