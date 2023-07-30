@@ -1,4 +1,4 @@
-package me.moonways.model.command.exception;
+package me.moonways.bridgenet.api.command.exception;
 
 import lombok.experimental.StandardException;
 

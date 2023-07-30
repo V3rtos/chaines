@@ -1,12 +1,12 @@
-package me.moonways.model.command.children;
+package me.moonways.bridgenet.api.command.children;
 
-import me.moonways.model.command.children.definition.MentorChild;
-import me.moonways.model.command.children.definition.PredicateChild;
-import me.moonways.model.command.children.definition.ProducerChild;
-import me.moonways.model.command.annotation.Mentor;
-import me.moonways.model.command.annotation.Permission;
-import me.moonways.model.command.annotation.Predicate;
-import me.moonways.model.command.annotation.Producer;
+import me.moonways.bridgenet.api.command.children.definition.MentorChild;
+import me.moonways.bridgenet.api.command.children.definition.PredicateChild;
+import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
+import me.moonways.bridgenet.api.command.annotation.Mentor;
+import me.moonways.bridgenet.api.command.annotation.Permission;
+import me.moonways.bridgenet.api.command.annotation.Predicate;
+import me.moonways.bridgenet.api.command.annotation.Producer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

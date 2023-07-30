@@ -1,17 +1,17 @@
-package me.moonways.model.command;
+package me.moonways.bridgenet.api.command;
 
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.command.annotation.Command;
+import me.moonways.bridgenet.api.command.annotation.Mentor;
+import me.moonways.bridgenet.api.command.annotation.Predicate;
+import me.moonways.bridgenet.api.command.annotation.Producer;
+import me.moonways.bridgenet.api.command.children.definition.MentorChild;
+import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
 import me.moonways.bridgenet.api.inject.Component;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostFactoryMethod;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
-import me.moonways.model.command.annotation.Command;
-import me.moonways.model.command.annotation.Mentor;
-import me.moonways.model.command.annotation.Predicate;
-import me.moonways.model.command.annotation.Producer;
-import me.moonways.model.command.children.definition.MentorChild;
-import me.moonways.model.command.children.definition.ProducerChild;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;

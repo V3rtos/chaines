@@ -1,6 +1,6 @@
-package me.moonways.model.command;
+package me.moonways.bridgenet.api.command;
 
-import me.moonways.model.command.annotation.*;
+import me.moonways.bridgenet.api.command.annotation.*;
 
 @Command("user")
 @Permission("test")

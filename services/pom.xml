@@ -85,5 +85,12 @@
             <version>2.1.214</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Internal Bridgenet dependencies -->
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>api</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 </project>

@@ -1,4 +1,4 @@
-package me.moonways.model.command;
+package me.moonways.bridgenet.api.command;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

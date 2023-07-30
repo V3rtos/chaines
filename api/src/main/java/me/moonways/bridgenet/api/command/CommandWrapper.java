@@ -1,8 +1,8 @@
-package me.moonways.model.command;
+package me.moonways.bridgenet.api.command;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.model.command.children.CommandChild;
+import me.moonways.bridgenet.api.command.children.CommandChild;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;

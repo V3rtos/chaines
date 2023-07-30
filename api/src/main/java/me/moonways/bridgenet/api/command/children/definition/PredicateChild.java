@@ -1,8 +1,8 @@
-package me.moonways.model.command.children.definition;
+package me.moonways.bridgenet.api.command.children.definition;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.model.command.children.CommandChild;
+import me.moonways.bridgenet.api.command.children.CommandChild;
 
 import java.lang.reflect.Method;
 

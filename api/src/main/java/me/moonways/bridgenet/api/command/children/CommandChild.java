@@ -1,4 +1,4 @@
-package me.moonways.model.command.children;
+package me.moonways.bridgenet.api.command.children;
 
 import java.lang.reflect.Method;
 

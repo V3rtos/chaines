@@ -27,12 +27,7 @@
     </modules>
 
     <dependencies>
-        <!-- Internal Bridgenet RMI services protocol -->
-        <dependency>
-            <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>api</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!-- Internal Bridgenet dependencies -->
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rsi</artifactId>

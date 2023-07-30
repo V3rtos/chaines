@@ -13,6 +13,8 @@ import java.util.stream.Stream;
 @EqualsAndHashCode(callSuper = false)
 public final class BnmgFile extends File {
 
+    private static final long serialVersionUID = -7083465806660244536L;
+
     BnmgFile(@NotNull String pathname) {
         super(pathname);
     }

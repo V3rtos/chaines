@@ -1,4 +1,4 @@
-package me.moonways.model.command.annotation;
+package me.moonways.bridgenet.api.command.annotation;
 
 import java.lang.annotation.*;
 

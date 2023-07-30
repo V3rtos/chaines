@@ -1,4 +1,4 @@
-package me.moonways.model.command.annotation;
+package me.moonways.bridgenet.api.command.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Mentor {
-}
+public @interface Producer {
+
+    String name();}
