@@ -1,5 +1,7 @@
-package me.moonways.bridgenet.api.command;
+package me.moonways.bridgenet.bootstrap.hook.console;
 
+import me.moonways.bridgenet.api.command.CommandSession;
+import me.moonways.bridgenet.api.command.EntityCommandSender;
 import me.moonways.bridgenet.api.command.annotation.*;
 
 @Command("user")
