@@ -16,6 +16,6 @@ public class ConsoleCommandSender implements EntityCommandSender {
 
     @Override
     public boolean hasPermission(@NotNull String permission) {
-        return true;
+        return false;
     }
 }

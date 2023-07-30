@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.api.command;
 
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.command.annotation.Permission;
 import me.moonways.bridgenet.api.command.children.CommandChild;
 import me.moonways.bridgenet.api.command.children.CommandChildrenScanner;
 import me.moonways.bridgenet.api.command.exception.CommandNotAnnotatedException;
@@ -40,6 +41,8 @@ public final class CommandRegistry {
         }
 
         Command command = object.getClass().getDeclaredAnnotation(Command.class);
+        Permission permission = object.getClass().getDeclaredAnnotation(Permission.class);
+
         String commandName = command.value();
 
         List<CommandChild> childrenList = createChildren(object);
@@ -47,8 +50,11 @@ public final class CommandRegistry {
         dependencyInjection.injectFields(object);
         Object proxiedObject = interceptor.createProxy(object, new DecoratedObjectProxy());
 
-        commandWrapperMap.put(commandName,
-                new CommandWrapper(commandName, proxiedObject, childrenList));
+        commandWrapperMap.put(commandName, new CommandWrapper(
+                commandName,
+                permission == null ? null : permission.value(),
+                proxiedObject,
+                childrenList));
 
         log.info("Command §7'{}' §rwas success registered", object.getClass().getSimpleName());
     }
@@ -56,8 +62,7 @@ public final class CommandRegistry {
     public CommandWrapper getCommandWrapper(@NotNull String name) {
         try {
             return commandWrapperMap.get(name.toLowerCase());
-        }
-        catch (CommandNotFoundException exception) {
+        } catch (CommandNotFoundException exception) {
             log.error(exception);
         }
 

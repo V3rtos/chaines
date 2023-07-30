@@ -49,11 +49,6 @@ public class ProxyManager {
     }
 
     public Object fireMethodHandler(Object interceptor, ProxiedMethod method, Object[] args) {
-
-        if (!interceptor.getClass().isAnnotationPresent(MethodInterceptor.class)) {
-            throw new InterceptionException("Proxy object " + interceptor.getClass() + " is not marked of @MethodInterceptor annotation");
-        }
-
         Object returnValue = null;
         List<ProxiedMethod> methodHandlers = validateMethodsHandlersOrdered(
                 this.findMethodHandlers(interceptor, method));
