@@ -10,6 +10,7 @@ import me.moonways.bridgenet.api.command.annotation.Command;
 import me.moonways.bridgenet.api.command.annotation.Permission;
 import me.moonways.bridgenet.api.command.children.CommandChild;
 import me.moonways.bridgenet.api.command.children.CommandChildrenScanner;
+import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
@@ -21,7 +22,7 @@ public final class CommandRegistry {
 
     private static final String COMMAND_NOT_ANNOTATED_ERROR_MESSAGE = "Command {} is not annotated by @Command";
 
-    private final Map<String, CommandWrapper> commandWrapperMap = new HashMap<>();
+    private final Map<String, WrappedCommand> commandWrapperMap = new HashMap<>();
 
     private final CommandChildrenScanner childService = new CommandChildrenScanner();
 
@@ -51,7 +52,7 @@ public final class CommandRegistry {
         dependencyInjection.injectFields(object);
         Object proxiedObject = interceptor.createProxy(object, new DecoratedObjectProxy());
 
-        commandWrapperMap.put(commandName, new CommandWrapper(
+        commandWrapperMap.put(commandName, new WrappedCommand(
                 commandName,
                 permission == null ? null : permission.value(),
                 proxiedObject,
@@ -60,7 +61,7 @@ public final class CommandRegistry {
         log.info("Command §7'{}' §rwas success registered", object.getClass().getSimpleName());
     }
 
-    public CommandWrapper getCommandWrapper(@NotNull String name) {
+    public WrappedCommand getCommandWrapper(@NotNull String name) {
         return commandWrapperMap.get(name.toLowerCase());
     }
 

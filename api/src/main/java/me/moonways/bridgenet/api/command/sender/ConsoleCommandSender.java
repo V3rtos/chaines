@@ -1,8 +1,7 @@
-package me.moonways.bridgenet.api.command.console;
+package me.moonways.bridgenet.api.command.sender;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Component;
-import me.moonways.bridgenet.api.command.EntityCommandSender;
 import org.jetbrains.annotations.NotNull;
 
 @Log4j2

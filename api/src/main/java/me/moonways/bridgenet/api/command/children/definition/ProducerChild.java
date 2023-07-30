@@ -13,6 +13,5 @@ public final class ProducerChild implements CommandChild {
     private final Object parent;
     private final Method method;
 
-    private final String name;
-    private final String permission;
+    private final String name, permission, description;
 }

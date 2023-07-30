@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.command;
+package me.moonways.bridgenet.api.command.wrapper;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +11,9 @@ import java.util.stream.Stream;
 
 @Getter
 @RequiredArgsConstructor
-public final class CommandWrapper {
+public final class WrappedCommand {
 
-    private final String commandName;
+    private final String name;
     private final String permission;
 
     private final Object source;

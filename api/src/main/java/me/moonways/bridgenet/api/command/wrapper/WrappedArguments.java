@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.command;
+package me.moonways.bridgenet.api.command.wrapper;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Getter
-public final class ArgumentArrayWrapper {
+public final class WrappedArguments {
 
     private final String[] nativeArray;
 
