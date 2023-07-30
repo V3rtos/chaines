@@ -10,6 +10,7 @@ import me.moonways.bridgenet.api.command.annotation.Command;
 import me.moonways.bridgenet.api.command.annotation.Permission;
 import me.moonways.bridgenet.api.command.children.CommandChild;
 import me.moonways.bridgenet.api.command.children.CommandChildrenScanner;
+import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
@@ -25,6 +26,7 @@ public final class CommandRegistry {
     private final Map<String, WrappedCommand> commandWrapperMap = new HashMap<>();
 
     private final CommandChildrenScanner childService = new CommandChildrenScanner();
+    private final InternalCommandFactory factory = new InternalCommandFactory();
 
     @Inject
     private AnnotationInterceptor interceptor;
@@ -32,33 +34,54 @@ public final class CommandRegistry {
     @Inject
     private DependencyInjection dependencyInjection;
 
-    private boolean matchAnnotation(@NotNull Object object) {
-        return object.getClass().isAnnotationPresent(Command.class);
-    }
-
     public void registerCommand(@NotNull Object object) {
-        if (!matchAnnotation(object)) {
+        if (!matchesAnnotation(object)) {
             log.error(COMMAND_NOT_ANNOTATED_ERROR_MESSAGE, object.getClass().getSimpleName());
             return;
         }
 
-        Command command = object.getClass().getDeclaredAnnotation(Command.class);
-        Permission permission = object.getClass().getDeclaredAnnotation(Permission.class);
+        final String commandName = findCommandName(object);
 
-        String commandName = command.value();
+        final String permission = findPermission(object);
 
-        List<CommandChild> childrenList = createChildren(object);
+        final Object commandProxy = toProxy(object);
 
-        dependencyInjection.injectFields(object);
-        Object proxiedObject = interceptor.createProxy(object, new DecoratedObjectProxy());
+        final List<CommandChild> childrenList = createChildren(object);
+        final CommandSession.HelpMessageView helpMessageView = createHelpMessageView(childrenList);
 
-        commandWrapperMap.put(commandName, new WrappedCommand(
-                commandName,
-                permission == null ? null : permission.value(),
-                proxiedObject,
-                childrenList));
+        WrappedCommand commandWrapper = factory.createCommandWrapper(commandProxy, commandName, permission, childrenList, helpMessageView);
+        commandWrapperMap.put(commandName, commandWrapper);
 
         log.info("Command §7'{}' §rwas success registered", object.getClass().getSimpleName());
+    }
+
+    private String findCommandName(Object comandObject) {
+        Command annotation = comandObject.getClass().getDeclaredAnnotation(Command.class);
+        return annotation.value();
+    }
+
+    private String findPermission(Object commandObject) {
+        Permission annotation = commandObject.getClass().getDeclaredAnnotation(Permission.class);
+        return annotation == null ? null : annotation.value();
+    }
+
+    private Object toProxy(Object commandObject) {
+        dependencyInjection.injectFields(commandObject);
+        return interceptor.createProxy(commandObject, new DecoratedObjectProxy());
+    }
+
+    private CommandSession.HelpMessageView createHelpMessageView(List<CommandChild> childrenList) {
+        final CommandSession.HelpMessageView helpMessageView = new CommandSession.HelpMessageView();
+        childrenList.stream()
+                .filter(child -> child instanceof ProducerChild)
+                .map(child -> (ProducerChild) child)
+                .forEachOrdered(child -> helpMessageView.addDescription(child.getName(), child.getDescription()));
+
+        return helpMessageView;
+    }
+
+    private boolean matchesAnnotation(@NotNull Object object) {
+        return object.getClass().isAnnotationPresent(Command.class);
     }
 
     public WrappedCommand getCommandWrapper(@NotNull String name) {

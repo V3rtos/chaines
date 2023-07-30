@@ -1,14 +1,14 @@
 package me.moonways.bridgenet.bootstrap.hook.console;
 
 import me.moonways.bridgenet.api.command.CommandSession;
-import me.moonways.bridgenet.api.command.EntityCommandSender;
+import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.command.annotation.*;
 
 @Command("user")
 @Permission("test")
 public class TestCommand {
 
-    @Mentor
+    @MentorExecutor
     public void defaultCommand(CommandSession session) {
         EntityCommandSender sender = session.getSender();
 
@@ -16,12 +16,12 @@ public class TestCommand {
     }
 
     @Permission("test.info")
-    @Producer(name = "info")
+    @ProducerExecutor("info")
     public void handleInfo(CommandSession session) {
         EntityCommandSender sender = session.getSender();
     }
 
-    @Matcher
+    @MatcherExecutor
     public boolean predicate_one(CommandSession session) {
         return true;
     }

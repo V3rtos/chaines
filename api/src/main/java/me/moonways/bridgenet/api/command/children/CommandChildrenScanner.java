@@ -38,7 +38,7 @@ public class CommandChildrenScanner {
     }
 
     public List<CommandChild> findProducerChildren(@NotNull Object object) {
-        return toStream(object, ProduceExecutor.class)
+        return toStream(object, ProducerExecutor.class)
                 .map(new MethodToProducerMapper(object))
                 .collect(Collectors.toList());
     }
@@ -60,7 +60,7 @@ public class CommandChildrenScanner {
 
         @Override
         public CommandChild apply(Method method) {
-            ProduceExecutor producerAnnotation = method.getDeclaredAnnotation(ProduceExecutor.class);
+            ProducerExecutor producerAnnotation = method.getDeclaredAnnotation(ProducerExecutor.class);
             String producerName = producerAnnotation.value();
 
             return FACTORY.createProducer(source, method, producerName,

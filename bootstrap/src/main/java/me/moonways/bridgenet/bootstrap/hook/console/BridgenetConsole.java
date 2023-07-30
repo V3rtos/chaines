@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.command.CommandExecutionException;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 import me.moonways.bridgenet.api.command.CommandExecutor;
-import me.moonways.bridgenet.api.command.console.ConsoleCommandSender;
+import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
 
 @Log4j2

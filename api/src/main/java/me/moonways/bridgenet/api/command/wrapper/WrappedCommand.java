@@ -2,6 +2,7 @@ package me.moonways.bridgenet.api.command.wrapper;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.api.command.CommandSession;
 import me.moonways.bridgenet.api.command.children.CommandChild;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +20,8 @@ public final class WrappedCommand {
     private final Object source;
 
     private final List<CommandChild> childrenList;
+
+    private final CommandSession.HelpMessageView helpMessageView;
 
     @SuppressWarnings("unchecked")
     public <T extends CommandChild> Stream<T> find(@NotNull Class<? extends Annotation> annotationClass) {

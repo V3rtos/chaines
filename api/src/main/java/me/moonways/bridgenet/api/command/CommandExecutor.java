@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.command.annotation.Command;
 import me.moonways.bridgenet.api.command.annotation.MatcherExecutor;
 import me.moonways.bridgenet.api.command.annotation.MentorExecutor;
-import me.moonways.bridgenet.api.command.annotation.ProduceExecutor;
+import me.moonways.bridgenet.api.command.annotation.ProducerExecutor;
 import me.moonways.bridgenet.api.command.children.definition.MentorChild;
 import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
@@ -52,7 +52,7 @@ public final class CommandExecutor {
             throw new CommandExecutionException("Label cannot be contains command was exists");
         }
 
-        CommandSession mentorSession = factory.createSession(wrapper, sender, arguments);
+        CommandSession mentorSession = factory.createSession(wrapper.getHelpMessageView(), sender, arguments);
 
         if (matchesBeforeExecute(mentorSession, wrapper)) { //if access is allowed
             if (mentorSession.getArguments().isEmpty()) {
@@ -71,7 +71,7 @@ public final class CommandExecutor {
     private void fireProducer(WrappedCommand wrapper, CommandSession commandSession, String[] args) {
         final EntityCommandSender sender = commandSession.getSender();
 
-        ProducerChild producerChild = wrapper.<ProducerChild>find(ProduceExecutor.class)
+        ProducerChild producerChild = wrapper.<ProducerChild>find(ProducerExecutor.class)
                 .filter(producer -> producer.getName().equalsIgnoreCase(args[0]))
                 .findFirst()
                 .orElse(null);
@@ -84,7 +84,7 @@ public final class CommandExecutor {
         String permission = producerChild.getPermission();
 
         if (permission == null || matchesPermission(sender, permission)) {
-            CommandSession childSession = factory.createSession(wrapper, sender, factory.copyArgumentsOfRange(args));
+            CommandSession childSession = factory.createSession(wrapper.getHelpMessageView(), sender, factory.copyArgumentsOfRange(args));
             invokeMethod(childSession, wrapper.getSource(), producerChild.getMethod());
         }
     }
