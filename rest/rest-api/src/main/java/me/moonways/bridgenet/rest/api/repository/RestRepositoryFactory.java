@@ -5,11 +5,9 @@ import me.moonways.bridgenet.api.inject.Component;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import me.moonways.bridgenet.rest.api.HttpHost;
-import me.moonways.bridgenet.rest.api.http.client.HttpClient;
 import me.moonways.bridgenet.rest.api.exception.RestRepositoryException;
+import me.moonways.bridgenet.rest.api.http.client.HttpClient;
 import me.moonways.bridgenet.rest.api.repository.proxy.RestClientProxy;
-import me.moonways.bridgenet.rest.api.repository.proxy.RestServerProxy;
-import me.moonways.bridgenet.rest.api.http.server.HttpServer;
 import org.jetbrains.annotations.NotNull;
 
 @Component
@@ -49,14 +47,14 @@ public class RestRepositoryFactory {
         return HttpClient.create(httpHost);
     }
 
-    public HttpServer lookupServer(@NotNull Class<?> repositoryClass) {
-        if (!matchesAsRepository(repositoryClass)) {
-            throw new RestRepositoryException("Class " + repositoryClass.getName() + " is not valid as repository");
-        }
+    //public HttpServer lookupServer(@NotNull Class<?> repositoryClass) {
+    //    if (!matchesAsRepository(repositoryClass)) {
+    //        throw new RestRepositoryException("Class " + repositoryClass.getName() + " is not valid as repository");
+    //    }
 
-        HttpHost httpHost = lookupHost(repositoryClass);
-        return null;
-    }
+    //    HttpHost httpHost = lookupHost(repositoryClass);
+    //    return null;
+    //}
 
     private boolean matchesAsRepository(@NotNull Class<?> repositoryClass) {
         return repositoryClass.isAnnotationPresent(RestRepository.class) &&
@@ -78,17 +76,17 @@ public class RestRepositoryFactory {
         return annotationInterceptor.createProxyChecked(cls, proxy);
     }
 
-    public <I> I lookupServerRepository(Class<I> cls) {
-        HttpServer httpServer = lookupServer(cls);
-        RestServerProxy proxy = new RestServerProxy(gson, httpServer);
+    //public <I> I lookupServerRepository(Class<I> cls) {
+    //    HttpServer httpServer = lookupServer(cls);
+    //    RestServerProxy proxy = new RestServerProxy(gson, httpServer);
 
-        return annotationInterceptor.createProxyChecked(cls, proxy);
-    }
+    //    return annotationInterceptor.createProxyChecked(cls, proxy);
+    //}
 
-    public <I> I lookupServerRepository(I obj) {
-        HttpServer httpServer = lookupServer(obj.getClass());
-        RestServerProxy proxy = new RestServerProxy(gson, httpServer);
+    //public <I> I lookupServerRepository(I obj) {
+    //    HttpServer httpServer = lookupServer(obj.getClass());
+    //    RestServerProxy proxy = new RestServerProxy(gson, httpServer);
 
-        return annotationInterceptor.createProxyChecked(obj, proxy);
-    }
+    //    return annotationInterceptor.createProxyChecked(obj, proxy);
+    //}
 }
