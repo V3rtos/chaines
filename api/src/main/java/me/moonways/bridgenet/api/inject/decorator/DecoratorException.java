@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.decorator.exception;
+package me.moonways.bridgenet.api.inject.decorator;
 
 import lombok.experimental.StandardException;
 
