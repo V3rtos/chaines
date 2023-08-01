@@ -1,11 +1,13 @@
 package me.moonways.bridgenet.bootstrap.hook.console.command;
 
 import me.moonways.bridgenet.api.command.CommandSession;
+import me.moonways.bridgenet.api.command.option.OnlyConsoleSenderOption;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.command.annotation.*;
 
 @Command("user")
 @Permission("test")
+@CommandOption(OnlyConsoleSenderOption.class)
 public class TestCommand {
 
     @MentorExecutor

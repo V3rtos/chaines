@@ -5,7 +5,6 @@ import me.moonways.bridgenet.api.command.option.CommandOptionMatcher;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.command.wrapper.WrappedArguments;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,13 +20,11 @@ class InternalCommandFactory {
         return new WrappedArguments(args);
     }
 
-    public WrappedCommand createCommandWrapper(Object source,
-                                               String name,
-                                               String permission,
+    public WrappedCommand createCommandWrapper(Object source, String name, String permission,
                                                List<CommandChild> childrenList,
                                                List<CommandOptionMatcher> optionsList,
                                                CommandSession.HelpMessageView helpMessageView) {
-        return new WrappedCommand(name, permission, source, childrenList, helpMessageView);
+        return new WrappedCommand(name, permission, source, childrenList, optionsList, helpMessageView);
     }
 
     public String findNameByLabel(String label) {
