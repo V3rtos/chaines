@@ -21,7 +21,7 @@ public class FieldInjectManager implements Serializable {
 
     private final DependencyContainer container;
 
-    private final Queue<FieldQueueState> queue = new ArrayDeque<>();
+    private final Queue<FieldQueueState> injectionQueue = new ArrayDeque<>();
 
     public void injectFields(@NotNull Object instance) {
         Set<Class<?>> dependenciesClasses = container.getFoundComponentsTypes();
@@ -43,7 +43,7 @@ public class FieldInjectManager implements Serializable {
                 }
 
                 // or else offer to injection-queue
-                queue.offer(new FieldQueueState(field, instance));
+                injectionQueue.offer(new FieldQueueState(field, instance));
             }
         }
 
@@ -90,9 +90,10 @@ public class FieldInjectManager implements Serializable {
     }
 
     private FieldQueueState[] findFieldsInQueueByDependency(Class<?> dependencyClass) {
-        return queue.stream()
-            .filter(state -> state.field.getType().isAssignableFrom(dependencyClass))
-            .toArray(FieldQueueState[]::new);
+        return injectionQueue
+                .stream()
+                .filter(state -> state.field.getType().isAssignableFrom(dependencyClass))
+                .toArray(FieldQueueState[]::new);
     }
 
     @ToString
