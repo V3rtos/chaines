@@ -21,7 +21,7 @@ public class FieldInjectManager implements Serializable {
 
     private final DependencyContainer container;
 
-    private final Queue<FieldQueueState> queue = new ArrayDeque<>();
+    private final Queue<FieldQueueState> injectionQueue = new ArrayDeque<>();
 
     public void injectFields(@NotNull Object instance) {
         Set<Class<?>> dependenciesClasses = container.getFoundComponentsTypes();
@@ -36,7 +36,14 @@ public class FieldInjectManager implements Serializable {
                 injectDependency(instance, field, container.findInstance(returnType));
             }
             else {
-                queue.offer(new FieldQueueState(field, instance));
+                // try self-injection
+                if (returnType.isAssignableFrom(instance.getClass())) {
+                    injectDependency(instance, field, instance);
+                    return;
+                }
+
+                // or else offer to injection-queue
+                injectionQueue.offer(new FieldQueueState(field, instance));
             }
         }
 
@@ -46,7 +53,6 @@ public class FieldInjectManager implements Serializable {
     }
 
     private void injectDependency(@NotNull Object instance, @NotNull Field field, @NotNull Object dependInstance) {
-        //System.out.println("INJECT " + field.getName() + " FOR " + instance.getClass().getSimpleName() + " AS " + dependInstance.getClass().getSimpleName());
         try {
             field.setAccessible(true);
             field.set(instance, dependInstance);
@@ -84,9 +90,10 @@ public class FieldInjectManager implements Serializable {
     }
 
     private FieldQueueState[] findFieldsInQueueByDependency(Class<?> dependencyClass) {
-        return queue.stream()
-            .filter(state -> state.field.getType().isAssignableFrom(dependencyClass))
-            .toArray(FieldQueueState[]::new);
+        return injectionQueue
+                .stream()
+                .filter(state -> state.field.getType().isAssignableFrom(dependencyClass))
+                .toArray(FieldQueueState[]::new);
     }
 
     @ToString
