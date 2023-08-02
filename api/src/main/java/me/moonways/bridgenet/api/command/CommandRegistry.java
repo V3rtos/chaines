@@ -17,6 +17,7 @@ import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,16 +71,16 @@ public final class CommandRegistry {
     }
 
     private List<CommandOptionMatcher> findOptions(Object commandObject) {
-        CommandOption[] repeatableOption = Arrays.stream(commandObject.getClass().getDeclaredAnnotations())
+        Annotation[] declaredAnnotations = commandObject.getClass().getDeclaredAnnotations();
+
+        ObjectFactory objectFactory = dependencyInjection.getScanner()
+                .getObjectFactory(CommandOption.class);
+
+        return Arrays.stream(declaredAnnotations)
                 .filter(annotation -> annotation.annotationType().equals(CommandOption.class))
                 .map(annotation -> (CommandOption)annotation)
-                .toArray(CommandOption[]::new);
-
-        System.out.println(Arrays.toString(repeatableOption));
-        ObjectFactory objectFactory = dependencyInjection.getScanner().getObjectFactory(CommandOption.class);
-
-        return Arrays.stream(repeatableOption)
-                .map(option -> objectFactory.create(option.value())).collect(Collectors.toList());
+                .map(option -> objectFactory.create(option.value()))
+                .collect(Collectors.toList());
     }
 
     private Object toProxy(Object commandObject) {
