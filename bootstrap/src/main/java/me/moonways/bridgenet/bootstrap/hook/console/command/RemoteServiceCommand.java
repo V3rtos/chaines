@@ -2,6 +2,7 @@ package me.moonways.bridgenet.bootstrap.hook.console.command;
 
 import me.moonways.bridgenet.api.command.CommandSession;
 import me.moonways.bridgenet.api.command.annotation.*;
+import me.moonways.bridgenet.api.command.option.OnlyConsoleSenderOption;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
@@ -11,8 +12,8 @@ import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import java.util.List;
 import java.util.Map;
 
-@Permission("rsi")
 @Command("rsi")
+@CommandOption(OnlyConsoleSenderOption.class)
 public class RemoteServiceCommand {
 
     @Inject
