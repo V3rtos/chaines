@@ -7,6 +7,7 @@ import me.moonways.bridgenet.api.command.annotation.MentorExecutor;
 import me.moonways.bridgenet.api.command.annotation.ProducerExecutor;
 import me.moonways.bridgenet.api.command.children.definition.MentorChild;
 import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
+import me.moonways.bridgenet.api.command.option.CommandOptionMatcher;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
 import me.moonways.bridgenet.api.inject.Component;
@@ -17,6 +18,8 @@ import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Log4j2
@@ -54,13 +57,26 @@ public final class CommandExecutor {
 
         CommandSession mentorSession = factory.createSession(wrapper.getHelpMessageView(), sender, arguments);
 
-        if (matchesPermission(sender, wrapper.getPermission()) && matchesBeforeExecute(mentorSession, wrapper)) { //if access is allowed
-            if (mentorSession.getArguments().isEmpty()) {
-                fireMentor(wrapper, mentorSession);
-                return;
-            }
+        fireOption(wrapper, mentorSession);
 
-            fireProducer(wrapper, mentorSession, arguments);
+    }
+
+    private void fireOption(WrappedCommand wrapper, CommandSession session) {
+        EntityCommandSender sender = session.getSender();
+        List<CommandOptionMatcher> optionList = wrapper
+                .getOptionsList().stream().filter(option -> option.matches(session))
+                .peek(commandOptionMatcher -> commandOptionMatcher.apply(session))
+                .collect(Collectors.toList());
+
+        if (optionList.isEmpty()) {
+            if (matchesPermission(sender, wrapper.getPermission()) && matchesBeforeExecute(session, wrapper)) { //if access is allowed
+                if (session.getArguments().isEmpty()) {
+                    fireMentor(wrapper, session);
+                    return;
+                }
+
+                fireProducer(wrapper, session, session.getArguments().getNativeArray());
+            }
         }
     }
 

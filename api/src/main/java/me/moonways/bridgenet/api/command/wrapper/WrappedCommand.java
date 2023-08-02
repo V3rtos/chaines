@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.command.CommandSession;
 import me.moonways.bridgenet.api.command.children.CommandChild;
+import me.moonways.bridgenet.api.command.option.CommandOptionMatcher;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
@@ -20,6 +21,8 @@ public final class WrappedCommand {
     private final Object source;
 
     private final List<CommandChild> childrenList;
+
+    private final List<CommandOptionMatcher> optionsList;
 
     private final CommandSession.HelpMessageView helpMessageView;
 

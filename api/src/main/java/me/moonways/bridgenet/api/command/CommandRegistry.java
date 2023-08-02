@@ -1,22 +1,25 @@
 package me.moonways.bridgenet.api.command;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.command.annotation.Command;
+import me.moonways.bridgenet.api.command.annotation.CommandOption;
 import me.moonways.bridgenet.api.command.annotation.Permission;
+import me.moonways.bridgenet.api.command.annotation.repeatable.RepeatableCommandOption;
 import me.moonways.bridgenet.api.command.children.CommandChild;
 import me.moonways.bridgenet.api.command.children.CommandChildrenScanner;
 import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
+import me.moonways.bridgenet.api.command.option.CommandOptionMatcher;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
+import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.annotation.Annotation;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Log4j2
 public final class CommandRegistry {
@@ -46,10 +49,12 @@ public final class CommandRegistry {
 
         final Object commandProxy = toProxy(object);
 
-        final List<CommandChild> childrenList = createChildren(object);
+        final List<CommandChild> childrenList = findChildren(object);
+        final List<CommandOptionMatcher> optionsList = findOptions(object);
         final CommandSession.HelpMessageView helpMessageView = createHelpMessageView(childrenList);
 
-        WrappedCommand commandWrapper = factory.createCommandWrapper(commandProxy, commandName, permission, childrenList, helpMessageView);
+        WrappedCommand commandWrapper = factory.createCommandWrapper(commandProxy, commandName, permission, childrenList,
+                optionsList, helpMessageView);
         commandWrapperMap.put(commandName, commandWrapper);
 
         log.info("Command §7'{}' §rwas success registered", object.getClass().getSimpleName());
@@ -63,6 +68,19 @@ public final class CommandRegistry {
     private String findPermission(Object commandObject) {
         Permission annotation = commandObject.getClass().getDeclaredAnnotation(Permission.class);
         return annotation == null ? null : annotation.value();
+    }
+
+    private List<CommandOptionMatcher> findOptions(Object commandObject) {
+        Annotation[] declaredAnnotations = commandObject.getClass().getDeclaredAnnotations();
+
+        ObjectFactory objectFactory = dependencyInjection.getScanner()
+                .getObjectFactory(CommandOption.class);
+
+        return Arrays.stream(declaredAnnotations)
+                .filter(annotation -> annotation.annotationType().equals(CommandOption.class))
+                .map(annotation -> (CommandOption)annotation)
+                .map(option -> objectFactory.create(option.value()))
+                .collect(Collectors.toList());
     }
 
     private Object toProxy(Object commandObject) {
@@ -88,7 +106,7 @@ public final class CommandRegistry {
         return commandWrapperMap.get(name.toLowerCase());
     }
 
-    private List<CommandChild> createChildren(@NotNull Object object) {
+    private List<CommandChild> findChildren(@NotNull Object object) {
         List<CommandChild> childrenList = new ArrayList<>();
 
         childrenList.addAll(childService.findProducerChildren(object));

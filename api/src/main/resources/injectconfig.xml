@@ -41,6 +41,10 @@
             <targetClass>me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory</targetClass>
         </factory>
         <factory>
+            <annotationClass>me.moonways.bridgenet.api.command.annotation.CommandOption</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory</targetClass>
+        </factory>
+        <factory>
             <annotationClass>me.moonways.bridgenet.api.command.annotation.Command</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.factory.ComponentObjectFactory</targetClass>
         </factory>

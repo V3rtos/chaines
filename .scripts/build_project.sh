@@ -20,9 +20,9 @@ function cleanup() {
 function application() {
   local -a files_to_copy=(
     bootstrap/target/$application_jarfile
-    bootstrap/src/main/resources/$bootstrap_file "$BUILD_DIR"
-    rsi/src/main/resources/$rsiconfig_file "$BUILD_DIR"
-    api/src/main/resources/$injectconfig_file "$BUILD_DIR"
+    bootstrap/src/main/resources/$bootstrap_file
+    rsi/src/main/resources/$rsiconfig_file
+    api/src/main/resources/$injectconfig_file
   )
 
   for file in "${files_to_copy[@]}"
