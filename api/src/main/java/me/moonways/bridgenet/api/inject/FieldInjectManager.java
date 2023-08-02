@@ -36,6 +36,13 @@ public class FieldInjectManager implements Serializable {
                 injectDependency(instance, field, container.findInstance(returnType));
             }
             else {
+                // try self-injection
+                if (returnType.isAssignableFrom(instance.getClass())) {
+                    injectDependency(instance, field, instance);
+                    return;
+                }
+
+                // or else offer to injection-queue
                 queue.offer(new FieldQueueState(field, instance));
             }
         }
@@ -46,7 +53,6 @@ public class FieldInjectManager implements Serializable {
     }
 
     private void injectDependency(@NotNull Object instance, @NotNull Field field, @NotNull Object dependInstance) {
-        //System.out.println("INJECT " + field.getName() + " FOR " + instance.getClass().getSimpleName() + " AS " + dependInstance.getClass().getSimpleName());
         try {
             field.setAccessible(true);
             field.set(instance, dependInstance);
