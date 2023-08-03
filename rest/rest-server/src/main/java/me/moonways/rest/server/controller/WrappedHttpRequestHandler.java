@@ -58,17 +58,17 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
             controller = undefinedController;
         }
 
-        processController(controller, request, response);
+        processController(controller, verificationConfig, request, response);
     }
 
-    private void processController(HttpController controller,
+    private void processController(HttpController controller, VerificationConfig verificationConfig,
                                    HttpRequest httpRequest, HttpResponse httpResponse)
             throws HttpException, IOException {
 
-        controller.process(httpRequest);
+        controller.process(httpRequest, verificationConfig);
 
         httpResponse.setStatusCode(HttpURLConnection.HTTP_OK);
-        controller.processCallback(httpResponse);
+        controller.processCallback(httpResponse, verificationConfig);
     }
 
     private HttpController findController(String method, String uri) {

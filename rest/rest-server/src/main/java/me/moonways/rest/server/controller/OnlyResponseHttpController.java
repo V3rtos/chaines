@@ -1,6 +1,7 @@
 package me.moonways.rest.server.controller;
 
 import lombok.extern.log4j.Log4j2;
+import me.moonways.rest.server.controller.verify.VerificationConfig;
 import org.apache.http.HttpRequest;
 
 @Log4j2
@@ -11,7 +12,7 @@ public abstract class OnlyResponseHttpController implements HttpController {
     }
 
     @Override
-    public final void process(HttpRequest request) {
+    public final void process(HttpRequest request, VerificationConfig verificationConfig) {
         if (canLogging()) {
             log.info("");
         }

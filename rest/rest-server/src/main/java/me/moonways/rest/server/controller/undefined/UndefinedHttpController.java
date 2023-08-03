@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.rest.server.HttpServerConfig;
 import me.moonways.rest.server.controller.HttpContextPattern;
 import me.moonways.rest.server.controller.HttpController;
+import me.moonways.rest.server.controller.verify.VerificationConfig;
 import org.apache.http.*;
 import org.apache.http.client.entity.EntityBuilder;
 
@@ -32,7 +33,7 @@ public final class UndefinedHttpController implements HttpController {
     }
 
     @Override
-    public void process(HttpRequest request) {
+    public void process(HttpRequest request, VerificationConfig verificationConfig) {
         if (!isActually(request)) {
             return;
         }
@@ -48,7 +49,7 @@ public final class UndefinedHttpController implements HttpController {
     }
 
     @Override
-    public void processCallback(HttpResponse response) {
+    public void processCallback(HttpResponse response, VerificationConfig verificationConfig) {
         if (continuesResponseHandling) {
             response.setStatusCode(HttpURLConnection.HTTP_NOT_FOUND);
             response.setEntity(NOTHING_NOT_FOUND_ENTITY);

@@ -2,6 +2,7 @@ package me.moonways.rest.server.handler;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.rest.server.controller.HttpController;
+import me.moonways.rest.server.controller.verify.VerificationConfig;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 
@@ -9,12 +10,12 @@ import org.apache.http.HttpResponse;
 public class GetUserInfo implements HttpController {
 
     @Override
-    public void process(HttpRequest request) {
+    public void process(HttpRequest request, VerificationConfig verificationConfig) {
         log.info("process request");
     }
 
     @Override
-    public void processCallback(HttpResponse response) {
+    public void processCallback(HttpResponse response, VerificationConfig verificationConfig) {
         log.info("process callback");
     }
 }
