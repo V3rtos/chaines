@@ -66,15 +66,7 @@ public class DependencyInjection {
     }
 
     public void injectFields(@NotNull Object instance) {
-        Class<?> cls = instance.getClass();
-
         injector.injectFields(instance);
-
-        if (!container.hasInjectionMark(cls) && !container.isComponentFound(cls)) {
-            container.markInjected(cls);
-
-            log.info("Applied injection for instance of §6{}", instance.getClass().getName());
-        }
     }
 
     public void bind(@NotNull Object object) {
