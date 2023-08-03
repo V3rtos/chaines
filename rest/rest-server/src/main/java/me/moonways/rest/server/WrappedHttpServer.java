@@ -74,6 +74,11 @@ public class WrappedHttpServer {
     }
 
     @PostFactoryMethod
+    private void initSubtotalServer() {
+        initConfig();
+        initHttpServer();
+    }
+
     private void initConfig() {
         final XmlJaxbParser parser = new XmlJaxbParser();
 
@@ -87,7 +92,6 @@ public class WrappedHttpServer {
         initConfigHttpControllers(jaxbServerContext);
     }
 
-    @PostFactoryMethod
     private void initHttpServer() {
         ServerBootstrap bootstrap = ServerBootstrap.bootstrap();
         initServerProperties(bootstrap);
