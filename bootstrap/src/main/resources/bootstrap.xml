@@ -8,22 +8,28 @@
             <executorPath>me.moonways.bridgenet.bootstrap.hook.jdbc.ConvenoJdbcHook</executorPath>
         </hook>
         <hook>
-            <displayName>Gson</displayName>
+            <displayName>GoogleJsonLib</displayName>
             <priorityID>2</priorityID>
             <priority>RUNNER</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.gson.GsonHook</executorPath>
         </hook>
         <hook>
-            <displayName>MessageTransferProtocol [MTP]</displayName>
+            <displayName>MTP</displayName>
             <priorityID>3</priorityID>
             <priority>RUNNER</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.mtp.MTPHook</executorPath>
         </hook>
         <hook>
-            <displayName>RemoteServiceInvocation [RSI]</displayName>
+            <displayName>RSI</displayName>
             <priorityID>4</priorityID>
             <priority>RUNNER</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.rsi.ServiceInitHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>RestServer</displayName>
+            <priorityID>5</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.rest.RestServerHook</executorPath>
         </hook>
         <hook>
             <displayName>ConsoleStart</displayName>

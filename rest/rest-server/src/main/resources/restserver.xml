@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serverContext>
+    <printExceptions>false</printExceptions>
+    <connection>
+        <host>127.0.0.1</host>
+        <port>4590</port>
+        <authentication>
+            <username>bridgenet_admin</username>
+            <password>$threadPool_10056</password>
+        </authentication>
+    </connection>
+    <controllers>
+        <controller>
+            <method>GET</method>
+            <pattern>/users</pattern>
+            <handler>me.moonways.rest.server.handler.GetUserInfo</handler>
+        </controller>
+    </controllers>
+</serverContext>
