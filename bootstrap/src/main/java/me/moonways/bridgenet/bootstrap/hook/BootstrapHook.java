@@ -21,11 +21,9 @@ public abstract class BootstrapHook {
                               @NotNull String namespace) {
 
         log.info("§7************************* BOOSTRAP HOOK EXECUTION BEGIN ({}) *************************", namespace);
-        log.info("§eBootstrap was started hook '{}' execution", namespace);
-
         executeUnchecked(bootstrap, namespace);
 
-        log.info("§7************************* BOOSTRAP HOOK EXECUTION END ({}) *************************", namespace);
+        log.info("§eBootstrap hook '{}' was processed", namespace);
     }
 
     private void executeUnchecked(AppBootstrap bootstrap, String namespace) {
