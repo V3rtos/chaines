@@ -2,14 +2,12 @@ package me.moonways.bridgenet.api.inject.scanner;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
-import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.InjectionException;
-import me.moonways.bridgenet.api.inject.PostFactoryMethod;
+import me.moonways.bridgenet.api.inject.*;
 import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
 import me.moonways.bridgenet.api.inject.scanner.controller.ScannerController;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
@@ -61,15 +59,30 @@ public final class DependencyScanner {
         resolve(annotationType, filter);
     }
 
-    public void postFactoryMethods(Class<?> instanceClass, Object instance) {
-        postProxiedFactoryMethods(instanceClass, instance);
-    }
-
-    public void postProxiedFactoryMethods(Class<?> instanceClass, Object instance) {
+    public void processPreConstructs(Class<?> instanceClass, Object instance) {
         Method[] methods = instanceClass.getDeclaredMethods();
 
         for (Method method : methods) {
-            PostFactoryMethod annotation = method.getDeclaredAnnotation(PostFactoryMethod.class);
+            PreConstruct annotation = method.getDeclaredAnnotation(PreConstruct.class);
+
+            if (annotation == null) {
+                continue;
+            }
+
+            if ((method.getModifiers() & Modifier.STATIC) != Modifier.STATIC) {
+                throw new InjectionException("@PreConstruct method " + instanceClass.getSimpleName() + "#" + method.getName() + " cannot be use because that is not static");
+            }
+
+            method.setAccessible(true);
+            invokeNativeInit(method, instance);
+        }
+    }
+
+    public void processPostConstruct(Class<?> instanceClass, Object instance) {
+        Method[] methods = instanceClass.getDeclaredMethods();
+
+        for (Method method : methods) {
+            PostConstruct annotation = method.getDeclaredAnnotation(PostConstruct.class);
 
             if (annotation == null) {
                 continue;

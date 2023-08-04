@@ -22,7 +22,7 @@ public class ClientTest {
 
     public static void main(String[] args) {
         DependencyInjection dependencyInjection = new DependencyInjection();
-        dependencyInjection.findComponentsIntoBasePackage();
+        dependencyInjection.searchByProject();
 
         dependencyInjection.bind(new Gson());
 

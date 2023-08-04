@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.DependencyContainer;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.decorator.definition.KeepTime;
 import me.moonways.bridgenet.mtp.ProtocolDirection;
 import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
 import me.moonways.bridgenet.mtp.message.inject.ServerMessage;
@@ -37,16 +36,16 @@ public class MessageRegistry {
         Class<ClientMessage> clientAnnotation = ClientMessage.class;
         Class<ServerMessage> serverAnnotation = ServerMessage.class;
 
-        dependencyInjection.findComponentsIntoBasePackage(clientAnnotation);
-        dependencyInjection.findComponentsIntoBasePackage(serverAnnotation);
+        dependencyInjection.searchByProject(clientAnnotation);
+        dependencyInjection.searchByProject(serverAnnotation);
 
         // merge messages instances.
         DependencyContainer dependencyContainer = dependencyInjection.getContainer();
 
-        for (Object message : dependencyContainer.getFoundComponents(clientAnnotation))
+        for (Object message : dependencyContainer.getStoredInstances(clientAnnotation))
             register(message.getClass());
 
-        for (Object message : dependencyContainer.getFoundComponents(serverAnnotation))
+        for (Object message : dependencyContainer.getStoredInstances(serverAnnotation))
             register(message.getClass());
     }
 

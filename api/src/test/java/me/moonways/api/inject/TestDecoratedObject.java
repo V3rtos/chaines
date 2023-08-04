@@ -3,16 +3,16 @@ package me.moonways.api.inject;
 import java.util.concurrent.TimeUnit;
 
 import lombok.SneakyThrows;
-import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.inject.decorator.definition.Async;
-import me.moonways.bridgenet.api.inject.decorator.DecoratedObject;
+import me.moonways.bridgenet.api.inject.decorator.Decorated;
 import me.moonways.bridgenet.api.inject.decorator.definition.KeepTime;
 import me.moonways.bridgenet.api.inject.decorator.definition.LateExecution;
 import me.moonways.bridgenet.api.inject.decorator.definition.RequiredNotNull;
 import me.moonways.bridgenet.api.inject.decorator.definition.Singleton;
 
-@Component
-@DecoratedObject
+@Depend
+@Decorated
 public class TestDecoratedObject {
 
     @LateExecution(delay = 3000)

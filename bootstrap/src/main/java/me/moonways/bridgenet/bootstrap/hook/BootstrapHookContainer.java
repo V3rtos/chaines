@@ -23,11 +23,12 @@ public final class BootstrapHookContainer {
     @Inject
     private DependencyInjection dependencyInjection;
 
-    private XmlBootstrap parseConfiguration() {
-        final XmlJaxbParser parser = new XmlJaxbParser();
+    @Inject
+    private XmlJaxbParser jaxbParser;
 
+    private XmlBootstrap parseConfiguration() {
         ClassLoader classLoader = getClass().getClassLoader();
-        return parser.parseCopiedResource(classLoader, BOOTSTRAP_XML_CONFIGURATION_NAME,
+        return jaxbParser.parseCopiedResource(classLoader, BOOTSTRAP_XML_CONFIGURATION_NAME,
                 XmlBootstrap.class);
     }
 

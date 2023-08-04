@@ -6,7 +6,7 @@ public class DecoratorsTestStarter {
 
     public static void main(String[] args) {
         DependencyInjection dependencyInjection = new DependencyInjection();
-        dependencyInjection.findComponentsIntoBasePackage();
+        dependencyInjection.searchByProject();
 
         DecoratedObjectStorage instance = (DecoratedObjectStorage) dependencyInjection.getContainer().findInstance(
                 DecoratedObjectStorage.class);

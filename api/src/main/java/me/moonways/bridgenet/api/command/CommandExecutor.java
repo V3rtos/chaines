@@ -10,10 +10,10 @@ import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
 import me.moonways.bridgenet.api.command.option.CommandOptionMatcher;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
-import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostFactoryMethod;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Depend
 @Log4j2
 public final class CommandExecutor {
 
@@ -36,12 +36,12 @@ public final class CommandExecutor {
     @Inject
     private AnnotationInterceptor interceptor;
 
-    @PostFactoryMethod
+    @PostConstruct
     private void init() {
         dependencyInjection.injectFields(commandRegistry);
-        dependencyInjection.findComponentsIntoBasePackage(Command.class);
+        dependencyInjection.searchByProject(Command.class);
 
-        dependencyInjection.getContainer().getFoundComponents(Command.class)
+        dependencyInjection.getContainer().getStoredInstances(Command.class)
                 .forEach(commandRegistry::registerCommand);
     }
 

@@ -2,7 +2,7 @@ package me.moonways.endpoint.players;
 
 import lombok.Getter;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
-import me.moonways.bridgenet.api.inject.PostFactoryMethod;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import me.moonways.endpoint.players.connection.PlayerConnectionStub;
 import me.moonways.endpoint.players.leveling.PlayerLevelingStub;
@@ -36,7 +36,7 @@ public final class PlayersServiceEndpoint extends AbstractEndpointDefinition imp
         super();
     }
 
-    @PostFactoryMethod
+    @PostConstruct
     public void injectRepository() {
         DependencyInjection dependencyInjection = getDependencyInjection();
         ConvenoRouter convenoRouter = (ConvenoRouter) dependencyInjection.getContainer().findInstance(ConvenoRouter.class);

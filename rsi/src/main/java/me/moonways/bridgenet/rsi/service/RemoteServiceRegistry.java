@@ -2,6 +2,7 @@ package me.moonways.bridgenet.rsi.service;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
 import me.moonways.bridgenet.rsi.endpoint.EndpointController;
@@ -9,9 +10,8 @@ import me.moonways.bridgenet.rsi.module.*;
 import me.moonways.bridgenet.rsi.xml.XmlModule;
 import me.moonways.bridgenet.rsi.xml.XmlConfiguration;
 import me.moonways.bridgenet.rsi.xml.XmlService;
-import me.moonways.bridgenet.api.inject.Component;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
-import me.moonways.bridgenet.api.inject.PostFactoryMethod;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.Inject;
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 @Getter
 @Log4j2
-@Component
+@Depend
 public final class RemoteServiceRegistry {
 
     private XmlConfiguration xmlConfiguration;
@@ -36,16 +36,18 @@ public final class RemoteServiceRegistry {
     @Inject
     private DependencyInjection dependencyInjection;
 
+    @Inject
+    private XmlJaxbParser jaxbParser;
+
     private final EndpointController endpointController = new EndpointController();
 
-    @PostFactoryMethod
+    @PostConstruct
     void init() {
         dependencyInjection.injectFields(endpointController);
     }
 
     public void initializeXmlConfiguration() {
-        XmlJaxbParser parser = new XmlJaxbParser();
-        xmlConfiguration = parser.parseCopiedResource(getClass().getClassLoader(), "rsiconfig.xml", XmlConfiguration.class);
+        xmlConfiguration = jaxbParser.parseCopiedResource(getClass().getClassLoader(), "rsiconfig.xml", XmlConfiguration.class);
 
         log.info("Parsed RMI XML-Configuration content: {}", xmlConfiguration);
 

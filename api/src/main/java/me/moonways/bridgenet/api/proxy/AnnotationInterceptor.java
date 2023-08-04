@@ -1,10 +1,12 @@
 package me.moonways.bridgenet.api.proxy;
 
+import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.proxy.proxy.ProxyManager;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+@Depend
 public final class AnnotationInterceptor {
 
     public InterceptController createController(ClassLoader classLoader, Class<?> cls, Object interceptor) {

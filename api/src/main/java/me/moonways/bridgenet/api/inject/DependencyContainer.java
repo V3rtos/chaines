@@ -15,44 +15,35 @@ import java.util.stream.Collectors;
 public class DependencyContainer {
 
     private final Map<Class<?>, Object> instancesMap = Collections.synchronizedMap(new HashMap<>());
-    private final Set<Class<?>> injectedClasses = Collections.synchronizedSet(new HashSet<>());
     private final Set<Class<?>> ignoredInterfaces = Collections.synchronizedSet(new HashSet<>());
 
     private final Map<Class<?>, Class<? extends Annotation>> annotationsByComponentTypeMap = new HashMap<>();
 
-    public Set<Object> getFoundComponents(@NotNull Class<? extends Annotation> componentAnnotation) {
+    public Set<Object> getStoredInstances(@NotNull Class<? extends Annotation> annotation) {
         return instancesMap.keySet()
                 .stream()
-                .filter(cls -> annotationsByComponentTypeMap.get(cls) == componentAnnotation)
+                .filter(cls -> annotationsByComponentTypeMap.get(cls) == annotation)
                 .map(instancesMap::get)
                 .collect(Collectors.toSet());
     }
 
-    public void markInjected(Class<?> cls) {
-        injectedClasses.add(cls);
-    }
-
-    public boolean hasInjectionMark(Class<?> cls) {
-        return injectedClasses.contains(cls);
-    }
-
-    public Set<Class<?>> getFoundComponentsTypes() {
+    public Set<Class<?>> getStoredClasses() {
         return instancesMap.keySet();
     }
 
-    public boolean isComponentFound(Class<?> cls) {
+    public boolean isStored(Class<?> cls) {
         return instancesMap.containsKey(cls);
     }
 
-    public void addComponentWithAnnotation(@NotNull Class<?> dependClass, @NotNull Class<? extends Annotation> componentAnnotation) {
+    public void subscribeDependByAnnotation(@NotNull Class<?> dependClass, @NotNull Class<? extends Annotation> componentAnnotation) {
         annotationsByComponentTypeMap.put(dependClass, componentAnnotation);
     }
 
     public void store(@NotNull Class<?> cls, @NotNull Object object) {
-        if (cls.isInterface() && isComponentFound(cls)) {
+        if (cls.isInterface() && isStored(cls)) {
 
             InjectionException exception = new InjectionException(InjectionErrorMessages.DUPLICATED_IMPLEMENTS);
-            log.error(InjectionErrorMessages.DUPLICATED_IMPLEMENTS, exception);
+            log.error(InjectionErrorMessages.DUPLICATED_IMPLEMENTS, cls.getName(), exception);
         }
 
         instancesMap.put(cls, object);
@@ -65,7 +56,7 @@ public class DependencyContainer {
                 return;
             }
 
-            if (isComponentFound(anInterface)) {
+            if (isStored(anInterface)) {
                 instancesMap.remove(anInterface);
                 ignoredInterfaces.add(anInterface);
             } else {
@@ -74,12 +65,8 @@ public class DependencyContainer {
         }
     }
 
-    public void remove(@NotNull Class<?> cls) {
+    public void unbind(@NotNull Class<?> cls) {
         instancesMap.remove(cls);
-    }
-
-    public void executeComponentsEach(BiConsumer<Class<?>, Object> foreachConsumer) {
-        instancesMap.forEach(foreachConsumer);
     }
 
     public Object findInstance(Class<?> cls) {

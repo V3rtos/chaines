@@ -1,7 +1,7 @@
 package me.moonways.rest.api.exchange.entity;
 
 import com.google.gson.Gson;
-import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.rest.api.exchange.entity.type.FileEntity;
 import me.moonways.rest.api.exchange.entity.type.JsonEntity;
@@ -11,7 +11,7 @@ import me.moonways.rest.api.exchange.entity.type.TextEntity;
 import java.io.File;
 import java.nio.file.Path;
 
-@Component
+@Depend
 public final class RestEntityFactory {
 
     @Inject

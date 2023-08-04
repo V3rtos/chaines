@@ -57,11 +57,11 @@ public class BaseBridgenetConnector {
         dependencyInjection.bind(ConvenoRouter.create());
 
         // inject
-        dependencyInjection.findComponentsIntoBasePackage();
+        dependencyInjection.searchByProject();
         dependencyInjection.bind(currentConnector);
 
-        dependencyInjection.findComponentsIntoBasePackage(ClientMessage.class);
-        dependencyInjection.findComponentsIntoBasePackage(MessageHandler.class);
+        dependencyInjection.searchByProject(ClientMessage.class);
+        dependencyInjection.searchByProject(MessageHandler.class);
 
         // bridgenet system
         dependencyInjection.bind(connectionFactory);

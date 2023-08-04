@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.DependencyContainer;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
+import me.moonways.bridgenet.api.inject.scanner.DependencyScanner;
 import me.moonways.bridgenet.api.inject.scanner.ScannerFilter;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Configuration;
@@ -20,7 +21,7 @@ import java.net.URL;
 import java.util.*;
 
 @Log4j2
-public class ComponentScannerController implements ScannerController {
+public class DependScannerController implements ScannerController {
 
     private final TypeAnnotationsScanner typeAnnotationsScanner = new TypeAnnotationsScanner();
     private final SubTypesScanner subTypesScanner = new SubTypesScanner(false);
@@ -83,27 +84,31 @@ public class ComponentScannerController implements ScannerController {
         if (resource == DependencyInjection.class) {
 
             dependencyInjection.bind(this);
-            container.addComponentWithAnnotation(resource, annotation);
+            container.subscribeDependByAnnotation(resource, annotation);
             return;
         }
 
-        if (container.isComponentFound(resource))
+        if (container.isStored(resource))
             return;
 
-        ObjectFactory objectFactory = dependencyInjection.getScanner().getObjectFactory(annotation);
+        DependencyScanner scanner = dependencyInjection.getScanner();
+
+        ObjectFactory objectFactory = scanner.getObjectFactory(annotation);
         Object object = objectFactory.create(resource);
+
+        scanner.processPreConstructs(resource, object);
 
         bind(dependencyInjection, resource, object, annotation);
     }
 
     public final void bind(@NotNull DependencyInjection dependencyInjection,
-                     @NotNull Class<?> resource,
-                     @NotNull Object object,
-                     @NotNull Class<? extends Annotation> annotation) {
+                           @NotNull Class<?> resource,
+                           @NotNull Object object,
+                           @NotNull Class<? extends Annotation> annotation) {
 
         DependencyContainer container = dependencyInjection.getContainer();
 
         dependencyInjection.bind(resource, object);
-        container.addComponentWithAnnotation(resource, annotation);
+        container.subscribeDependByAnnotation(resource, annotation);
     }
 }

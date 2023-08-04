@@ -3,34 +3,34 @@
     <searchPackage>me.moonways</searchPackage>
     <scanners>
         <scanner>
-            <annotationClass>me.moonways.bridgenet.api.inject.Component</annotationClass>
-            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.ComponentScannerController</targetClass>
+            <annotationClass>me.moonways.bridgenet.api.inject.Depend</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
         <scanner>
             <annotationClass>me.moonways.bridgenet.mtp.message.inject.MessageHandler</annotationClass>
-            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.ComponentScannerController</targetClass>
+            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
         <scanner>
             <annotationClass>me.moonways.bridgenet.mtp.message.inject.ServerMessage</annotationClass>
-            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.ComponentScannerController</targetClass>
+            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
         <scanner>
             <annotationClass>me.moonways.bridgenet.mtp.message.inject.ClientMessage</annotationClass>
-            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.ComponentScannerController</targetClass>
+            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
         <scanner>
             <annotationClass>me.moonways.bridgenet.api.command.annotation.Command</annotationClass>
-            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.ComponentScannerController</targetClass>
+            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
     </scanners>
     <factories>
         <factory>
-            <annotationClass>me.moonways.bridgenet.api.inject.Component</annotationClass>
-            <targetClass>me.moonways.bridgenet.api.inject.factory.ComponentObjectFactory</targetClass>
+            <annotationClass>me.moonways.bridgenet.api.inject.Depend</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.inject.factory.DependObjectFactory</targetClass>
         </factory>
         <factory>
             <annotationClass>me.moonways.bridgenet.mtp.message.inject.MessageHandler</annotationClass>
-            <targetClass>me.moonways.bridgenet.api.inject.factory.ComponentObjectFactory</targetClass>
+            <targetClass>me.moonways.bridgenet.api.inject.factory.DependObjectFactory</targetClass>
         </factory>
         <factory>
             <annotationClass>me.moonways.bridgenet.mtp.message.inject.ServerMessage</annotationClass>
@@ -46,7 +46,7 @@
         </factory>
         <factory>
             <annotationClass>me.moonways.bridgenet.api.command.annotation.Command</annotationClass>
-            <targetClass>me.moonways.bridgenet.api.inject.factory.ComponentObjectFactory</targetClass>
+            <targetClass>me.moonways.bridgenet.api.inject.factory.DependObjectFactory</targetClass>
         </factory>
     </factories>
 </containers>

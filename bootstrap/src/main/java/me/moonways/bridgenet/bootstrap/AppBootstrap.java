@@ -2,6 +2,10 @@ package me.moonways.bridgenet.bootstrap;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.event.EventManager;
+import me.moonways.bridgenet.api.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
+import me.moonways.bridgenet.api.scheduler.Scheduler;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookContainer;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookPriority;
@@ -10,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 @Log4j2
 public class AppBootstrap {
@@ -39,10 +44,23 @@ public class AppBootstrap {
 
         final DependencyInjection dependencyInjection = new DependencyInjection();
 
-        dependencyInjection.bind(this);
+        injectApi(dependencyInjection);
 
-        dependencyInjection.findComponentsIntoBasePackage();
+        dependencyInjection.searchByProject();
         dependencyInjection.injectFields(hooksContainer);
+    }
+
+    private void injectApi(DependencyInjection injection) {
+        final Object[] bindArr = new Object[]
+                {
+                        new AnnotationInterceptor(),
+                        new XmlJaxbParser(),
+                        new Scheduler(),
+                        new EventManager(),
+                };
+
+        Stream.of(bindArr)
+                .forEachOrdered(injection::bind);
     }
 
     public void start(String[] args) {

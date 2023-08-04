@@ -2,11 +2,11 @@ package me.moonways.rest.server;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostFactoryMethod;
-import me.moonways.bridgenet.api.inject.decorator.DecoratedObject;
+import me.moonways.bridgenet.api.inject.PostConstruct;
+import me.moonways.bridgenet.api.inject.decorator.Decorated;
 import me.moonways.bridgenet.api.inject.decorator.definition.Async;
 import me.moonways.bridgenet.api.inject.decorator.definition.KeepTime;
 import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
@@ -39,8 +39,8 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
-@Component
-@DecoratedObject
+@Depend
+@Decorated
 public class WrappedHttpServer {
 
     private static final int BUFFER_SIZE = (5 * 1024);
@@ -55,6 +55,9 @@ public class WrappedHttpServer {
 
     @Inject
     private DependencyInjection dependencyInjection;
+
+    @Inject
+    private XmlJaxbParser jaxbParser;
 
     @KeepTime
     public synchronized void bindSync() {
@@ -73,16 +76,14 @@ public class WrappedHttpServer {
         bindSync();
     }
 
-    @PostFactoryMethod
+    @PostConstruct
     private void initSubtotalServer() {
         initConfig();
         initHttpServer();
     }
 
     private void initConfig() {
-        final XmlJaxbParser parser = new XmlJaxbParser();
-
-        JaxbServerContext jaxbServerContext = parser.parseCopiedResource(getClass().getClassLoader(),
+        JaxbServerContext jaxbServerContext = jaxbParser.parseCopiedResource(getClass().getClassLoader(),
                 CONFIG_FILENAME, JaxbServerContext.class);
 
         this.exceptionHandler =

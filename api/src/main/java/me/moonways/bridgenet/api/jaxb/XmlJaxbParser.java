@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.api.jaxb;
 
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Depend;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Log4j2
+@Depend
 public final class XmlJaxbParser {
 
     private String correctLocalFilepathName(String filepath) {

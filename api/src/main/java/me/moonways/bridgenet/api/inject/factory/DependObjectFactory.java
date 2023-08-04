@@ -7,7 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 @Log4j2
-public class ComponentObjectFactory implements ObjectFactory {
+public class DependObjectFactory implements ObjectFactory {
 
     @Override
     public <T> T create(Class<T> cls) {

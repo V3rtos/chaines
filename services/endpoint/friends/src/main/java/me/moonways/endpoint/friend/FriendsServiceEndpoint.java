@@ -3,9 +3,9 @@ package me.moonways.endpoint.friend;
 import lombok.Getter;
 import me.moonways.bridgenet.api.event.EventManager;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscribeBuilder;
-import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostFactoryMethod;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import me.moonways.model.friends.FriendsList;
 import me.moonways.model.friends.FriendsServiceModel;
@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Getter
-@Component
+@Depend
 public final class FriendsServiceEndpoint extends AbstractEndpointDefinition implements FriendsServiceModel {
 
     private static final long serialVersionUID = 6945343361490533671L;
@@ -48,7 +48,7 @@ public final class FriendsServiceEndpoint extends AbstractEndpointDefinition imp
         super();
     }
 
-    @PostFactoryMethod
+    @PostConstruct
     private void init() {
         repository = convenoRouter.getRepository(FriendsRepository.class);
         repository.executeTableValid();

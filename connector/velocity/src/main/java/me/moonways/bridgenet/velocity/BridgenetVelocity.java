@@ -10,7 +10,7 @@ import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.mtp.MTPDriver;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
-import me.moonways.bridgenet.api.inject.PostFactoryMethod;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ public class BridgenetVelocity extends BaseBridgenetConnector {
         this.logger = logger;
     }
 
-    @PostFactoryMethod
+    @PostConstruct
     private void init() {
         super.initializeConnectorData(
                 driver,

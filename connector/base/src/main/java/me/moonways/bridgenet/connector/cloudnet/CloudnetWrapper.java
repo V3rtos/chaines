@@ -4,11 +4,11 @@ import de.dytanic.cloudnet.driver.network.HostAndPort;
 import de.dytanic.cloudnet.driver.service.ServiceId;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import de.dytanic.cloudnet.wrapper.Wrapper;
-import me.moonways.bridgenet.api.inject.Component;
+import me.moonways.bridgenet.api.inject.Depend;
 
 import java.net.InetSocketAddress;
 
-@Component
+@Depend
 public final class CloudnetWrapper {
 
     private static final Wrapper WRAPPER = Wrapper.getInstance();
