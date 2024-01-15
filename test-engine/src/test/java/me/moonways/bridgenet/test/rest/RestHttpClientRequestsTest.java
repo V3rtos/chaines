@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(BridgenetJUnitTestRunner.class)
-public class RestClientTest {
+public class RestHttpClientRequestsTest {
 
     @Inject
     private AnnotationInterceptor annotationInterceptor;

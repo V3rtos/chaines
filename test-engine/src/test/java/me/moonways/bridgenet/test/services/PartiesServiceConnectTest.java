@@ -4,11 +4,8 @@ import me.moonways.bridgenet.rsi.module.access.AccessConfig;
 import me.moonways.bridgenet.rsi.module.access.AccessRemoteModule;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
-import me.moonways.model.friends.FriendsServiceModel;
 import me.moonways.model.parties.PartiesServiceModel;
-import me.moonways.model.reports.ReportsServiceModel;
-import me.moonways.model.reports.Report;
-import me.moonways.model.reports.ReportReason;
+import me.moonways.model.parties.Party;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,13 +15,13 @@ import java.rmi.RemoteException;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(BridgenetJUnitTestRunner.class)
-public class RsiReportsTest {
+public class PartiesServiceConnectTest {
 
     private AccessRemoteModule subj;
 
     @Before
     public void setUp() {
-        ServiceInfo serviceInfo = new ServiceInfo("reports", 7009, PartiesServiceModel.class);
+        ServiceInfo serviceInfo = new ServiceInfo("parties", 7008, PartiesServiceModel.class);
 
         subj = new AccessRemoteModule();
         subj.init(serviceInfo, new AccessConfig("127.0.0.1"));
@@ -32,19 +29,16 @@ public class RsiReportsTest {
 
     @Test
     public void test_success() {
-        ReportsServiceModel stub = subj.lookupStub();
+        PartiesServiceModel serviceModel = subj.lookupStub();
 
         try {
-            Report report = stub.createReport(
-                    ReportReason.CHEATING, "GitCoder", "xxcoldinme",
-                    "читерил на хайпе", "Hypixel");
+            Party party = serviceModel.createParty("GitCoder");
 
-            assertEquals("GitCoder", report.getWhoReportedName());
-            assertEquals("читерил на хайпе", report.getComment());
+            assertEquals(party.getOwner().getName(), "GitCoder");
+            assertEquals(party.getTotalMembersCount(), 0);
         }
         catch (RemoteException exception) {
             exception.printStackTrace();
         }
     }
 }
-

@@ -4,7 +4,6 @@ import me.moonways.bridgenet.rsi.module.access.AccessConfig;
 import me.moonways.bridgenet.rsi.module.access.AccessRemoteModule;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
-import me.moonways.model.friends.FriendsServiceModel;
 import me.moonways.model.players.PlayersServiceModel;
 import me.moonways.model.players.connection.ConnectedEntityPlayer;
 import me.moonways.model.players.connection.PlayerConnection;
@@ -19,7 +18,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(BridgenetJUnitTestRunner.class)
-public class RsiPlayersTest {
+public class PlayersServiceConnectTest {
 
     private AccessRemoteModule subj;
 

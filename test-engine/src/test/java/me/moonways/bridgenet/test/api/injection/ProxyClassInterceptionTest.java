@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(BridgenetJUnitTestRunner.class)
-public class ProxiedInterfaceTest {
+public class ProxyClassInterceptionTest {
 
     @Inject
     private AnnotationInterceptor interceptor;
