@@ -27,21 +27,20 @@ public final class CommandExecutor {
 
     private static final String MENTOR_CHILD_NOT_FOUND_MESSAGE = "Couldn't find @Mentor in command {}";
 
-    private final CommandRegistry commandRegistry = new CommandRegistry();
     private final InternalCommandFactory factory = new InternalCommandFactory();
 
     @Inject
+    private CommandRegistry commandRegistry;
+    @Inject
     private DependencyInjection dependencyInjection;
-
     @Inject
     private AnnotationInterceptor interceptor;
 
     @PostConstruct
     private void init() {
-        dependencyInjection.injectFields(commandRegistry);
         dependencyInjection.searchByProject(Command.class);
-
-        dependencyInjection.getContainer().getStoredInstances(Command.class)
+        dependencyInjection.getContainer()
+                .getStoredInstances(Command.class)
                 .forEach(commandRegistry::registerCommand);
     }
 
@@ -58,7 +57,6 @@ public final class CommandExecutor {
         CommandSession mentorSession = factory.createSession(wrapper.getHelpMessageView(), sender, arguments);
 
         fireOption(wrapper, mentorSession);
-
     }
 
     private void fireOption(WrappedCommand wrapper, CommandSession session) {
@@ -115,6 +113,10 @@ public final class CommandExecutor {
     }
 
     private boolean matchesPermission(EntityCommandSender sender, String permission) {
+        if (permission == null) {
+            return true;
+        }
+
         boolean hasPermission = sender.hasPermission(permission);
 
         if (!hasPermission)

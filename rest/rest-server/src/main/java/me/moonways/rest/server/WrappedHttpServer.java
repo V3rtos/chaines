@@ -149,6 +149,7 @@ public class WrappedHttpServer {
                             = new WrappedHttpRequestHandler(forcedUndefinedController, config, pattern, verifyHelper);
 
                     bootstrap.registerHandler(pattern.getName(), context);
+
                     log.info("HTTP Controller §2'{}' §rwas registered §7(method='{}', pattern='{}')",
                             pattern.getController().getClass().getSimpleName(),
                             pattern.getMethod(), pattern.getName());

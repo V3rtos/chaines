@@ -54,9 +54,9 @@ public class EndpointLoader {
         return new Endpoint(serviceInfo, endpointFolder.toPath(), endpointConfig);
     }
 
-    private boolean isDedicatedLoading() {
-        Path buildDirectoryPath = Paths.get(correctPath(LOCAL_BUILD_DIR));
-        return !Files.exists(buildDirectoryPath);
+    private boolean isDedicatedStart() {
+        String os = System.getProperty("os.name").toLowerCase();
+        return !os.contains("mac") && !os.contains("windows");
     }
 
     private String correctPath(String pathname) {
@@ -69,12 +69,18 @@ public class EndpointLoader {
 
     @SuppressWarnings("resource")
     public List<Endpoint> lookupStoredEndpoints() {
-        String servicesContentPathname = isDedicatedLoading() ? DEDICATED_BUILD_DIR : LOCAL_BUILD_DIR;
+        String servicesContentPathname = correctPath(isDedicatedStart() ? DEDICATED_BUILD_DIR : LOCAL_BUILD_DIR);
         Path servicesContentPath = Paths.get(servicesContentPathname);
 
         if (!Files.exists(servicesContentPath) || !Files.isDirectory(servicesContentPath)) {
-            log.warn("§4Directory '{}' for services content was not found", servicesContentPathname);
-            return Collections.emptyList();
+            servicesContentPath = servicesContentPath.toAbsolutePath()
+                    .getParent().getParent().getParent()
+                    .resolve(servicesContentPath);
+
+            if (!Files.exists(servicesContentPath) || !Files.isDirectory(servicesContentPath)) {
+                log.warn("§4Directory '{}' for services content was not found", servicesContentPathname);
+                return Collections.emptyList();
+            }
         }
 
         try {

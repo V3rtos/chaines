@@ -9,9 +9,7 @@ import org.jetbrains.annotations.NotNull;
 @RequiredArgsConstructor
 public abstract class BootstrapHook {
 
-    //private static final ExecutorService ASYNC_POOL_EXECUTOR = Executors.newCachedThreadPool();
-
-    public void setProperties() {
+    public void prepareExecution() {
         // override me.
     }
 
@@ -34,8 +32,4 @@ public abstract class BootstrapHook {
             log.error("§4Bootstrap hook '{}' execution aborted:", namespace, exception);
         }
     }
-
-    //private CompletableFuture<Void> wrapAsyncProcess(AppBootstrap bootstrap, String namespace) {
-    //    return CompletableFuture.runAsync(() -> executeWithThrows(bootstrap, namespace), ASYNC_POOL_EXECUTOR);
-    //}
 }

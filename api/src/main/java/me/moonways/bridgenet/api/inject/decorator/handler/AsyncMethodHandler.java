@@ -3,6 +3,7 @@ package me.moonways.bridgenet.api.inject.decorator.handler;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedMethodHandler;
+import me.moonways.bridgenet.api.util.thread.Threads;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +14,7 @@ import java.util.function.Supplier;
 public class AsyncMethodHandler implements DecoratedMethodHandler {
 
     private static final ExecutorService ASYNC_POOL_EXECUTOR
-            = Executors.newCachedThreadPool();
+            = Threads.newCachedThreadPool();
 
     @Override
     public Object handleProxyInvocation(DecoratorInvocation invocation) {

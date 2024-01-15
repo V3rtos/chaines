@@ -20,7 +20,7 @@ public class SingletonMethodHandler implements DecoratedMethodHandler {
         }
 
         Object value = SINGLETONS.computeIfAbsent(invocation.toString(), (k) -> invocation.proceed());
-        log.info("§3Decorated method {} returned Singleton object value", invocation);
+        log.info("§3Decorated method {} was returned same value", invocation);
 
         return value;
     }

@@ -47,17 +47,17 @@ public class MTPDriver {
         messages.register(messageClass);
     }
 
-    @RequiredNotNull(printStackTrace = false)
+    @RequiredNotNull(message = "message wrapper")
     public MessageWrapper lookupWrapperByID(int id) {
         return messages.lookupWrapperByID(id);
     }
 
-    @RequiredNotNull(printStackTrace = false)
+    @RequiredNotNull(message = "message wrapper")
     public MessageWrapper lookupWrapperByClass(@NotNull Class<?> messageClass) {
         return messages.lookupWrapperByClass(messageClass);
     }
 
-    @RequiredNotNull(printStackTrace = false)
+    @RequiredNotNull(message = "message export")
     @Synchronized
     public ExportedMessage export(@NotNull Object message) {
         return messages.export(message);

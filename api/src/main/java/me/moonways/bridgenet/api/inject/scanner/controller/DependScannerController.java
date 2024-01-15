@@ -96,7 +96,7 @@ public class DependScannerController implements ScannerController {
         ObjectFactory objectFactory = scanner.getObjectFactory(annotation);
         Object object = objectFactory.create(resource);
 
-        scanner.processPreConstructs(resource, object);
+        scanner.processPreConstructs(resource);
 
         bind(dependencyInjection, resource, object, annotation);
     }

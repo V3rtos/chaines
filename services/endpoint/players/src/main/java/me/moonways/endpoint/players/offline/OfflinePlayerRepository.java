@@ -2,7 +2,7 @@ package me.moonways.endpoint.players.offline;
 
 import java.util.UUID;
 
-import me.moonways.model.players.offline.OfflinePlayerData;
+import me.moonways.model.players.offline.OfflineDao;
 import net.conveno.jdbc.*;
 import net.conveno.jdbc.response.ConvenoResponse;
 
@@ -16,7 +16,6 @@ public interface OfflinePlayerRepository {
         "uuid varchar(36) not null, " +
         "name varchar(16) not null, " +
         "experience int not null default 0, " +
-        "group int not null default 0," +
         "primary key (uuid, name))")
     @ConvenoNonResponse
     @ConvenoAsynchronous(onlySubmit = true)
@@ -29,24 +28,23 @@ public interface OfflinePlayerRepository {
     ConvenoResponse getByName(@ConvenoParam("name") String name);
 
     @ConvenoQuery(sql = "select * from ${table} where name like lower(${name})")
-    ConvenoResponse matchByName(@ConvenoParam("name") String name);
-
-    @ConvenoQuery(sql = "select * from ${table} where group = ${group}")
-    ConvenoResponse getByGroup(@ConvenoParam("group") int groupLevel);
+    ConvenoResponse matchesByName(@ConvenoParam("name") String name);
 
     @ConvenoNonResponse
     @ConvenoAsynchronous(onlySubmit = true)
-    @ConvenoQuery(sql = "insert into ${table} values (${data}.$uuid, ${data}.$name, ${data}.$experience, ${data}.$groupLevel) ON DUPLICATE KEY UPDATE "
-        + "experience = ${data}.$experience, group = ${data}.$groupLevel")
-    void validatePlayer(@ConvenoParam("data") OfflinePlayerData playerData);
+    @ConvenoQuery(sql = "insert into ${table} values (${data}.$uuid, ${data}.$name, ${data}.$experience, ${data}.$groupLevel) on duplicate key update " +
+            "experience = ${data}.$experience, group = ${data}.$groupLevel")
+    void updateOfflinePlayer(@ConvenoParam("data") OfflineDao playerData);
 
     @ConvenoNonResponse
     @ConvenoAsynchronous(onlySubmit = true)
     @ConvenoQuery(sql = "update ${table} set group = ${group} where uuid = ${uuid}")
-    void updateGroupByUUID(@ConvenoParam("uuid") UUID uuid, @ConvenoParam("group") int groupLevel);
+    void updateGroupByUUID(@ConvenoParam("uuid") UUID uuid,
+                           @ConvenoParam("group") int groupLevel);
 
     @ConvenoNonResponse
     @ConvenoAsynchronous(onlySubmit = true)
     @ConvenoQuery(sql = "update ${table} set group = ${group} where name = lower(${name})")
-    void updateGroupByName(@ConvenoParam("name") String name, @ConvenoParam("group") int groupLevel);
+    void updateGroupByName(@ConvenoParam("name") String name,
+                           @ConvenoParam("group") int groupLevel);
 }

@@ -120,9 +120,17 @@ public class HttpChannel {
     @Synchronized
     public RestResponse decodeActualityResponse() {
         try {
+            int responseCode = activeConnection.getResponseCode();
+            if (responseCode / 100 >= 4) {
+                return RestResponseBuilder.create()
+                        .setStatusCode(responseCode)
+                        .setMethod(activeConnection.getRequestMethod())
+                        .build();
+            }
+
             return RestResponseBuilder.create()
                     .setInputContent(activeConnection.getInputStream())
-                    .setStatusCode(activeConnection.getResponseCode())
+                    .setStatusCode(responseCode)
                     .setMethod(activeConnection.getRequestMethod())
                     .build();
         }

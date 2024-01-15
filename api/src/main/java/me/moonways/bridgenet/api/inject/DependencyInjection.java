@@ -24,14 +24,13 @@ public class DependencyInjection {
     private final FieldInjectManager injector = new FieldInjectManager(container);
 
     private final DecoratedObjectProxy decorateProxy = new DecoratedObjectProxy();
-
-    @Inject
-    private AnnotationInterceptor annotationInterceptor;
+    private final AnnotationInterceptor annotationInterceptor = new AnnotationInterceptor();
 
     { bindSelf(); }
 
     private void bindSelf() {
         bind(this);
+        bind(annotationInterceptor);
 
         injectFields(container);
         injectFields(injector);
@@ -104,5 +103,15 @@ public class DependencyInjection {
 
             scanner.processPostConstruct(objectClass, object);
         }
+    }
+
+    public void imitateFakeBind(Class<?> bindClass, Object object) {
+        scanner.processPreConstructs(bindClass);
+        injectFields(object);
+        scanner.processPostConstruct(bindClass, object);
+    }
+
+    public void imitateFakeBind(Object object) {
+        this.imitateFakeBind(object.getClass(), object);
     }
 }

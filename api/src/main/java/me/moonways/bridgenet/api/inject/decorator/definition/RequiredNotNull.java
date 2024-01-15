@@ -10,6 +10,4 @@ import java.lang.annotation.Target;
 public @interface RequiredNotNull {
 
     String message() default "null";
-
-    boolean printStackTrace() default true;
 }

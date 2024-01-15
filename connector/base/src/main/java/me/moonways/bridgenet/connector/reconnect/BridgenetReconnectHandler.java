@@ -3,6 +3,7 @@ package me.moonways.bridgenet.connector.reconnect;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.connector.BaseBridgenetConnector;
 import me.moonways.bridgenet.connector.exception.BridgenetConnectionClosedException;
 import me.moonways.bridgenet.mtp.MTPChannel;
@@ -17,7 +18,7 @@ public class BridgenetReconnectHandler extends ChannelInboundHandlerAdapter {
     private final MTPClient MTPClient;
     private final BaseBridgenetConnector bridgenetConnector;
 
-    private final ScheduledExecutorService reconnectScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService reconnectScheduledExecutor = Threads.newSingleThreadScheduledExecutor();
 
     private ScheduledFuture<?> currentReconnectTaskFuture;
 

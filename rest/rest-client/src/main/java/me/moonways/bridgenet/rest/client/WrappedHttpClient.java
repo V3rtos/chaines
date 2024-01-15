@@ -3,6 +3,7 @@ package me.moonways.bridgenet.rest.client;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.rest.api.HttpHost;
 import me.moonways.rest.api.exchange.entity.ExchangeableEntity;
 import me.moonways.rest.api.exchange.message.RestMessage;
@@ -20,7 +21,7 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class WrappedHttpClient implements Closeable {
 
-    private static final ExecutorService ASYNC_THREADS_POOL = Executors.newCachedThreadPool();
+    private static final ExecutorService ASYNC_THREADS_POOL = Threads.newCachedThreadPool();
 
     public static WrappedHttpClient create(@NotNull HttpHost host) {
         return new WrappedHttpClient(host, new HttpChannel(host));

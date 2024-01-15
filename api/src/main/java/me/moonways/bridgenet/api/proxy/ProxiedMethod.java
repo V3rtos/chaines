@@ -19,7 +19,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class ProxiedMethod {
 
-    private static final String TO_STRING_FORMAT = "%s.%s();";
+    private static final String TO_STRING_FORMAT = "%s.%s()";
 
     public static ProxiedMethod create(Object source, Method method) {
         return new ProxiedMethod(source, method.getName(), method.getReturnType(), method);

@@ -12,6 +12,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.RequestLine;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -45,6 +46,7 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
         String apiType = (verificationConfig.isPublic() ? PUBLIC_API : PRIVATE_API);
 
         if (!verificationConfig.isVerified() || (!verificationConfig.isPublic() && !verificationConfig.isCredentialsVerified())) {
+            response.setStatusCode(HttpURLConnection.HTTP_UNAUTHORIZED);
             log.error(REQUEST_NOT_VERIFIED_LOG, apiType, requestLine);
             return;
         }

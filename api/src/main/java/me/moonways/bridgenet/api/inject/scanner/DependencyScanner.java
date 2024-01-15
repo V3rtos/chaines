@@ -1,10 +1,11 @@
 package me.moonways.bridgenet.api.inject.scanner;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.*;
@@ -30,21 +31,48 @@ public final class DependencyScanner {
         container.initMaps();
     }
 
-    private Set<Class<?>> findOrdered(ScannerController scannerController, ScannerFilter scannerFilter) {
+    private List<Class<?>> findOrdered(ScannerController scannerController, ScannerFilter scannerFilter) {
         if (scannerController == null) {
 
             log.error("§4Cannot be found dependencies for {}", scannerFilter);
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
 
-        return scannerController.findAllComponents(scannerFilter);
+        LinkedList<Class<?>> totalComponentsList = new LinkedList<>(scannerController.findAllComponents(scannerFilter));
+        totalComponentsList.sort(Comparator.comparing(component -> component.getDeclaredFields().length));
+
+        setInjectionQueue(totalComponentsList);
+
+        return totalComponentsList;
+    }
+
+    private void setInjectionQueue(LinkedList<Class<?>> totalComponentsList) {
+        int componentIndex = 0;
+        for (Class<?> component : new ArrayList<>(totalComponentsList) /*fix CME*/) {
+            for (Field field : component.getDeclaredFields()) {
+                if (!field.isAnnotationPresent(Inject.class)) {
+                    continue;
+                }
+
+                Class<?> injectionType = field.getType();
+                int injectionIndex = totalComponentsList.indexOf(injectionType);
+
+                if (injectionIndex > componentIndex) {
+                    totalComponentsList.remove(component);
+                    totalComponentsList.add(component);
+                    break;
+                }
+            }
+
+            componentIndex++;
+        }
     }
 
     public void resolve(@NotNull Class<? extends Annotation> annotationType,
                         @NotNull ScannerFilter filter) {
 
         final ScannerController scannerController = getScannerController(annotationType);
-        Set<Class<?>> classesByAnnotationList = findOrdered(scannerController, filter);
+        List<Class<?>> classesByAnnotationList = findOrdered(scannerController, filter);
 
         for (Class<?> componentClass : classesByAnnotationList) {
             scannerController.whenFound(dependencyInjection, componentClass, annotationType);
@@ -59,7 +87,7 @@ public final class DependencyScanner {
         resolve(annotationType, filter);
     }
 
-    public void processPreConstructs(Class<?> instanceClass, Object instance) {
+    public void processPreConstructs(Class<?> instanceClass) {
         Method[] methods = instanceClass.getDeclaredMethods();
 
         for (Method method : methods) {
@@ -73,8 +101,7 @@ public final class DependencyScanner {
                 throw new InjectionException("@PreConstruct method " + instanceClass.getSimpleName() + "#" + method.getName() + " cannot be use because that is not static");
             }
 
-            method.setAccessible(true);
-            invokeNativeInit(method, instance);
+            invokeNativeInitStatic(method);
         }
     }
 
@@ -88,14 +115,26 @@ public final class DependencyScanner {
                 continue;
             }
 
-            method.setAccessible(true);
             invokeNativeInit(method, instance);
         }
     }
 
     private void invokeNativeInit(Method method, Object instance) {
         try {
+            method.setAccessible(true);
             method.invoke(instance);
+        }
+        catch (Exception exception) {
+            System.out.println(method);
+            System.out.println(instance);
+            throw new InjectionException(exception);
+        }
+    }
+
+    private void invokeNativeInitStatic(Method method) {
+        try {
+            method.setAccessible(true);
+            method.invoke(null);
         }
         catch (Exception exception) {
             throw new InjectionException(exception);

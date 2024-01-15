@@ -11,19 +11,12 @@ public class RequiredNotNullMethodHandler implements DecoratedMethodHandler {
     @Override
     public Object handleProxyInvocation(DecoratorInvocation invocation) {
         RequiredNotNull annotation = invocation.findAnnotation(RequiredNotNull.class);
+
+        log.info("§3Decorated method {} has matching on NullPointerException", invocation);
         Object value = invocation.proceed();
 
-        log.info("§3Decorated method {} matches null returned object", invocation);
-
         if (value == null) {
-            NullPointerException nullPointerException = new NullPointerException(annotation.message());
-            log.error("§4Decorator @RequiredNotNull has received null for {}", invocation);
-
-            if (annotation.printStackTrace()) {
-                nullPointerException.printStackTrace();
-            }
-
-            return null;
+            throw new NullPointerException(annotation.message());
         }
 
         return value;

@@ -52,7 +52,12 @@ public final class ReportsServiceEndpoint extends AbstractEndpointDefinition imp
         validateNameNull(whoReportedName, "server name");
 
         try {
-            return new ReportStub(reason, whoReportedName, intruderName, comment, whereServerName, System.currentTimeMillis());
+            ReportStub report = new ReportStub(reason, whoReportedName, intruderName, comment, whereServerName, System.currentTimeMillis());
+
+            ReportedPlayer reportedPlayer = getReportedPlayer(report);
+            reportedPlayer.addReport(report);
+
+            return report;
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

@@ -2,12 +2,11 @@ package me.moonways.endpoint.gui.item;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import me.moonways.model.gui.item.Item;
 import me.moonways.model.gui.item.Material;
 import org.jetbrains.annotations.Nullable;
 
-import java.rmi.RemoteException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.stream.Stream;
 
 @Getter
 @Setter
-public class ItemStub extends AbstractEndpointDefinition implements Item {
+public class ItemStub implements Item, Serializable {
 
     private static final long serialVersionUID = -5999585115152443155L;
 
@@ -28,17 +27,13 @@ public class ItemStub extends AbstractEndpointDefinition implements Item {
     private int amount;
     private int durability;
 
-    public ItemStub() throws RemoteException {
-        super();
-    }
-
     @Override
-    public Stream<String> getLoreAsStream() throws RemoteException {
+    public Stream<String> getLoreAsStream() {
         return Arrays.stream(lore);
     }
 
     @Override
-    public void setLore(@Nullable List<String> lore) throws RemoteException {
+    public void setLore(@Nullable List<String> lore) {
         if (lore == null) {
             lore = Collections.emptyList();
         }
@@ -47,7 +42,7 @@ public class ItemStub extends AbstractEndpointDefinition implements Item {
     }
 
     @Override
-    public void setLore(@Nullable String[] lore) throws RemoteException {
+    public void setLore(@Nullable String[] lore) {
         this.lore = lore;
     }
 }

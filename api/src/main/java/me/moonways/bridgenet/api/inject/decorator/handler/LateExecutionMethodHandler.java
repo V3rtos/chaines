@@ -9,12 +9,13 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
 import me.moonways.bridgenet.api.inject.decorator.definition.LateExecution;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedMethodHandler;
+import me.moonways.bridgenet.api.util.thread.Threads;
 
 @Log4j2
 public class LateExecutionMethodHandler implements DecoratedMethodHandler {
 
     private static final ScheduledExecutorService SCHEDULER
-        = Executors.newScheduledThreadPool(2);
+        = Threads.newScheduledThreadPool(2);
 
     @SneakyThrows
     @Override

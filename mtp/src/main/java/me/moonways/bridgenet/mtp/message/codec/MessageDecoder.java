@@ -61,7 +61,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
                 array = encryption.decode(array);
             }
 
-            return new MessageTransfer(null, array);
+            return MessageTransfer.decode(array);
         }
         catch (DataFormatException | IOException exception) {
             throw new CompressionException(exception);

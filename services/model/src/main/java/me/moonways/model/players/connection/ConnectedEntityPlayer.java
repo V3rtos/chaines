@@ -36,23 +36,16 @@ public class ConnectedEntityPlayer extends OfflineEntityPlayer implements Entity
     }
 
     @Override
-    public void redirect(@NotNull EntityServer server) {
+    public CompletableFuture<Boolean> redirect(@NotNull EntityServer server) {
         CompletableFuture<Boolean> connectFuture;
-
         try {
             connectFuture = server.connect(this);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+        }
+        catch (RemoteException exception) {
+            connectFuture = CompletableFuture.completedFuture(false);
+            connectFuture.completeExceptionally(exception);
         }
 
-        connectFuture.whenComplete((isSuccess, throwable) -> {
-
-            if (isSuccess) {
-                setSpigotServer(server);
-            }
-            else {
-                throwable.printStackTrace();
-            }
-        });
+        return connectFuture;
     }
 }

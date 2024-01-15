@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Getter
 @RequiredArgsConstructor
@@ -32,16 +33,19 @@ public class OfflineEntityPlayer implements EntityPlayer, Serializable {
 
     @Override
     public EntityServer getVelocityServer() {
-        throw new UnsupportedOperationException("offline");
+        return null;
     }
 
     @Override
     public EntityServer getSpigotServer() {
-        throw new UnsupportedOperationException("offline");
+        return null;
     }
 
     @Override
-    public void redirect(@NotNull EntityServer server) {
-        throw new UnsupportedOperationException("offline");
+    public CompletableFuture<Boolean> redirect(@NotNull EntityServer server) {
+        CompletableFuture<Boolean> completableFuture = CompletableFuture.completedFuture(false);
+        completableFuture.completeExceptionally(new UnsupportedOperationException("offline"));
+
+        return completableFuture;
     }
 }

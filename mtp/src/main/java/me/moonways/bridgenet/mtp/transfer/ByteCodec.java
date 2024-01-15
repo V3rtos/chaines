@@ -11,7 +11,7 @@ import org.mockito.internal.util.Primitives;
 public final class ByteCodec {
 
     private static final int DEFAULT_PRIMITIVE_BUFFER_SIZE = 256;
-    private static final int DEFAULT_OBJ_BUFFER_SIZE = 256;
+    private static final int DEFAULT_OBJ_BUFFER_SIZE = 512;
 
     public static final ByteBuffer INT_BUFFER = ByteBuffer.allocate(Integer.BYTES);
     public static final ByteBuffer LONG_BUFFER = ByteBuffer.allocate(Long.BYTES);

@@ -10,6 +10,7 @@ import me.moonways.bridgenet.api.command.children.CommandChildrenScanner;
 import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
 import me.moonways.bridgenet.api.command.option.CommandOptionMatcher;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
+import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
@@ -22,6 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
+@Depend
 public final class CommandRegistry {
 
     private static final String COMMAND_NOT_ANNOTATED_ERROR_MESSAGE = "Command {} is not annotated by @Command";
@@ -33,7 +35,6 @@ public final class CommandRegistry {
 
     @Inject
     private AnnotationInterceptor interceptor;
-
     @Inject
     private DependencyInjection dependencyInjection;
 

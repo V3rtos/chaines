@@ -28,7 +28,7 @@ public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
         MessageWrapper wrapper = exportedMessage.getWrapper();
         Object message = exportedMessage.getMessage();
 
-        MessageTransfer messageTransfer = new MessageTransfer(message, null);
+        MessageTransfer messageTransfer = MessageTransfer.encode(message);
         messageTransfer.buf();
 
         try {

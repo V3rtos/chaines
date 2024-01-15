@@ -13,7 +13,7 @@ public class ConvenoJdbcHook extends BootstrapHook {
     private DependencyInjection dependencyInjection;
 
     @Override
-    public void setProperties() {
+    public void prepareExecution() {
         System.setProperty("system.jdbc.username", "username");
         System.setProperty("system.jdbc.password", "password");
     }

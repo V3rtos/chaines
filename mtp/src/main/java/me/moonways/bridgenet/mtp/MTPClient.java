@@ -6,6 +6,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.mtp.exception.ChannelException;
 
 import java.util.concurrent.CompletableFuture;
@@ -24,6 +25,7 @@ public class MTPClient implements MTPConnection {
             log.info("Successful connected to {}", channel);
 
             this.channel = new MTPChannel(channel);
+            Threads.hookShutdown(this.channel::close);
 
             if (completableFuture != null) {
                 completableFuture.complete(this.channel);

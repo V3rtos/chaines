@@ -3,15 +3,24 @@ package me.moonways.bridgenet.mtp.transfer;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MessageTransfer {
 
     private static final ByteCodec BYTE_CODEC = new ByteCodec();
+
+    public static MessageTransfer decode(byte[] bytes) {
+        return new MessageTransfer(null, bytes);
+    }
+
+    public static MessageTransfer encode(Object message) {
+        return new MessageTransfer(message, null);
+    }
 
     private Object messagePacket;
 

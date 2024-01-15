@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface EntityPlayer extends EntityCommandSender, Remote {
 
@@ -16,5 +17,5 @@ public interface EntityPlayer extends EntityCommandSender, Remote {
 
     EntityServer getSpigotServer() throws RemoteException;
 
-    void redirect(@NotNull EntityServer server) throws RemoteException;
+    CompletableFuture<Boolean> redirect(@NotNull EntityServer server) throws RemoteException;
 }

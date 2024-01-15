@@ -1,0 +1,9 @@
+
+§cTestEngine has received exception:
+§4{
+    "class": "${exception_class}"
+    "message": "${exception_message}"
+    "stacktrace": [
+!@      §4${element_class}.${element_method}(L:${element_line})
+    ]
+}

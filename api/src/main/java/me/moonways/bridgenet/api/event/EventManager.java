@@ -5,6 +5,7 @@ import me.moonways.bridgenet.api.event.subscribe.EventSubscriptionApplier;
 import me.moonways.bridgenet.api.inject.Depend;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;
@@ -13,7 +14,7 @@ import java.util.concurrent.Executors;
 @Depend
 public final class EventManager {
 
-    private final ExecutorService threadsExecutorService = Executors.newCachedThreadPool();
+    private final ExecutorService threadsExecutorService = Threads.newCachedThreadPool();
 
     private final EventRegistry eventRegistry = new EventRegistry();
 

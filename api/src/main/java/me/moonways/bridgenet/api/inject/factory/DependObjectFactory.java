@@ -19,7 +19,7 @@ public class DependObjectFactory implements ObjectFactory {
             return (T) constructor.newInstance();
         }
         catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException exception) {
-            log.error(InjectionErrorMessages.CANNOT_CREATE_OBJECT_INSTANCE, exception);
+            log.error(InjectionErrorMessages.CANNOT_CREATE_OBJECT_INSTANCE, cls.getName(), exception);
             return null;
         }
     }
