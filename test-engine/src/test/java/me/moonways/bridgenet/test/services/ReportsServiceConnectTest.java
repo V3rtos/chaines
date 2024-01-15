@@ -40,6 +40,8 @@ public class ReportsServiceConnectTest {
 
             assertEquals("GitCoder", report.getWhoReportedName());
             assertEquals("читерил на хайпе", report.getComment());
+
+            assertEquals(1, stub.getTotalReportedPlayersCount());
         }
         catch (RemoteException exception) {
             exception.printStackTrace();

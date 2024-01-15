@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 public interface ReportsServiceModel extends RemoteService {
 
@@ -18,6 +19,10 @@ public interface ReportsServiceModel extends RemoteService {
                         @NotNull String whoReportedName,
                         @NotNull String intruderName,
                         @NotNull String whereServerName) throws RemoteException;
+
+    List<Report> getTotalReports() throws RemoteException;
+
+    List<ReportedPlayer> getTotalReportedPlayers() throws RemoteException;
 
     int getTotalReportedPlayersCount() throws RemoteException;
 

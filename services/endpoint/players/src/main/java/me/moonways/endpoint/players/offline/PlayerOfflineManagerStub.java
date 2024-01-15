@@ -22,23 +22,28 @@ public class PlayerOfflineManagerStub extends AbstractEndpointDefinition impleme
     private static final int EXPERIENCE_RESPONSE_INDEX = 1;
     private static final int GROUP_RESPONSE_INDEX = 1;
 
-    private OfflinePlayerRepository repository;
+    private OfflinePlayerRepository offlinePlayerRepository;
+    private OfflineMessageRepository offlineMessageRepository;
 
     public PlayerOfflineManagerStub() throws RemoteException {
         super();
     }
 
     @PostConstruct
-    public void injectRepository() {
+    public void injectRepositories() {
         DependencyInjection dependencyInjection = getDependencyInjection();
+
         ConvenoRouter convenoRouter = (ConvenoRouter) dependencyInjection.getContainer().findInstance(ConvenoRouter.class);
 
-        repository = convenoRouter.getRepository(OfflinePlayerRepository.class);
-        repository.executeTableValid();
+        offlinePlayerRepository = convenoRouter.getRepository(OfflinePlayerRepository.class);
+        offlinePlayerRepository.executeTableValid();
+
+        offlineMessageRepository = convenoRouter.getRepository(OfflineMessageRepository.class);
+        offlineMessageRepository.executeTableValid();
     }
 
     private OfflineDao lookupDaoByUUID(UUID playerUUID) {
-        ConvenoResponse offlinePlayerResponse = repository.getByUUID(playerUUID);
+        ConvenoResponse offlinePlayerResponse = offlinePlayerRepository.getByUUID(playerUUID);
         ConvenoResponseLine first = offlinePlayerResponse.first();
 
         if (first == null) {
@@ -49,7 +54,7 @@ public class PlayerOfflineManagerStub extends AbstractEndpointDefinition impleme
     }
 
     private OfflineDao lookupDaoByName(String playerName) {
-        ConvenoResponse offlinePlayerResponse = repository.getByName(playerName);
+        ConvenoResponse offlinePlayerResponse = offlinePlayerRepository.getByName(playerName);
         ConvenoResponseLine first = offlinePlayerResponse.first();
 
         if (first == null) {
@@ -103,11 +108,13 @@ public class PlayerOfflineManagerStub extends AbstractEndpointDefinition impleme
 
     @Override
     public CompletableFuture<Boolean> pushOfflineMessage(String playerName, String message) throws RemoteException {
-        return null;
+        OfflineDao offlineDao = readData(playerName);
+        return pushOfflineMessage(offlineDao.getUuid(), message);
     }
 
     @Override
     public CompletableFuture<Boolean> pushOfflineMessage(UUID playerUuid, String message) throws RemoteException {
-        return null;
+        offlineMessageRepository.offer(playerUuid, message);
+        return CompletableFuture.completedFuture(true);
     }
 }

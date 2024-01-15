@@ -26,12 +26,6 @@ public class PlayerConnectionStub extends AbstractEndpointDefinition implements 
         }
     }
 
-    private void validateNull(String playerName) {
-        if (playerName == null) {
-            throw new NullPointerException("connected player name");
-        }
-    }
-
     @Override
     public void addConnectedPlayer(@NotNull ConnectedEntityPlayer connectedPlayer) {
         validateNull(connectedPlayer);

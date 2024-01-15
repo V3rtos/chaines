@@ -40,6 +40,7 @@ public final class ReportsServiceEndpoint extends AbstractEndpointDefinition imp
         }
     }
 
+    @Override
     public ReportStub createReport(@NotNull ReportReason reason,
                                    @NotNull String whoReportedName,
                                    @NotNull String intruderName,
@@ -63,6 +64,7 @@ public final class ReportsServiceEndpoint extends AbstractEndpointDefinition imp
         }
     }
 
+    @Override
     public ReportStub createReport(@NotNull ReportReason reason,
                                    @NotNull String whoReportedName,
                                    @NotNull String intruderName,
@@ -76,20 +78,25 @@ public final class ReportsServiceEndpoint extends AbstractEndpointDefinition imp
         return createReport(reason, whoReportedName, intruderName, null, whereServerName);
     }
 
+    @Override
     public int getTotalReportedPlayersCount() {
         return reportedPlayersList.size();
     }
 
+    @Override
     public int getTotalReportsCount() {
         return (int) reportedPlayersList.stream().mapToLong(reportedPlayer -> reportedPlayer.getTotalReports().size()).sum();
     }
 
+    @Override
     public List<ReportedPlayer> getTotalReportedPlayers() {
         return reportedPlayersList;
     }
 
+    @Override
     public List<Report> getTotalReports() {
-        return reportedPlayersList.stream().flatMap(reportedPlayer -> reportedPlayer.getTotalReports().stream()).collect(Collectors.toList());
+        return reportedPlayersList.stream().flatMap(reportedPlayer -> reportedPlayer.getTotalReports().stream())
+                .collect(Collectors.toList());
     }
 
     public List<Report> getTotalReportsByIntruder(@NotNull String intruderName) {

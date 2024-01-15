@@ -23,7 +23,7 @@ public class ItemFactoryStub extends AbstractEndpointDefinition implements ItemF
         Item item = new ItemStub();
         item.setMaterial(material);
         item.setAmount(amount);
-        item.setDurability(durability);
+        item.setDurability(durability <= 0 ? material.getDurability() : durability);
         return item;
     }
 
@@ -34,7 +34,7 @@ public class ItemFactoryStub extends AbstractEndpointDefinition implements ItemF
 
     @Override
     public Item createEmptyItem(int amount) throws RemoteException {
-        return createInitializedItem(null, amount, DEFAULT_DURABILITY);
+        return createInitializedItem(Material.AIR, amount, DEFAULT_DURABILITY);
     }
 
     @Override
