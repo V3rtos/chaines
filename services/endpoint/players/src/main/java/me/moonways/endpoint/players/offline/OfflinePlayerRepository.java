@@ -28,7 +28,7 @@ public interface OfflinePlayerRepository {
     ConvenoResponse getByName(@ConvenoParam("name") String name);
 
     @ConvenoQuery(sql = "select * from ${table} where name like lower(${name})")
-    ConvenoResponse matchesByName(@ConvenoParam("name") String name);
+    ConvenoResponse getByNameSimilar(@ConvenoParam("name") String name);
 
     @ConvenoNonResponse
     @ConvenoAsynchronous(onlySubmit = true)
