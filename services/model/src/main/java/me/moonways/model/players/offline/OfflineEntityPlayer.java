@@ -32,6 +32,11 @@ public class OfflineEntityPlayer implements EntityPlayer, Serializable {
     }
 
     @Override
+    public void sendMessage(@NotNull String message, @Nullable Object... replacements) {
+        sendMessage(String.format(message, replacements));
+    }
+
+    @Override
     public EntityServer getVelocityServer() {
         return null;
     }

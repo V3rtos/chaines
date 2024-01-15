@@ -53,9 +53,8 @@ public class BridgenetJUnitTestRunner extends BlockJUnit4ClassRunner {
         catch (Exception exception) {
             BOOTSTRAP.throwException(exception);
         }
-        finally {
-            notifier.fireTestFinished(getDescription());
-            BOOTSTRAP.shutdown();
-        }
+
+        notifier.fireTestFinished(getDescription());
+        BOOTSTRAP.shutdown();
     }
 }

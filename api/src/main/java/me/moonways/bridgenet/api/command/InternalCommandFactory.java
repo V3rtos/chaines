@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.command;
 
 import me.moonways.bridgenet.api.command.children.CommandChild;
-import me.moonways.bridgenet.api.command.option.CommandOptionMatcher;
+import me.moonways.bridgenet.api.command.option.CommandParameterMatcher;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.command.wrapper.WrappedArguments;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
@@ -11,9 +11,9 @@ import java.util.List;
 
 class InternalCommandFactory {
 
-    public CommandSession createSession(CommandSession.HelpMessageView helpMessageView, EntityCommandSender sender, String[] args) {
+    public CommandSession createSession(CommandDescriptor descriptor, CommandSession.HelpMessageView helpMessageView, EntityCommandSender sender, String[] args) {
         final WrappedArguments arguments = createArgumentsWrapper(args);
-        return new CommandSession(helpMessageView, sender, arguments);
+        return new CommandSession(helpMessageView, descriptor, arguments, sender);
     }
 
     public WrappedArguments createArgumentsWrapper(String[] args) {
@@ -22,7 +22,7 @@ class InternalCommandFactory {
 
     public WrappedCommand createCommandWrapper(Object source, String name, String permission,
                                                List<CommandChild> childrenList,
-                                               List<CommandOptionMatcher> optionsList,
+                                               List<CommandParameterMatcher> optionsList,
                                                CommandSession.HelpMessageView helpMessageView) {
         return new WrappedCommand(name, permission, source, childrenList, optionsList, helpMessageView);
     }

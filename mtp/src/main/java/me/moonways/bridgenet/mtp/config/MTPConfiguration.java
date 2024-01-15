@@ -3,7 +3,7 @@ package me.moonways.bridgenet.mtp.config;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.json.AbstractJsonConfig;
+import me.moonways.bridgenet.api.util.json.AbstractJsonConfig;
 import me.moonways.bridgenet.mtp.message.encryption.MessageEncryption;
 
 @Log4j2

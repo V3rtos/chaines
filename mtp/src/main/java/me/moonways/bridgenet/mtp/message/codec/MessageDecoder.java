@@ -43,6 +43,11 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
     private ExportedMessage decodeMessage(int messageId, ByteBuf byteBuf) {
         MessageWrapper wrapper = registry.lookupWrapperByID(messageId);
+
+        if (wrapper == null) {
+            throw new MessageNotFoundException("Decoded message (ID: " + messageId + ") is`nt registered");
+        }
+
         MessageTransfer messageTransfer = createTransfer(byteBuf, wrapper);
 
         Object message = wrapper.allocate();

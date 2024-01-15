@@ -9,7 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.decorator.xml.XmlDecoratorHandler;
 import me.moonways.bridgenet.api.inject.decorator.xml.XmlDecoratedInterceptor;
 import me.moonways.bridgenet.api.inject.decorator.xml.XmlDecoratorInput;
-import me.moonways.bridgenet.api.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;

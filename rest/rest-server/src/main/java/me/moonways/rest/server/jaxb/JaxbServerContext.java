@@ -3,7 +3,7 @@ package me.moonways.rest.server.jaxb;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import me.moonways.bridgenet.api.jaxb.XmlRootObject;
+import me.moonways.bridgenet.api.util.jaxb.XmlRootObject;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;

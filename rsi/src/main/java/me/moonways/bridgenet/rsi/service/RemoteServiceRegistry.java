@@ -2,8 +2,8 @@ package me.moonways.bridgenet.rsi.service;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.Depend;
-import me.moonways.bridgenet.api.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.api.inject.Autobind;
+import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
 import me.moonways.bridgenet.rsi.endpoint.EndpointController;
 import me.moonways.bridgenet.rsi.module.*;
@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 @Getter
 @Log4j2
-@Depend
+@Autobind
 public final class RemoteServiceRegistry {
 
     private XmlConfiguration xmlConfiguration;

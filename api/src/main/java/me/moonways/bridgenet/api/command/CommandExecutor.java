@@ -7,10 +7,11 @@ import me.moonways.bridgenet.api.command.annotation.MentorExecutor;
 import me.moonways.bridgenet.api.command.annotation.ProducerExecutor;
 import me.moonways.bridgenet.api.command.children.definition.MentorChild;
 import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
-import me.moonways.bridgenet.api.command.option.CommandOptionMatcher;
+import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
+import me.moonways.bridgenet.api.command.option.CommandParameterMatcher;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
@@ -21,7 +22,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Depend
+@Autobind
 @Log4j2
 public final class CommandExecutor {
 
@@ -54,32 +55,33 @@ public final class CommandExecutor {
             throw new CommandExecutionException("Label cannot be contains command was exists");
         }
 
-        CommandSession mentorSession = factory.createSession(wrapper.getHelpMessageView(), sender, arguments);
+        CommandDescriptor descriptor = new CommandDescriptor(wrapper.getName(), wrapper.getPermission(), wrapper.getName(), "");
+        CommandSession mentorSession = factory.createSession(descriptor, wrapper.getHelpMessageView(), sender, arguments);
 
         fireOption(wrapper, mentorSession);
     }
 
     private void fireOption(WrappedCommand wrapper, CommandSession session) {
         EntityCommandSender sender = session.getSender();
-        List<CommandOptionMatcher> optionList = wrapper
+        List<CommandParameterMatcher> optionList = wrapper
                 .getOptionsList().stream().filter(option -> option.matches(session))
                 .peek(commandOptionMatcher -> commandOptionMatcher.apply(session))
                 .collect(Collectors.toList());
 
         if (optionList.isEmpty()) {
             if (matchesPermission(sender, wrapper.getPermission()) && matchesBeforeExecute(session, wrapper)) { //if access is allowed
-                if (session.getArguments().isEmpty()) {
+                if (session.arguments().isEmpty()) {
                     fireMentor(wrapper, session);
                     return;
                 }
 
-                fireProducer(wrapper, session, session.getArguments().getNativeArray());
+                fireProducer(wrapper, session, session.arguments().toStringArray());
             }
         }
     }
 
-    private void fireProducer(WrappedCommand wrapper, CommandSession commandSession, String[] args) {
-        final EntityCommandSender sender = commandSession.getSender();
+    private void fireProducer(WrappedCommand wrapper, CommandSession session, String[] args) {
+        final EntityCommandSender sender = session.getSender();
 
         ProducerChild producerChild = wrapper.<ProducerChild>find(ProducerExecutor.class)
                 .filter(producer -> producer.getName().equalsIgnoreCase(args[0]))
@@ -87,14 +89,16 @@ public final class CommandExecutor {
                 .orElse(null);
 
         if (producerChild == null) {
-            fireMentor(wrapper, commandSession);
+            fireMentor(wrapper, session);
             return;
         }
 
         String permission = producerChild.getPermission();
 
         if (permission == null || matchesPermission(sender, permission)) {
-            CommandSession childSession = factory.createSession(wrapper.getHelpMessageView(), sender, factory.copyArgumentsOfRange(args));
+            CommandDescriptor descriptor = new CommandDescriptor(producerChild.getName(), producerChild.getPermission(), producerChild.getUsage(), producerChild.getDescription());
+            CommandSession childSession = factory.createSession(descriptor, wrapper.getHelpMessageView(), sender, factory.copyArgumentsOfRange(args));
+
             invokeMethod(childSession, wrapper.getSource(), producerChild.getMethod());
         }
     }

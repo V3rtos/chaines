@@ -24,7 +24,7 @@ public class MTPClient implements MTPConnection {
             Channel channel = channelFuture.channel();
             log.info("Successful connected to {}", channel);
 
-            this.channel = new MTPChannel(channel);
+            this.channel = new MTPChannel(true, channel);
             Threads.hookShutdown(this.channel::close);
 
             if (completableFuture != null) {

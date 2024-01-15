@@ -2,16 +2,15 @@ package me.moonways.bridgenet.api.event;
 
 import me.moonways.bridgenet.api.event.subscribe.EventSubscription;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscriptionApplier;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.util.thread.Threads;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-@Depend
+@Autobind
 public final class EventManager {
 
     private final ExecutorService threadsExecutorService = Threads.newCachedThreadPool();

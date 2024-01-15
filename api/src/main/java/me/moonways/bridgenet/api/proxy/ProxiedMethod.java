@@ -53,8 +53,7 @@ public class ProxiedMethod {
                 cause = exception;
             }
 
-            cause.printStackTrace();
-            return null;
+            throw new InterceptionException(cause);
         }
     }
 

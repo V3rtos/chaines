@@ -58,6 +58,11 @@ public class CommandChildrenScanner {
             return annotation == null ? null : annotation.value();
         }
 
+        private String findUsageDescription(Method method) {
+            ProducerUsageDescription annotation = method.getDeclaredAnnotation(ProducerUsageDescription.class);
+            return annotation == null ? null : annotation.value();
+        }
+
         @Override
         public CommandChild apply(Method method) {
             ProducerExecutor producerAnnotation = method.getDeclaredAnnotation(ProducerExecutor.class);
@@ -65,6 +70,7 @@ public class CommandChildrenScanner {
 
             return FACTORY.createProducer(source, method, producerName,
                     findPermission(method),
+                    findUsageDescription(method),
                     findDescription(method));
         }
     }

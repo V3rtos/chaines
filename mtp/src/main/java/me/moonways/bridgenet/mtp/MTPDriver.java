@@ -2,7 +2,7 @@ package me.moonways.bridgenet.mtp;
 
 import lombok.Getter;
 import lombok.Synchronized;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.decorator.definition.Async;
 import me.moonways.bridgenet.api.inject.decorator.definition.KeepTime;
 import me.moonways.bridgenet.api.inject.decorator.definition.RequiredNotNull;
@@ -18,7 +18,7 @@ import me.moonways.bridgenet.mtp.message.MessageWrapper;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-@Depend
+@Autobind
 @Decorated
 public class MTPDriver {
 

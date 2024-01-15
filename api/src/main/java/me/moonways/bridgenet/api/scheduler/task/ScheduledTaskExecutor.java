@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.api.scheduler.task;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.scheduler.ScheduleException;
 import me.moonways.bridgenet.api.scheduler.ScheduledQueue;
 import me.moonways.bridgenet.api.scheduler.ScheduledTime;
@@ -9,6 +10,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Log4j2
 @RequiredArgsConstructor
 public class ScheduledTaskExecutor {
 
@@ -59,6 +61,7 @@ public class ScheduledTaskExecutor {
         else
             future = executorService.schedule(executorTaskRunnable, scheduledTask.getDelay().toNanos(), TimeUnit.NANOSECONDS);
 
+        log.info("Running execution {}", scheduledTask);
         return future;
     }
 

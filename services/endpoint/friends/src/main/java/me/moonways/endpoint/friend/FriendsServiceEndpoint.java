@@ -3,7 +3,7 @@ package me.moonways.endpoint.friend;
 import lombok.Getter;
 import me.moonways.bridgenet.api.event.EventManager;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscribeBuilder;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Getter
-@Depend
+@Autobind
 public final class FriendsServiceEndpoint extends AbstractEndpointDefinition implements FriendsServiceModel {
 
     private static final long serialVersionUID = 6945343361490533671L;

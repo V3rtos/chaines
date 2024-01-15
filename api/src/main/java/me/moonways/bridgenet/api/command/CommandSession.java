@@ -18,10 +18,11 @@ public final class CommandSession {
     private final HelpMessageView helpMessageView;
 
     @Getter
-    private final EntityCommandSender sender;
+    private final CommandDescriptor descriptor;
+    private final WrappedArguments arguments;
 
     @Getter
-    private final WrappedArguments arguments;
+    private final EntityCommandSender sender;
 
     public <T extends EntityCommandSender> T getSender(Class<T> objectCast) {
         return objectCast.cast(sender);
@@ -31,6 +32,10 @@ public final class CommandSession {
         helpMessageView.print(sender, messageFormat);
     }
 
+    public WrappedArguments arguments() {
+        return arguments;
+    }
+
     public static class HelpMessageView {
 
         private static final String NAME_FORMAT = "{0}";
@@ -38,9 +43,9 @@ public final class CommandSession {
 
         private final Map<String, String> producersDescriptionMap = new WeakHashMap<>();
 
-        public void addDescription(@NotNull String name, @Nullable String description) {
+        public void addDescription(@NotNull String name, @Nullable String usage, @Nullable String description) {
             if (description != null) {
-                producersDescriptionMap.put(name.toLowerCase(), description);
+                producersDescriptionMap.put(usage != null ? usage : name.toLowerCase(), description);
             }
         }
 

@@ -3,7 +3,7 @@ package me.moonways.endpoint.games;
 import gnu.trove.TCollections;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import me.moonways.model.games.GamesServiceModel;
 import me.moonways.model.games.data.Arena;
@@ -11,7 +11,7 @@ import me.moonways.model.games.data.Arena;
 import java.rmi.RemoteException;
 import java.util.Set;
 
-@Depend
+@Autobind
 public final class GamesServiceEndpoint extends AbstractEndpointDefinition implements GamesServiceModel {
 
     private static final long serialVersionUID = -1131200912946923881L;

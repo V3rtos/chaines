@@ -1,56 +1,92 @@
 package me.moonways.bridgenet.api.command.wrapper;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.api.command.exception.CommandArgumentsException;
+import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
+import me.moonways.bridgenet.api.util.ExceptionallyFunction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-@Getter
-public final class WrappedArguments {
+public final class WrappedArguments implements Iterable<String> {
 
-    private final String[] nativeArray;
+    private final String[] handle;
 
     public Stream<String> stream() {
-        return Arrays.stream(nativeArray);
+        return Arrays.stream(handle);
     }
 
-    public <R> R map(int position, Function<String, R> mapper) {
-        return mapper.apply(lookup(position));
+    public String[] toStringArray() {
+        return handle;
     }
 
-    private String lookup(int position) {
-        if (isEmpty() || getSize() < position) {
-            return null;
+    private Optional<String> lookup(int position) {
+        if (isEmpty() || size() < position) {
+            return Optional.empty();
         }
 
-        return nativeArray[position];
+        return Optional.ofNullable(handle[position]);
     }
 
-    public String get(int position) {
+    public Optional<String> get(int position) {
         return lookup(position);
     }
 
-    public Optional<String> getFirst() {
-        return Optional.ofNullable(lookup(0));
+    public <R> Optional<R> get(int position, ExceptionallyFunction<String, R> mapper) {
+        try {
+            return Optional.ofNullable(mapper.apply(lookup(position).orElse(null)));
+        } catch (Throwable exception) {
+            throw new CommandArgumentsException(exception);
+        }
     }
 
-    public Optional<String> getSecond() {
-        return Optional.ofNullable(lookup(1));
+    public Optional<String> first() {
+        return get(0);
     }
 
-    public Optional<String> getLast() {
-        return Optional.ofNullable(isEmpty() ? null : nativeArray[getSize() - 1]);
+    public <R> Optional<R> first(ExceptionallyFunction<String, R> mapper) {
+        return get(0, mapper);
+    }
+
+    public Optional<String> last() {
+        if (size() - 1 < 0) {
+            return Optional.empty();
+        }
+        return get(size() - 1);
+    }
+
+    public <R> Optional<R> last(ExceptionallyFunction<String, R> mapper) {
+        if (size() - 1 < 0) {
+            return Optional.empty();
+        }
+        return get(size() - 1, mapper);
     }
 
     public boolean isEmpty() {
-        return nativeArray.length == 0;
+        return handle.length == 0;
     }
 
-    public int getSize() {
-        return nativeArray.length;
+    public int size() {
+        return handle.length;
+    }
+
+    public void assertSize(int required) {
+        if (!has(required)) {
+            throw new AssertionError(String.format("Illegal command arguments size (%d < %d)", size(), required));
+        }
+    }
+
+    public boolean has(int requiredSize) {
+        return size() >= requiredSize;
+    }
+
+    @NotNull
+    @Override
+    public Iterator<String> iterator() {
+        return Arrays.asList(handle).iterator();
     }
 }

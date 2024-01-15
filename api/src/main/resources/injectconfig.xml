@@ -3,7 +3,7 @@
     <searchPackage>me.moonways</searchPackage>
     <scanners>
         <scanner>
-            <annotationClass>me.moonways.bridgenet.api.inject.Depend</annotationClass>
+            <annotationClass>me.moonways.bridgenet.api.inject.Autobind</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
         <scanner>
@@ -20,12 +20,16 @@
         </scanner>
         <scanner>
             <annotationClass>me.moonways.bridgenet.api.command.annotation.Command</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
+        </scanner>
+        <scanner>
+            <annotationClass>me.moonways.bridgenet.api.util.autorun.persistance.AutoRunner</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
     </scanners>
     <factories>
         <factory>
-            <annotationClass>me.moonways.bridgenet.api.inject.Depend</annotationClass>
+            <annotationClass>me.moonways.bridgenet.api.inject.Autobind</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.factory.DependObjectFactory</targetClass>
         </factory>
         <factory>
@@ -41,11 +45,15 @@
             <targetClass>me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory</targetClass>
         </factory>
         <factory>
-            <annotationClass>me.moonways.bridgenet.api.command.annotation.CommandOption</annotationClass>
+            <annotationClass>me.moonways.bridgenet.api.command.annotation.CommandParameter</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory</targetClass>
         </factory>
         <factory>
             <annotationClass>me.moonways.bridgenet.api.command.annotation.Command</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.inject.factory.DependObjectFactory</targetClass>
+        </factory>
+        <factory>
+            <annotationClass>me.moonways.bridgenet.api.util.autorun.persistance.AutoRunner</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.factory.DependObjectFactory</targetClass>
         </factory>
     </factories>

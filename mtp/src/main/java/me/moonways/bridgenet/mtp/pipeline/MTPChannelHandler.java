@@ -27,7 +27,7 @@ public class MTPChannelHandler extends SimpleChannelInboundHandler<ExportedMessa
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        log.info("§4The previously connected client connection channel has been severed from the server: (ID={})", ctx.channel().id());
+        log.info("§4Connected client connection channel has been severed from the server: (ID={})", ctx.channel().id());
     }
 
     @Override
@@ -38,6 +38,6 @@ public class MTPChannelHandler extends SimpleChannelInboundHandler<ExportedMessa
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error("§4Internal MTP exception caught: §c{}", cause.toString());
+        log.error("§4MessageTransferProtocol channel handler has received internal exception", cause);
     }
 }

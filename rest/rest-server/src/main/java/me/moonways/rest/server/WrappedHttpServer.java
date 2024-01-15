@@ -2,7 +2,7 @@ package me.moonways.rest.server;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
@@ -10,7 +10,7 @@ import me.moonways.bridgenet.api.inject.decorator.Decorated;
 import me.moonways.bridgenet.api.inject.decorator.definition.Async;
 import me.moonways.bridgenet.api.inject.decorator.definition.KeepTime;
 import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
-import me.moonways.bridgenet.api.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
 import me.moonways.rest.api.HttpHost;
 import me.moonways.rest.server.controller.verify.VerifyHelper;
 import me.moonways.rest.server.controller.HttpContextPattern;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
-@Depend
+@Autobind
 @Decorated
 public class WrappedHttpServer {
 

@@ -8,18 +8,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.Future;
 
 @Getter
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 @RequiredArgsConstructor
 public abstract class AbstractDelayedTask implements ScheduledTask {
 
     private final Object lock = new Object();
 
+    @ToString.Include
     private final long id;
 
+    @ToString.Include
     private final ScheduledTime delay, period;
 
     private boolean isAsynchronous;
+    @ToString.Include
     private boolean cancelled;
 
     private Future<?> future;

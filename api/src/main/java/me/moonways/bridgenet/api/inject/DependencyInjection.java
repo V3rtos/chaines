@@ -44,11 +44,11 @@ public class DependencyInjection {
     }
 
     public void search(@NotNull ScannerFilter filter) {
-        scanner.resolve(Depend.class, filter);
+        scanner.resolve(Autobind.class, filter);
     }
 
     public void search(@NotNull String packageName) {
-        scanner.resolve(packageName, Depend.class);
+        scanner.resolve(packageName, Autobind.class);
     }
 
     public void search(@NotNull String packageName, @NotNull Class<? extends Annotation> cls) {
@@ -57,7 +57,7 @@ public class DependencyInjection {
 
     public void searchByProject() {
         String searchGeneralPackage = scanner.getSearchGeneralPackage();
-        scanner.resolve(searchGeneralPackage, Depend.class);
+        scanner.resolve(searchGeneralPackage, Autobind.class);
     }
 
     public void searchByProject(@NotNull Class<? extends Annotation> cls) {
@@ -80,7 +80,7 @@ public class DependencyInjection {
 
         postBind(bindClass, object);
 
-        if (bindClass.isAnnotationPresent(Depend.class)) {
+        if (bindClass.isAnnotationPresent(Autobind.class)) {
             log.info("Bind component instance of §6{}", bindClass.getName());
         }
     }

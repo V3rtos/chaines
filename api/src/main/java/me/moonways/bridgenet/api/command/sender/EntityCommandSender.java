@@ -7,5 +7,7 @@ public interface EntityCommandSender {
 
     void sendMessage(@Nullable String message);
 
+    void sendMessage(@NotNull String message, @Nullable Object... replacements);
+
     boolean hasPermission(@NotNull String permission);
 }

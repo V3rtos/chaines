@@ -2,15 +2,14 @@ package me.moonways.bridgenet.api.command;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.command.annotation.Command;
-import me.moonways.bridgenet.api.command.annotation.CommandOption;
+import me.moonways.bridgenet.api.command.annotation.CommandParameter;
 import me.moonways.bridgenet.api.command.annotation.Permission;
-import me.moonways.bridgenet.api.command.annotation.repeatable.RepeatableCommandOption;
 import me.moonways.bridgenet.api.command.children.CommandChild;
 import me.moonways.bridgenet.api.command.children.CommandChildrenScanner;
 import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
-import me.moonways.bridgenet.api.command.option.CommandOptionMatcher;
+import me.moonways.bridgenet.api.command.option.CommandParameterMatcher;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
-import me.moonways.bridgenet.api.inject.Depend;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
@@ -23,7 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
-@Depend
+@Autobind
 public final class CommandRegistry {
 
     private static final String COMMAND_NOT_ANNOTATED_ERROR_MESSAGE = "Command {} is not annotated by @Command";
@@ -51,7 +50,7 @@ public final class CommandRegistry {
         final Object commandProxy = toProxy(object);
 
         final List<CommandChild> childrenList = findChildren(object);
-        final List<CommandOptionMatcher> optionsList = findOptions(object);
+        final List<CommandParameterMatcher> optionsList = findOptions(object);
         final CommandSession.HelpMessageView helpMessageView = createHelpMessageView(childrenList);
 
         WrappedCommand commandWrapper = factory.createCommandWrapper(commandProxy, commandName, permission, childrenList,
@@ -71,15 +70,15 @@ public final class CommandRegistry {
         return annotation == null ? null : annotation.value();
     }
 
-    private List<CommandOptionMatcher> findOptions(Object commandObject) {
+    private List<CommandParameterMatcher> findOptions(Object commandObject) {
         Annotation[] declaredAnnotations = commandObject.getClass().getDeclaredAnnotations();
 
         ObjectFactory objectFactory = dependencyInjection.getScanner()
-                .getObjectFactory(CommandOption.class);
+                .getObjectFactory(CommandParameter.class);
 
         return Arrays.stream(declaredAnnotations)
-                .filter(annotation -> annotation.annotationType().equals(CommandOption.class))
-                .map(annotation -> (CommandOption)annotation)
+                .filter(annotation -> annotation.annotationType().equals(CommandParameter.class))
+                .map(annotation -> (CommandParameter)annotation)
                 .map(option -> objectFactory.create(option.value()))
                 .collect(Collectors.toList());
     }
@@ -94,7 +93,7 @@ public final class CommandRegistry {
         childrenList.stream()
                 .filter(child -> child instanceof ProducerChild)
                 .map(child -> (ProducerChild) child)
-                .forEachOrdered(child -> helpMessageView.addDescription(child.getName(), child.getDescription()));
+                .forEachOrdered(child -> helpMessageView.addDescription(child.getName(), child.getUsage(), child.getDescription()));
 
         return helpMessageView;
     }

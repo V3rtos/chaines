@@ -2,34 +2,40 @@
 <bootstrap>
     <hooks>
         <hook>
-            <displayName>JDBC</displayName>
+            <displayName>ConvenoJDBC</displayName>
             <priorityID>1</priorityID>
             <priority>RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.jdbc.ConvenoJdbcHook</executorPath>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.ConvenoCreateDatabaseConnectionHook</executorPath>
         </hook>
         <hook>
             <displayName>GoogleJsonLib</displayName>
             <priorityID>2</priorityID>
             <priority>RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.gson.GsonHook</executorPath>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.BindGsonLibraryHook</executorPath>
         </hook>
         <hook>
             <displayName>MTP</displayName>
             <priorityID>3</priorityID>
             <priority>RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.mtp.MTPHook</executorPath>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.StartMtpServerHook</executorPath>
         </hook>
         <hook>
-            <displayName>RSI</displayName>
+            <displayName>Endpoints</displayName>
             <priorityID>4</priorityID>
             <priority>RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.rsi.ServiceInitHook</executorPath>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.RunRMIEndpointsHook</executorPath>
         </hook>
         <hook>
-            <displayName>RestServer</displayName>
+            <displayName>REST</displayName>
             <priorityID>5</priorityID>
             <priority>RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.rest.RestServerHook</executorPath>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.StartRestServerHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>AutoRunners</displayName>
+            <priorityID>6</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.StartScheduledRunnersServiceHook</executorPath>
         </hook>
     </hooks>
 </bootstrap>

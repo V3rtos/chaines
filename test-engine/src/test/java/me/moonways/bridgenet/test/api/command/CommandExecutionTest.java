@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.test.api.command;
 
-import me.moonways.bridgenet.api.command.CommandExecutionException;
+import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
 import me.moonways.bridgenet.api.command.CommandExecutor;
 import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
@@ -19,9 +19,18 @@ public class CommandExecutionTest {
     private ConsoleCommandSender consoleCommandSender;
 
     @Test
-    public void test_success() {
+    public void test_mentorExecute() {
         try {
             commandExecutor.execute(consoleCommandSender, "test");
+        } catch (CommandExecutionException exception) {
+            fail(exception.getMessage());
+        }
+    }
+
+    @Test
+    public void test_producerExecute() {
+        try {
+            commandExecutor.execute(consoleCommandSender, "test info");
         } catch (CommandExecutionException exception) {
             fail(exception.getMessage());
         }

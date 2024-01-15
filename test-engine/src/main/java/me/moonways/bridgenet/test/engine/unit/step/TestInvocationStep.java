@@ -2,10 +2,12 @@ package me.moonways.bridgenet.test.engine.unit.step;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.test.engine.TestBridgenetBootstrap;
+import me.moonways.bridgenet.test.engine.impl.UnexceptionallyFailure;
 import me.moonways.bridgenet.test.engine.unit.TestRunnableStep;
 import me.moonways.bridgenet.test.engine.unit.TestUnit;
 import org.junit.Test;
 import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 import java.lang.reflect.Method;
@@ -26,13 +28,13 @@ public class TestInvocationStep implements TestRunnableStep {
 
         try {
             testUnit.invoke(testFunc.getName());
-            log.info("Test function has exit successful: §a{}", testFunc);
+            log.info("Test function has exit successful: §a{}()", testFunc.getName());
         }
         catch (Exception exception) {
             log.info("§4Test function has exit failed: §c{}", testFunc);
 
             bootstrap.throwException(exception.getCause());
-            notifier.fireTestIgnored(description);
+            notifier.fireTestFailure(new UnexceptionallyFailure(description));
         }
 
         notifier.fireTestFinished(description);

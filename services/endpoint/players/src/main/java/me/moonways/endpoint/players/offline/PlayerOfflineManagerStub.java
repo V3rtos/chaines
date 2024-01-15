@@ -58,7 +58,7 @@ public class PlayerOfflineManagerStub extends AbstractEndpointDefinition impleme
         ConvenoResponseLine first = offlinePlayerResponse.first();
 
         if (first == null) {
-            throw new NullPointerException("player response by name");
+            return null;
         }
 
         return read(first);

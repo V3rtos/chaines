@@ -12,8 +12,8 @@ class CommandChildrenFactory {
         return new MentorChild(sourceObject, method);
     }
 
-    public CommandChild createProducer(Object sourceObject, Method method, String name, String permission, String description) {
-        return new ProducerChild(sourceObject, method, name, permission, description);
+    public CommandChild createProducer(Object sourceObject, Method method, String name, String permission, String usage, String description) {
+        return new ProducerChild(sourceObject, method, name, permission, usage, description);
     }
 
     public CommandChild createPredicate(Object sourceObject, Method method) {

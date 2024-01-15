@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.mtp;
 
 import io.netty.channel.Channel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
@@ -16,6 +17,9 @@ public class MTPChannel {
 
     // TODO - 20.07.2023 - Добавить аттрибуты из channel
 
+    @Getter
+    private final boolean isClient;
+
     private final Channel channel;
 
     @Inject
@@ -29,12 +33,16 @@ public class MTPChannel {
     public void sendMessage(@NotNull Object message) {
         ExportedMessage exported = driver.export(message);
 
-        log.info("§9[Server -> Client[ID={}]]: §r{}", channel.id(), message);
+        log.info("§9[{}]: §r{}", String.format(getMessageSendLogPrefix(), channel.id()), message);
         channel.writeAndFlush(exported);
     }
 
     @Synchronized
     public void close() {
         channel.closeFuture();
+    }
+
+    private String getMessageSendLogPrefix() {
+        return isClient ? "Client[ID=%s] -> Server" : "Server -> Client[ID=%s]";
     }
 }
