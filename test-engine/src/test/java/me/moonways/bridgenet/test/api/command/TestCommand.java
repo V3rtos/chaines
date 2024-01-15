@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.command;
+package me.moonways.bridgenet.test.api.command;
 
 import me.moonways.bridgenet.api.command.CommandSession;
 import me.moonways.bridgenet.api.command.option.OnlyConsoleSenderOption;

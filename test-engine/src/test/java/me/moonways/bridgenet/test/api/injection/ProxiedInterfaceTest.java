@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.injection;
+package me.moonways.bridgenet.test.api.injection;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
