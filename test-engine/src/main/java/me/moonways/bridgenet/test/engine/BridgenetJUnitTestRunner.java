@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.test.engine;
 
+import me.moonways.bridgenet.api.inject.factory.DependObjectFactory;
 import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
 import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
 import me.moonways.bridgenet.test.engine.unit.TestRunnableStep;
@@ -18,7 +19,7 @@ import java.util.List;
 public class BridgenetJUnitTestRunner extends BlockJUnit4ClassRunner {
 
     private static final BridgenetBootstrapInitializer BOOTSTRAP_INITIALIZER = new BridgenetBootstrapInitializer();
-    private static final ObjectFactory OBJECT_FACTORY = new UnsafeObjectFactory();
+    private static final ObjectFactory OBJECT_FACTORY = new DependObjectFactory();
 
     private final Class<?> testClass;
 
