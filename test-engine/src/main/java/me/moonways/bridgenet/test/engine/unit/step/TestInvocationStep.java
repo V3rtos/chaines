@@ -1,24 +1,24 @@
 package me.moonways.bridgenet.test.engine.unit.step;
 
-import me.moonways.bridgenet.test.engine.BridgenetBootstrapInitializer;
+import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.test.engine.TestBridgenetBootstrapInitializer;
 import me.moonways.bridgenet.test.engine.unit.TestRunnableStep;
 import me.moonways.bridgenet.test.engine.unit.TestUnit;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 import java.lang.reflect.Method;
 
+@Log4j2
 public class TestInvocationStep implements TestRunnableStep {
 
     @Override
-    public void process(BridgenetBootstrapInitializer initializer, TestUnit testUnit) throws Exception {
+    public void process(TestBridgenetBootstrapInitializer initializer, TestUnit testUnit) throws Exception {
         testUnit.peekAnnotated(Test.class, (testFunc) -> invokeTestFunction(initializer, testUnit, testFunc));
     }
 
-    private void invokeTestFunction(BridgenetBootstrapInitializer initializer, TestUnit testUnit, Method testFunc) {
+    private void invokeTestFunction(TestBridgenetBootstrapInitializer initializer, TestUnit testUnit, Method testFunc) {
         RunNotifier notifier = testUnit.getNotifier();
 
         Description description = Description.createTestDescription(testUnit.getSource().getClass(), testFunc.getName());
@@ -26,8 +26,11 @@ public class TestInvocationStep implements TestRunnableStep {
 
         try {
             testUnit.invoke(testFunc.getName());
+            log.info("Test function has exit successful: §a{}", testFunc);
         }
         catch (Exception exception) {
+            log.info("§4Test function has exit failed: §c{}", testFunc);
+
             initializer.throwException(exception.getCause());
             notifier.fireTestIgnored(description);
         }

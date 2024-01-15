@@ -6,7 +6,7 @@ import me.moonways.bridgenet.bootstrap.AppBootstrap;
 import me.moonways.bridgenet.test.engine.exception.ExceptionFormatter;
 
 @Log4j2
-public final class BridgenetBootstrapInitializer {
+public final class TestBridgenetBootstrapInitializer {
 
     private static AppBootstrap bootstrap;
     private static final ExceptionFormatter EXCEPTION_FORMATTER = new ExceptionFormatter();

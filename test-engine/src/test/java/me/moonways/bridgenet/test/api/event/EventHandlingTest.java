@@ -21,7 +21,7 @@ public class EventHandlingTest {
     private final UserConnectEvent eventToSend = new UserConnectEvent(UUID.randomUUID(), "Mike Tyson");
 
     @Inject
-    private EventManager eventManager;
+    private EventManager subj;
 
     private void assertInputEvent(UserConnectEvent event) {
         assertEquals(event.getName(), eventToSend.getName());
@@ -30,12 +30,12 @@ public class EventHandlingTest {
 
     @Test
     public void test_successHandling() {
-        eventManager.subscribe(
+        subj.subscribe(
                 EventSubscribeBuilder.newBuilder(UserConnectEvent.class)
                         .follow(this::assertInputEvent)
                         .build());
 
-        eventManager.fireEvent(eventToSend);
+        subj.fireEvent(eventToSend);
     }
 
     @Getter

@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.test.engine.unit;
 
-import me.moonways.bridgenet.test.engine.BridgenetBootstrapInitializer;
+import me.moonways.bridgenet.test.engine.TestBridgenetBootstrapInitializer;
 
 public interface TestRunnableStep {
 
-    void process(BridgenetBootstrapInitializer initializer, TestUnit testUnit) throws Exception;
+    void process(TestBridgenetBootstrapInitializer initializer, TestUnit testUnit) throws Exception;
 }

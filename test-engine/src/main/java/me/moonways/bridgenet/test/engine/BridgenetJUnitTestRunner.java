@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.test.engine;
 
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.factory.DependObjectFactory;
 import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
-import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
 import me.moonways.bridgenet.test.engine.unit.TestRunnableStep;
 import me.moonways.bridgenet.test.engine.unit.TestUnit;
 import me.moonways.bridgenet.test.engine.unit.step.TestCreateStep;
@@ -16,9 +16,10 @@ import org.junit.runners.model.InitializationError;
 import java.util.Arrays;
 import java.util.List;
 
+@Log4j2
 public class BridgenetJUnitTestRunner extends BlockJUnit4ClassRunner {
 
-    private static final BridgenetBootstrapInitializer BOOTSTRAP_INITIALIZER = new BridgenetBootstrapInitializer();
+    private static final TestBridgenetBootstrapInitializer BOOTSTRAP_INITIALIZER = new TestBridgenetBootstrapInitializer();
     private static final ObjectFactory OBJECT_FACTORY = new DependObjectFactory();
 
     private final Class<?> testClass;
@@ -44,6 +45,8 @@ public class BridgenetJUnitTestRunner extends BlockJUnit4ClassRunner {
             BOOTSTRAP_INITIALIZER.init(testClassInstance);
 
             for (TestRunnableStep step : testRunnableStepList) {
+                log.info("§6TestEngine has processing step - {}", step.getClass().getSimpleName());
+
                 step.process(BOOTSTRAP_INITIALIZER, testUnit);
             }
         }
