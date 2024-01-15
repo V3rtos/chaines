@@ -19,7 +19,7 @@ import java.util.List;
 @Log4j2
 public class BridgenetJUnitTestRunner extends BlockJUnit4ClassRunner {
 
-    private static final TestBridgenetBootstrapInitializer BOOTSTRAP_INITIALIZER = new TestBridgenetBootstrapInitializer();
+    private static final TestBridgenetBootstrap BOOTSTRAP = new TestBridgenetBootstrap();
     private static final ObjectFactory OBJECT_FACTORY = new DependObjectFactory();
 
     private final Class<?> testClass;
@@ -42,20 +42,20 @@ public class BridgenetJUnitTestRunner extends BlockJUnit4ClassRunner {
             Object testClassInstance = OBJECT_FACTORY.create(testClass);
             TestUnit testUnit = new TestUnit(notifier, testClassInstance);
 
-            BOOTSTRAP_INITIALIZER.init(testClassInstance);
+            BOOTSTRAP.init(testClassInstance);
 
             for (TestRunnableStep step : testRunnableStepList) {
                 log.info("§6TestEngine has processing step - {}", step.getClass().getSimpleName());
 
-                step.process(BOOTSTRAP_INITIALIZER, testUnit);
+                step.process(BOOTSTRAP, testUnit);
             }
         }
         catch (Exception exception) {
-            BOOTSTRAP_INITIALIZER.throwException(exception);
+            BOOTSTRAP.throwException(exception);
         }
         finally {
             notifier.fireTestFinished(getDescription());
-            BOOTSTRAP_INITIALIZER.shutdown();
+            BOOTSTRAP.shutdown();
         }
     }
 }

@@ -3,13 +3,12 @@ package me.moonways.bridgenet.test.engine;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
-import me.moonways.bridgenet.test.engine.exception.ExceptionFormatter;
 
 @Log4j2
-public final class TestBridgenetBootstrapInitializer {
+public final class TestBridgenetBootstrap {
 
     private static AppBootstrap bootstrap;
-    private static final ExceptionFormatter EXCEPTION_FORMATTER = new ExceptionFormatter();
+    private static final TestEngineExceptionFormatter EXCEPTION_FORMATTER = new TestEngineExceptionFormatter();
 
     public void init(Object testObject) {
         if (bootstrap == null) {

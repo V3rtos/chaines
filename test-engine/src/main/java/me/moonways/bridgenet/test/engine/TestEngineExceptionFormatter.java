@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.engine.exception;
+package me.moonways.bridgenet.test.engine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ExceptionFormatter {
+public class TestEngineExceptionFormatter {
 
     private static final String RESOURCE_PATH = "stacktrace.pattern";
     private static final String ELEMENT_LINE_PREFIX = "!@";
@@ -20,7 +20,7 @@ public class ExceptionFormatter {
             PH_ELEMENT_METHOD = "${element_method}";
 
     private InputStream getInputStream() {
-        return ExceptionFormatter.class.getClassLoader().getResourceAsStream(RESOURCE_PATH);
+        return TestEngineExceptionFormatter.class.getClassLoader().getResourceAsStream(RESOURCE_PATH);
     }
 
     private String readPatternFile() {
