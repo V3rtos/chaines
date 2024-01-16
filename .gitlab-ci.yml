@@ -8,6 +8,4 @@ build:
   interruptible: true
   tags:
     - moonways-runner
-  script:
-    - |
-      sh bridgenet -fb
+  script: sh bridgenet -fb
