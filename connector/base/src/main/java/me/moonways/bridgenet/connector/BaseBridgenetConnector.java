@@ -19,6 +19,8 @@ import me.moonways.bridgenet.api.inject.DependencyInjection;
 import net.conveno.jdbc.ConvenoRouter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Properties;
+
 public class BaseBridgenetConnector {
 
     private MTPConnectionFactory connectionFactory;
@@ -48,28 +50,19 @@ public class BaseBridgenetConnector {
     }
 
     private void applyDependencyInjection(BaseBridgenetConnector currentConnector) {
-        DependencyInjection dependencyInjection = new DependencyInjection(); // TODO - Забрать из модуля bootstrap
+        DependencyInjection injector = new DependencyInjection(); // TODO - Забрать из модуля bootstrap
 
-        // local system services.
-        dependencyInjection.bind(dependencyInjection);
+        injector.searchByProject();
 
-        // dependencies services.
-        dependencyInjection.bind(ConvenoRouter.create());
-
-        // inject
-        dependencyInjection.searchByProject();
-        dependencyInjection.bind(currentConnector);
-
-        dependencyInjection.searchByProject(ClientMessage.class);
-        dependencyInjection.searchByProject(MessageHandler.class);
-
-        // bridgenet system
-        dependencyInjection.bind(connectionFactory);
+        injector.bind(ConvenoRouter.create());
+        injector.bind(currentConnector);
+        injector.bind(new Properties());
+        injector.bind(connectionFactory);
     }
 
-    public void enableBridgenetServicesSync(DependencyInjection dependencyInjection, BaseBridgenetConnector currentConnector) {
+    public void enableBridgenetServicesSync(DependencyInjection injector, BaseBridgenetConnector currentConnector) {
         setProperties();
-        connectionFactory = MTPConnectionFactory.createConnectionFactory(dependencyInjection);
+        connectionFactory = MTPConnectionFactory.createConnectionFactory(injector);
 
         applyDependencyInjection(currentConnector);
 

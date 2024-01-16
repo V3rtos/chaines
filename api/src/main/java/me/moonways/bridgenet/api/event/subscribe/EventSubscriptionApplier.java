@@ -12,7 +12,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public final class EventSubscriptionApplier {
 
-    private final EventService eventManager;
+    private final EventService eventService;
 
     private final EventSubscriptionContainer container = new EventSubscriptionContainer();
 
@@ -32,7 +32,7 @@ public final class EventSubscriptionApplier {
                 for (EventSubscription<?> eventSubscriptionImpl : subscriptionsAll) {
 
                     EventSubscription<E> genericSubscription = (EventSubscription<E>) eventSubscriptionImpl;
-                    genericSubscription.followExpiration(eventManager);
+                    genericSubscription.followExpiration(eventService);
 
                     EventFollower<E> follower = genericSubscription.getFollower();
                     follower.postComplete(event);

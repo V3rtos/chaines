@@ -37,7 +37,7 @@ public final class CommandRegistry {
     @Inject
     private AnnotationInterceptor interceptor;
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     public void registerCommand(@NotNull Object object) {
         if (!matchesAnnotation(object)) {
@@ -79,7 +79,7 @@ public final class CommandRegistry {
     private List<CommandParameterMatcher> findOptions(Object commandObject) {
         Annotation[] declaredAnnotations = commandObject.getClass().getDeclaredAnnotations();
 
-        ObjectFactory objectFactory = dependencyInjection.getScanner()
+        ObjectFactory objectFactory = injector.getScanner()
                 .getObjectFactory(CommandParameter.class);
 
         return Arrays.stream(declaredAnnotations)
@@ -108,7 +108,7 @@ public final class CommandRegistry {
     }
 
     private Object toProxy(Object commandObject) {
-        dependencyInjection.injectFields(commandObject);
+        injector.injectFields(commandObject);
         return interceptor.createProxy(commandObject, new DecoratedObjectProxy());
     }
 

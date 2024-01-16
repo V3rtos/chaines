@@ -12,13 +12,13 @@ public class EndpointController {
     private final EndpointLoader loader = new EndpointLoader();
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     private List<Endpoint> endpointsList;
 
     public void injectInternalComponents() {
-        dependencyInjection.injectFields(runner);
-        dependencyInjection.injectFields(loader);
+        injector.injectFields(runner);
+        injector.injectFields(loader);
     }
 
     public void findEndpoints() {

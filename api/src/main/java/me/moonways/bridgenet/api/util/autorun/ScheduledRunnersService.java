@@ -25,17 +25,13 @@ public class ScheduledRunnersService {
     private static final ScheduledTime DEFAULT_PERIOD = ScheduledTime.ofMillis(100);
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Inject
     private Scheduler scheduler;
 
     public void start() {
-        dependencyInjection.searchByProject(AutoRunner.class);
-
-        DependencyContainer container = dependencyInjection.getContainer();
-
-        Set<Object> runners = container.getStoredInstances(AutoRunner.class);
+        Set<Object> runners = injector.peekAnnotatedMembers(AutoRunner.class).collect(Collectors.toSet());
         startGlobalTimer(runners);
     }
 

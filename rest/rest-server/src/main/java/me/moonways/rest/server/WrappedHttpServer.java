@@ -54,7 +54,7 @@ public class WrappedHttpServer {
     private HttpServerExceptionHandler exceptionHandler;
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Inject
     private XmlJaxbParser jaxbParser;
@@ -129,7 +129,7 @@ public class WrappedHttpServer {
         UndefinedHttpRequestInterceptor undefinedInterceptor
                 = new UndefinedHttpRequestInterceptor(new UndefinedHttpController(config, false));
 
-        dependencyInjection.injectFields(undefinedInterceptor);
+        injector.injectFields(undefinedInterceptor);
 
         bootstrap.setHttpProcessor(
                 HttpProcessorBuilder.create()
@@ -139,7 +139,7 @@ public class WrappedHttpServer {
 
         // register exists pattern-contexts.
         UndefinedHttpController forcedUndefinedController = new UndefinedHttpController(config, true);
-        dependencyInjection.injectFields(forcedUndefinedController);
+        injector.injectFields(forcedUndefinedController);
 
         config.getControllerPatternsMap()
                 .values()
@@ -154,7 +154,7 @@ public class WrappedHttpServer {
                             pattern.getController().getClass().getSimpleName(),
                             pattern.getMethod(), pattern.getName());
 
-                    dependencyInjection.injectFields(context);
+                    injector.injectFields(context);
                 });
 
         // set expectation verifier

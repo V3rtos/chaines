@@ -24,5 +24,5 @@ public class XMLServiceModuleDescriptor {
     private String configClass;
 
     @Setter(onMethod_ = @XmlElement(name = "property"))
-    private List<XmlServiceModulePropertyDescriptor> properties;
+    private List<XMLServiceModulePropertyDescriptor> properties;
 }

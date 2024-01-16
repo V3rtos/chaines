@@ -75,15 +75,15 @@ public class DependScannerController implements ScannerController {
     }
 
     @Override
-    public void handleResource(@NotNull DependencyInjection dependencyInjection,
+    public void handleResource(@NotNull DependencyInjection injector,
                                @NotNull Class<?> resource,
                                @NotNull Class<? extends Annotation> annotation) {
 
-        DependencyContainer container = dependencyInjection.getContainer();
+        DependencyContainer container = injector.getContainer();
 
         if (resource == DependencyInjection.class) {
 
-            dependencyInjection.bind(this);
+            injector.bind(this);
             container.subscribeDependByAnnotation(resource, annotation);
             return;
         }
@@ -91,24 +91,24 @@ public class DependScannerController implements ScannerController {
         if (container.isStored(resource))
             return;
 
-        DependencyScanner scanner = dependencyInjection.getScanner();
+        DependencyScanner scanner = injector.getScanner();
 
         ObjectFactory objectFactory = scanner.getObjectFactory(annotation);
         Object object = objectFactory.create(resource);
 
         scanner.processPreConstructs(resource);
 
-        bind(dependencyInjection, resource, object, annotation);
+        bind(injector, resource, object, annotation);
     }
 
-    public final void bind(@NotNull DependencyInjection dependencyInjection,
+    public final void bind(@NotNull DependencyInjection injector,
                            @NotNull Class<?> resource,
                            @NotNull Object object,
                            @NotNull Class<? extends Annotation> annotation) {
 
-        DependencyContainer container = dependencyInjection.getContainer();
+        DependencyContainer container = injector.getContainer();
 
-        dependencyInjection.bind(resource, object);
+        injector.bind(resource, object);
         container.subscribeDependByAnnotation(resource, annotation);
     }
 }

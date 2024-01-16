@@ -19,7 +19,7 @@ public class AppBootstrap {
     @Getter
     private final BootstrapHookContainer hooksContainer = new BootstrapHookContainer();
     @Getter
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     private void processBootstrapHooks(@NotNull BootstrapHookPriority priority) {
         Collection<ApplicationBootstrapHook> hooksByPriority = hooksContainer.findOrderedHooks(priority);
@@ -42,13 +42,13 @@ public class AppBootstrap {
     private void initDependencyInjection() {
         log.info("Running DependencyInjection initialization processes");
 
-        dependencyInjection = new DependencyInjection();
+        injector = new DependencyInjection();
 
-        dependencyInjection.searchByProject();
-        dependencyInjection.injectFields(hooksContainer);
+        injector.searchByProject();
+        injector.injectFields(hooksContainer);
 
-        dependencyInjection.bind(new Properties());
-        dependencyInjection.bind(this);
+        injector.bind(new Properties());
+        injector.bind(this);
     }
 
     public void start(String[] args) {

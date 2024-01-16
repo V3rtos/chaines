@@ -34,7 +34,7 @@ public final class FriendsServiceEndpoint extends AbstractEndpointDefinition imp
     private ConvenoRouter convenoRouter;
 
     @Inject
-    private EventService eventManager;
+    private EventService eventService;
 
     @Inject
     private PlayersServiceModel playersModel;
@@ -53,10 +53,10 @@ public final class FriendsServiceEndpoint extends AbstractEndpointDefinition imp
         repository = convenoRouter.getRepository(FriendsRepository.class);
         repository.executeTableValid();
 
-        eventManager.subscribe(EventSubscribeBuilder.newBuilder(FriendJoinEvent.class)
+        eventService.subscribe(EventSubscribeBuilder.newBuilder(FriendJoinEvent.class)
                 .follow(friendJoinEventConsumer)
                 .build());
-        eventManager.subscribe(EventSubscribeBuilder.newBuilder(FriendLeaveEvent.class)
+        eventService.subscribe(EventSubscribeBuilder.newBuilder(FriendLeaveEvent.class)
                 .follow(friendLeaveEventConsumer)
                 .build());
     }

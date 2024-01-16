@@ -31,7 +31,7 @@ public class EndpointRunner {
     private RemoteServiceRegistry remoteServiceRegistry;
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     public void start(Endpoint endpoint) {
         String name = endpoint.getServiceInfo().getName();

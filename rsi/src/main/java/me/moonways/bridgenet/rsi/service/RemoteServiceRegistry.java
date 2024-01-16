@@ -34,7 +34,7 @@ public final class RemoteServiceRegistry {
     private final Map<ServiceInfo, ServiceModulesContainer> modulesContainerMap = Collections.synchronizedMap(new HashMap<>());
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Inject
     private XmlJaxbParser jaxbParser;
@@ -43,7 +43,7 @@ public final class RemoteServiceRegistry {
 
     @PostConstruct
     void init() {
-        dependencyInjection.injectFields(endpointController);
+        injector.injectFields(endpointController);
     }
 
     public void initializeXmlConfiguration() {
@@ -145,7 +145,7 @@ public final class RemoteServiceRegistry {
     }
 
     private void registerService(ServiceInfo serviceInfo, RemoteService remoteService) {
-        dependencyInjection.injectFields(remoteService);
+        injector.injectFields(remoteService);
 
         log.info("Service {} was registered", serviceInfo.getName());
         servicesImplements.put(serviceInfo, remoteService);
@@ -184,7 +184,7 @@ public final class RemoteServiceRegistry {
         Function<ServiceInfo, RemoteModule<?>> factoryFunc = (serviceInfo) -> {
             try {
                 RemoteModule<?> module = checkedModuleClass.newInstance();
-                dependencyInjection.injectFields(module);
+                injector.injectFields(module);
 
                 Method bindMethod = Arrays.stream(checkedModuleClass.getMethods())
                         .filter(method -> method.getName().equals("bind"))

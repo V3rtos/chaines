@@ -7,8 +7,8 @@ import lombok.ToString;
 import me.moonways.bridgenet.rsi.service.ServiceException;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import me.moonways.bridgenet.rsi.xml.XMLServiceModuleDescriptor;
-import me.moonways.bridgenet.rsi.xml.XmlServiceModulePropertyDescriptor;
 import me.moonways.bridgenet.rsi.xml.XMLServicesConfigDescriptor;
+import me.moonways.bridgenet.rsi.xml.XMLServiceModulePropertyDescriptor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -42,9 +42,9 @@ public abstract class AbstractRemoteModule<Configuration extends ModuleConfigura
                 .orElse(null);
 
         T config = createEmptyInstance(cls);
-        List<XmlServiceModulePropertyDescriptor> properties = xmlModule.getProperties();
+        List<XMLServiceModulePropertyDescriptor> properties = xmlModule.getProperties();
 
-        for (XmlServiceModulePropertyDescriptor property : properties) {
+        for (XMLServiceModulePropertyDescriptor property : properties) {
             Class<? extends ModuleConfiguration> configClass = config.getClass();
 
             try {

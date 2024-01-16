@@ -32,25 +32,23 @@ public final class CommandExecutor {
     private final InternalCommandFactory factory = new InternalCommandFactory();
 
     @Inject
-    private CommandRegistry commandRegistry;
+    private CommandRegistry registry;
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
     @Inject
     private AnnotationInterceptor interceptor;
 
     @PostConstruct
     private void init() {
-        dependencyInjection.searchByProject(Command.class);
-        dependencyInjection.getContainer()
-                .getStoredInstances(Command.class)
-                .forEach(commandRegistry::registerCommand);
+        injector.peekAnnotatedMembers(Command.class)
+                .forEachOrdered(registry::registerCommand);
     }
 
     public void execute(@NotNull EntityCommandSender sender, @NotNull String label) throws CommandExecutionException {
         String name = factory.findNameByLabel(label);
         String[] arguments = factory.copyArgumentsOfRange(factory.findArgumentsByLabel(label));
 
-        WrappedCommand wrapper = commandRegistry.getCommandWrapper(name);
+        WrappedCommand wrapper = registry.getCommandWrapper(name);
 
         if (wrapper == null) {
             throw new CommandExecutionException("Label cannot be contains command was exists");

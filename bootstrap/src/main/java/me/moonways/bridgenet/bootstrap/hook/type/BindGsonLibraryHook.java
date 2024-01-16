@@ -10,10 +10,10 @@ import org.jetbrains.annotations.NotNull;
 public class BindGsonLibraryHook extends ApplicationBootstrapHook {
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Override
     protected void process(@NotNull AppBootstrap bootstrap) {
-        dependencyInjection.bind(new Gson());
+        injector.bind(new Gson());
     }
 }

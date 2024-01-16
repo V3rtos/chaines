@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public final class DependencyScanner {
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Inject
     private AnnotationInterceptor annotationInterceptor;
@@ -27,7 +27,7 @@ public final class DependencyScanner {
     private final DependencyScannerContainer container = new DependencyScannerContainer();
 
     public void initContainer() {
-        dependencyInjection.injectFields(container);
+        injector.injectFields(container);
         container.initMaps();
     }
 
@@ -75,7 +75,7 @@ public final class DependencyScanner {
         List<Class<?>> classesByAnnotationList = findOrdered(scannerController, filter);
 
         for (Class<?> componentClass : classesByAnnotationList) {
-            scannerController.handleResource(dependencyInjection, componentClass, annotationType);
+            scannerController.handleResource(injector, componentClass, annotationType);
         }
     }
 
@@ -125,8 +125,6 @@ public final class DependencyScanner {
             method.invoke(instance);
         }
         catch (Exception exception) {
-            System.out.println(method);
-            System.out.println(instance);
             throw new InjectionException(exception);
         }
     }
