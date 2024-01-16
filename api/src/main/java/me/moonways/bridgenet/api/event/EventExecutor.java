@@ -52,11 +52,7 @@ public final class EventExecutor {
     private boolean canCancellations(Event event) {
         boolean result = (event instanceof Cancellable);
         if (result) {
-            try {
-                ((Cancellable) event).makeNotCancelled();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
+            ((Cancellable) event).makeNotCancelled();
         }
 
         return result;

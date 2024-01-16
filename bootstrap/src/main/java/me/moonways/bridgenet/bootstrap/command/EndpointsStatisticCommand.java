@@ -14,20 +14,13 @@ import java.util.Map;
 
 @Command("endpoints")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
-public class EndpointsStatisticsCommand {
+public class EndpointsStatisticCommand {
 
     @Inject
-    private RemoteServiceRegistry rsiRegistry;
+    private RemoteServiceRegistry registry;
 
     @MentorExecutor
     public void defaultCommand(CommandSession session) {
-        session.getSender().sendMessage("§eDefault sub-commands list:");
-        session.printDefaultMessage("§7* §f{1} - §e/endpoints {0}");
-    }
-
-    @ProducerExecutor("stats")
-    @ProducerDescription("Print an information block of actuality RMI protocol state")
-    public void statsCommand(CommandSession session) {
         final EntityCommandSender entityCommandSender = session.getSender();
 
         printTotalServices(entityCommandSender);
@@ -35,7 +28,7 @@ public class EndpointsStatisticsCommand {
     }
 
     private void printTotalServices(EntityCommandSender sender) {
-        final Map<String, ServiceInfo> servicesInfos = rsiRegistry.getServicesInfos();
+        final Map<String, ServiceInfo> servicesInfos = registry.getServicesInfos();
 
         sender.sendMessage("Total services:");
         servicesInfos.forEach((name, serviceInfo) -> {
@@ -46,7 +39,7 @@ public class EndpointsStatisticsCommand {
     }
 
     private void printTotalEndpoints(EntityCommandSender sender) {
-        final List<Endpoint> endpointsList = rsiRegistry.getEndpointController().getEndpoints();
+        final List<Endpoint> endpointsList = registry.getEndpointController().getEndpoints();
 
         sender.sendMessage("Total endpoints:");
         endpointsList.forEach((endpoint) -> {

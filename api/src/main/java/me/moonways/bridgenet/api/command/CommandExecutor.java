@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public final class CommandExecutor {
 
-    private static final String MENTOR_CHILD_NOT_FOUND_MESSAGE = "Couldn't find @Mentor in command {}";
+    private static final String MENTOR_CHILD_NOT_FOUND_MESSAGE = "Couldn't find @MentorExecutor in command '/{}'";
 
     private final InternalCommandFactory factory = new InternalCommandFactory();
 

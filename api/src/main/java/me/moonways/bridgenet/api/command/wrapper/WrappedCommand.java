@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @Getter
@@ -28,8 +29,9 @@ public final class WrappedCommand {
 
     @SuppressWarnings("unchecked")
     public <T extends CommandChild> Stream<T> find(@NotNull Class<? extends Annotation> annotationClass) {
-        return childrenList
-                .stream()
+        return childrenList.stream()
+                .filter(Objects::nonNull)
+                .filter(commandChild -> commandChild.getMethod() != null)
                 .map(commandChild -> (T) commandChild)
                 .filter(commandChild -> commandChild.getMethod().isAnnotationPresent(annotationClass));
     }
