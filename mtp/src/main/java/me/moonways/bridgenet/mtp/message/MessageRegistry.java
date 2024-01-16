@@ -6,6 +6,7 @@ import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.ProtocolDirection;
 import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
+import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 import me.moonways.bridgenet.mtp.message.inject.ServerMessage;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +21,7 @@ public class MessageRegistry {
     private final Set<MessageWrapper> messageWrapperSet = Collections.synchronizedSet(new HashSet<>());
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     private MessageWrapper toWrapper(ProtocolDirection direction, Class<?> messageClass) {
         int messageID = messageWrapperSet.size();
@@ -33,20 +34,8 @@ public class MessageRegistry {
     }
 
     public void bindMessages() {
-        Class<ClientMessage> clientAnnotation = ClientMessage.class;
-        Class<ServerMessage> serverAnnotation = ServerMessage.class;
-
-        dependencyInjection.searchByProject(clientAnnotation);
-        dependencyInjection.searchByProject(serverAnnotation);
-
-        // merge messages instances.
-        DependencyContainer dependencyContainer = dependencyInjection.getContainer();
-
-        for (Object message : dependencyContainer.getStoredInstances(clientAnnotation))
-            register(message.getClass());
-
-        for (Object message : dependencyContainer.getStoredInstances(serverAnnotation))
-            register(message.getClass());
+        injector.peekAnnotatedMembers(ClientMessage.class).forEach(message -> register(message.getClass()));
+        injector.peekAnnotatedMembers(ServerMessage.class).forEach(message -> register(message.getClass()));
     }
 
     private Class<? extends Annotation> findMessageAnnotation(Class<?> messageClass) {

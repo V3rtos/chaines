@@ -22,7 +22,7 @@ public final class BootstrapHookContainer {
     private final Map<Class<?>, XMLHookDescriptor> xmlByHooksTypesMap = new HashMap<>();
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Inject
     private XmlJaxbParser jaxbParser;
@@ -106,7 +106,7 @@ public final class BootstrapHookContainer {
 
     public ApplicationBootstrapHook findHookInstance(Class<? extends ApplicationBootstrapHook> cls) {
         ApplicationBootstrapHook bootstrapHook = instancesByHooksTypesMap.get(cls);
-        dependencyInjection.injectFields(bootstrapHook);
+        injector.injectFields(bootstrapHook);
         return bootstrapHook;
     }
 

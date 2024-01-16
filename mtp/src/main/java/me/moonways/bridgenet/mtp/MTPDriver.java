@@ -26,15 +26,15 @@ public class MTPDriver {
     private final MessageHandlerList handlerList = new MessageHandlerList();
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Inject
     private AnnotationInterceptor interceptor;
 
     @PostConstruct
     void init() {
-        dependencyInjection.injectFields(messages);
-        dependencyInjection.injectFields(handlerList);
+        injector.injectFields(messages);
+        injector.injectFields(handlerList);
     }
 
     @Async

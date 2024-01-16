@@ -29,7 +29,7 @@ public final class DependencyScannerContainer {
     private final Map<Class<?>, ScannerController> scannerControllerMap = new HashMap<>();
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     void initMaps() {
         XmlJaxbParser parser = new XmlJaxbParser();
@@ -65,7 +65,7 @@ public final class DependencyScannerContainer {
 
                 ScannerController scannerController = subclass.getConstructor().newInstance();
 
-                dependencyInjection.injectFields(scannerController);
+                injector.injectFields(scannerController);
                 scannerControllerMap.put(annotationClass, scannerController);
             }
             catch (InvocationTargetException | InstantiationException | IllegalAccessException |
@@ -91,7 +91,7 @@ public final class DependencyScannerContainer {
 
                 ObjectFactory objectFactory = subclass.getConstructor().newInstance();
 
-                dependencyInjection.injectFields(objectFactory);
+                injector.injectFields(objectFactory);
                 objectFactoryMap.put(annotationClass, objectFactory);
             }
             catch (InvocationTargetException | InstantiationException | IllegalAccessException |

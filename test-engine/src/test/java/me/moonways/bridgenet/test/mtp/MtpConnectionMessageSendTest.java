@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 public class MtpConnectionMessageSendTest {
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Inject
     private MTPDriver driver;
@@ -45,7 +45,7 @@ public class MtpConnectionMessageSendTest {
                 .build();
 
         channel = client.connectSync();
-        dependencyInjection.injectFields(channel);
+        injector.injectFields(channel);
     }
 
     @Test

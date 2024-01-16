@@ -11,12 +11,12 @@ import org.jetbrains.annotations.NotNull;
 public class ApacheConsoleStartHook extends ApplicationBootstrapHook {
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Override
     protected void process(@NotNull AppBootstrap bootstrap) {
         BridgenetConsole bridgenetConsole = new BridgenetConsole();
-        dependencyInjection.bind(bridgenetConsole);
+        injector.bind(bridgenetConsole);
 
         bridgenetConsole.start();
     }

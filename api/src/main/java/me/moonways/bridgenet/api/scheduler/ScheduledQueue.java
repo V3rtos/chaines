@@ -6,7 +6,7 @@ import java.util.*;
 
 public class ScheduledQueue {
 
-    private final List<ScheduledTask> scheduledTasks = Collections.synchronizedList(new ArrayList<>());
+    private final List<ScheduledTask> scheduledTasks = Collections.synchronizedList(new LinkedList<>());
     private long lastIndexedId;
 
     private void validateNull(ScheduledTask scheduledTask) {

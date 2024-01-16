@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class StartMtpServerHook extends ApplicationBootstrapHook {
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Inject
     private MTPDriver driver;
@@ -27,8 +27,8 @@ public class StartMtpServerHook extends ApplicationBootstrapHook {
 
     @Override
     protected void process(@NotNull AppBootstrap bootstrap) {
-        MTPConnectionFactory connectionFactory = MTPConnectionFactory.createConnectionFactory(dependencyInjection);
-        dependencyInjection.bind(connectionFactory);
+        MTPConnectionFactory connectionFactory = MTPConnectionFactory.createConnectionFactory(injector);
+        injector.bind(connectionFactory);
 
         driver.bindMessages();
         driver.bindHandlers();
@@ -53,7 +53,7 @@ public class StartMtpServerHook extends ApplicationBootstrapHook {
                 .build();
 
         MTPChannel channel = server.bindSync();
-        dependencyInjection.bind(channel);
+        injector.bind(channel);
         // TODO - 17.07.2023 - Перенести в bus endpoint
     }
 }

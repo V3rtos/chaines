@@ -34,7 +34,7 @@ public final class PlayersServiceEndpoint extends AbstractEndpointDefinition imp
     private final PlayerOfflineManager playerOfflineManager = new PlayerOfflineManagerStub();
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     public PlayersServiceEndpoint() throws RemoteException {
         super();
@@ -54,10 +54,10 @@ public final class PlayersServiceEndpoint extends AbstractEndpointDefinition imp
 
     @PostConstruct
     void postInject() {
-        dependencyInjection.imitateFakeBind(playerConnection);
-        dependencyInjection.imitateFakeBind(playerLeveling);
-        dependencyInjection.imitateFakeBind(playerPermissions);
-        dependencyInjection.imitateFakeBind(playerSocials);
-        dependencyInjection.imitateFakeBind(playerOfflineManager);
+        injector.imitateFakeBind(playerConnection);
+        injector.imitateFakeBind(playerLeveling);
+        injector.imitateFakeBind(playerPermissions);
+        injector.imitateFakeBind(playerSocials);
+        injector.imitateFakeBind(playerOfflineManager);
     }
 }

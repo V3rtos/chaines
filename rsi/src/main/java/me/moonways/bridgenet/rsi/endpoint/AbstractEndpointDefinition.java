@@ -14,7 +14,7 @@ public abstract class AbstractEndpointDefinition extends UnicastRemoteObject {
 
     @Inject
     @Getter(AccessLevel.PROTECTED)
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     public AbstractEndpointDefinition() throws RemoteException {
         super();
