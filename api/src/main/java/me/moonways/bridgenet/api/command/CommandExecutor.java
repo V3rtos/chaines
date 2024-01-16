@@ -5,8 +5,8 @@ import me.moonways.bridgenet.api.command.annotation.Command;
 import me.moonways.bridgenet.api.command.annotation.MatcherExecutor;
 import me.moonways.bridgenet.api.command.annotation.MentorExecutor;
 import me.moonways.bridgenet.api.command.annotation.ProducerExecutor;
-import me.moonways.bridgenet.api.command.children.definition.MentorChild;
-import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
+import me.moonways.bridgenet.api.command.children.definition.CommandMentorChild;
+import me.moonways.bridgenet.api.command.children.definition.CommandProducerChild;
 import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
 import me.moonways.bridgenet.api.command.option.CommandParameterMatcher;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
@@ -65,7 +65,7 @@ public final class CommandExecutor {
         EntityCommandSender sender = session.getSender();
         List<CommandParameterMatcher> optionList = wrapper
                 .getOptionsList().stream().filter(option -> option.matches(session))
-                .peek(commandOptionMatcher -> commandOptionMatcher.apply(session))
+                .peek(commandOptionMatcher -> commandOptionMatcher.process(session))
                 .collect(Collectors.toList());
 
         if (optionList.isEmpty()) {
@@ -83,7 +83,7 @@ public final class CommandExecutor {
     private void fireProducer(WrappedCommand wrapper, CommandSession session, String[] args) {
         final EntityCommandSender sender = session.getSender();
 
-        ProducerChild producerChild = wrapper.<ProducerChild>find(ProducerExecutor.class)
+        CommandProducerChild producerChild = wrapper.<CommandProducerChild>find(ProducerExecutor.class)
                 .filter(producer -> producer.getName().equalsIgnoreCase(args[0]))
                 .findFirst()
                 .orElse(null);
@@ -104,7 +104,7 @@ public final class CommandExecutor {
     }
 
     private void fireMentor(WrappedCommand wrapper, CommandSession session) {
-        MentorChild mentorChild = wrapper.<MentorChild>find(MentorExecutor.class)
+        CommandMentorChild mentorChild = wrapper.<CommandMentorChild>find(MentorExecutor.class)
                 .findFirst()
                 .orElse(null);
 

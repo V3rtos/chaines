@@ -1,13 +1,23 @@
 package me.moonways.bridgenet.api.event.cancellation;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+/**
+ * События, которые наследуют данный интерфейс,
+ * могут отменять обрабатываемое событие в корне.
+ */
+public interface Cancellable {
 
-public interface Cancellable extends Remote {
+    /**
+     * Отменено ли событие на данный момент
+     */
+    boolean isCancelled();
 
-    boolean isCancelled() throws RemoteException;
+    /**
+     * Перевести статус события в отмененный.
+     */
+    void makeCancelled();
 
-    void makeCancelled() throws RemoteException;
-
-    void makeNotCancelled() throws RemoteException;
+    /**
+     * Перевести статус события в не отмененный.
+     */
+    void makeNotCancelled();
 }

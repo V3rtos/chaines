@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 @Getter
 @RequiredArgsConstructor
-public final class MentorChild implements CommandChild { //недодрочилдрен
+public final class CommandMentorChild implements CommandChild { //недодрочилдрен
 
     private final Object parent;
     private final Method method;

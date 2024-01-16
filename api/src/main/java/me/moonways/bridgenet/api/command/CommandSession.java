@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
-import me.moonways.bridgenet.api.command.wrapper.WrappedArguments;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +18,7 @@ public final class CommandSession {
 
     @Getter
     private final CommandDescriptor descriptor;
-    private final WrappedArguments arguments;
+    private final CommandArguments arguments;
 
     @Getter
     private final EntityCommandSender sender;
@@ -32,7 +31,7 @@ public final class CommandSession {
         helpMessageView.print(sender, messageFormat);
     }
 
-    public WrappedArguments arguments() {
+    public CommandArguments arguments() {
         return arguments;
     }
 

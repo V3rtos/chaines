@@ -1,8 +1,7 @@
-package me.moonways.bridgenet.api.command.wrapper;
+package me.moonways.bridgenet.api.command;
 
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.command.exception.CommandArgumentsException;
-import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
 import me.moonways.bridgenet.api.util.ExceptionallyFunction;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-public final class WrappedArguments implements Iterable<String> {
+public final class CommandArguments implements Iterable<String> {
 
     private final String[] handle;
 

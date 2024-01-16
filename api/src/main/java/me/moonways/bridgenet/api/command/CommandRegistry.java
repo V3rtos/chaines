@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.command.annotation.CommandParameter;
 import me.moonways.bridgenet.api.command.annotation.Permission;
 import me.moonways.bridgenet.api.command.children.CommandChild;
 import me.moonways.bridgenet.api.command.children.CommandChildrenScanner;
-import me.moonways.bridgenet.api.command.children.definition.ProducerChild;
+import me.moonways.bridgenet.api.command.children.definition.CommandProducerChild;
 import me.moonways.bridgenet.api.command.option.CommandParameterMatcher;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
 import me.moonways.bridgenet.api.inject.Autobind;
@@ -91,8 +91,8 @@ public final class CommandRegistry {
     private CommandSession.HelpMessageView createHelpMessageView(List<CommandChild> childrenList) {
         final CommandSession.HelpMessageView helpMessageView = new CommandSession.HelpMessageView();
         childrenList.stream()
-                .filter(child -> child instanceof ProducerChild)
-                .map(child -> (ProducerChild) child)
+                .filter(child -> child instanceof CommandProducerChild)
+                .map(child -> (CommandProducerChild) child)
                 .forEachOrdered(child -> helpMessageView.addDescription(child.getName(), child.getUsage(), child.getDescription()));
 
         return helpMessageView;

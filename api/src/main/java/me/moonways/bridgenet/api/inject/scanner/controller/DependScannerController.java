@@ -58,7 +58,7 @@ public class DependScannerController implements ScannerController {
     }
 
     @Override
-    public Set<Class<?>> findAllComponents(@NotNull ScannerFilter filter) {
+    public Set<Class<?>> requestResources(@NotNull ScannerFilter filter) {
         Configuration configuration = createConfiguration(filter);
 
         Reflections reflections = new Reflections(configuration);
@@ -75,9 +75,9 @@ public class DependScannerController implements ScannerController {
     }
 
     @Override
-    public void whenFound(@NotNull DependencyInjection dependencyInjection,
-                          @NotNull Class<?> resource,
-                          @NotNull Class<? extends Annotation> annotation) {
+    public void handleResource(@NotNull DependencyInjection dependencyInjection,
+                               @NotNull Class<?> resource,
+                               @NotNull Class<? extends Annotation> annotation) {
 
         DependencyContainer container = dependencyInjection.getContainer();
 

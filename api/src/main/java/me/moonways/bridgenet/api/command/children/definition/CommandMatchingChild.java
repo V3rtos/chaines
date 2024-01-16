@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 @Getter
 @RequiredArgsConstructor
-public final class PredicateChild implements CommandChild {
+public final class CommandMatchingChild implements CommandChild {
 
     private final Object parent;
     private final Method method;

@@ -1,8 +1,13 @@
 package me.moonways.bridgenet.api.inject.decorator;
 
-import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
-
+/**
+ * Обработчик декорированных методов.
+ */
 public interface DecoratedMethodHandler {
 
+    /**
+     * Обработать метод, помеченный декораторами.
+     * @param invocation - процесс вызова декоратора.
+     */
     Object handleProxyInvocation(DecoratorInvocation invocation);
 }

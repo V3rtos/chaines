@@ -38,7 +38,7 @@ public final class DependencyScanner {
             return Collections.emptyList();
         }
 
-        LinkedList<Class<?>> totalComponentsList = new LinkedList<>(scannerController.findAllComponents(scannerFilter));
+        LinkedList<Class<?>> totalComponentsList = new LinkedList<>(scannerController.requestResources(scannerFilter));
         totalComponentsList.sort(Comparator.comparing(component -> component.getDeclaredFields().length));
 
         setInjectionQueue(totalComponentsList);
@@ -75,7 +75,7 @@ public final class DependencyScanner {
         List<Class<?>> classesByAnnotationList = findOrdered(scannerController, filter);
 
         for (Class<?> componentClass : classesByAnnotationList) {
-            scannerController.whenFound(dependencyInjection, componentClass, annotationType);
+            scannerController.handleResource(dependencyInjection, componentClass, annotationType);
         }
     }
 

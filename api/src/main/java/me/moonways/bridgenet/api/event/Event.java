@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.api.event;
 
-import java.rmi.Remote;
-
-public interface Event extends Remote {
+/**
+ * Реализации данного интерфейса являются
+ * вызываемым событием системы, и имеют параметры,
+ * относящиеся к определенному событию.
+ */
+public interface Event {
 }

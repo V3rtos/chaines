@@ -7,11 +7,28 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
+/**
+ * Контроллер, отвечающий за сканирование проекта,
+ * поиск и обработку найденных ресурсов.
+ */
 public interface ScannerController {
 
-    Set<Class<?>> findAllComponents(@NotNull ScannerFilter filter);
+    /**
+     * Запросить список доступных ресурсов в системе,
+     * подходящих по параметрам фильтра.
+     *
+     * @param filter - фильтр запроса.
+     */
+    Set<Class<?>> requestResources(@NotNull ScannerFilter filter);
 
-    void whenFound(@NotNull DependencyInjection dependencyInjection,
-                   @NotNull Class<?> resource,
-                   @NotNull Class<? extends Annotation> annotation);
+    /**
+     * Обработать найденный ресурс данным контроллером.
+     *
+     * @param dependencyInjection - реализация DependencyInjection.
+     * @param resource - найденный ресурс
+     * @param annotation - аннотация, по которому нашли данный ресурс.
+     */
+    void handleResource(@NotNull DependencyInjection dependencyInjection,
+                        @NotNull Class<?> resource,
+                        @NotNull Class<? extends Annotation> annotation);
 }

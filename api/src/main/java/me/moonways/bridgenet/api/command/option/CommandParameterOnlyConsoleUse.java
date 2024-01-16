@@ -12,7 +12,7 @@ public class CommandParameterOnlyConsoleUse implements CommandParameterMatcher {
     }
 
     @Override
-    public void apply(@NotNull CommandSession session) {
+    public void process(@NotNull CommandSession session) {
         session.getSender().sendMessage("§4Only console sender!");
     }
 }
