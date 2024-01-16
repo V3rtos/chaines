@@ -2,9 +2,6 @@ package me.moonways.bridgenet.bootstrap;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.event.EventManager;
-import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
-import me.moonways.bridgenet.api.scheduler.Scheduler;
 import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.bootstrap.hook.ApplicationBootstrapHook;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookContainer;
@@ -15,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Properties;
-import java.util.stream.Stream;
 
 @Log4j2
 public class AppBootstrap {
@@ -23,7 +19,7 @@ public class AppBootstrap {
     @Getter
     private final BootstrapHookContainer hooksContainer = new BootstrapHookContainer();
     @Getter
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     private void processBootstrapHooks(@NotNull BootstrapHookPriority priority) {
         Collection<ApplicationBootstrapHook> hooksByPriority = hooksContainer.findOrderedHooks(priority);
@@ -46,13 +42,13 @@ public class AppBootstrap {
     private void initDependencyInjection() {
         log.info("Running DependencyInjection initialization processes");
 
-        dependencyInjection = new DependencyInjection();
+        injector = new DependencyInjection();
 
-        dependencyInjection.searchByProject();
-        dependencyInjection.injectFields(hooksContainer);
+        injector.searchByProject();
+        injector.injectFields(hooksContainer);
 
-        dependencyInjection.bind(new Properties());
-        dependencyInjection.bind(this);
+        injector.bind(new Properties());
+        injector.bind(this);
     }
 
     public void start(String[] args) {

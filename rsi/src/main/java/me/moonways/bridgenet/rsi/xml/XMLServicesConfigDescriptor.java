@@ -13,17 +13,17 @@ import java.util.List;
 @Getter
 @ToString
 @XmlRootElement(name = "configuration")
-public class XmlConfiguration implements XmlRootObject {
+public class XMLServicesConfigDescriptor implements XmlRootObject {
 
     @Setter(onMethod_ = {
             @XmlElementWrapper(name = "modules"),
             @XmlElement(name = "module")
     })
-    private List<XmlModule> modulesList;
+    private List<XMLServiceModuleDescriptor> modulesList;
 
     @Setter(onMethod_ = {
             @XmlElementWrapper(name = "services"),
             @XmlElement(name = "service")
     })
-    private List<XmlService> servicesList;
+    private List<XmlServiceInfoDescriptor> servicesList;
 }

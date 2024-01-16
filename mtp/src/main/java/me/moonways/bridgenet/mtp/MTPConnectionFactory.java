@@ -19,9 +19,9 @@ import java.net.SocketAddress;
 @RequiredArgsConstructor
 public class MTPConnectionFactory {
 
-    public static MTPConnectionFactory createConnectionFactory(DependencyInjection dependencyInjection) {
+    public static MTPConnectionFactory createConnectionFactory(DependencyInjection injector) {
         MTPConfiguration configuration = new MTPConfiguration();
-        dependencyInjection.injectFields(configuration);
+        injector.injectFields(configuration);
 
         configuration.reload();
 

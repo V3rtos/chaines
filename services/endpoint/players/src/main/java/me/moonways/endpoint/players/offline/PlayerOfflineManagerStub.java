@@ -31,9 +31,9 @@ public class PlayerOfflineManagerStub extends AbstractEndpointDefinition impleme
 
     @PostConstruct
     public void injectRepositories() {
-        DependencyInjection dependencyInjection = getDependencyInjection();
+        DependencyInjection injector = getInjector();
 
-        ConvenoRouter convenoRouter = (ConvenoRouter) dependencyInjection.getContainer().findInstance(ConvenoRouter.class);
+        ConvenoRouter convenoRouter = (ConvenoRouter) injector.getContainer().findInstance(ConvenoRouter.class);
 
         offlinePlayerRepository = convenoRouter.getRepository(OfflinePlayerRepository.class);
         offlinePlayerRepository.executeTableValid();

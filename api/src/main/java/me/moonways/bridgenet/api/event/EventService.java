@@ -11,22 +11,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ExecutorService;
 
 @Autobind
-public final class EventManager {
+public final class EventService {
 
     private final ExecutorService threadsExecutorService = Threads.newCachedThreadPool();
 
     private final EventRegistry eventRegistry = new EventRegistry();
-
     private final EventExecutor eventExecutor = new EventExecutor(threadsExecutorService, eventRegistry);
 
     private final EventSubscriptionApplier eventSubscriptionApplier = new EventSubscriptionApplier(this);
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @NotNull
     public <E extends Event> EventFuture<E> fireEvent(@NotNull E event) {
-        dependencyInjection.injectFields(event);
+        injector.injectFields(event);
 
         EventFuture<E> eventFuture = eventExecutor.fireEvent(event);
         eventSubscriptionApplier.followSubscription(eventFuture);
@@ -35,7 +34,7 @@ public final class EventManager {
     }
 
     public void registerHandler(@NotNull Object handler) {
-        dependencyInjection.injectFields(handler);
+        injector.injectFields(handler);
         eventRegistry.register(handler);
     }
 

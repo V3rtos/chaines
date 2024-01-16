@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.xml;
+package me.moonways.bridgenet.api.inject.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @ToString
 @XmlRootElement(name = "containers")
-public class XmlContainers implements XmlRootObject {
+public class XMLContainersDescriptor implements XmlRootObject {
 
     @Setter(onMethod_ = @XmlElement)
     private String searchPackage;
@@ -22,11 +22,11 @@ public class XmlContainers implements XmlRootObject {
             @XmlElementWrapper(name = "scanners"),
             @XmlElement(name = "scanner")
     })
-    private List<XmlScanController> scannersList;
+    private List<XMLScannerDescriptor> scannersList;
 
     @Setter(onMethod_ = {
             @XmlElementWrapper(name = "factories"),
             @XmlElement(name = "factory")
     })
-    private List<XmlObjectFactory> factoriesList;
+    private List<XMLObjectFactoryDescriptor> factoriesList;
 }

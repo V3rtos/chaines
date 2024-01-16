@@ -3,13 +3,13 @@
     <methodHandlers>
         <methodHandler>
             <name>Async</name>
-            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.Async</annotation>
-            <path>me.moonways.bridgenet.api.inject.decorator.handler.AsyncMethodHandler</path>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.persistance.Async</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.persistance.handler.AsyncMethodHandler</path>
         </methodHandler>
         <methodHandler>
             <name>LateExecution</name>
-            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.LateExecution</annotation>
-            <path>me.moonways.bridgenet.api.inject.decorator.handler.LateExecutionMethodHandler</path>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.persistance.LateExecution</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.persistance.handler.LateExecutionMethodHandler</path>
             <conflicts>
                 <input>Async</input>
                 <input>Singleton</input>
@@ -17,8 +17,8 @@
         </methodHandler>
         <methodHandler>
             <name>KeepTime</name>
-            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.KeepTime</annotation>
-            <path>me.moonways.bridgenet.api.inject.decorator.handler.KeepTimeMethodHandler</path>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.persistance.KeepTime</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.persistance.handler.KeepTimeMethodHandler</path>
             <inherits>
                 <input>Async</input>
                 <input>LateExecution</input>
@@ -26,8 +26,8 @@
         </methodHandler>
         <methodHandler>
             <name>Singleton</name>
-            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.Singleton</annotation>
-            <path>me.moonways.bridgenet.api.inject.decorator.handler.SingletonMethodHandler</path>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.persistance.Singleton</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.persistance.handler.SingletonMethodHandler</path>
             <inherits>
                 <input>Async</input>
                 <input>LateExecution</input>
@@ -35,8 +35,8 @@
         </methodHandler>
         <methodHandler>
             <name>RequiredNotNull</name>
-            <annotation>me.moonways.bridgenet.api.inject.decorator.definition.RequiredNotNull</annotation>
-            <path>me.moonways.bridgenet.api.inject.decorator.handler.RequiredNotNullMethodHandler</path>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.persistance.RequiredNotNull</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.persistance.handler.RequiredNotNullMethodHandler</path>
             <inherits>
                 <input>Async</input>
                 <input>LateExecution</input>

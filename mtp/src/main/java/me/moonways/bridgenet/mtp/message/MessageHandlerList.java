@@ -6,6 +6,7 @@ import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.util.autorun.persistance.AutoRunner;
 import me.moonways.bridgenet.mtp.message.exception.MessageHandleException;
 import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 import me.moonways.bridgenet.mtp.message.inject.MessageTrigger;
@@ -25,12 +26,10 @@ public class MessageHandlerList {
     private Set<TriggerMethodWrapper> messageHandlers;
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     public void bindHandlers() {
-        dependencyInjection.searchByProject(MessageHandler.class);
-        messageHandlers = dependencyInjection.getContainer().getStoredInstances(MessageHandler.class)
-                .stream()
+        messageHandlers = injector.peekAnnotatedMembers(MessageHandler.class)
                 .flatMap(object -> Arrays.stream(object.getClass().getDeclaredMethods())
                         .map(method -> new TriggerMethodWrapper(object, object.getClass(), method)))
                 .filter(method -> method.hasAnnotation(MessageTrigger.class))

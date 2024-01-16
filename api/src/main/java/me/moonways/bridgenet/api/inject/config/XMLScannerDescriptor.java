@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.xml;
+package me.moonways.bridgenet.api.inject.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.*;
 @ToString
 @XmlRootElement(name = "scanner")
 @XmlType(propOrder = {"annotationClass", "targetClass"})
-public class XmlScanController {
+public class XMLScannerDescriptor {
 
     @Setter(onMethod_ = @XmlElement)
     private String annotationClass;

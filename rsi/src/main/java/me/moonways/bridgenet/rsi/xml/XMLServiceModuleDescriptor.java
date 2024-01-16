@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @ToString
 @XmlRootElement(name = "module")
-public class XmlModule {
+public class XMLServiceModuleDescriptor {
 
     @Setter(onMethod_ = @XmlAttribute)
     private String name;
@@ -24,5 +24,5 @@ public class XmlModule {
     private String configClass;
 
     @Setter(onMethod_ = @XmlElement(name = "property"))
-    private List<XmlModuleProperty> properties;
+    private List<XMLServiceModulePropertyDescriptor> properties;
 }

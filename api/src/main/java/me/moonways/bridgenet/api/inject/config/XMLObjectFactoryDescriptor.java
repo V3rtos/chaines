@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.xml;
+package me.moonways.bridgenet.api.inject.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlType;
 @ToString
 @XmlRootElement(name = "factory")
 @XmlType(propOrder = {"annotationClass", "targetClass"})
-public class XmlObjectFactory {
+public class XMLObjectFactoryDescriptor {
 
     @Setter(onMethod_ = @XmlElement)
     private String annotationClass;

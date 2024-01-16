@@ -10,6 +10,7 @@ import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
+import java.util.stream.Stream;
 
 @Log4j2
 public class DependencyInjection {
@@ -63,6 +64,16 @@ public class DependencyInjection {
     public void searchByProject(@NotNull Class<? extends Annotation> cls) {
         String searchGeneralPackage = scanner.getSearchGeneralPackage();
         scanner.resolve(searchGeneralPackage, cls);
+    }
+
+    public Stream<Object> peekAnnotatedMembers(Class<? extends Annotation> annotation) {
+        String searchGeneralPackage = scanner.getSearchGeneralPackage();
+        return peekAnnotatedMembers(searchGeneralPackage, annotation);
+    }
+
+    public Stream<Object> peekAnnotatedMembers(String packageName, Class<? extends Annotation> annotation) {
+        search(packageName, annotation);
+        return container.getStoredInstances(annotation).stream();
     }
 
     public void injectFields(@NotNull Object instance) {

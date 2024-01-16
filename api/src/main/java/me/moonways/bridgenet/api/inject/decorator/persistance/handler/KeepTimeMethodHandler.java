@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.decorator.handler;
+package me.moonways.bridgenet.api.inject.decorator.persistance.handler;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;

@@ -24,11 +24,11 @@ public interface ScannerController {
     /**
      * Обработать найденный ресурс данным контроллером.
      *
-     * @param dependencyInjection - реализация DependencyInjection.
+     * @param injector - реализация DependencyInjection.
      * @param resource - найденный ресурс
      * @param annotation - аннотация, по которому нашли данный ресурс.
      */
-    void handleResource(@NotNull DependencyInjection dependencyInjection,
+    void handleResource(@NotNull DependencyInjection injector,
                         @NotNull Class<?> resource,
                         @NotNull Class<? extends Annotation> annotation);
 }

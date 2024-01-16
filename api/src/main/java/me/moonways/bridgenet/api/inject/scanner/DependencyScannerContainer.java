@@ -10,9 +10,9 @@ import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.InjectionErrorMessages;
 import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
-import me.moonways.bridgenet.api.inject.xml.XmlObjectFactory;
-import me.moonways.bridgenet.api.inject.xml.XmlContainers;
-import me.moonways.bridgenet.api.inject.xml.XmlScanController;
+import me.moonways.bridgenet.api.inject.config.XMLObjectFactoryDescriptor;
+import me.moonways.bridgenet.api.inject.config.XMLContainersDescriptor;
+import me.moonways.bridgenet.api.inject.config.XMLScannerDescriptor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -29,11 +29,11 @@ public final class DependencyScannerContainer {
     private final Map<Class<?>, ScannerController> scannerControllerMap = new HashMap<>();
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     void initMaps() {
         XmlJaxbParser parser = new XmlJaxbParser();
-        XmlContainers xmlContainers = parser.parseCopiedResource(getClass().getClassLoader(), "injectconfig.xml", XmlContainers.class);
+        XMLContainersDescriptor xmlContainers = parser.parseCopiedResource(getClass().getClassLoader(), "injectconfig.xml", XMLContainersDescriptor.class);
 
         storeScanners(xmlContainers);
         storeFactories(xmlContainers);
@@ -49,10 +49,10 @@ public final class DependencyScannerContainer {
         return scannerControllerMap.get(cls);
     }
 
-    private void storeScanners(XmlContainers xmlContainers) {
-        List<XmlScanController> scannersList = xmlContainers.getScannersList();
+    private void storeScanners(XMLContainersDescriptor xmlContainers) {
+        List<XMLScannerDescriptor> scannersList = xmlContainers.getScannersList();
 
-        for (XmlScanController xmlScanController : scannersList) {
+        for (XMLScannerDescriptor xmlScanController : scannersList) {
 
             String annotationClassName = xmlScanController.getAnnotationClass();
             String targetClassName = xmlScanController.getTargetClass();
@@ -65,7 +65,7 @@ public final class DependencyScannerContainer {
 
                 ScannerController scannerController = subclass.getConstructor().newInstance();
 
-                dependencyInjection.injectFields(scannerController);
+                injector.injectFields(scannerController);
                 scannerControllerMap.put(annotationClass, scannerController);
             }
             catch (InvocationTargetException | InstantiationException | IllegalAccessException |
@@ -75,10 +75,10 @@ public final class DependencyScannerContainer {
         }
     }
 
-    private void storeFactories(XmlContainers xmlContainers) {
-        List<XmlObjectFactory> factoriesList = xmlContainers.getFactoriesList();
+    private void storeFactories(XMLContainersDescriptor xmlContainers) {
+        List<XMLObjectFactoryDescriptor> factoriesList = xmlContainers.getFactoriesList();
 
-        for (XmlObjectFactory xmlObjectFactory : factoriesList) {
+        for (XMLObjectFactoryDescriptor xmlObjectFactory : factoriesList) {
 
             String annotationClassName = xmlObjectFactory.getAnnotationClass();
             String targetClassName = xmlObjectFactory.getTargetClass();
@@ -91,7 +91,7 @@ public final class DependencyScannerContainer {
 
                 ObjectFactory objectFactory = subclass.getConstructor().newInstance();
 
-                dependencyInjection.injectFields(objectFactory);
+                injector.injectFields(objectFactory);
                 objectFactoryMap.put(annotationClass, objectFactory);
             }
             catch (InvocationTargetException | InstantiationException | IllegalAccessException |

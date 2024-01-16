@@ -4,7 +4,7 @@ import lombok.SneakyThrows;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.decorator.Decorated;
-import me.moonways.bridgenet.api.inject.decorator.definition.*;
+import me.moonways.bridgenet.api.inject.decorator.persistance.*;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,12 +21,12 @@ public class DecoratedDependencyTest {
     private AnyObjectWithDecorators subj;
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Before
     public void setUp() {
-        dependencyInjection.bind(new AnyObjectWithDecorators());
-        subj = (AnyObjectWithDecorators) dependencyInjection.getContainer().findInstance(AnyObjectWithDecorators.class);
+        injector.bind(new AnyObjectWithDecorators());
+        subj = (AnyObjectWithDecorators) injector.getContainer().findInstance(AnyObjectWithDecorators.class);
     }
 
     @Test

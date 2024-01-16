@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConvenoCreateDatabaseConnectionHook extends ApplicationBootstrapHook {
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Override
     public void onBefore() {
@@ -21,6 +21,6 @@ public class ConvenoCreateDatabaseConnectionHook extends ApplicationBootstrapHoo
     @Override
     protected void process(@NotNull AppBootstrap bootstrap) {
         ConvenoRouter convenoRouter = ConvenoRouter.create();
-        dependencyInjection.bind(convenoRouter);
+        injector.bind(convenoRouter);
     }
 }

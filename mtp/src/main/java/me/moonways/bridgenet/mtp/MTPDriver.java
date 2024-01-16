@@ -3,9 +3,9 @@ package me.moonways.bridgenet.mtp;
 import lombok.Getter;
 import lombok.Synchronized;
 import me.moonways.bridgenet.api.inject.Autobind;
-import me.moonways.bridgenet.api.inject.decorator.definition.Async;
-import me.moonways.bridgenet.api.inject.decorator.definition.KeepTime;
-import me.moonways.bridgenet.api.inject.decorator.definition.RequiredNotNull;
+import me.moonways.bridgenet.api.inject.decorator.persistance.Async;
+import me.moonways.bridgenet.api.inject.decorator.persistance.KeepTime;
+import me.moonways.bridgenet.api.inject.decorator.persistance.RequiredNotNull;
 import me.moonways.bridgenet.api.inject.decorator.Decorated;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
@@ -26,15 +26,15 @@ public class MTPDriver {
     private final MessageHandlerList handlerList = new MessageHandlerList();
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     @Inject
     private AnnotationInterceptor interceptor;
 
     @PostConstruct
     void init() {
-        dependencyInjection.injectFields(messages);
-        dependencyInjection.injectFields(handlerList);
+        injector.injectFields(messages);
+        injector.injectFields(handlerList);
     }
 
     @Async

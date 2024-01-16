@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.event.Event;
 import me.moonways.bridgenet.api.event.EventFollower;
-import me.moonways.bridgenet.api.event.EventManager;
+import me.moonways.bridgenet.api.event.EventService;
 import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public final class EventSubscription<E extends Event> {
     @Getter
     private final EventFollower<E> follower;
 
-    public void followExpiration(@NotNull EventManager eventManager) {
+    public void followExpiration(@NotNull EventService eventManager) {
         if (expiration == null || expiration.isTimeoutExpired())
             return;
 

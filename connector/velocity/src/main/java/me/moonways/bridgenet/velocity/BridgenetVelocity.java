@@ -25,7 +25,7 @@ public class BridgenetVelocity extends BaseBridgenetConnector {
     @Inject
     private CloudnetWrapper cloudnetWrapper;
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
 
     @Getter
@@ -54,7 +54,7 @@ public class BridgenetVelocity extends BaseBridgenetConnector {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        enableBridgenetServicesSync(dependencyInjection, this);
+        enableBridgenetServicesSync(injector, this);
         sendHandshakeRequest();
     }
 

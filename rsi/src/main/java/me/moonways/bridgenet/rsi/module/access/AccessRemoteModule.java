@@ -27,7 +27,7 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
     private Class<?> endpointClass;
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     public AccessRemoteModule() {
         super(ModuleID.of(ModuleConst.REMOTE_ACCESS_ID, "accessModule"));
@@ -59,7 +59,7 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
             Constructor<? extends RemoteService> constructor = subclass.getConstructor();
             RemoteService stub = constructor.newInstance();
 
-            dependencyInjection.bind(serviceInfo.getModelClass(), stub);
+            injector.bind(serviceInfo.getModelClass(), stub);
 
             try {
                 LocateRegistry.createRegistry(serviceInfo.getPort());

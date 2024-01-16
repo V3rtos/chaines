@@ -20,9 +20,8 @@ public final class TestBridgenetBootstrap {
             bootstrap.start(new String[0]);
         }
 
-        DependencyInjection dependencyInjection = bootstrap.getDependencyInjection();
-
-        dependencyInjection.bind(testObject);
+        DependencyInjection injector = bootstrap.getInjector();
+        injector.bind(testObject);
     }
 
     public void throwException(Throwable exception) {
