@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Getter
 @ToString
 @XmlRootElement(name = "property")
-public class XmlServiceModulePropertyDescriptor {
+public class XMLServiceModulePropertyDescriptor {
 
     @Setter(onMethod_ = @XmlAttribute)
     private String name;
