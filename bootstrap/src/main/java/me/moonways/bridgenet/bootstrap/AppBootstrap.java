@@ -52,6 +52,7 @@ public class AppBootstrap {
         dependencyInjection.injectFields(hooksContainer);
 
         dependencyInjection.bind(new Properties());
+        dependencyInjection.bind(this);
     }
 
     public void start(String[] args) {
