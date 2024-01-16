@@ -27,7 +27,7 @@ public class MtpConnectionMessageSendTest {
 
     @Before
     public void bindMtpThings() {
-        connectionFactory = MTPConnectionFactory.createConnectionFactory(dependencyInjection);
+        connectionFactory = MTPConnectionFactory.createConnectionFactory(injector);
         driver.register(DefaultMessage.class);
     }
 
