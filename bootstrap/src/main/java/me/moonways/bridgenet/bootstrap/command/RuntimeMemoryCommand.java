@@ -3,6 +3,7 @@ package me.moonways.bridgenet.bootstrap.command;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.moonways.bridgenet.api.command.CommandSession;
+import me.moonways.bridgenet.api.command.annotation.Alias;
 import me.moonways.bridgenet.api.command.annotation.Command;
 import me.moonways.bridgenet.api.command.annotation.CommandParameter;
 import me.moonways.bridgenet.api.command.annotation.MentorExecutor;
@@ -14,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.function.Function;
 
 @Command("memory")
+@Alias("mem")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class RuntimeMemoryCommand {
 

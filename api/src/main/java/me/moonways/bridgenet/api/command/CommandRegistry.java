@@ -1,9 +1,11 @@
 package me.moonways.bridgenet.api.command;
 
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.command.annotation.Alias;
 import me.moonways.bridgenet.api.command.annotation.Command;
 import me.moonways.bridgenet.api.command.annotation.CommandParameter;
 import me.moonways.bridgenet.api.command.annotation.Permission;
+import me.moonways.bridgenet.api.command.annotation.repeatable.RepeatableCommandAliases;
 import me.moonways.bridgenet.api.command.children.CommandChild;
 import me.moonways.bridgenet.api.command.children.CommandChildrenScanner;
 import me.moonways.bridgenet.api.command.children.definition.CommandProducerChild;
@@ -55,7 +57,11 @@ public final class CommandRegistry {
 
         WrappedCommand commandWrapper = factory.createCommandWrapper(commandProxy, commandName, permission, childrenList,
                 optionsList, helpMessageView);
-        commandWrapperMap.put(commandName, commandWrapper);
+
+        commandWrapperMap.put(commandName.toLowerCase(), commandWrapper);
+
+        for (String alias : findAliases(object))
+            commandWrapperMap.put(alias.toLowerCase(), commandWrapper);
 
         log.info("Command §7'{}' §rwas success registered", object.getClass().getSimpleName());
     }
@@ -78,9 +84,26 @@ public final class CommandRegistry {
 
         return Arrays.stream(declaredAnnotations)
                 .filter(annotation -> annotation.annotationType().equals(CommandParameter.class))
-                .map(annotation -> (CommandParameter)annotation)
+                .map(annotation -> (CommandParameter) annotation)
                 .map(option -> objectFactory.create(option.value()))
                 .collect(Collectors.toList());
+    }
+
+    private List<String> findAliases(Object commandObject) {
+        Class<?> commandClass = commandObject.getClass();
+        List<String> result = new ArrayList<>();
+
+        RepeatableCommandAliases repeatableAliasesAnnotation = commandClass.getDeclaredAnnotation(RepeatableCommandAliases.class);
+        if (repeatableAliasesAnnotation != null) {
+            result.addAll(
+                    Arrays.stream(repeatableAliasesAnnotation.value())
+                            .map(Alias::value)
+                            .collect(Collectors.toList()));
+        } else if (commandClass.isAnnotationPresent(Alias.class)) {
+            result.add(commandClass.getDeclaredAnnotation(Alias.class).value());
+        }
+
+        return result;
     }
 
     private Object toProxy(Object commandObject) {

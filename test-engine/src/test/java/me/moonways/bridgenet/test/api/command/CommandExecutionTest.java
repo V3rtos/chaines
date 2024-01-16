@@ -19,7 +19,7 @@ public class CommandExecutionTest {
     private ConsoleCommandSender consoleCommandSender;
 
     @Test
-    public void test_mentorExecute() {
+    public void test_executeMentor() {
         try {
             commandExecutor.execute(consoleCommandSender, "test");
         } catch (CommandExecutionException exception) {
@@ -28,7 +28,7 @@ public class CommandExecutionTest {
     }
 
     @Test
-    public void test_producerExecute() {
+    public void test_executeProducerWithoutArguments() {
         try {
             commandExecutor.execute(consoleCommandSender, "test info");
         } catch (CommandExecutionException exception) {

@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 @Command("endpoints")
+@Alias("endpoint")
+@Alias("ep")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class EndpointsStatisticCommand {
 
