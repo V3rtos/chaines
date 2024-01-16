@@ -57,12 +57,16 @@ public class CommandAnnotationService {
         Set<Class<?>> registeredAnnotations = getRegisteredAnnotations();
 
         for (Class<?> registeredAnnotation : registeredAnnotations) {
-            Annotation annotation = annotatedElement.getDeclaredAnnotation((Class<? extends Annotation>) registeredAnnotation);
+            applyCommandAnnotation(session, annotatedElement, (Class<? extends Annotation>)registeredAnnotation);
+        }
+    }
 
-            if (annotation != null) {
-                CommandAnnotationContext<?> context = new CommandAnnotationContext<>(annotation, session, null); // todo
-                processCommandAnnotation(context);
-            }
+    private <T extends Annotation> void applyCommandAnnotation(CommandSession session, AnnotatedElement annotatedElement, Class<T> annotationType) {
+        T annotation = annotatedElement.getDeclaredAnnotation(annotationType);
+
+        if (annotation != null) {
+            CommandAnnotationContext<T> context = new CommandAnnotationContext<>(annotation, session.getEntity(), null); // todo
+            processCommandAnnotation(context);
         }
     }
 
