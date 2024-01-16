@@ -1,0 +1,12 @@
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  interruptible: true
+  tags:
+    - moonways-runner
+  script:
+    - |
+      ./bridgenet -fb
