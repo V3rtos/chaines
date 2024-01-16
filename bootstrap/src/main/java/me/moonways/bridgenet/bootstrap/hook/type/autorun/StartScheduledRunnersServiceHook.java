@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.bootstrap.hook.type;
+package me.moonways.bridgenet.bootstrap.hook.type.autorun;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.util.autorun.ScheduledRunnersService;
