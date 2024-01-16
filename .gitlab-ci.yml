@@ -3,6 +3,7 @@ stages:
   - test
 
 build:
+  image: maven:3-jdk-8
   stage: build
   interruptible: true
   tags:
