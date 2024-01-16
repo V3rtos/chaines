@@ -31,6 +31,8 @@ public class CommandExecutionTest {
     public void test_executeProducerWithoutArguments() {
         try {
             commandExecutor.execute(consoleCommandSender, "test info");
+            commandExecutor.execute(consoleCommandSender, "test get");
+            commandExecutor.execute(consoleCommandSender, "test player");
         } catch (CommandExecutionException exception) {
             fail(exception.getMessage());
         }

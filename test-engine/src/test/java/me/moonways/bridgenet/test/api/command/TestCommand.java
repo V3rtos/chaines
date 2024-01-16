@@ -27,6 +27,8 @@ public class TestCommand {
         session.printDefaultMessage("§e/test {0} §7- {1}");
     }
 
+    @Alias("get")
+    @Alias("player")
     @Permission("test.info")
     @ProducerExecutor("info")
     @ProducerUsageDescription("info <player-name>")

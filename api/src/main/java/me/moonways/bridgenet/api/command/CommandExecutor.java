@@ -19,6 +19,7 @@ import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,7 @@ public final class CommandExecutor {
             throw new CommandExecutionException("Label cannot be contains command was exists");
         }
 
-        CommandDescriptor descriptor = new CommandDescriptor(wrapper.getName(), wrapper.getPermission(), wrapper.getName(), "");
+        CommandDescriptor descriptor = new CommandDescriptor(name, wrapper.getPermission(), wrapper.getName(), "", Collections.emptyList());
         CommandSession mentorSession = factory.createSession(descriptor, wrapper.getHelpMessageView(), sender, arguments);
 
         fireOption(wrapper, mentorSession);
@@ -84,7 +85,7 @@ public final class CommandExecutor {
         final EntityCommandSender sender = session.getSender();
 
         CommandProducerChild producerChild = wrapper.<CommandProducerChild>find(ProducerExecutor.class)
-                .filter(producer -> producer.getName().equalsIgnoreCase(args[0]))
+                .filter(producer -> producer.getName().equalsIgnoreCase(args[0].toLowerCase()) || producer.getAliases().contains(args[0].toLowerCase()))
                 .findFirst()
                 .orElse(null);
 
@@ -96,7 +97,7 @@ public final class CommandExecutor {
         String permission = producerChild.getPermission();
 
         if (permission == null || matchesPermission(sender, permission)) {
-            CommandDescriptor descriptor = new CommandDescriptor(producerChild.getName(), producerChild.getPermission(), producerChild.getUsage(), producerChild.getDescription());
+            CommandDescriptor descriptor = new CommandDescriptor(producerChild.getName(), producerChild.getPermission(), producerChild.getUsage(), producerChild.getDescription(), producerChild.getAliases());
             CommandSession childSession = factory.createSession(descriptor, wrapper.getHelpMessageView(), sender, factory.copyArgumentsOfRange(args));
 
             invokeMethod(childSession, wrapper.getSource(), producerChild.getMethod());

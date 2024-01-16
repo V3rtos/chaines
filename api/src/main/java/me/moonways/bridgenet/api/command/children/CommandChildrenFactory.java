@@ -5,6 +5,7 @@ import me.moonways.bridgenet.api.command.children.definition.CommandMatchingChil
 import me.moonways.bridgenet.api.command.children.definition.CommandProducerChild;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 class CommandChildrenFactory {
 
@@ -12,8 +13,8 @@ class CommandChildrenFactory {
         return new CommandMentorChild(sourceObject, method);
     }
 
-    public CommandChild createProducer(Object sourceObject, Method method, String name, String permission, String usage, String description) {
-        return new CommandProducerChild(sourceObject, method, name, permission, usage, description);
+    public CommandChild createProducer(Object sourceObject, Method method, String name, List<String> aliases, String permission, String usage, String description) {
+        return new CommandProducerChild(sourceObject, method, aliases, name, permission, usage, description);
     }
 
     public CommandChild createPredicate(Object sourceObject, Method method) {

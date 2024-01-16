@@ -98,9 +98,10 @@ public final class CommandRegistry {
             result.addAll(
                     Arrays.stream(repeatableAliasesAnnotation.value())
                             .map(Alias::value)
+                            .map(String::toLowerCase)
                             .collect(Collectors.toList()));
         } else if (commandClass.isAnnotationPresent(Alias.class)) {
-            result.add(commandClass.getDeclaredAnnotation(Alias.class).value());
+            result.add(commandClass.getDeclaredAnnotation(Alias.class).value().toLowerCase());
         }
 
         return result;
