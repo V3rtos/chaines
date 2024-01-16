@@ -56,7 +56,6 @@ public class BridgenetMetricCommand {
         sender.sendMessage(" — Версия VM: §2" + bean.getVmVersion());
         sender.sendMessage(" — Дата и время запуска: §2" + DATETIME_FORMAT.format(bean.getStartTime()));
         sender.sendMessage(" — Uptime: §2" + TIME_FORMAT.format(bean.getUptime()));
-
     }
 
     private void printThreads(EntityCommandSender sender) {
@@ -75,8 +74,7 @@ public class BridgenetMetricCommand {
     }
 
     private void printThread(EntityCommandSender sender, Thread thread) {
-        boolean isMainThread = thread.getName().equals(Thread.currentThread().getName());
-        StackTraceElement stackTraceElement = thread.getStackTrace()[isMainThread ? 1 : 0];
+        StackTraceElement stackTraceElement = thread.getStackTrace()[1];
 
         sender.sendMessage(" — Поток §3%s§r §7(daemon: %s, state: %s)   §4[ %s ]",
                 thread.getName(), thread.isDaemon(), thread.getState(), stackTraceElement.toString());
