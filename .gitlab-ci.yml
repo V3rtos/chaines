@@ -9,4 +9,4 @@ build:
     - moonways-runner
   script:
     - |
-      ./bridgenet -fb
+      sh bridgenet -fb
