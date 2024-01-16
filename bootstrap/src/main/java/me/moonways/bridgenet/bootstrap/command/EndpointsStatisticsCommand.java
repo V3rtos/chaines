@@ -12,9 +12,9 @@ import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import java.util.List;
 import java.util.Map;
 
-@Command("rsi")
+@Command("endpoints")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
-public class RemoteServiceCommand {
+public class EndpointsStatisticsCommand {
 
     @Inject
     private RemoteServiceRegistry rsiRegistry;
@@ -22,12 +22,12 @@ public class RemoteServiceCommand {
     @MentorExecutor
     public void defaultCommand(CommandSession session) {
         session.getSender().sendMessage("§eDefault sub-commands list:");
-        session.printDefaultMessage("§7* §f{1} - §e/rsi {0}");
+        session.printDefaultMessage("§7* §f{1} - §e/endpoints {0}");
     }
 
-    @ProducerExecutor("info")
+    @ProducerExecutor("stats")
     @ProducerDescription("Print an information block of actuality RMI protocol state")
-    public void infoCommand(CommandSession session) {
+    public void statsCommand(CommandSession session) {
         final EntityCommandSender entityCommandSender = session.getSender();
 
         printTotalServices(entityCommandSender);
