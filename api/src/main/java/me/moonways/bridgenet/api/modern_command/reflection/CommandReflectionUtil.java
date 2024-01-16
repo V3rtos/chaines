@@ -1,19 +1,25 @@
 package me.moonways.bridgenet.api.modern_command.reflection;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.modern_command.*;
+import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.Description;
+import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.EntityLevel;
+import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.UsageCooldown;
+import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.Permission;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 @UtilityClass
 public class CommandReflectionUtil {
 
     public Aliases getAliasesAnnotation(Object object) {
         if (!isExistsAnnotation(object, Aliases.class)) {
-            error("Annotation not found");
+            log.error("Annotation not found");
         }
 
         return object.getClass().getDeclaredAnnotation(Aliases.class);
@@ -21,7 +27,7 @@ public class CommandReflectionUtil {
 
     public Aliases getAliasesAnnotation(Method method) {
         if (!isExistsAnnotation(method, Aliases.class)) {
-            error("Annotation not found");
+            log.error("Annotation not found");
         }
 
         return method.getDeclaredAnnotation(Aliases.class);
@@ -35,8 +41,8 @@ public class CommandReflectionUtil {
         return object.getClass().getDeclaredAnnotation(EntityLevel.class);
     }
 
-    public Interval getIntervalAnnotation(Object object) {
-        return object.getClass().getDeclaredAnnotation(Interval.class);
+    public UsageCooldown getIntervalAnnotation(Object object) {
+        return object.getClass().getDeclaredAnnotation(UsageCooldown.class);
     }
 
     public Description getDescriptionAnnotation(Object object) {
@@ -51,8 +57,8 @@ public class CommandReflectionUtil {
         return method.getDeclaredAnnotation(EntityLevel.class);
     }
 
-    public Interval getIntervalAnnotation(Method method) {
-        return method.getDeclaredAnnotation(Interval.class);
+    public UsageCooldown getIntervalAnnotation(Method method) {
+        return method.getDeclaredAnnotation(UsageCooldown.class);
     }
 
     public Description getDescriptionAnnotation(Method method) {
@@ -78,9 +84,5 @@ public class CommandReflectionUtil {
 
     public boolean isExistsAnnotation(Method method, Class<? extends Annotation> annotationClass) {
         return method.isAnnotationPresent(annotationClass);
-    }
-
-    private void error(String message) {
-        throw new RuntimeException(message);
     }
 }

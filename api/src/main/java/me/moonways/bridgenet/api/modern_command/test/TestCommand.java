@@ -5,6 +5,10 @@ import me.moonways.bridgenet.api.modern_command.argument.type.StringArgument;
 import me.moonways.bridgenet.api.modern_command.entity.ConsoleEntity;
 import me.moonways.bridgenet.api.modern_command.entity.EntityType;
 import me.moonways.bridgenet.api.modern_command.message.MessageBuilder;
+import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.Description;
+import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.EntityLevel;
+import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.UsageCooldown;
+import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.Permission;
 import me.moonways.bridgenet.api.modern_command.session.CommandSession;
 import me.moonways.bridgenet.api.modern_command.subcommand.SubcommandArgument;
 import me.moonways.bridgenet.api.modern_command.subcommand.SubcommandUsageDescription;
@@ -12,12 +16,11 @@ import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 
 import java.util.concurrent.TimeUnit;
 
-@Command()
-@Permission("test_command")
-@Aliases({"test", "test_command"})
+@Command
+@Aliases("test")
+@Permission("test.use")
 @EntityLevel(EntityType.CONSOLE)
-@Interval(time = 1, unit = TimeUnit.MINUTES)
-@Description("Список доступных подкоманд: \n{subcommands}")
+@UsageCooldown(time = 1, unit = TimeUnit.MINUTES)
 public class TestCommand {
 
     @Permission("primary_command_test")
@@ -45,7 +48,7 @@ public class TestCommand {
     @SubcommandUsageDescription("<string> <string> <integer>")
     @SubcommandArgument(argument = "{0}", argumentType = StringArgument.class)
     @SubcommandArgument(argument = "{1}", argumentType = StringArgument.class)
-    @Interval(time = 1, unit = TimeUnit.MINUTES)
+    @UsageCooldown(time = 1, unit = TimeUnit.MINUTES)
     private void secondary_subcommand() {
     }
 }

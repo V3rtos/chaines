@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.proxy;
+package me.moonways.bridgenet.api.modern_command.modern_annotation.persistance;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface MethodInterceptor {
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface Permission {
+
+    String value();
 }

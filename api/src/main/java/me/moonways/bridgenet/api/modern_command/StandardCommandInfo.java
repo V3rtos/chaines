@@ -27,16 +27,16 @@ public interface StandardCommandInfo {
     EntityType getEntityType();
 
     /**
+     * Получить интервал вводы команды.
+     */
+    IntervalInfo getInterval();
+    
+    /**
      * Установить тип сущности, которая может выполнить команду.
      *
      * @param entityType - тип сущности.
      */
     void setEntityType(EntityType entityType);
-
-    /**
-     * Получить интервал вводы команды.
-     */
-    IntervalInfo getInterval();
 
     /**
      * Установить интервал команде.

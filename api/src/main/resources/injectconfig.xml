@@ -26,6 +26,10 @@
             <annotationClass>me.moonways.bridgenet.api.util.autorun.persistance.AutoRunner</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
+        <scanner>
+            <annotationClass>me.moonways.bridgenet.api.modern_command.modern_annotation.AutoregisterCommandAnnotation</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
+        </scanner>
     </scanners>
     <factories>
         <factory>
@@ -54,6 +58,10 @@
         </factory>
         <factory>
             <annotationClass>me.moonways.bridgenet.api.util.autorun.persistance.AutoRunner</annotationClass>
+            <targetClass>me.moonways.bridgenet.api.inject.factory.DependObjectFactory</targetClass>
+        </factory>
+        <factory>
+            <annotationClass>me.moonways.bridgenet.api.modern_command.modern_annotation.AutoregisterCommandAnnotation</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.factory.DependObjectFactory</targetClass>
         </factory>
     </factories>
