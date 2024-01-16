@@ -5,7 +5,5 @@ stages:
 build:
   image: maven:3-jdk-8
   stage: build
-  interruptible: true
-  tags:
-    - moonways-runner
+  tags: [moonways-runner]
   script: sh bridgenet -fb
