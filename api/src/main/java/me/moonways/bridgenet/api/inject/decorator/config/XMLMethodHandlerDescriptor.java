@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.decorator.xml;
+package me.moonways.bridgenet.api.inject.decorator.config;
 
 import java.util.List;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Getter
 @ToString
 @XmlRootElement(name = "methodHandler")
-public class XmlDecoratorHandler {
+public class XMLMethodHandlerDescriptor {
 
     @Setter(onMethod_ = @XmlElement(name = "name"))
     private String name;
@@ -27,11 +27,11 @@ public class XmlDecoratorHandler {
         @XmlElementWrapper(name = "conflicts"),
         @XmlElement(name = "input")
     })
-    private List<XmlDecoratorInput> conflicts;
+    private List<XMLInputDescriptor> conflicts;
 
     @Setter(onMethod_ = {
         @XmlElementWrapper(name = "inherits"),
         @XmlElement(name = "input")
     })
-    private List<XmlDecoratorInput> inherits;
+    private List<XMLInputDescriptor> inherits;
 }

@@ -1,7 +1,7 @@
 package me.moonways.endpoint.friend;
 
 import lombok.Getter;
-import me.moonways.bridgenet.api.event.EventManager;
+import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscribeBuilder;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
@@ -34,7 +34,7 @@ public final class FriendsServiceEndpoint extends AbstractEndpointDefinition imp
     private ConvenoRouter convenoRouter;
 
     @Inject
-    private EventManager eventManager;
+    private EventService eventManager;
 
     @Inject
     private PlayersServiceModel playersModel;

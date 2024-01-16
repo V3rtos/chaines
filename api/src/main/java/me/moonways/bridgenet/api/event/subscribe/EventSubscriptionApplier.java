@@ -3,7 +3,7 @@ package me.moonways.bridgenet.api.event.subscribe;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.event.EventFollower;
 import me.moonways.bridgenet.api.event.EventFuture;
-import me.moonways.bridgenet.api.event.EventManager;
+import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.event.Event;
 import me.moonways.bridgenet.api.event.EventException;
 
@@ -12,7 +12,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public final class EventSubscriptionApplier {
 
-    private final EventManager eventManager;
+    private final EventService eventManager;
 
     private final EventSubscriptionContainer container = new EventSubscriptionContainer();
 

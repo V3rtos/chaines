@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.rsi.service.ServiceException;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
-import me.moonways.bridgenet.rsi.xml.XmlModule;
-import me.moonways.bridgenet.rsi.xml.XmlModuleProperty;
-import me.moonways.bridgenet.rsi.xml.XmlConfiguration;
+import me.moonways.bridgenet.rsi.xml.XMLServiceModuleDescriptor;
+import me.moonways.bridgenet.rsi.xml.XmlServiceModulePropertyDescriptor;
+import me.moonways.bridgenet.rsi.xml.XMLServicesConfigDescriptor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -29,22 +29,22 @@ public abstract class AbstractRemoteModule<Configuration extends ModuleConfigura
     public abstract void init(ServiceInfo serviceInfo, Configuration config);
 
     @Override
-    public void bind(XmlConfiguration xmlConfiguration, ServiceInfo serviceInfo, Class<Configuration> cls) {
+    public void bind(XMLServicesConfigDescriptor xmlConfiguration, ServiceInfo serviceInfo, Class<Configuration> cls) {
         config = parseModuleConfiguration(xmlConfiguration, id, cls);
         init(serviceInfo, config);
     }
 
-    public <T extends ModuleConfiguration> T parseModuleConfiguration(XmlConfiguration xmlConfiguration, ModuleID moduleID, Class<T> cls) {
-        XmlModule xmlModule = xmlConfiguration.getModulesList()
+    public <T extends ModuleConfiguration> T parseModuleConfiguration(XMLServicesConfigDescriptor xmlConfiguration, ModuleID moduleID, Class<T> cls) {
+        XMLServiceModuleDescriptor xmlModule = xmlConfiguration.getModulesList()
                 .stream()
                 .filter(xml -> xml.getName().equals(moduleID.getNamespace()))
                 .findFirst()
                 .orElse(null);
 
         T config = createEmptyInstance(cls);
-        List<XmlModuleProperty> properties = xmlModule.getProperties();
+        List<XmlServiceModulePropertyDescriptor> properties = xmlModule.getProperties();
 
-        for (XmlModuleProperty property : properties) {
+        for (XmlServiceModulePropertyDescriptor property : properties) {
             Class<? extends ModuleConfiguration> configClass = config.getClass();
 
             try {

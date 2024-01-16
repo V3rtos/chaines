@@ -3,8 +3,8 @@ package me.moonways.bridgenet.bootstrap.hook;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
-import me.moonways.bridgenet.bootstrap.xml.XmlBootstrap;
-import me.moonways.bridgenet.bootstrap.xml.XmlHook;
+import me.moonways.bridgenet.bootstrap.xml.XMLBootstrapConfigDescriptor;
+import me.moonways.bridgenet.bootstrap.xml.XMLHookDescriptor;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ public final class BootstrapHookContainer {
 
     private final Map<Class<? extends ApplicationBootstrapHook>, ApplicationBootstrapHook> instancesByHooksTypesMap = new HashMap<>();
     private final Map<Class<?>, BootstrapHookPriority> prioririesByHooksTypesMap = new HashMap<>();
-    private final Map<Class<?>, XmlHook> xmlByHooksTypesMap = new HashMap<>();
+    private final Map<Class<?>, XMLHookDescriptor> xmlByHooksTypesMap = new HashMap<>();
 
     @Inject
     private DependencyInjection dependencyInjection;
@@ -28,12 +28,12 @@ public final class BootstrapHookContainer {
     private XmlJaxbParser jaxbParser;
 
     @SneakyThrows
-    private XmlBootstrap parseConfiguration() {
+    private XMLBootstrapConfigDescriptor parseConfiguration() {
         if (jaxbParser == null) {
             jaxbParser = new XmlJaxbParser();
         }
         return jaxbParser.parseCopiedResource(getClass().getClassLoader(), BOOTSTRAP_XML_CONFIGURATION_NAME,
-                XmlBootstrap.class);
+                XMLBootstrapConfigDescriptor.class);
     }
 
     public void bindHooks() {
@@ -43,10 +43,10 @@ public final class BootstrapHookContainer {
 
         log.info("BootstrapHookContainer.bindHooks() => begin;");
 
-        XmlBootstrap xmlBootstrap = parseConfiguration();
-        List<XmlHook> hooks = xmlBootstrap.getHooks();
+        XMLBootstrapConfigDescriptor xmlBootstrap = parseConfiguration();
+        List<XMLHookDescriptor> hooks = xmlBootstrap.getHooks();
 
-        for (XmlHook xmlHook : hooks) {
+        for (XMLHookDescriptor xmlHook : hooks) {
 
             ApplicationBootstrapHook bootstrapHook = parseHook(xmlHook);
             if (bootstrapHook == null)
@@ -63,7 +63,7 @@ public final class BootstrapHookContainer {
         log.info("BootstrapHookContainer.bindHooks() => end;");
     }
 
-    private ApplicationBootstrapHook parseHook(XmlHook xmlHook) {
+    private ApplicationBootstrapHook parseHook(XMLHookDescriptor xmlHook) {
         final String displayName = xmlHook.getDisplayName();
         final String priorityName = xmlHook.getPriority();
         final String executorPath = xmlHook.getExecutorPath();
@@ -89,7 +89,7 @@ public final class BootstrapHookContainer {
     }
 
     public int findHookPriorityID(Class<? extends ApplicationBootstrapHook> cls) {
-        final XmlHook xmlHook = xmlByHooksTypesMap.get(cls);
+        final XMLHookDescriptor xmlHook = xmlByHooksTypesMap.get(cls);
         final int defaultPriorityID = -1;
 
         if (xmlHook == null) {

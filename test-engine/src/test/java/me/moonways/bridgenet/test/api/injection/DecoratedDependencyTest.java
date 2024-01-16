@@ -4,7 +4,7 @@ import lombok.SneakyThrows;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.decorator.Decorated;
-import me.moonways.bridgenet.api.inject.decorator.definition.*;
+import me.moonways.bridgenet.api.inject.decorator.persistance.*;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import org.junit.Before;
 import org.junit.Test;

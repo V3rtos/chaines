@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlType;
 @ToString
 @XmlRootElement(name = "hook")
 @XmlType(propOrder = {"displayName", "priorityID", "priority", "executorPath"})
-public class XmlHook {
+public class XMLHookDescriptor {
 
     @Setter(onMethod_ = @XmlElement)
     private String displayName;

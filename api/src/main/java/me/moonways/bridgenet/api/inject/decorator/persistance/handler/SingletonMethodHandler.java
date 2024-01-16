@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.decorator.handler;
+package me.moonways.bridgenet.api.inject.decorator.persistance.handler;
 
 import java.util.Map;
 import java.util.WeakHashMap;

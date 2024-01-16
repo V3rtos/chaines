@@ -7,9 +7,9 @@ import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
 import me.moonways.bridgenet.rsi.endpoint.EndpointController;
 import me.moonways.bridgenet.rsi.module.*;
-import me.moonways.bridgenet.rsi.xml.XmlModule;
-import me.moonways.bridgenet.rsi.xml.XmlConfiguration;
-import me.moonways.bridgenet.rsi.xml.XmlService;
+import me.moonways.bridgenet.rsi.xml.XMLServiceModuleDescriptor;
+import me.moonways.bridgenet.rsi.xml.XMLServicesConfigDescriptor;
+import me.moonways.bridgenet.rsi.xml.XmlServiceInfoDescriptor;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.Inject;
@@ -24,7 +24,7 @@ import java.util.function.Function;
 @Autobind
 public final class RemoteServiceRegistry {
 
-    private XmlConfiguration xmlConfiguration;
+    private XMLServicesConfigDescriptor xmlConfiguration;
 
     private final Map<String, ServiceInfo> servicesInfos = Collections.synchronizedMap(new HashMap<>());
     private final Map<ServiceInfo, RemoteService> servicesImplements = Collections.synchronizedMap(new HashMap<>());
@@ -47,12 +47,12 @@ public final class RemoteServiceRegistry {
     }
 
     public void initializeXmlConfiguration() {
-        xmlConfiguration = jaxbParser.parseCopiedResource(getClass().getClassLoader(), "rsiconfig.xml", XmlConfiguration.class);
+        xmlConfiguration = jaxbParser.parseCopiedResource(getClass().getClassLoader(), "rsiconfig.xml", XMLServicesConfigDescriptor.class);
 
         log.info("Parsed RMI XML-Configuration content: {}", xmlConfiguration);
 
-        List<XmlModule> xmlModulesList = xmlConfiguration.getModulesList();
-        List<XmlService> xmlServicesList = xmlConfiguration.getServicesList();
+        List<XMLServiceModuleDescriptor> xmlModulesList = xmlConfiguration.getModulesList();
+        List<XmlServiceInfoDescriptor> xmlServicesList = xmlConfiguration.getServicesList();
 
         if (xmlModulesList != null) {
             initXmlModules(xmlModulesList);
@@ -84,11 +84,11 @@ public final class RemoteServiceRegistry {
         endpointController.bindEndpoints();
     }
 
-    private void initXmlModules(List<XmlModule> xmlModulesList) {
+    private void initXmlModules(List<XMLServiceModuleDescriptor> xmlModulesList) {
         log.info("§e{} §rmodules found", xmlModulesList.size());
         log.info("Running modules registration process...");
 
-        for (XmlModule xmlService : xmlModulesList) {
+        for (XMLServiceModuleDescriptor xmlService : xmlModulesList) {
 
             String name = xmlService.getName().toUpperCase();
             String configClass = xmlService.getConfigClass();
@@ -99,11 +99,11 @@ public final class RemoteServiceRegistry {
         }
     }
 
-    private void initXmlServices(List<XmlService> xmlServicesList) {
+    private void initXmlServices(List<XmlServiceInfoDescriptor> xmlServicesList) {
         log.info("§e{} §rremote services found", xmlServicesList.size());
         log.info("Running remote services registration process...");
 
-        for (XmlService xmlService : xmlServicesList) {
+        for (XmlServiceInfoDescriptor xmlService : xmlServicesList) {
 
             String name = xmlService.getName().toUpperCase();
             String bindPort = xmlService.getBindPort();
@@ -115,7 +115,7 @@ public final class RemoteServiceRegistry {
         }
     }
 
-    private ServiceInfo createServiceInfo(XmlService wrapper) {
+    private ServiceInfo createServiceInfo(XmlServiceInfoDescriptor wrapper) {
         String name = wrapper.getName();
         Class<?> modelClass;
 
@@ -164,7 +164,7 @@ public final class RemoteServiceRegistry {
         return moduleID;
     }
 
-    private ModuleFactory createModuleFactory(XmlModule wrapper) {
+    private ModuleFactory createModuleFactory(XMLServiceModuleDescriptor wrapper) {
         Class<?> targetClass;
         Class<?> configClass;
 
@@ -203,7 +203,7 @@ public final class RemoteServiceRegistry {
         return new ModuleFactory(moduleID, factoryFunc);
     }
 
-    private void registerModule(XmlModule wrapper) {
+    private void registerModule(XMLServiceModuleDescriptor wrapper) {
         ModuleFactory moduleFactory = createModuleFactory(wrapper);
         ModuleID id = moduleFactory.getId();
 

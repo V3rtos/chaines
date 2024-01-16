@@ -6,9 +6,9 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.decorator.xml.XmlDecoratorHandler;
-import me.moonways.bridgenet.api.inject.decorator.xml.XmlDecoratedInterceptor;
-import me.moonways.bridgenet.api.inject.decorator.xml.XmlDecoratorInput;
+import me.moonways.bridgenet.api.inject.decorator.config.XMLMethodHandlerDescriptor;
+import me.moonways.bridgenet.api.inject.decorator.config.XMLInterceptorDescriptor;
+import me.moonways.bridgenet.api.inject.decorator.config.XMLInputDescriptor;
 import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
 
 import java.lang.annotation.Annotation;
@@ -26,18 +26,18 @@ public final class DecoratedMethodScanner {
         conflictsMap = new HashMap<>(),
         inheritsMap = new HashMap<>();
 
-    private XmlDecoratedInterceptor parseXmlInterceptor() {
+    private XMLInterceptorDescriptor parseXmlInterceptor() {
         final XmlJaxbParser parser = new XmlJaxbParser();
         final ClassLoader classLoader = getClass().getClassLoader();
 
         return parser.parseResource(classLoader, "decorators.xml",
-                XmlDecoratedInterceptor.class);
+                XMLInterceptorDescriptor.class);
     }
 
     public void bindHandlers() {
-        XmlDecoratedInterceptor rootXML = parseXmlInterceptor();
+        XMLInterceptorDescriptor rootXML = parseXmlInterceptor();
 
-        for (XmlDecoratorHandler decoratorXML : rootXML.getMethodHandlers()) {
+        for (XMLMethodHandlerDescriptor decoratorXML : rootXML.getMethodHandlers()) {
             String name = decoratorXML.getName();
 
             try {
@@ -49,16 +49,16 @@ public final class DecoratedMethodScanner {
                 handlersByAnnotationsMap.put(annotationClass, instance);
                 namesByAnnotationsMap.put(annotationClass, name);
 
-                List<XmlDecoratorInput> conflicts = decoratorXML.getConflicts();
-                List<XmlDecoratorInput> inherits = decoratorXML.getInherits();
+                List<XMLInputDescriptor> conflicts = decoratorXML.getConflicts();
+                List<XMLInputDescriptor> inherits = decoratorXML.getInherits();
 
                 if (conflicts != null) {
                     conflictsMap.put(name,
-                        conflicts.stream().map(XmlDecoratorInput::getValue).collect(Collectors.toSet()));
+                        conflicts.stream().map(XMLInputDescriptor::getValue).collect(Collectors.toSet()));
                 }
                 if (inherits != null) {
                     inheritsMap.put(name,
-                        inherits.stream().map(XmlDecoratorInput::getValue).collect(Collectors.toSet()));
+                        inherits.stream().map(XMLInputDescriptor::getValue).collect(Collectors.toSet()));
                 }
             }
             catch (ClassNotFoundException | InstantiationException

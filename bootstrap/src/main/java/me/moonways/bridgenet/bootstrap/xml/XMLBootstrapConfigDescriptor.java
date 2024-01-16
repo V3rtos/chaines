@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.decorator.xml;
+package me.moonways.bridgenet.bootstrap.xml;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,12 +12,12 @@ import java.util.List;
 
 @Getter
 @ToString
-@XmlRootElement(name = "interceptor")
-public class XmlDecoratedInterceptor implements XmlRootObject {
+@XmlRootElement(name = "bootstrap")
+public class XMLBootstrapConfigDescriptor implements XmlRootObject {
 
     @Setter(onMethod_ = {
-            @XmlElementWrapper(name = "methodHandlers"),
-            @XmlElement(name = "methodHandler")
+            @XmlElementWrapper(name = "hooks"),
+            @XmlElement(name = "hook")
     })
-    private List<XmlDecoratorHandler> methodHandlers;
+    private List<XMLHookDescriptor> hooks;
 }

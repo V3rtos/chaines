@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.api.event.Event;
-import me.moonways.bridgenet.api.event.EventManager;
+import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscribeBuilder;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
@@ -21,7 +21,7 @@ public class EventHandlingTest {
     private final UserConnectEvent eventToSend = new UserConnectEvent(UUID.randomUUID(), "Mike Tyson");
 
     @Inject
-    private EventManager subj;
+    private EventService subj;
 
     private void assertInputEvent(UserConnectEvent event) {
         assertEquals(event.getName(), eventToSend.getName());

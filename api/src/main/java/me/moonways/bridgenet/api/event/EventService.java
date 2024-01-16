@@ -11,12 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ExecutorService;
 
 @Autobind
-public final class EventManager {
+public final class EventService {
 
     private final ExecutorService threadsExecutorService = Threads.newCachedThreadPool();
 
     private final EventRegistry eventRegistry = new EventRegistry();
-
     private final EventExecutor eventExecutor = new EventExecutor(threadsExecutorService, eventRegistry);
 
     private final EventSubscriptionApplier eventSubscriptionApplier = new EventSubscriptionApplier(this);

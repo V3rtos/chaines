@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.rsi.module;
 
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
-import me.moonways.bridgenet.rsi.xml.XmlConfiguration;
+import me.moonways.bridgenet.rsi.xml.XMLServicesConfigDescriptor;
 
 public interface RemoteModule<Configuration extends ModuleConfiguration> {
 
@@ -9,5 +9,5 @@ public interface RemoteModule<Configuration extends ModuleConfiguration> {
 
     Configuration getConfig();
 
-    void bind(XmlConfiguration xmlConfiguration, ServiceInfo serviceInfo, Class<Configuration> cls);
+    void bind(XMLServicesConfigDescriptor xmlConfiguration, ServiceInfo serviceInfo, Class<Configuration> cls);
 }

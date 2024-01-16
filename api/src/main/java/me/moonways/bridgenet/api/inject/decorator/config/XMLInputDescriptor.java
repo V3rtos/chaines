@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.decorator.xml;
+package me.moonways.bridgenet.api.inject.decorator.config;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @XmlRootElement(name = "input")
-public class XmlDecoratorInput {
+public class XMLInputDescriptor {
 
     @Setter(onMethod_ = @XmlValue)
     private String value;
