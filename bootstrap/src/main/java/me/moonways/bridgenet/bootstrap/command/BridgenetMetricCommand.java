@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@Command("bridgenet")
 @Alias("metrics")
+@Command("bridgenet")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class BridgenetMetricCommand {
 

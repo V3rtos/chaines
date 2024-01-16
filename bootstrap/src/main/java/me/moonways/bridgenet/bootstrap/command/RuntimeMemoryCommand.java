@@ -14,8 +14,8 @@ import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 import java.text.SimpleDateFormat;
 import java.util.function.Function;
 
-@Command("memory")
 @Alias("mem")
+@Command("memory")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class RuntimeMemoryCommand {
 

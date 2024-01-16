@@ -9,8 +9,8 @@ import me.moonways.bridgenet.api.command.option.CommandParameterOnlyConsoleUse;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 
-@Command("shutdown")
 @Alias("stop")
+@Command("shutdown")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class ShutdownCommand {
 

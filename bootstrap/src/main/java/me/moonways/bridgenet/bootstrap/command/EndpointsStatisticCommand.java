@@ -12,9 +12,9 @@ import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import java.util.List;
 import java.util.Map;
 
-@Command("endpoints")
 @Alias("endpoint")
 @Alias("ep")
+@Command("endpoints")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class EndpointsStatisticCommand {
 
