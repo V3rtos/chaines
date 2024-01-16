@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.api.modern_command.argument;
 
-public interface SubcommandArgumentValidator {
+public interface ArgumentValidator {
 
     boolean validate(String argument);
 }

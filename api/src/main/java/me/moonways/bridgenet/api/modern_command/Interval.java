@@ -1,17 +1,16 @@
 package me.moonways.bridgenet.api.modern_command;
 
-import me.moonways.bridgenet.api.modern_command.argument.SubcommandArgumentValidator;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-public @interface SubcommandArgument {
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface Interval {
 
-    String arguments();
+    long time();
 
-    Class<? extends SubcommandArgumentValidator>[] argumentsType();
+    TimeUnit unit();
 }
