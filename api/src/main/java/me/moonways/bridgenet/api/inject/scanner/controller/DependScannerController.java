@@ -37,7 +37,6 @@ public class DependScannerController implements ScannerController {
 
         return new ConfigurationBuilder()
                 .setUrls(urls)
-                .setParallel(false)
                 .setScanners(Scanners.TypesAnnotated, Scanners.SubTypes, Scanners.Resources)
                 .filterInputsBy(filterBuilder);
     }
