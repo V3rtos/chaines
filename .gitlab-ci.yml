@@ -11,6 +11,6 @@ build:
   image: maven:3-jdk-8
   stage: build
   variables:
-    MAVEN_OPTS: "-Dmaven.repo.local=/var/cache/gitlab-runner/maven"
+    MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
   tags: [moonways-runner, Joule]
   script: /bin/bash bridgenet -fb
