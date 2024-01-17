@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo source .scripts/utils.sh
+source .scripts/utils.sh
 
 exec_help() {
   echo "$PREF Usage: ./$APP <subcommand> <flags>"
@@ -16,19 +16,19 @@ case $1 in
         exec_help
         ;;
     "-epc" | "--endpointsconfig")
-        sudo source .scripts/config_endpoints.sh
+        source .scripts/config_endpoints.sh
         ;;
     "-ep" | "--endpoints")
-        sudo source .scripts/build_endpoints.sh
-        sudo source .scripts/config_endpoints.sh
+        source .scripts/build_endpoints.sh
+        source .scripts/config_endpoints.sh
         ;;
     "-b" | "--build")
-        sudo source .scripts/build_project.sh
+        source .scripts/build_project.sh
         ;;
     "-fb" | "--fullbuild")
-        sudo source .scripts/build_project.sh
-        sudo source .scripts/build_endpoints.sh
-        sudo source .scripts/config_endpoints.sh
+        source .scripts/build_project.sh
+        source .scripts/build_endpoints.sh
+        source .scripts/config_endpoints.sh
         ;;
     *)
         echo "$PREF Unknown command: $1"
