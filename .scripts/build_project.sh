@@ -33,12 +33,7 @@ function application() {
 }
 
 function install() {
-  if [ "$1" != "test-engine" ];
-  then
-    mvn clean install -Dmaven.test.skip --file "$1/pom.xml" || exit
-  else
-    mvn clean install --file "$1/pom.xml" || exit
-  fi
+  mvn clean install -Dmaven.test.skip --file "$1/pom.xml" || exit
   except_code
 }
 

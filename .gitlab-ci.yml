@@ -3,9 +3,8 @@ variables:
 
 stages:
   - build
-#  - test
 
-build_with_tests:
+build:
   image: maven:3-jdk-8
   stage: build
   interruptible: true
@@ -18,11 +17,3 @@ build_with_tests:
     expire_in: 5 days
     paths:
       - $CI_PROJECT_DIR/*
-
-#unit_tests:
-#  image: maven:3-jdk-8
-#  stage: test
-#  interruptible: true
-#  tags:
-#    - moonways-runner
-#  script: mvn install --file test-engine/pom.xml
