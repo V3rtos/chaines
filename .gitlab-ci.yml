@@ -1,3 +1,6 @@
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
 stages:
   - build
   - test
@@ -6,8 +9,6 @@ build:
   image: maven:3-jdk-8
   stage: build
   interruptible: true
-  variables:
-    MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
   tags:
     - moonways-runner
   script: /bin/bash bridgenet -fb
@@ -19,8 +20,6 @@ unit_tests:
   image: maven:3-jdk-8
   stage: test
   interruptible: true
-  variables:
-    MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
   tags:
     - moonways-runner
   script: mvn clean install --file test-engine/pom.xml
