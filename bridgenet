@@ -16,19 +16,19 @@ case $1 in
         exec_help
         ;;
     "-epc" | "--endpointsconfig")
-        source /.scripts/config_endpoints.sh
+        source .scripts/config_endpoints.sh
         ;;
     "-ep" | "--endpoints")
-        source /.scripts/build_endpoints.sh
-        source /.scripts/config_endpoints.sh
+        source .scripts/build_endpoints.sh
+        source .scripts/config_endpoints.sh
         ;;
     "-b" | "--build")
-        source /.scripts/build_project.sh
+        source .scripts/build_project.sh
         ;;
     "-fb" | "--fullbuild")
-        source /.scripts/build_project.sh
-        source /.scripts/build_endpoints.sh
-        source /.scripts/config_endpoints.sh
+        source .scripts/build_project.sh
+        source .scripts/build_endpoints.sh
+        source .scripts/config_endpoints.sh
         ;;
     *)
         echo "$PREF Unknown command: $1"
