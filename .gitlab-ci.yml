@@ -13,7 +13,6 @@ build_with_tests:
     - moonways-runner
   script: |-
     /bin/bash bridgenet -fb
-    mvn test --file test-engine/pom.xml
   artifacts:
     when: always
     expire_in: 5 days
