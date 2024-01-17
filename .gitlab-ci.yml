@@ -13,9 +13,7 @@ build:
   interruptible: true
   tags:
     - $CI_RUNNER_TAG
-  script:
-    |-
-    /bin/bash bridgenet -fb
+  script: /bin/bash bridgenet -fb
   artifacts:
     when: always
     expire_in: 5 days
