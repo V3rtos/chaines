@@ -4,6 +4,7 @@ bootstrap_file="bootstrap.xml";
 rsiconfig_file="rsiconfig.xml";
 injectconfig_file="injectconfig.xml";
 
+mvn clean install -N
 mkdir "$BUILD_DIR"
 
 function cleanup() {
