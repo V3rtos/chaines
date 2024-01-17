@@ -10,7 +10,7 @@ build:
     MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
   tags:
     - moonways-runner
-  script: bin/bash bridgenet -fb
+  script: /bin/bash bridgenet -fb
   artifacts:
     paths:
       - $CI_PROJECT_DIR/*
