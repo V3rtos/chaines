@@ -10,7 +10,8 @@ build:
   interruptible: true
   tags:
     - moonways-runner
-  script: |-
+  script:
+    |-
     /bin/bash bridgenet -fb
   artifacts:
     when: always
