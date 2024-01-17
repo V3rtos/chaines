@@ -14,3 +14,11 @@ build:
     MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
   tags: [moonways-runner, Joule]
   script: /bin/bash bridgenet -fb
+
+unit_tests:
+  image: maven:3-jdk-8
+  stage: test
+  variables:
+    MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
+  tags: [moonways-runner, Joule]
+  script: mvn clean install --file "test-engine/pom.xml"
