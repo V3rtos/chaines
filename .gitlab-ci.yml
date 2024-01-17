@@ -3,7 +3,7 @@ variables:
 
 stages:
   - build
-  - test
+#  - test
 
 build:
   image: maven:3-jdk-8
@@ -11,15 +11,17 @@ build:
   interruptible: true
   tags:
     - moonways-runner
-  script: /bin/bash bridgenet -fb
-  artifacts:
-    paths:
-      - $CI_PROJECT_DIR/*
+  script: |-
+    /bin/bash bridgenet -fb
+    mvn test --file test-engine/pom.xml
+  #artifacts:
+  #  paths:
+  #    - $CI_PROJECT_DIR/*
 
-unit_tests:
-  image: maven:3-jdk-8
-  stage: test
-  interruptible: true
-  tags:
-    - moonways-runner
-  script: mvn clean install --file test-engine/pom.xml
+#unit_tests:
+#  image: maven:3-jdk-8
+#  stage: test
+#  interruptible: true
+#  tags:
+#    - moonways-runner
+#  script: mvn install --file test-engine/pom.xml
