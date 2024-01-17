@@ -8,7 +8,7 @@ cache:
     - .m2/repository/
 
 build:
-  image: maven:3-jdk-8
+  image: maven:latest
   stage: build
   tags: [moonways-runner, Joule]
   script: |-
