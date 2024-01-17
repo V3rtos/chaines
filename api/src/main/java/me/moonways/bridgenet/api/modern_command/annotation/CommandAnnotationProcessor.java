@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_command.modern_annotation;
+package me.moonways.bridgenet.api.modern_command.annotation;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,11 +6,11 @@ import lombok.ToString;
 
 import java.lang.annotation.Annotation;
 
+@Getter
 @ToString
 @RequiredArgsConstructor
 public abstract class CommandAnnotationProcessor<T extends Annotation> {
 
-    @Getter
     private final Class<T> annotationType;
 
     /**

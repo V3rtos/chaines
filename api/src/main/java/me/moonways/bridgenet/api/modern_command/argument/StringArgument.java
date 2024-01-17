@@ -1,6 +1,4 @@
-package me.moonways.bridgenet.api.modern_command.argument.type;
-
-import me.moonways.bridgenet.api.modern_command.argument.ArgumentValidator;
+package me.moonways.bridgenet.api.modern_command.argument;
 
 public class StringArgument implements ArgumentValidator {
 

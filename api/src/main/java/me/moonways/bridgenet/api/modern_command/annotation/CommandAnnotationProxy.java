@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_command.modern_annotation;
+package me.moonways.bridgenet.api.modern_command.annotation;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.modern_command.session.CommandSession;
@@ -25,5 +25,7 @@ public class CommandAnnotationProxy {
 
         CommandSession commandSession = ((CommandSession) args[0]);
         service.processCommandAnnotations(commandSession, declare);
+
+        method.call(args);
     }
 }

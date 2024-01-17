@@ -58,4 +58,11 @@ public interface StandardCommandInfo {
      * @param value - значение.
      */
     void setDescription(@NotNull String value);
+
+    /**
+     * Получить тип команды.
+     *
+     * @return - COMMAND/SUBCOMMAND
+     */
+    CommandType getCommandType();
 }

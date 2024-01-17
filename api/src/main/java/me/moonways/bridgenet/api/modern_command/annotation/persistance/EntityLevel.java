@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_command.modern_annotation.persistance;
+package me.moonways.bridgenet.api.modern_command.annotation.persistance;
 
 import me.moonways.bridgenet.api.modern_command.entity.EntityType;
 

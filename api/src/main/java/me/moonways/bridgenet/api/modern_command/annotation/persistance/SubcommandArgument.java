@@ -1,6 +1,7 @@
-package me.moonways.bridgenet.api.modern_command.subcommand;
+package me.moonways.bridgenet.api.modern_command.annotation.persistance;
 
 import me.moonways.bridgenet.api.modern_command.argument.ArgumentValidator;
+import me.moonways.bridgenet.api.modern_command.subcommand.SubcommandArguments;
 
 import java.lang.annotation.*;
 

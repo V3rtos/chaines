@@ -1,10 +1,11 @@
-package me.moonways.bridgenet.api.modern_command.modern_annotation;
+package me.moonways.bridgenet.api.modern_command.annotation;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.modern_command.StandardCommandInfo;
+import me.moonways.bridgenet.api.modern_command.session.CommandSession;
 
 import java.lang.annotation.Annotation;
 import java.util.function.Consumer;
@@ -16,7 +17,7 @@ public class CommandAnnotationContext<T extends Annotation> {
 
     private final T annotation;
 
-    private final EntityCommandSender sender;
+    private final CommandSession session;
     private final StandardCommandInfo commandInfo;
 
     public <V extends StandardCommandInfo> void update(Class<V> type, Consumer<V> consumer) {

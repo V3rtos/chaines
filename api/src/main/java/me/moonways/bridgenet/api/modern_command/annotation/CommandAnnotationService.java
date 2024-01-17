@@ -1,6 +1,5 @@
-package me.moonways.bridgenet.api.modern_command.modern_annotation;
+package me.moonways.bridgenet.api.modern_command.annotation;
 
-import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
@@ -53,31 +52,35 @@ public class CommandAnnotationService {
         return method.isAnnotationPresent(Aliases.class);
     }
 
-    public void processCommandAnnotations(@NotNull CommandSession session, @NotNull AnnotatedElement annotatedElement) {
+    public boolean processCommandAnnotations(@NotNull CommandSession session, @NotNull AnnotatedElement annotatedElement) {
         Set<Class<?>> registeredAnnotations = getRegisteredAnnotations();
 
         for (Class<?> registeredAnnotation : registeredAnnotations) {
-            applyCommandAnnotation(session, annotatedElement, (Class<? extends Annotation>)registeredAnnotation);
+            if (applyCommandAnnotation(session, annotatedElement, (Class<? extends Annotation>) registeredAnnotation)) {
+                return true;
+            }
         }
+
+        return false;
     }
 
-    private <T extends Annotation> void applyCommandAnnotation(CommandSession session, AnnotatedElement annotatedElement, Class<T> annotationType) {
+    private <T extends Annotation> boolean applyCommandAnnotation(CommandSession session, AnnotatedElement annotatedElement, Class<T> annotationType) {
         T annotation = annotatedElement.getDeclaredAnnotation(annotationType);
 
         if (annotation != null) {
-            CommandAnnotationContext<T> context = new CommandAnnotationContext<>(annotation, session.getEntity(), null); // todo
-            processCommandAnnotation(context);
+            CommandAnnotationContext<T> context = new CommandAnnotationContext<>(annotation, session, null); // todo
+            return processCommandAnnotation(context);
         }
+
+        return false;
     }
 
-    private <T extends Annotation> void processCommandAnnotation(CommandAnnotationContext<T> context) {
+    private <T extends Annotation> boolean processCommandAnnotation(CommandAnnotationContext<T> context) {
         CommandAnnotationProcessor<T> annotationHandler = (CommandAnnotationProcessor<T>)
                 getAnnotationHandler(context.getAnnotation().annotationType());
 
         annotationHandler.updateCommandInfo(context);
 
-        if (annotationHandler.verify(context)) {
-            // todo - component of command processing...
-        }
+        return annotationHandler.verify(context);
     }
 }

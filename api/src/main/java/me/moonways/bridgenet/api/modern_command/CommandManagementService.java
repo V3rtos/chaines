@@ -1,9 +1,14 @@
 package me.moonways.bridgenet.api.modern_command;
 
+import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.modern_command.entity.CommandEntity;
-import me.moonways.bridgenet.api.modern_command.label.LabelParser;
+import me.moonways.bridgenet.api.modern_command.annotation.CommandAnnotationService;
+import me.moonways.bridgenet.api.modern_command.session.CommandSession;
+import me.moonways.bridgenet.api.modern_command.session.CommandSessionImpl;
+import me.moonways.bridgenet.api.modern_command.syntax.SyntaxParser;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 public class CommandManagementService {
 
@@ -17,7 +22,39 @@ public class CommandManagementService {
     private CommandExecutor executor;
 
     @Inject
-    private LabelParser labelParser;
+    private SyntaxParser syntaxParser;
+
+    @Inject
+    private CommandAnnotationService annotationService;
+
+    public void execute(@NotNull EntityCommandSender entity, @NotNull String label) {
+        String[] args = syntaxParser.splitCommandLabelIntoArray(label);
+
+        String commandName = syntaxParser.getCommandName(args);
+        if (!isExists(commandName)) {
+            failExecute(entity);
+            return;
+        }
+
+        CommandSession session = createSession(entity, entity.getUuid());
+
+        String[] parsedArgs = args.length <= 1 ? new String[]{} : syntaxParser.getCommandArguments(1, args);
+
+        CommandInfo commandInfo = getCasted(commandName, CommandInfo.class);
+        if (parsedArgs.length == 0 || !isExists(parsedArgs[0])) { //args size = 0 no subcommand | no exists subcommand by args[1]
+            if (!annotationService.processCommandAnnotations(session, commandInfo.getParent().getClass())) { //верификация доступа к команде перед вызовом
+                return;
+            }
+
+            executor.executeParent(entity, commandInfo, parsedArgs);
+            return;
+        }
+
+        String subcommandName = parsedArgs[0];
+        SubcommandInfo subcommandInfo = getCasted(subcommandName, SubcommandInfo.class);
+
+        executor.executeSub(entity, subcommandInfo, parsedArgs);
+    }
 
     public void register(@NotNull Object object) {
         CommandInfo commandInfo = registry.register(object);
@@ -35,29 +72,19 @@ public class CommandManagementService {
         container.removeAll();
     }
 
-    public CommandInfo get(@NotNull String name) {
-        return container.get(name.toLowerCase());
-    }
-
-    public boolean exists(@NotNull String name) {
-        return get(name) != null;
-    }
-
-    public void execute(@NotNull CommandEntity entity, @NotNull String label) {
-        String name = labelParser.getName(label);
-
-        if (!exists(name)) {
-            failExecute(entity);
-            return;
-        }
-
-        String[] arguments = labelParser.getArguments(label);
-        CommandInfo info = get(name);
-
-        executor.execute(entity, info, arguments);
-    }
-
-    public void failExecute(@NotNull CommandEntity entity) {
+    private void failExecute(@NotNull EntityCommandSender entity) {
         entity.sendMessage("Command not found :/");
+    }
+
+    private CommandSession createSession(EntityCommandSender entity, UUID entityUUID) {
+        return new CommandSessionImpl(entity, entityUUID);
+    }
+
+    private  <T extends StandardCommandInfo> T getCasted(@NotNull String name, Class<T> cls) {
+        return cls.cast(container.get(name.toLowerCase()));
+    }
+
+    private boolean isExists(@NotNull String name) {
+        return container.get(name) != null;
     }
 }

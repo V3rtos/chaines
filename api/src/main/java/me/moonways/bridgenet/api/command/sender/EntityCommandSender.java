@@ -1,10 +1,13 @@
 package me.moonways.bridgenet.api.command.sender;
 
+import me.moonways.bridgenet.api.modern_command.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 /**
- * Данный интерфейс реализуется всемивозможными
+ * Данный интерфейс реализуется всеми возможными
  * в системе отправителями команд.
  */
 public interface EntityCommandSender {
@@ -28,4 +31,23 @@ public interface EntityCommandSender {
      * @param permission - право
      */
     boolean hasPermission(@NotNull String permission);
+
+    /**
+     * Получить тип сущности.
+     */
+    EntityType getType();
+
+    /**
+     * Проверить является ли сущность требуемой.
+     *
+     * @param entityType - тип сущности.
+     * @return - true/false.
+     */
+    boolean valueOf(EntityType entityType);
+
+    /**
+     * Получить UUID сущности.
+     */
+    UUID getUuid();
+
 }

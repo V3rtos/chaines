@@ -1,20 +1,27 @@
 package me.moonways.bridgenet.api.modern_command.session;
 
-import me.moonways.bridgenet.api.modern_command.entity.CommandEntity;
+import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
+
+import java.util.UUID;
 
 public interface CommandSession {
 
     /**
+     * Получить UUID сессии.
+     */
+    UUID getUuid();
+
+    /**
      * Получить сущность выполняющую команду.
      */
-    CommandEntity getEntity();
+    EntityCommandSender getEntity();
 
     /**
      * Получить требуемый тип сущности.
      *
      * @param entityClass - сущность, которую хотим получить.
      */
-    <E extends CommandEntity> E from(Class<E> entityClass);
+    <E extends EntityCommandSender> E from(Class<E> entityClass);
 
     /**
      * Заблокировать сессию.

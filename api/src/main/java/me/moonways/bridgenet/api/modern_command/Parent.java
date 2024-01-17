@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_command.annotation;
+package me.moonways.bridgenet.api.modern_command;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,6 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface CustomAnnotation {
+@Target(ElementType.METHOD)
+public @interface Parent {
 }

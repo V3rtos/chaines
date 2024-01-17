@@ -3,10 +3,6 @@ package me.moonways.bridgenet.api.modern_command.reflection;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.modern_command.*;
-import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.Description;
-import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.EntityLevel;
-import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.UsageCooldown;
-import me.moonways.bridgenet.api.modern_command.modern_annotation.persistance.Permission;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -31,38 +27,6 @@ public class CommandReflectionUtil {
         }
 
         return method.getDeclaredAnnotation(Aliases.class);
-    }
-
-    public Permission getPermissionAnnotation(Object object) {
-        return object.getClass().getDeclaredAnnotation(Permission.class);
-    }
-
-    public EntityLevel getEntityLevelAnnotation(Object object) {
-        return object.getClass().getDeclaredAnnotation(EntityLevel.class);
-    }
-
-    public UsageCooldown getIntervalAnnotation(Object object) {
-        return object.getClass().getDeclaredAnnotation(UsageCooldown.class);
-    }
-
-    public Description getDescriptionAnnotation(Object object) {
-        return object.getClass().getDeclaredAnnotation(Description.class);
-    }
-
-    public Permission getPermissionAnnotation(Method method) {
-        return method.getDeclaredAnnotation(Permission.class);
-    }
-
-    public EntityLevel getEntityLevelAnnotation(Method method) {
-        return method.getDeclaredAnnotation(EntityLevel.class);
-    }
-
-    public UsageCooldown getIntervalAnnotation(Method method) {
-        return method.getDeclaredAnnotation(UsageCooldown.class);
-    }
-
-    public Description getDescriptionAnnotation(Method method) {
-        return method.getDeclaredAnnotation(Description.class);
     }
 
     public List<Method> getMethodsOfSubcommands(Object object) {
