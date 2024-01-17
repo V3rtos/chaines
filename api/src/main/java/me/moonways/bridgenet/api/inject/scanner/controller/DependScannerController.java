@@ -52,7 +52,6 @@ public class DependScannerController implements ScannerController {
 
         return new ConfigurationBuilder()
                 .setUrls(urls)
-
                 .setScanners(typeAnnotationsScanner, subTypesScanner, resourcesScanner)
                 .filterInputsBy(inputsFilter);
     }
@@ -61,7 +60,7 @@ public class DependScannerController implements ScannerController {
     public Set<Class<?>> requestResources(@NotNull ScannerFilter filter) {
         Configuration configuration = createConfiguration(filter);
 
-        Reflections reflections = new Reflections(configuration);
+        Reflections reflections = new Reflections(configuration, typeAnnotationsScanner, subTypesScanner, resourcesScanner);
 
         Set<Class<? extends Annotation>> annotations = filter.getAnnotations();
         Set<Set<Class<?>>> setOfSets = new HashSet<>();

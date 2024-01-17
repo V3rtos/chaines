@@ -5,7 +5,7 @@ stages:
   - build
 #  - test
 
-build:
+build_with_tests:
   image: maven:3-jdk-8
   stage: build
   interruptible: true
