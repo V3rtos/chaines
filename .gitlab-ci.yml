@@ -5,7 +5,7 @@ stages:
 cache:
   key: new_cache
   paths:
-    - .m2/repository/
+    - /root/.m2/repository/
 
 build:
   image: maven:3-jdk-8
