@@ -15,7 +15,3 @@ function except_code() {
       exit 1
     fi
 }
-
-function mvn() {
-  $M2_HOME/bin/mvn "$@"
-}
