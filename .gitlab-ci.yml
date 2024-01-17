@@ -9,6 +9,10 @@ build:
     MAVEN_OPTS: "-Dmaven.repo.local=/root/.m2/repository"
   tags: [moonways-runner, Joule]
   script: /bin/bash bridgenet -fb
+  artifacts:
+    paths:
+      - /root/.m2/repository
+      - target/*.jar
 
 unit_tests:
   image: maven:3-jdk-8
