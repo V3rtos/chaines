@@ -11,6 +11,7 @@ import java.util.UUID;
 @Getter
 @ToString
 @ClientMessage
+@ServerMessage
 @AllArgsConstructor
 @NoArgsConstructor
 public class Redirect {
@@ -18,8 +19,8 @@ public class Redirect {
     @ByteTransfer(provider = TransferUuidProvider.class)
     private UUID playerUUID;
 
-    @ByteTransfer
-    private String target;
+    @ByteTransfer(provider = TransferUuidProvider.class)
+    private UUID serverKey;
 
     public interface Result { }
 
@@ -32,8 +33,8 @@ public class Redirect {
         @ByteTransfer(provider = TransferUuidProvider.class)
         private UUID playerUUID;
 
-        @ByteTransfer
-        private String target;
+        @ByteTransfer(provider = TransferUuidProvider.class)
+        private UUID serverKey;
     }
 
     @Getter
@@ -45,7 +46,7 @@ public class Redirect {
         @ByteTransfer(provider = TransferUuidProvider.class)
         private UUID playerUUID;
 
-        @ByteTransfer
-        private String target;
+        @ByteTransfer(provider = TransferUuidProvider.class)
+        private UUID serverKey;
     }
 }

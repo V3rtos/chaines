@@ -153,10 +153,10 @@ public final class ByteCodec {
 
     public long readLong(byte[] array) {
         LONG_BUFFER.put(array, 0, array.length);
-        ((Buffer)INT_BUFFER).flip(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
+        ((Buffer)LONG_BUFFER).flip(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
 
         long value = LONG_BUFFER.getLong();
-        ((Buffer)INT_BUFFER).clear(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
+        ((Buffer)LONG_BUFFER).clear(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
 
         return value;
     }

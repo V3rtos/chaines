@@ -9,7 +9,6 @@ import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.*;
 import me.moonways.bridgenet.mtp.message.DefaultMessage;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
-import me.moonways.bridgenet.mtp.pipeline.response.MessageResponseTimeoutException;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +22,7 @@ import java.util.concurrent.CompletionException;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(BridgenetJUnitTestRunner.class)
-public class MtpConnectionMessageSendTest {
+public class MtpServerHandshakeTest {
 
     @Inject
     private DependencyInjection injector;

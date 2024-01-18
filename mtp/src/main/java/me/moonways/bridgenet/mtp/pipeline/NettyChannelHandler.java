@@ -39,8 +39,7 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<ExportedMes
         MTPChannel channel = new MTPChannel(true, ctx.channel());
 
         driver.getInjector().injectFields(channel);
-        driver.handle(message.getWrapper(),
-                new InputMessageContext<>(message.getMessage(), channel, System.currentTimeMillis()));
+        driver.handle(new InputMessageContext<>(message.getMessage(), channel, System.currentTimeMillis()));
     }
 
     @Override

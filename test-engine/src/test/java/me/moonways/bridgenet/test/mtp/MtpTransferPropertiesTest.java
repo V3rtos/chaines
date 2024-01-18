@@ -7,18 +7,15 @@ import lombok.ToString;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferPropertiesProvider;
-import me.moonways.bridgenet.mtp.transfer.provider.TransferUuidProvider;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Properties;
-import java.util.UUID;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class MtpPropertiesMessageToBytesTest {
+public class MtpTransferPropertiesTest {
 
     private static final String KEY = "output.message.text";
     private static final String VALUE = "Hello World!";

@@ -73,7 +73,7 @@ public class MTPDriver {
 
     @KeepTime
     @Synchronized
-    public void handle(@NotNull MessageWrapper wrapper, @NotNull InputMessageContext<?> context) {
-        handlerList.handle(wrapper, context);
+    public void handle(@NotNull InputMessageContext<?> context) {
+        handlerList.handle(context);
     }
 }

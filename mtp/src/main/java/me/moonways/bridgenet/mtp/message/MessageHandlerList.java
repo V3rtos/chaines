@@ -11,7 +11,6 @@ import me.moonways.bridgenet.mtp.message.persistence.MessageHandler;
 import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -50,49 +49,53 @@ public class MessageHandlerList {
         }
     }
 
-    public void handle(@NotNull MessageWrapper wrapper, @NotNull InputMessageContext<?> context) {
-        String messageName = context.getMessage().getClass().getSimpleName();
+    public void handle(@NotNull InputMessageContext<?> context) {
+        Class<?> messageClass = context.getMessage().getClass();
 
         int handlingCount = 0;
-        for (MethodTriggerState triggerMethod : messageHandlers) {
-
-            Method method = triggerMethod.getMethod();
-            Class<?> messageClass = wrapper.getMessageType();
+        for (MethodTriggerState state : messageHandlers) {
+            Method method = state.getMethod();
 
             if (method.getParameterCount() != 1) {
                 throw new MessageHandleException(
                         String.format("Can't handle message %s in handler %s", messageClass.getName(),
-                                triggerMethod.getSourceClass().getName()));
+                                state.getSourceClass().getName()));
             }
 
-            Class<?> methodMessageClass = method.getParameterTypes()[0];
+            Class<?> parameterType = method.getParameterTypes()[0];
             try {
                 Object value;
-                if (methodMessageClass.isAssignableFrom(messageClass)) {
+                if (parameterType.isAssignableFrom(messageClass)) {
                     value = context.getMessage();
-                } else if (methodMessageClass.equals(InputMessageContext.class)) {
+                } else if (parameterType.equals(InputMessageContext.class)) {
                     value = context;
                 } else {
                     continue;
                 }
 
-                method.invoke(triggerMethod.getSource(), value);
+                method.setAccessible(true);
+                method.invoke(state.getSource(), value);
+
                 handlingCount++;
 
-                log.info("Received message §3{} §rhandled in §2{}",
-                        messageName,
-                        triggerMethod.getSource().getClass().getSimpleName());
+                String handlerClassName = state.getSource().getClass().getSimpleName();
+
+                log.info("Received message §3{} §rhandled in §2{}", messageClass, handlerClassName);
             }
             catch (IllegalAccessException | InvocationTargetException | ClassCastException exception) {
-                if (!(exception instanceof ClassCastException)) {
+                if (isNotClassCastException(exception)) {
                     throw new MessageHandleException(exception);
                 }
             }
         }
 
         if (handlingCount == 0) {
-            log.info("§4No one founded message handler for '{}'", messageName);
+            log.info("§4No one founded message handler for '{}'", messageClass);
         }
+    }
+
+    private boolean isNotClassCastException(Exception exception) {
+        return !(exception instanceof ClassCastException) && !(exception.getCause() instanceof ClassCastException);
     }
 
     @Getter

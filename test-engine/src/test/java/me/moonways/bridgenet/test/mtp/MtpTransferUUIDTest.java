@@ -12,7 +12,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class MtpUuidMessageToBytesTest {
+public class MtpTransferUUIDTest {
 
     private static final String UUID_STRING = "a4c41198-4b52-4fef-b081-f336d77a08da";
     private static final byte[] EXPECTED_BYTES = {-92, -60, 17, -104, 75, 82, 79, -17, -80, -127, -13, 54, -41, 122, 8, -38};
