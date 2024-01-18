@@ -1,14 +1,12 @@
 package me.moonways.bridgenet.mtp.transfer;
 
+import org.mockito.internal.util.Primitives;
+
 import java.lang.reflect.Field;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.mockito.internal.util.Primitives;
+import java.util.*;
 
 public final class ByteCodec {
 
@@ -35,8 +33,15 @@ public final class ByteCodec {
         return PRIMITIVE_TO_WRAPPER_MAP.getOrDefault(cls, cls);
     }
 
+    public boolean isPrimitiveOrWrapper(Class<?> cls) {
+        Set<Class<?>> total = new HashSet<>();
+        total.addAll(PRIMITIVE_TO_WRAPPER_MAP.keySet());
+        total.addAll(PRIMITIVE_TO_WRAPPER_MAP.values());
+        return total.contains(cls);
+    }
+
     public int toBufferSize(Class<?> type) {
-        if (Primitives.isPrimitiveOrWrapper(type)) {
+        if (isPrimitiveOrWrapper(type)) {
             try {
                 Field bytesSizeField = getPrimitiveWrapper(type).getDeclaredField("BYTES");
                 return bytesSizeField.getInt(null);

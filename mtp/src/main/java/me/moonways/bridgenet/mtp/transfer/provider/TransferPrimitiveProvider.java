@@ -5,12 +5,11 @@ import java.util.Arrays;
 
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.MessageBytes;
-import org.mockito.internal.util.Primitives;
 
 public class TransferPrimitiveProvider implements TransferProvider {
 
-    private void validateAsPrimitive(Class<?> cls) {
-        if (!Primitives.isPrimitiveOrWrapper(cls)) {
+    private void validateAsPrimitive(ByteCodec byteCodec, Class<?> cls) {
+        if (!byteCodec.isPrimitiveOrWrapper(cls)) {
             throw new IllegalArgumentException("type");
         }
     }
@@ -34,7 +33,7 @@ public class TransferPrimitiveProvider implements TransferProvider {
             return value;
         }
 
-        validateAsPrimitive(cls);
+        validateAsPrimitive(byteCodec, cls);
 
         if (isBoolean(cls)) {
             messageBytes.moveTo(1);
@@ -69,7 +68,7 @@ public class TransferPrimitiveProvider implements TransferProvider {
             return byteBuffer.array();
         }
 
-        validateAsPrimitive(cls);
+        validateAsPrimitive(byteCodec, cls);
 
         if (isBoolean(cls)) {
             return new byte[]{(byte) ((Boolean) object ? 1 : 0)};
