@@ -47,11 +47,13 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<ExportedMes
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ExportedMessage message) {
-        MTPChannel channel = newHandlerChannel(
-                new MTPChannel(ctx.channel().attr(MTPChannel.DIRECTION_ATTRIBUTE).get(), ctx.channel()));
+        Channel channel = ctx.channel();
 
-        log.info("§9[{}]: §r{}", String.format(channel.getMessageSendLogPrefix(), ctx.channel().id()), message.getMessage());
-        driver.handle(new InputMessageContext<>(message.getMessage(), newHandlerChannel(channel), System.currentTimeMillis()));
+        MTPChannel mtpChannel = newHandlerChannel(
+                new MTPChannel(channel.attr(MTPChannel.DIRECTION_ATTRIBUTE).get(), channel));
+
+        log.info("§9[{}]: §r{}", String.format(mtpChannel.getMessageSendLogPrefix(), channel.id()), message.getMessage());
+        driver.handle(new InputMessageContext<>(message.getMessage(), newHandlerChannel(mtpChannel), System.currentTimeMillis()));
     }
 
     @Override
