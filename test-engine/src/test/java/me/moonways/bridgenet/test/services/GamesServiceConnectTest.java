@@ -1,9 +1,6 @@
 package me.moonways.bridgenet.test.services;
 
-import me.moonways.bridgenet.model.games.ActiveGame;
-import me.moonways.bridgenet.model.games.GameServer;
-import me.moonways.bridgenet.model.games.GameStatus;
-import me.moonways.bridgenet.model.games.GamesServiceModel;
+import me.moonways.bridgenet.model.games.*;
 import me.moonways.bridgenet.rsi.module.access.AccessConfig;
 import me.moonways.bridgenet.rsi.module.access.AccessRemoteModule;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
@@ -36,7 +33,8 @@ public class GamesServiceConnectTest {
         GamesServiceModel stub = subj.lookupStub();
 
         try {
-            List<GameServer> japanMapServersList = stub.getGameServersByMap("Japan");
+            Game skywarsGame = stub.getGame("skywars");
+            List<GameServer> japanMapServersList = skywarsGame.getLoadedServersByMap("Japan");
 
             for (GameServer japanMapServer : japanMapServersList) {
                 List<ActiveGame> activeGames = japanMapServer.getActiveGames();
