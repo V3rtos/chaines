@@ -55,14 +55,14 @@ public class MessageRegistry {
         Class<ServerMessage> serverAnnotation = ServerMessage.class;
 
         if (messageClass.isAnnotationPresent(clientAnnotation)) {
-            doRegister(clientAnnotation, messageClass);
+            registerAnnotated(clientAnnotation, messageClass);
         }
         if (messageClass.isAnnotationPresent(serverAnnotation)) {
-            doRegister(serverAnnotation, messageClass);
+            registerAnnotated(serverAnnotation, messageClass);
         }
     }
 
-    private void doRegister(Class<? extends Annotation> annotation, Class<?> messageType) {
+    private void registerAnnotated(Class<? extends Annotation> annotation, Class<?> messageType) {
         MessageWrapper messageWrapper = toWrapper(annotation, messageType);
         messageWrapperSet.add(messageWrapper);
 
