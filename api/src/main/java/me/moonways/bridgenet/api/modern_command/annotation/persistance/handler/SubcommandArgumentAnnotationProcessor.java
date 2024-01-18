@@ -14,6 +14,9 @@ public class SubcommandArgumentAnnotationProcessor extends CommandAnnotationProc
 
     @Override
     protected void updateCommandInfo(CommandAnnotationContext<SubcommandArgument> context) {
+        SubcommandArgument subcommandArgument = context.getAnnotation();
+
+        //todo get args from session and validate and refactor SubcommandArgument to SubcommandArguments
     }
 
     @Override

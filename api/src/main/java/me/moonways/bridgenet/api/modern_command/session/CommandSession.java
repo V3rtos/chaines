@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.api.modern_command.session;
 
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_command.argument.wrapper.CommandArgumentWrapper;
 
 import java.util.UUID;
 
@@ -29,6 +30,11 @@ public interface CommandSession {
      * @param millis - время в миллисекундах.
      */
     void block(long millis);
+
+    /**
+     * Получить обёртку для работы с аргументами.
+     */
+    CommandArgumentWrapper getArgumentWrapper();
 
     /**
      * Навсегда заблокировать сессию.

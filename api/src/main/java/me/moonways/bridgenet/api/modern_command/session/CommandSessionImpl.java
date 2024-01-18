@@ -3,6 +3,8 @@ package me.moonways.bridgenet.api.modern_command.session;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_command.argument.wrapper.CommandArgumentWrapper;
+import me.moonways.bridgenet.api.modern_command.argument.wrapper.CommandArgumentWrapperImpl;
 
 import java.util.UUID;
 
@@ -13,6 +15,14 @@ public class CommandSessionImpl implements CommandSession {
     private final EntityCommandSender entity;
     private final UUID uuid;
 
+    private final CommandArgumentWrapper argumentWrapper;
+
+    public CommandSessionImpl(EntityCommandSender entity, UUID uuid, String[] args) {
+        this.entity = entity;
+        this.uuid = uuid;
+
+        this.argumentWrapper = new CommandArgumentWrapperImpl(args);
+    }
     @Override
     public UUID getUuid() {
         return uuid;
@@ -25,11 +35,9 @@ public class CommandSessionImpl implements CommandSession {
 
     @Override
     public void block(long millis) {
-
     }
 
     @Override
     public void block() {
-
     }
 }

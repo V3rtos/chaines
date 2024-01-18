@@ -68,7 +68,7 @@ public class CommandAnnotationService {
         T annotation = annotatedElement.getDeclaredAnnotation(annotationType);
 
         if (annotation != null) {
-            CommandAnnotationContext<T> context = new CommandAnnotationContext<>(annotation, session, null); // todo
+            CommandAnnotationContext<T> context = new CommandAnnotationContext<>(annotation, session, null);
             return processCommandAnnotation(context);
         }
 
