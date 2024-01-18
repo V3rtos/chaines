@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.mtp.transfer.provider;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -79,7 +80,7 @@ public class TransferPrimitiveProvider implements TransferProvider {
 
         byte[] array = byteBuffer.array();
 
-        byteBuffer.clear();
+        ((Buffer) byteBuffer).clear();
         return array;
     }
 }

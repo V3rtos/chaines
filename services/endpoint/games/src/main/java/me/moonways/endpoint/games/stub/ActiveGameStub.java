@@ -1,24 +1,25 @@
 package me.moonways.endpoint.games.stub;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import me.moonways.bridgenet.model.games.ActiveGame;
+import me.moonways.bridgenet.model.games.Game;
 import me.moonways.bridgenet.model.games.GameState;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.UUID;
 
 @Getter
-public class ActiveGameStub extends AbstractEndpointDefinition implements ActiveGame {
+@AllArgsConstructor
+public class ActiveGameStub implements ActiveGame, Serializable {
 
     private final UUID uniqueId;
-    private final GameState state;
+    private final Game parent;
 
-    public ActiveGameStub(UUID uniqueId, GameState state) throws RemoteException {
-        super();
-        this.uniqueId = uniqueId;
-        this.state = state;
-    }
+    @Setter
+    private GameState state;
 
     @Override
     public String getMap() throws RemoteException {

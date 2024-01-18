@@ -1,50 +1,82 @@
 package me.moonways.endpoint.games.stub;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.model.games.ActiveGame;
 import me.moonways.bridgenet.model.games.Game;
 import me.moonways.bridgenet.model.games.GameServer;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-@Getter
-public class GameStub extends AbstractEndpointDefinition implements Game {
+@RequiredArgsConstructor
+public class GameStub implements Game, Serializable {
 
+    @Getter
     private final UUID uniqueId;
+    @Getter
     private final String name;
 
-    public GameStub(UUID uniqueId, String name) throws RemoteException {
-        super();
-        this.uniqueId = uniqueId;
-        this.name = name;
+    private final List<GameServerStub> loadedServers = new CopyOnWriteArrayList<>();
+
+    public void addGameServer(GameServerStub gameServer) {
+        loadedServers.add(gameServer);
+    }
+
+    public void removeGameServer(GameServerStub gameServer) {
+        loadedServers.remove(gameServer);
+    }
+
+    @Override
+    public Optional<ActiveGame> getActiveGame(UUID uniqueId) throws RemoteException {
+        for (ActiveGame activeGame : getActiveGames()) {
+            if (activeGame.getUniqueId().equals(uniqueId)) {
+                return Optional.of(activeGame);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
     public List<String> getLoadedMaps() throws RemoteException {
-        return null;
+        Set<String> loadedMaps = new HashSet<>();
+
+        for (ActiveGame activeGame : getActiveGames()) {
+            loadedMaps.add(activeGame.getMap());
+        }
+
+        return new ArrayList<>(loadedMaps);
     }
 
     @Override
     public List<GameServer> getLoadedServers() throws RemoteException {
-        return null;
+        return Collections.unmodifiableList(loadedServers);
     }
 
     @Override
     public List<ActiveGame> getActiveGames() throws RemoteException {
-        return null;
-    }
+        List<ActiveGame> activeGamesList = new ArrayList<>();
 
-    @Override
-    public List<GameServer> getLoadedServersByMap(@NotNull String map) throws RemoteException {
-        return null;
+        for (GameServer gameServer : getLoadedServers()) {
+            activeGamesList.addAll(gameServer.getActiveGames());
+        }
+
+        return activeGamesList;
     }
 
     @Override
     public List<ActiveGame> getActiveGamesByMap(@NotNull String map) throws RemoteException {
-        return null;
+        List<ActiveGame> gamesByMapList = new ArrayList<>();
+
+        for (ActiveGame activeGame : getActiveGames()) {
+            if (activeGame.getMap().equalsIgnoreCase(map)) {
+                gamesByMapList.add(activeGame);
+            }
+        }
+
+        return gamesByMapList;
     }
 }

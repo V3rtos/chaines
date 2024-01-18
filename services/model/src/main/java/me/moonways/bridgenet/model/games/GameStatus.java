@@ -5,8 +5,7 @@ public enum GameStatus {
     IDLE,
     WAIT_PLAYERS,
     PROCESSING,
-    INACTIVE,
-    ;
+    INACTIVE;
 
     /**
      * Проверить может ли новый игрок присоединиться

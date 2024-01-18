@@ -1,6 +1,8 @@
 package me.moonways.bridgenet.mtp;
 
 import io.netty.channel.Channel;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
@@ -12,18 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
 @RequiredArgsConstructor
 public class MTPChannel implements MTPMessageSender {
 
     private static final int DEFAULT_RESPONSE_TIMEOUT = 5000;
-
-    private final Map<String, Object> properties = new ConcurrentHashMap<>();
 
     @Getter
     private final boolean isClient;
@@ -55,10 +53,10 @@ public class MTPChannel implements MTPMessageSender {
         //sendMessage(new ResponsibleMessage(
         //        createResponseSessionId(), driver.export(message)
         //));
-        sendMessage(message);
-
         CompletableFuture<R> future = new CompletableFuture<>();
         responseService.await(timeout, future, responseType);
+
+        sendMessage(message);
 
         return future;
     }
@@ -83,7 +81,8 @@ public class MTPChannel implements MTPMessageSender {
 
     @Override
     public Optional<Object> getProperty(@NotNull String key) {
-        return Optional.ofNullable(properties.get(key.toLowerCase()));
+        Attribute<Object> attribute = channel.attr(AttributeKey.valueOf(key));
+        return Optional.ofNullable(attribute.get());
     }
 
     @Override
@@ -98,7 +97,8 @@ public class MTPChannel implements MTPMessageSender {
 
     @Override
     public void setProperty(@NotNull String key, @Nullable Object value) {
-        properties.put(key.toLowerCase(), value);
+        Attribute<Object> attribute = channel.attr(AttributeKey.valueOf(key));
+        attribute.set(value);
     }
 
     private String getMessageSendLogPrefix() {

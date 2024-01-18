@@ -12,8 +12,6 @@ import me.moonways.bridgenet.mtp.message.encryption.MessageEncryption;
 import me.moonways.bridgenet.mtp.transfer.ByteCompression;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 
-import java.io.IOException;
-
 @RequiredArgsConstructor
 public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
 
@@ -28,10 +26,10 @@ public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
         MessageWrapper wrapper = exportedMessage.getWrapper();
         Object message = exportedMessage.getMessage();
 
-        MessageTransfer messageTransfer = MessageTransfer.encode(message);
-        messageTransfer.buf();
-
         try {
+            MessageTransfer messageTransfer = MessageTransfer.encode(message);
+            messageTransfer.buf();
+
             byteBuf.writeIntLE(wrapper.getId());
             byte[] messageBytes = messageTransfer.getBytes();
 
@@ -43,7 +41,7 @@ public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
 
             ByteCompression.write(messageBytes, byteBuf);
         }
-        catch (IOException exception) {
+        catch (Exception exception) {
             throw new ChannelException(exception);
         }
     }

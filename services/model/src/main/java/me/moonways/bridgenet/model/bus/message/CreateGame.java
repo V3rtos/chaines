@@ -1,9 +1,6 @@
 package me.moonways.bridgenet.model.bus.message;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
@@ -16,6 +13,7 @@ import java.util.UUID;
 @ServerMessage
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class CreateGame {
 
     @ByteTransfer

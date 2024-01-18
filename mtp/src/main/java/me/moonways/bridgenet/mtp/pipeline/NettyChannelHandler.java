@@ -36,7 +36,7 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<ExportedMes
     protected void channelRead0(ChannelHandlerContext ctx, ExportedMessage message) {
         log.info("§9[Client[ID={}] -> Server]: §r{}", ctx.channel().id(), message.getMessage());
 
-        MTPChannel channel = new MTPChannel(true, ctx.channel());
+        MTPChannel channel = new MTPChannel(false, ctx.channel()); // todo - reverse 'isClient'
 
         driver.getInjector().injectFields(channel);
         driver.handle(new InputMessageContext<>(message.getMessage(), channel, System.currentTimeMillis()));

@@ -27,6 +27,11 @@ public interface EntityServer extends Remote {
     String getName() throws RemoteException;
 
     /**
+     * Получить информацию о сервере.
+     */
+    ServerInfo getServerInfo() throws RemoteException;
+
+    /**
      * Получить канал сервера по протоколу MTP
      * для отправки и обработки сообщений.
      */

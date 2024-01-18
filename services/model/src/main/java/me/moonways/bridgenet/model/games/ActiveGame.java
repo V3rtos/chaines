@@ -20,4 +20,9 @@ public interface ActiveGame extends Remote {
      * Получить текущее состояние игры
      */
     GameState getState() throws RemoteException;
+
+    /**
+     * Получить родительскую игру.
+     */
+    Game getParent();
 }
