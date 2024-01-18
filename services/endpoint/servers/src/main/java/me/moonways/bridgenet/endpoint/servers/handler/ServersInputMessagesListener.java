@@ -1,13 +1,16 @@
-package me.moonways.bridgenet.endpoint.servers;
+package me.moonways.bridgenet.endpoint.servers.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.endpoint.servers.ConnectedServerStub;
+import me.moonways.bridgenet.endpoint.servers.ServersContainer;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.model.bus.message.Redirect;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerFlag;
 import me.moonways.bridgenet.model.servers.ServerInfo;
 import me.moonways.bridgenet.model.servers.ServersServiceModel;
@@ -73,7 +76,7 @@ public class ServersInputMessagesListener {
             ConnectedServerStub server = createServer(input, serverInfo);
             serverKey = container.registerServer(server);
 
-            server.setUniqueId(serverKey);
+            doSuccessRegister(serverKey, server);
 
             log.info("Server §2{} §rwas registered now by key: §2{}", serverInfo.getName(), serverKey);
             input.answer(new Handshake.Success(serverKey));
@@ -82,6 +85,11 @@ public class ServersInputMessagesListener {
             log.info("§4Server {} has already registered by key: {}", serverInfo.getName(), serverKey);
             input.answer(new Handshake.Failure(serverKey));
         }
+    }
+
+    private void doSuccessRegister(UUID serverKey, ConnectedServerStub server) {
+        server.setUniqueId(serverKey);
+        server.getChannel().setProperty(EntityServer.CHANNEL_PROPERTY, server);
     }
 
     private ConnectedServerStub createServer(InputMessageContext<Handshake> input, ServerInfo serverInfo) {

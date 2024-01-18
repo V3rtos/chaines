@@ -7,18 +7,24 @@ import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
-import me.moonways.bridgenet.mtp.message.ResponsibleMessage;
 import me.moonways.bridgenet.mtp.pipeline.response.DefaultMessageResponseService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
 @RequiredArgsConstructor
-public class MTPChannel implements MTPMessageSender {
+public class MTPChannel implements MTPMessageSender, Serializable {
 
     private static final int DEFAULT_RESPONSE_TIMEOUT = 5000;
+
+    private final Map<String, Object> properties = new ConcurrentHashMap<>();
 
     @Getter
     private final boolean isClient;
@@ -28,7 +34,6 @@ public class MTPChannel implements MTPMessageSender {
 
     @Inject
     private MTPDriver driver;
-
     @Inject
     private DefaultMessageResponseService responseService;
 
@@ -75,6 +80,26 @@ public class MTPChannel implements MTPMessageSender {
             return lastResponseSessionId = 0;
         }
         return lastResponseSessionId++;
+    }
+
+    @Override
+    public Optional<Object> getProperty(@NotNull String key) {
+        return Optional.ofNullable(properties.get(key.toLowerCase()));
+    }
+
+    @Override
+    public Optional<String> getPropertyString(@NotNull String key) {
+        return getProperty(key).map(Object::toString);
+    }
+
+    @Override
+    public Optional<Integer> getPropertyInt(@NotNull String key) {
+        return getPropertyString(key).map(Integer::parseInt);
+    }
+
+    @Override
+    public void setProperty(@NotNull String key, @Nullable Object value) {
+        properties.put(key.toLowerCase(), value);
     }
 
     private String getMessageSendLogPrefix() {

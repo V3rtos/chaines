@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface EntityServer extends Remote {
+    String CHANNEL_PROPERTY = "entity.server.instance";
 
     /**
      * Получение уникального идентификатора сервера,
