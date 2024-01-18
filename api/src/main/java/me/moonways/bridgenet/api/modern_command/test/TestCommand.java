@@ -1,8 +1,9 @@
 package me.moonways.bridgenet.api.modern_command.test;
 
+import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.modern_command.*;
 import me.moonways.bridgenet.api.modern_command.argument.StringArgument;
-import me.moonways.bridgenet.api.modern_command.entity.ConsoleEntity;
+import me.moonways.bridgenet.api.modern_command.entity.ConsoleCommandSender;
 import me.moonways.bridgenet.api.modern_command.entity.EntityType;
 import me.moonways.bridgenet.api.modern_command.message.MessageBuilder;
 import me.moonways.bridgenet.api.modern_command.annotation.persistance.Description;
@@ -34,7 +35,7 @@ public class TestCommand {
     @SubcommandUsageDescription("<string> <boolean>")
     @SubcommandArgument(argument = "{0}", argumentType = StringArgument.class)
     public void primary_subcommand(CommandSession session) {
-        ConsoleEntity console = session.from(ConsoleEntity.class);
+        EntityCommandSender console = session.from(ConsoleCommandSender.class);
 
         console.sendMessage(MessageBuilder
                 .newBuilder()

@@ -88,7 +88,7 @@ public class CommandManagementService {
     }
 
     private void writeCommandNotExists(@NotNull EntityCommandSender entity) {
-        String formattedMessage = COMMAND_NOT_FOUND_MSG.replace("%s", "Команда не найдена");
+        String formattedMessage = String.format(COMMAND_NOT_FOUND_MSG, "Команда не найдена");
 
         entity.sendMessage(formattedMessage);
     }

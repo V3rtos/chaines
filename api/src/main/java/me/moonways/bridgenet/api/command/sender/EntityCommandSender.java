@@ -43,7 +43,7 @@ public interface EntityCommandSender {
      * @param entityType - тип сущности.
      * @return - true/false.
      */
-    boolean instanceOf(EntityType entityType);
+    boolean isInstanceOf(EntityType entityType);
 
     /**
      * Получить UUID сущности.
