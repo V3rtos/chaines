@@ -39,8 +39,6 @@ public final class DependencyScanner {
         }
 
         LinkedList<Class<?>> totalComponentsList = new LinkedList<>(scannerController.requestResources(scannerFilter));
-        totalComponentsList.sort(Comparator.comparing(component -> component.getDeclaredFields().length));
-
         setInjectionQueue(totalComponentsList);
 
         return totalComponentsList;
