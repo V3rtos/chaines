@@ -3,7 +3,6 @@ package me.moonways.bridgenet.endpoint.servers;
 import lombok.Synchronized;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
 import me.moonways.bridgenet.model.servers.ServerFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,12 +30,26 @@ public final class ServersContainer {
         return uuid;
     }
 
-    public @Nullable UUID getServerKey(@NotNull String serverName) {
+    public @Nullable UUID getExactServerKey(@NotNull String serverName) {
         return registeredServersMap.keySet()
                 .stream()
                 .filter(key -> {
                     try {
                         return registeredServersMap.get(key).getName().equalsIgnoreCase(serverName);
+                    } catch (RemoteException exception) {
+                        throw new ServersEndpointException(exception);
+                    }
+                })
+                .findFirst()
+                .orElse(null);
+    }
+
+    public @Nullable UUID getServerKey(@NotNull String serverName) {
+        return registeredServersMap.keySet()
+                .stream()
+                .filter(key -> {
+                    try {
+                        return registeredServersMap.get(key).getName().contains(serverName);
                     } catch (RemoteException exception) {
                         throw new ServersEndpointException(exception);
                     }
@@ -61,13 +74,18 @@ public final class ServersContainer {
     }
 
     @Synchronized
-    public ConnectedServerStub getConnectedServer(@NotNull UUID serverKey) {
+    public ConnectedServerStub getConnectedServerExact(@NotNull UUID serverKey) {
         return registeredServersMap.get(serverKey);
     }
 
     @Synchronized
-    public ConnectedServerStub getConnectedServer(@NotNull String serverName) {
-        return registeredServersMap.get(getServerKey(serverName));
+    public ConnectedServerStub getConnectedServerExact(@NotNull String serverName) {
+        return registeredServersMap.get(getExactServerKey(serverName));
+    }
+
+    @Synchronized
+    public ConnectedServerStub getConnectedServer(@NotNull String input) {
+        return registeredServersMap.get(getServerKey(input));
     }
 
     public Stream<ConnectedServerStub> getConnectedServersWithFlag(@NotNull ServerFlag flag) {

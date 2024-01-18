@@ -8,7 +8,6 @@ import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnection
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.model.bus.message.Redirect;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerFlag;
 import me.moonways.bridgenet.model.servers.ServerInfo;
 import me.moonways.bridgenet.model.servers.ServersServiceModel;
@@ -16,7 +15,6 @@ import me.moonways.bridgenet.mtp.message.InputMessageContext;
 import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
 
 import java.net.InetSocketAddress;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -54,7 +52,7 @@ public class ServersInputMessagesListener {
         UUID playerUUID = redirect.getPlayerUUID();
         UUID serverKey = redirect.getServerKey();
 
-        ConnectedServerStub server = container.getConnectedServer(serverKey);
+        ConnectedServerStub server = container.getConnectedServerExact(serverKey);
 
         if (server == null) {
             log.info("§4Server by key '{}' is not connected", serverKey);
@@ -69,7 +67,7 @@ public class ServersInputMessagesListener {
     }
 
     private void registerServer(InputMessageContext<Handshake> input, ServerInfo serverInfo) {
-        UUID serverKey = container.getServerKey(serverInfo.getName());
+        UUID serverKey = container.getExactServerKey(serverInfo.getName());
 
         if (serverKey == null) {
             ConnectedServerStub server = createServer(input, serverInfo);

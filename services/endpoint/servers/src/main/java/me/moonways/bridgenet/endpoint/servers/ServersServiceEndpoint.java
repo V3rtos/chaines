@@ -48,8 +48,13 @@ public class ServersServiceEndpoint extends AbstractEndpointDefinition implement
     }
 
     @Override
-    public Optional<EntityServer> getServer(@NotNull UUID uuid) throws RemoteException {
-        return Optional.ofNullable(serversContainer.getConnectedServer(uuid));
+    public Optional<EntityServer> getServerExact(@NotNull String serverName) throws RemoteException {
+        return Optional.ofNullable(serversContainer.getConnectedServerExact(serverName));
+    }
+
+    @Override
+    public Optional<EntityServer> getServerExact(@NotNull UUID uuid) throws RemoteException {
+        return Optional.ofNullable(serversContainer.getConnectedServerExact(uuid));
     }
 
     @Override
@@ -59,11 +64,11 @@ public class ServersServiceEndpoint extends AbstractEndpointDefinition implement
 
     @Override
     public boolean hasServer(@NotNull UUID uuid) throws RemoteException {
-        return getServer(uuid).isPresent();
+        return getServerExact(uuid).isPresent();
     }
 
     @Override
     public boolean hasServer(@NotNull String serverName) throws RemoteException {
-        return getServer(serverName).isPresent();
+        return getServerExact(serverName).isPresent();
     }
 }

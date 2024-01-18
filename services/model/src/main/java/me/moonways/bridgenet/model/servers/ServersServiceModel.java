@@ -23,18 +23,24 @@ public interface ServersServiceModel extends RemoteService {
     List<EntityServer> getFallbackServers() throws RemoteException;
 
     /**
+     * Получить список серверов, которые отвечают за редирект
+     * при падении текущих серверов.
+     */
+    Optional<EntityServer> getServerExact(@NotNull String serverName) throws RemoteException;
+
+    /**
      * Получить инициализированный и подключенный сервер
      * по его уникальному ключевому идентификатору.
      *
      * @param uuid - ключ сервера.
      */
-    Optional<EntityServer> getServer(@NotNull UUID uuid) throws RemoteException;
+    Optional<EntityServer> getServerExact(@NotNull UUID uuid) throws RemoteException;
 
     /**
      * Получить инициализированный и подключенный сервер
-     * по его само-идентифицированному названию.
+     * по его ПРИМЕРНОМУ само-идентифицированному названию.
      *
-     * @param serverName - название сервера.
+     * @param serverName - примерное название сервера.
      */
     Optional<EntityServer> getServer(@NotNull String serverName) throws RemoteException;
 
