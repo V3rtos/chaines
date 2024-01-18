@@ -11,7 +11,6 @@ import me.moonways.bridgenet.mtp.pipeline.response.DefaultMessageResponseService
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
 @RequiredArgsConstructor
-public class MTPChannel implements MTPMessageSender, Serializable {
+public class MTPChannel implements MTPMessageSender {
 
     private static final int DEFAULT_RESPONSE_TIMEOUT = 5000;
 

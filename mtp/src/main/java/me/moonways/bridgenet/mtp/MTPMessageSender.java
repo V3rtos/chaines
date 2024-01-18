@@ -3,6 +3,7 @@ package me.moonways.bridgenet.mtp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -12,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
  * внутреннего протокола MTP, и способы к
  * транспортировке сообщений.
  */
-public interface MTPMessageSender {
+public interface MTPMessageSender extends Serializable {
 
     /**
      * Получить кешированное значение аттрибута.
