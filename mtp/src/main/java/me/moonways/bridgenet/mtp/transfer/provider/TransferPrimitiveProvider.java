@@ -27,9 +27,11 @@ public class TransferPrimitiveProvider implements TransferProvider {
 
             int length = byteCodec.readInt(Arrays.copyOfRange(array, 0, Integer.BYTES));
             messageBytes.moveTo(Integer.BYTES);
+
+            String value = new String(Arrays.copyOfRange(array, Integer.BYTES, Integer.BYTES + length));
             messageBytes.moveTo(length);
 
-            return new String(array, 0, length);
+            return value;
         }
 
         validateAsPrimitive(cls);
@@ -56,13 +58,13 @@ public class TransferPrimitiveProvider implements TransferProvider {
     public byte[] toByteArray(ByteCodec byteCodec, Object object) {
         final Class<?> cls = object.getClass();
 
-        if (CharSequence.class.isAssignableFrom(cls)) {
-            String value = object.toString();
+        if (String.class.isAssignableFrom(cls)) {
+            byte[] bytes = ((String) object).getBytes();
 
-            ByteBuffer byteBuffer = ByteBuffer.allocate(Integer.BYTES + value.length());
+            ByteBuffer byteBuffer = ByteBuffer.allocate(Integer.BYTES + bytes.length);
 
-            byteCodec.write(value.length(), byteBuffer);
-            byteCodec.write(value, byteBuffer);
+            byteCodec.write(bytes.length, byteBuffer);
+            byteCodec.write(bytes, byteBuffer);
 
             return byteBuffer.array();
         }

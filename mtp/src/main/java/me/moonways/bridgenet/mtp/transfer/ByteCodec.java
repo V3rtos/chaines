@@ -119,7 +119,7 @@ public final class ByteCodec {
         }
 
         if (obj instanceof String) {
-            byteBuffer.put(obj.toString().getBytes());
+            byteBuffer.put(((String) obj).getBytes());
         }
     }
 
