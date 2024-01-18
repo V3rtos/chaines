@@ -1,5 +1,7 @@
 package me.moonways.endpoint.games;
 
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.games.Game;
 import me.moonways.bridgenet.model.games.GamesServiceModel;
 import me.moonways.bridgenet.model.servers.EntityServer;
@@ -12,17 +14,22 @@ import java.util.UUID;
 
 public final class GamesServiceEndpoint extends AbstractEndpointDefinition implements GamesServiceModel {
 
+    @Inject
+    private GamesContainer container;
+    @Inject
+    private DependencyInjection injector;
+
     public GamesServiceEndpoint() throws RemoteException {
         super();
     }
 
     @Override
-    public Game getGame(@NotNull UUID uuid) {
+    public Game getGame(@NotNull UUID uuid) throws RemoteException {
         return null;
     }
 
     @Override
-    public Game getGame(@NotNull String name) {
+    public Game getGame(@NotNull String name) throws RemoteException {
         return null;
     }
 

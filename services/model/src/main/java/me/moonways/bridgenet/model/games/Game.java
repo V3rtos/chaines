@@ -12,12 +12,12 @@ public interface Game extends Remote {
     /**
      * Получить уникальный регистрационный номер игры.
      */
-    UUID getUniqueId();
+    UUID getUniqueId() throws RemoteException;
 
     /**
      * Получить название игры.
      */
-    String getName();
+    String getName() throws RemoteException;
 
     /**
      * Получить список загруженных карт в этой игре

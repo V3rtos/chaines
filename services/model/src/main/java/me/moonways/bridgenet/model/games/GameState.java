@@ -21,7 +21,7 @@ public interface GameState extends Remote {
      * Сверить статус игрового сервера на необходимый.
      * @param gameStatus - игровой статус.
      */
-    boolean checkStatus(@NotNull GameStatus gameStatus);
+    boolean checkStatus(@NotNull GameStatus gameStatus) throws RemoteException;
 
     /**
      * Получить максимальное возможное количество игроков,

@@ -16,13 +16,13 @@ public interface GamesServiceModel extends RemoteService {
      *
      * @param uuid - идентификатор игры.
      */
-    Game getGame(@NotNull UUID uuid);
+    Game getGame(@NotNull UUID uuid) throws RemoteException;
 
     /**
      * Получить игру по ее названию.
      * @param name - название игры.
      */
-    Game getGame(@NotNull String name);
+    Game getGame(@NotNull String name) throws RemoteException;
 
     /**
      * Получить список всех загруженных игр

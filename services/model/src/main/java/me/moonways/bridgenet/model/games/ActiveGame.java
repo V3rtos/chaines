@@ -9,7 +9,7 @@ public interface ActiveGame extends Remote {
     /**
      * Получить уникальный регистрационный номер активной игры.
      */
-    UUID getUniqueId();
+    UUID getUniqueId() throws RemoteException;
 
     /**
      * Получить текущую загруженную карту на данный сервер.
