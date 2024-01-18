@@ -28,7 +28,7 @@ public class CommandAnnotationService {
 
     @PostConstruct
     private void initAnnotationProcessors() {
-        injector.searchByProject(AutoregisterCommandAnnotation.class);
+        injector.peekAnnotatedMembers(AutoregisterCommandAnnotation.class);
 
         annotationProcessorsMap.putAll(injector.getContainer().getStoredInstances(AutoregisterCommandAnnotation.class)
                 .stream()
