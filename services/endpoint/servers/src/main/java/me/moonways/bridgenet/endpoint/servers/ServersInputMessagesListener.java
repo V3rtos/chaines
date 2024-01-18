@@ -4,13 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
 import me.moonways.bridgenet.model.bus.message.Handshake;
+import me.moonways.bridgenet.model.bus.message.Redirect;
+import me.moonways.bridgenet.model.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerFlag;
 import me.moonways.bridgenet.model.servers.ServerInfo;
+import me.moonways.bridgenet.model.servers.ServersServiceModel;
 import me.moonways.bridgenet.mtp.message.InputMessageContext;
 import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
 
 import java.net.InetSocketAddress;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -21,9 +27,16 @@ import java.util.UUID;
 public class ServersInputMessagesListener {
 
     private final ServersContainer container;
+    private final ServersServiceModel serversServiceModel;
 
     @Inject
     private DependencyInjection injector;
+
+    @Inject
+    private PlayersOnServersConnectionService playersOnServersConnectionService;
+
+    @Inject
+    private PlayersServiceModel playersServiceModel;
 
     @MessageTrigger
     public void handle(InputMessageContext<Handshake> input) {
@@ -34,6 +47,25 @@ public class ServersInputMessagesListener {
             ServerInfo serverInfo = toServerInfo(handshake.getProperties());
             registerServer(input, serverInfo);
         }
+    }
+
+    @MessageTrigger
+    public void handle(Redirect redirect) {
+        UUID playerUUID = redirect.getPlayerUUID();
+        UUID serverKey = redirect.getServerKey();
+
+        ConnectedServerStub server = container.getConnectedServer(serverKey);
+
+        if (server == null) {
+            log.info("§4Server by key '{}' is not connected", serverKey);
+            return;
+        }
+
+        redirectPlayer(server, playerUUID);
+    }
+
+    private void redirectPlayer(ConnectedServerStub serverTo, UUID playerUUID) {
+        playersOnServersConnectionService.insert(playerUUID, serverTo.getUniqueId());
     }
 
     private void registerServer(InputMessageContext<Handshake> input, ServerInfo serverInfo) {

@@ -82,7 +82,7 @@ public class MessageHandlerList {
 
                 log.info("Received message §3{} §rhandled in §2{}", messageClass, handlerClassName);
             }
-            catch (IllegalAccessException | InvocationTargetException | ClassCastException exception) {
+            catch (Throwable exception) {
                 if (isNotClassCastException(exception)) {
                     throw new MessageHandleException(exception);
                 }
@@ -94,7 +94,7 @@ public class MessageHandlerList {
         }
     }
 
-    private boolean isNotClassCastException(Exception exception) {
+    private boolean isNotClassCastException(Throwable exception) {
         return !(exception instanceof ClassCastException) && !(exception.getCause() instanceof ClassCastException);
     }
 

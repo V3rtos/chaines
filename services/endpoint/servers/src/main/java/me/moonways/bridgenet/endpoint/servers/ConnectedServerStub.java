@@ -4,8 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
 import me.moonways.bridgenet.model.bus.message.Redirect;
+import me.moonways.bridgenet.model.players.PlayersServiceModel;
 import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
+import me.moonways.bridgenet.model.players.connection.PlayerConnection;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerInfo;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
@@ -16,6 +20,7 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
@@ -27,6 +32,12 @@ public class ConnectedServerStub implements EntityServer {
 
     private final ServerInfo serverInfo;
     private final MTPMessageSender channel;
+
+    @Inject
+    private PlayersServiceModel playersServiceModel;
+
+    @Inject
+    private PlayersOnServersConnectionService playersOnServersConnectionService;
 
     @Override
     public String getName() throws RemoteException {
@@ -50,11 +61,21 @@ public class ConnectedServerStub implements EntityServer {
 
     @Override
     public Collection<ConnectedEntityPlayer> getConnectedPlayers() throws RemoteException {
-        return null;
+        PlayerConnection playerConnection = playersServiceModel.getPlayerConnection();
+        return playersOnServersConnectionService.getPlayersOnServerByKey(uniqueId)
+                .stream()
+                .map(uuid -> {
+                    try {
+                        return playerConnection.getConnectedPlayer(uuid);
+                    } catch (RemoteException exception) {
+                        throw new ServersEndpointException(exception);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     public int getTotalOnline() throws RemoteException {
-        return 0;
+        return playersOnServersConnectionService.getPlayersOnServerByKey(uniqueId).size();
     }
 }
