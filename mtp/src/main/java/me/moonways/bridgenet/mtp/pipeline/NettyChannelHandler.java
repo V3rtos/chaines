@@ -1,11 +1,13 @@
 package me.moonways.bridgenet.mtp.pipeline;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.mtp.MTPChannel;
 import me.moonways.bridgenet.mtp.MTPDriver;
+import me.moonways.bridgenet.mtp.ProtocolDirection;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.InputMessageContext;
 
@@ -32,14 +34,24 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<ExportedMes
         log.info("§4Connected client connection channel has been severed from the server: (ID={})", ctx.channel().id());
     }
 
+    private MTPChannel newHandlerChannel(MTPChannel channel) {
+        ProtocolDirection direction = channel.getDirection();
+        ProtocolDirection newDirection = direction == ProtocolDirection.TO_CLIENT ? ProtocolDirection.TO_SERVER : ProtocolDirection.TO_CLIENT;
+
+        MTPChannel mtpChannel = new MTPChannel(newDirection, channel.getHandle());
+
+        driver.getInjector().injectFields(mtpChannel);
+
+        return mtpChannel;
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ExportedMessage message) {
-        log.info("§9[Client[ID={}] -> Server]: §r{}", ctx.channel().id(), message.getMessage());
+        MTPChannel channel = newHandlerChannel(
+                new MTPChannel(ctx.channel().attr(MTPChannel.DIRECTION_ATTRIBUTE).get(), ctx.channel()));
 
-        MTPChannel channel = new MTPChannel(false, ctx.channel()); // todo - reverse 'isClient'
-
-        driver.getInjector().injectFields(channel);
-        driver.handle(new InputMessageContext<>(message.getMessage(), channel, System.currentTimeMillis()));
+        log.info("§9[{}]: §r{}", String.format(channel.getMessageSendLogPrefix(), ctx.channel().id()), message.getMessage());
+        driver.handle(new InputMessageContext<>(message.getMessage(), newHandlerChannel(channel), System.currentTimeMillis()));
     }
 
     @Override

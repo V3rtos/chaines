@@ -49,7 +49,7 @@ public class TransferPrimitiveProvider implements TransferProvider {
         byte[] src = Arrays.copyOfRange(array, 0, bufferSize);
 
         byteBuffer.put(src, 0, src.length);
-        byteBuffer.flip();
+        ((Buffer) byteBuffer).flip();
 
         return byteCodec.read(cls, byteBuffer);
     }

@@ -8,7 +8,6 @@ import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.*;
-import me.moonways.bridgenet.mtp.message.DefaultMessage;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
 
 @Autobind
@@ -37,13 +36,13 @@ public class TestMTPClientConnection {
                 .build();
 
         channel = client.connectSync();
+        channel.initAttributes();
+
         injector.injectFields(channel);
     }
 
     public void prepareTest() {
         connectionFactory = MTPConnectionFactory.createConnectionFactory(injector);
-        driver.register(DefaultMessage.class);
-
         connect();
     }
 }
