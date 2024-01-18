@@ -2,8 +2,8 @@ package me.moonways.endpoint.gui.item;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.moonways.model.gui.item.Item;
-import me.moonways.model.gui.item.Material;
+import me.moonways.bridgenet.model.gui.item.Item;
+import me.moonways.bridgenet.model.gui.item.Material;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;

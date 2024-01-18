@@ -1,13 +1,11 @@
 package me.moonways.bridgenet.mtp.message;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.DependencyContainer;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.ProtocolDirection;
-import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
-import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
-import me.moonways.bridgenet.mtp.message.inject.ServerMessage;
+import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
+import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
@@ -53,15 +51,24 @@ public class MessageRegistry {
     }
 
     public void register(Class<?> messageClass) {
-        Class<? extends Annotation> messageAnnotation = findMessageAnnotation(messageClass);
+        Class<ClientMessage> clientAnnotation = ClientMessage.class;
+        Class<ServerMessage> serverAnnotation = ServerMessage.class;
 
-        if (messageAnnotation == null) {
-            log.info("§4Protocol cannot be register message {}: §cMessage annotation is not found", messageClass.getSimpleName());
-            return;
+        if (messageClass.isAnnotationPresent(clientAnnotation)) {
+            doRegister(clientAnnotation, messageClass);
         }
+        if (messageClass.isAnnotationPresent(serverAnnotation)) {
+            doRegister(serverAnnotation, messageClass);
+        }
+    }
 
-        messageWrapperSet.add(toWrapper(messageAnnotation, messageClass));
-        log.info("Protocol was registered message: {}", messageClass.getSimpleName());
+    private void doRegister(Class<? extends Annotation> annotation, Class<?> messageType) {
+        MessageWrapper messageWrapper = toWrapper(annotation, messageType);
+        messageWrapperSet.add(messageWrapper);
+
+        log.info("Protocol was registered message: §3{} §7(id: {}, direction: {})", messageType.getName(),
+                messageWrapper.getId(),
+                messageWrapper.getDirection());
     }
 
     public MessageWrapper lookupWrapperByID(int id) {

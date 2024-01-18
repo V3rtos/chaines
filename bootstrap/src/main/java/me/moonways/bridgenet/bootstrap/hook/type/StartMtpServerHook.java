@@ -11,7 +11,7 @@ import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.*;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
-import me.moonways.bridgenet.mtp.pipeline.NettyPipeline;
+import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
 import org.jetbrains.annotations.NotNull;
 
 public class StartMtpServerHook extends ApplicationBootstrapHook {
@@ -40,7 +40,7 @@ public class StartMtpServerHook extends ApplicationBootstrapHook {
         ChannelFactory<? extends ServerChannel> serverChannelFactory = NettyFactory.createServerChannelFactory();
 
         MTPConfiguration configuration = connectionFactory.getConfiguration();
-        NettyPipeline channelInitializer = NettyPipeline.create(driver, configuration);
+        NettyPipelineInitializer channelInitializer = NettyPipelineInitializer.create(driver, configuration);
 
         EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(configuration.getSettings().getWorkers().getBossThreads());
         EventLoopGroup childWorker = NettyFactory.createEventLoopGroup(configuration.getSettings().getWorkers().getChildThreads());

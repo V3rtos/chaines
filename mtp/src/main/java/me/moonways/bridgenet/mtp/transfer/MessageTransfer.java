@@ -6,13 +6,17 @@ import java.util.Arrays;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
 import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 
+@Log4j2
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MessageTransfer {
 
     private static final ByteCodec BYTE_CODEC = new ByteCodec();
+    private static final ObjectFactory OBJECT_FACTORY = new UnsafeObjectFactory();
 
     public static MessageTransfer decode(byte[] bytes) {
         return new MessageTransfer(null, bytes);
@@ -80,6 +84,21 @@ public final class MessageTransfer {
         reflectiveBuf();
     }
 
+    private Class<? extends TransferProvider> getFieldProvider(Field field) {
+        ByteTransfer declaredAnnotation = field.getDeclaredAnnotation(ByteTransfer.class);
+
+        if (declaredAnnotation == null) {
+            log.warn("Message field '{}' is not transferable then to be ignored", field);
+            return null;
+        }
+
+        Class<? extends TransferProvider> provider = declaredAnnotation.provider();
+        if (provider == null)
+            throw new MessageTransferException("Provider for " + field + " is not initialized");
+
+        return provider;
+    }
+
     private void reflectiveBuf() {
         Class<?> packetType = messagePacket.getClass();
         Field[] declaredFieldsArray = packetType.getDeclaredFields();
@@ -87,26 +106,17 @@ public final class MessageTransfer {
         int lastIndex = 0;
 
         for (Field field : declaredFieldsArray) {
-            ByteTransfer declaredAnnotation = field.getDeclaredAnnotation(ByteTransfer.class);
-            if (declaredAnnotation == null)
-                continue;
+            Class<? extends TransferProvider> provider = getFieldProvider(field);
 
-            Class<? extends TransferProvider> provider = declaredAnnotation.provider();
-            if (provider == null)
-                continue;
-
-            field.setAccessible(true);
-
-            TransferProvider transferProvider = new UnsafeObjectFactory()
-                    .create(provider);
+            TransferProvider transferProvider = OBJECT_FACTORY.create(provider);
 
             byte[] bytesArray;
-
             try {
+                field.setAccessible(true);
                 bytesArray = transferProvider.toByteArray(BYTE_CODEC, field.get(messagePacket));
             }
             catch (IllegalAccessException exception) {
-                throw new RuntimeException(exception);
+                throw new MessageTransferException(exception);
             }
 
             System.arraycopy(bytesArray, 0, bytes, lastIndex, bytesArray.length);
@@ -131,26 +141,17 @@ public final class MessageTransfer {
         MessageBytes messageBytes = MessageBytes.create(bytes);
 
         for (Field field : declaredFieldsArray) {
-            ByteTransfer declaredAnnotation = field.getDeclaredAnnotation(ByteTransfer.class);
-            if (declaredAnnotation == null)
-                continue;
+            Class<? extends TransferProvider> provider = getFieldProvider(field);
 
-            Class<? extends TransferProvider> provider = declaredAnnotation.provider();
-
-            if (provider == null)
-                continue;
-
-            TransferProvider transferProvider = new UnsafeObjectFactory()
-                    .create(provider);
-
-            Object providedObject = transferProvider.provide(BYTE_CODEC, field.getType(), messageBytes);
-
-            field.setAccessible(true);
+            TransferProvider transferProvider = OBJECT_FACTORY.create(provider);
+            Object providedObject = transferProvider.fromByteArray(BYTE_CODEC, field.getType(), messageBytes);
 
             try {
+                field.setAccessible(true);
                 field.set(messagePacket, providedObject);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
+            }
+            catch (IllegalAccessException exception) {
+                throw new MessageTransferException(exception);
             }
         }
     }

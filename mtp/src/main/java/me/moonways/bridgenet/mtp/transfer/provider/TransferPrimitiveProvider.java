@@ -20,25 +20,27 @@ public class TransferPrimitiveProvider implements TransferProvider {
     }
 
     @Override
-    public Object provide(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
+    public Object fromByteArray(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
         byte[] array = messageBytes.getArray();
 
-        if (array.length == 0) {
-            return null;
-        }
+        if (String.class.isAssignableFrom(cls)) {
 
-        if (CharSequence.class.isAssignableFrom(cls)) {
-            return new String(array);
+            int length = byteCodec.readInt(Arrays.copyOfRange(array, 0, Integer.BYTES));
+            messageBytes.moveTo(Integer.BYTES);
+            messageBytes.moveTo(length);
+
+            return new String(array, 0, length);
         }
 
         validateAsPrimitive(cls);
 
         if (isBoolean(cls)) {
+            messageBytes.moveTo(1);
             return (array[0] == 1);
         }
 
         int bufferSize = byteCodec.toBufferSize(cls);
-        messageBytes.addPosition(bufferSize);
+        messageBytes.moveTo(bufferSize);
 
         ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
 
@@ -55,7 +57,14 @@ public class TransferPrimitiveProvider implements TransferProvider {
         final Class<?> cls = object.getClass();
 
         if (CharSequence.class.isAssignableFrom(cls)) {
-            return object.toString().getBytes();
+            String value = object.toString();
+
+            ByteBuffer byteBuffer = ByteBuffer.allocate(Integer.BYTES + value.length());
+
+            byteCodec.write(value.length(), byteBuffer);
+            byteCodec.write(value, byteBuffer);
+
+            return byteBuffer.array();
         }
 
         validateAsPrimitive(cls);

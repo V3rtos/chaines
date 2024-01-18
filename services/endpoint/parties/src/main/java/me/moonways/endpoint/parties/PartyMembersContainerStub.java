@@ -1,8 +1,8 @@
 package me.moonways.endpoint.parties;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.model.parties.PartyMembersContainer;
-import me.moonways.model.parties.PartyMember;
+import me.moonways.bridgenet.model.parties.PartyMembersContainer;
+import me.moonways.bridgenet.model.parties.PartyMember;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

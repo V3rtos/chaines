@@ -1,9 +1,9 @@
 package me.moonways.endpoint.gui.item;
 
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.gui.item.Item;
-import me.moonways.model.gui.item.ItemFactory;
-import me.moonways.model.gui.item.Material;
+import me.moonways.bridgenet.model.gui.item.Item;
+import me.moonways.bridgenet.model.gui.item.ItemFactory;
+import me.moonways.bridgenet.model.gui.item.Material;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;

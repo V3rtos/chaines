@@ -2,7 +2,7 @@ package me.moonways.endpoint.players.offline;
 
 import java.util.UUID;
 
-import me.moonways.model.players.offline.OfflineDao;
+import me.moonways.bridgenet.model.players.offline.OfflineDao;
 import net.conveno.jdbc.*;
 import net.conveno.jdbc.response.ConvenoResponse;
 

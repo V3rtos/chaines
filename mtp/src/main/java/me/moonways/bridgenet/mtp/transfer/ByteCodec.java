@@ -1,8 +1,10 @@
 package me.moonways.bridgenet.mtp.transfer;
 
 import java.lang.reflect.Field;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,6 +86,10 @@ public final class ByteCodec {
     }
 
     public void write(Object obj, ByteBuffer byteBuffer) {
+        if (obj instanceof byte[]) {
+            byteBuffer.put((byte[]) obj);
+        }
+
         if (obj instanceof Byte) {
             byteBuffer.put((Byte) obj);
         }
@@ -137,20 +143,20 @@ public final class ByteCodec {
 
     public int readInt(byte[] array) {
         INT_BUFFER.put(array, 0, array.length);
-        INT_BUFFER.flip();
+        ((Buffer)INT_BUFFER).flip(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
 
         int value = INT_BUFFER.getInt();
-        INT_BUFFER.clear();
+        ((Buffer)INT_BUFFER).clear(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
 
         return value;
     }
 
     public long readLong(byte[] array) {
         LONG_BUFFER.put(array, 0, array.length);
-        LONG_BUFFER.flip();
+        ((Buffer)INT_BUFFER).flip(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
 
         long value = LONG_BUFFER.getLong();
-        LONG_BUFFER.clear();
+        ((Buffer)INT_BUFFER).clear(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
 
         return value;
     }

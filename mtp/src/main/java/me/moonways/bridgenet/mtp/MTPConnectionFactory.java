@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.mtp.config.Settings;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
-import me.moonways.bridgenet.mtp.pipeline.NettyPipeline;
+import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,7 +66,7 @@ public class MTPConnectionFactory {
             return this;
         }
 
-        public ServerBuilder setChannelInitializer(@NotNull NettyPipeline nettyPipeline) {
+        public ServerBuilder setChannelInitializer(@NotNull NettyPipelineInitializer nettyPipeline) {
             serverBootstrap.childHandler(nettyPipeline);
             return this;
         }
@@ -99,7 +99,7 @@ public class MTPConnectionFactory {
             return this;
         }
 
-        public ClientBuilder setChannelInitializer(@NotNull NettyPipeline nettyPipeline) {
+        public ClientBuilder setChannelInitializer(@NotNull NettyPipelineInitializer nettyPipeline) {
             bootstrap.handler(nettyPipeline);
             return this;
         }

@@ -1,10 +1,10 @@
 package me.moonways.endpoint.reports;
 
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.reports.ReportsServiceModel;
-import me.moonways.model.reports.Report;
-import me.moonways.model.reports.ReportReason;
-import me.moonways.model.reports.ReportedPlayer;
+import me.moonways.bridgenet.model.reports.ReportsServiceModel;
+import me.moonways.bridgenet.model.reports.Report;
+import me.moonways.bridgenet.model.reports.ReportReason;
+import me.moonways.bridgenet.model.reports.ReportedPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

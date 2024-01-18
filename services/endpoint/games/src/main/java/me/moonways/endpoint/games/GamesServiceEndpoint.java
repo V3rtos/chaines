@@ -5,8 +5,8 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.games.GamesServiceModel;
-import me.moonways.model.games.data.Arena;
+import me.moonways.bridgenet.model.games.GamesServiceModel;
+import me.moonways.bridgenet.model.games.data.Arena;
 
 import java.rmi.RemoteException;
 import java.util.Set;
