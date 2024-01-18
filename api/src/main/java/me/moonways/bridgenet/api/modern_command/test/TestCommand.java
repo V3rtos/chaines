@@ -12,7 +12,7 @@ import me.moonways.bridgenet.api.modern_command.annotation.persistance.Cooldown;
 import me.moonways.bridgenet.api.modern_command.annotation.persistance.Permission;
 import me.moonways.bridgenet.api.modern_command.session.CommandSession;
 import me.moonways.bridgenet.api.modern_command.annotation.persistance.SubcommandArgument;
-import me.moonways.bridgenet.api.modern_command.subcommand.SubcommandUsageDescription;
+import me.moonways.bridgenet.api.modern_command.subcommand.SubcommandUsage;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 
 import java.util.concurrent.TimeUnit;
@@ -32,7 +32,7 @@ public class TestCommand {
     @Permission("primary")
     @Aliases("primary")
     @Description("строка / булевое значение")
-    @SubcommandUsageDescription("<string> <boolean>")
+    @SubcommandUsage("<string> <boolean>")
     @SubcommandArgument(argument = "{0}", argumentType = StringArgument.class)
     public void primary_subcommand(CommandSession session) {
         EntityCommandSender console = session.from(ConsoleCommandSender.class);
@@ -51,7 +51,7 @@ public class TestCommand {
     @Permission("secondary")
     @Aliases("secondary")
     @Description("строка / строка / число   ")
-    @SubcommandUsageDescription("<string> <string> <integer>")
+    @SubcommandUsage("<string> <string> <integer>")
     @SubcommandArgument(argument = "{0}", argumentType = StringArgument.class)
     @SubcommandArgument(argument = "{1}", argumentType = StringArgument.class)
     @Cooldown(time = 1, unit = TimeUnit.MINUTES)
