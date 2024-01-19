@@ -21,7 +21,7 @@ public class MessageBytes {
 
     private final byte[] rawArray;
 
-    public void addPosition(int add) {
+    public void moveTo(int add) {
         this.position += add;
     }
 

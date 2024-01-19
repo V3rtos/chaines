@@ -10,11 +10,9 @@ import me.moonways.bridgenet.connector.reconnect.BridgenetReconnectHandler;
 import me.moonways.bridgenet.mtp.*;
 import me.moonways.bridgenet.mtp.MTPClient;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
-import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
 import me.moonways.bridgenet.mtp.message.MessageWrapper;
-import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
-import me.moonways.bridgenet.mtp.pipeline.NettyPipeline;
+import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import net.conveno.jdbc.ConvenoRouter;
 import org.jetbrains.annotations.NotNull;
@@ -74,7 +72,7 @@ public class BaseBridgenetConnector {
         ChannelFactory<? extends Channel> clientChannelFactory = NettyFactory.createClientChannelFactory();
 
         MTPConfiguration configuration = connectionFactory.getConfiguration();
-        NettyPipeline channelInitializer = NettyPipeline.create(driver, configuration);
+        NettyPipelineInitializer channelInitializer = NettyPipelineInitializer.create(driver, configuration);
 
         EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(configuration.getSettings().getWorkers().getBossThreads());
 

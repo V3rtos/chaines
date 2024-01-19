@@ -3,8 +3,8 @@ package me.moonways.endpoint.bus;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
-import me.moonways.model.servers.ServersServiceModel;
+import me.moonways.bridgenet.mtp.message.persistence.MessageHandler;
+import me.moonways.bridgenet.model.servers.ServersServiceModel;
 
 @MessageHandler
 @Log4j2

@@ -27,7 +27,7 @@ public class MTPServer implements MTPConnection {
             Channel channel = channelFuture.channel();
             log.info("Successful bind server {}", channel);
 
-            this.channel = new MTPChannel(false, channel);
+            this.channel = new MTPChannel(ProtocolDirection.TO_SERVER, channel);
             Threads.hookShutdown(channel::close);
 
             if (completableFuture != null) {

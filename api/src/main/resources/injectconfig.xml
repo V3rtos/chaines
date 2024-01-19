@@ -7,15 +7,15 @@
             <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
         <scanner>
-            <annotationClass>me.moonways.bridgenet.mtp.message.inject.MessageHandler</annotationClass>
+            <annotationClass>me.moonways.bridgenet.mtp.message.persistence.MessageHandler</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
         <scanner>
-            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ServerMessage</annotationClass>
+            <annotationClass>me.moonways.bridgenet.mtp.message.persistence.ServerMessage</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
         <scanner>
-            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ClientMessage</annotationClass>
+            <annotationClass>me.moonways.bridgenet.mtp.message.persistence.ClientMessage</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.scanner.controller.DependScannerController</targetClass>
         </scanner>
         <scanner>
@@ -37,15 +37,15 @@
             <targetClass>me.moonways.bridgenet.api.inject.factory.DependObjectFactory</targetClass>
         </factory>
         <factory>
-            <annotationClass>me.moonways.bridgenet.mtp.message.inject.MessageHandler</annotationClass>
+            <annotationClass>me.moonways.bridgenet.mtp.message.persistence.MessageHandler</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.factory.DependObjectFactory</targetClass>
         </factory>
         <factory>
-            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ServerMessage</annotationClass>
+            <annotationClass>me.moonways.bridgenet.mtp.message.persistence.ServerMessage</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory</targetClass>
         </factory>
         <factory>
-            <annotationClass>me.moonways.bridgenet.mtp.message.inject.ClientMessage</annotationClass>
+            <annotationClass>me.moonways.bridgenet.mtp.message.persistence.ClientMessage</annotationClass>
             <targetClass>me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory</targetClass>
         </factory>
         <factory>

@@ -10,6 +10,7 @@ import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Log4j2
@@ -17,10 +18,8 @@ public class DependencyInjection {
 
     @Getter
     private final DependencyContainer container = new DependencyContainer();
-
     @Getter
     private final DependencyScanner scanner = new DependencyScanner();
-
     @Getter
     private final FieldInjectManager injector = new FieldInjectManager(container);
 
@@ -106,13 +105,18 @@ public class DependencyInjection {
                     decorateProxy);
 
             container.store(bindClass, proxy);
-            scanner.processPostConstruct(objectClass, object);
-        }
-        else {
+        } else {
+
             container.store(bindClass, object);
             injectFields(object);
+        }
 
+        if (injector.isInInjectionQueue(bindClass)) {
+            injector.addPostInjectionQueueLeaveTask(objectClass,
+                    o -> scanner.processPostConstruct(objectClass, object));
+        } else {
             scanner.processPostConstruct(objectClass, object);
+            injector.flushInjectionsQueue(object);
         }
     }
 

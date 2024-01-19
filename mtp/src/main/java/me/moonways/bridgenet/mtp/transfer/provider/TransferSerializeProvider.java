@@ -20,11 +20,11 @@ public class TransferSerializeProvider implements TransferProvider {
     }
 
     @Override
-    public Object provide(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
+    public Object fromByteArray(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
         validateType(byteCodec, cls);
 
         int bytesLength = byteCodec.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
-        messageBytes.addPosition(Integer.BYTES);
+        messageBytes.moveTo(Integer.BYTES);
 
         try (ByteArrayInputStream stream = new ByteArrayInputStream(messageBytes.getArray(), 0, bytesLength);
              ObjectInputStream objectInputStream = new ObjectInputStream(stream)) {
@@ -33,7 +33,7 @@ public class TransferSerializeProvider implements TransferProvider {
         } catch (ClassNotFoundException | IOException exception) {
             throw new RuntimeException(exception);
         } finally {
-            messageBytes.addPosition(bytesLength);
+            messageBytes.moveTo(bytesLength);
         }
     }
 

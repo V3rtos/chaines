@@ -1,8 +1,8 @@
 package me.moonways.endpoint.players.social;
 
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.players.social.PlayerSocials;
-import me.moonways.model.players.social.SocialContainer;
+import me.moonways.bridgenet.model.players.social.PlayerSocials;
+import me.moonways.bridgenet.model.players.social.SocialContainer;
 
 import java.rmi.RemoteException;
 import java.util.UUID;

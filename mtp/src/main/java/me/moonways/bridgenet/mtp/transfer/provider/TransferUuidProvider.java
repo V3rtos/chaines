@@ -16,14 +16,14 @@ public class TransferUuidProvider implements TransferProvider {
     }
 
     @Override
-    public Object provide(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
+    public Object fromByteArray(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
         validateType(cls);
 
         long mostSigBits = byteCodec.readLong(Arrays.copyOfRange(messageBytes.getArray(), 0, Long.BYTES));
-        messageBytes.addPosition(Long.BYTES);
+        messageBytes.moveTo(Long.BYTES);
 
-        long leastSigBits = byteCodec.readLong(messageBytes.getArray());
-        messageBytes.addPosition(Long.BYTES);
+        long leastSigBits = byteCodec.readLong(Arrays.copyOfRange(messageBytes.getArray(), 0, Long.BYTES));
+        messageBytes.moveTo(Long.BYTES);
 
         return new UUID(mostSigBits, leastSigBits);
     }

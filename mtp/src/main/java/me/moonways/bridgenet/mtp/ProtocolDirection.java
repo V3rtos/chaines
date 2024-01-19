@@ -2,8 +2,8 @@ package me.moonways.bridgenet.mtp;
 
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.mtp.exception.DirectionNotFoundException;
-import me.moonways.bridgenet.mtp.message.inject.ClientMessage;
-import me.moonways.bridgenet.mtp.message.inject.ServerMessage;
+import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
+import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 
 import java.lang.annotation.Annotation;
 

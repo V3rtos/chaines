@@ -13,5 +13,4 @@ public interface MTPConnection {
     CompletableFuture<MTPChannel> connect();
 
     void shutdownGracefully();
-
 }

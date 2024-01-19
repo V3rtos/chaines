@@ -1,12 +1,12 @@
 package me.moonways.bridgenet.mtp.transfer;
 
+import org.mockito.internal.util.Primitives;
+
 import java.lang.reflect.Field;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.mockito.internal.util.Primitives;
+import java.util.*;
 
 public final class ByteCodec {
 
@@ -33,8 +33,15 @@ public final class ByteCodec {
         return PRIMITIVE_TO_WRAPPER_MAP.getOrDefault(cls, cls);
     }
 
+    public boolean isPrimitiveOrWrapper(Class<?> cls) {
+        Set<Class<?>> total = new HashSet<>();
+        total.addAll(PRIMITIVE_TO_WRAPPER_MAP.keySet());
+        total.addAll(PRIMITIVE_TO_WRAPPER_MAP.values());
+        return total.contains(cls);
+    }
+
     public int toBufferSize(Class<?> type) {
-        if (Primitives.isPrimitiveOrWrapper(type)) {
+        if (isPrimitiveOrWrapper(type)) {
             try {
                 Field bytesSizeField = getPrimitiveWrapper(type).getDeclaredField("BYTES");
                 return bytesSizeField.getInt(null);
@@ -84,6 +91,10 @@ public final class ByteCodec {
     }
 
     public void write(Object obj, ByteBuffer byteBuffer) {
+        if (obj instanceof byte[]) {
+            byteBuffer.put((byte[]) obj);
+        }
+
         if (obj instanceof Byte) {
             byteBuffer.put((Byte) obj);
         }
@@ -113,7 +124,7 @@ public final class ByteCodec {
         }
 
         if (obj instanceof String) {
-            byteBuffer.put(obj.toString().getBytes());
+            byteBuffer.put(((String) obj).getBytes());
         }
     }
 
@@ -137,20 +148,20 @@ public final class ByteCodec {
 
     public int readInt(byte[] array) {
         INT_BUFFER.put(array, 0, array.length);
-        INT_BUFFER.flip();
+        ((Buffer)INT_BUFFER).flip(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
 
         int value = INT_BUFFER.getInt();
-        INT_BUFFER.clear();
+        ((Buffer)INT_BUFFER).clear(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
 
         return value;
     }
 
     public long readLong(byte[] array) {
         LONG_BUFFER.put(array, 0, array.length);
-        LONG_BUFFER.flip();
+        ((Buffer)LONG_BUFFER).flip(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
 
         long value = LONG_BUFFER.getLong();
-        LONG_BUFFER.clear();
+        ((Buffer)LONG_BUFFER).clear(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
 
         return value;
     }

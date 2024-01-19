@@ -3,8 +3,8 @@ package me.moonways.endpoint.gui;
 import lombok.Getter;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import me.moonways.endpoint.gui.item.ItemFactoryStub;
-import me.moonways.model.gui.GuiServiceModel;
-import me.moonways.model.gui.item.ItemFactory;
+import me.moonways.bridgenet.model.gui.GuiServiceModel;
+import me.moonways.bridgenet.model.gui.item.ItemFactory;
 
 import java.rmi.RemoteException;
 
