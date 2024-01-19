@@ -12,6 +12,8 @@ import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -61,13 +63,16 @@ public class MessageHandlerList {
                                 state.getSourceClass().getName()));
             }
 
-            Class<?> parameterType = method.getParameterTypes()[0];
+            Parameter parameter = method.getParameters()[0];
             try {
                 Object value;
-                if (parameterType.isAssignableFrom(messageClass)) {
+                if (parameter.getType().isAssignableFrom(messageClass)) {
                     value = context.getMessage();
-                } else if (parameterType.equals(InputMessageContext.class)) {
+                } else if (parameter.getType().equals(InputMessageContext.class)) {
                     value = context;
+                    if (!parameter.getParameterizedType().getTypeName().contains(messageClass.getTypeName())) {
+                        continue;
+                    }
                 } else {
                     continue;
                 }
