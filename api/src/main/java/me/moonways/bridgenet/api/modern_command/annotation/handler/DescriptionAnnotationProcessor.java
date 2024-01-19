@@ -1,9 +1,9 @@
-package me.moonways.bridgenet.api.modern_command.annotation.persistance.handler;
+package me.moonways.bridgenet.api.modern_command.annotation.handler;
 
 import me.moonways.bridgenet.api.modern_command.annotation.AutoregisterCommandAnnotation;
 import me.moonways.bridgenet.api.modern_command.annotation.CommandAnnotationContext;
 import me.moonways.bridgenet.api.modern_command.annotation.CommandAnnotationProcessor;
-import me.moonways.bridgenet.api.modern_command.annotation.persistance.Description;
+import me.moonways.bridgenet.api.modern_command.annotation.value.Description;
 
 @AutoregisterCommandAnnotation
 public class DescriptionAnnotationProcessor extends CommandAnnotationProcessor<Description> {

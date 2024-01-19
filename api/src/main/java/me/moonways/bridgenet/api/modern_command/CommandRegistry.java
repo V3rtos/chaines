@@ -3,6 +3,7 @@ package me.moonways.bridgenet.api.modern_command;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.modern_command.annotation.CommandAnnotationProxy;
+import me.moonways.bridgenet.api.modern_command.annotation.value.Aliases;
 import me.moonways.bridgenet.api.modern_command.reflection.CommandReflectionUtil;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;

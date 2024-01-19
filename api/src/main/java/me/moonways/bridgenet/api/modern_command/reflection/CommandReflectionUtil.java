@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.modern_command.reflection;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.modern_command.*;
+import me.moonways.bridgenet.api.modern_command.annotation.value.Aliases;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

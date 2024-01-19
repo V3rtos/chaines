@@ -4,7 +4,7 @@ import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.modern_command.Aliases;
+import me.moonways.bridgenet.api.modern_command.annotation.value.Aliases;
 import me.moonways.bridgenet.api.modern_command.session.CommandSession;
 import org.jetbrains.annotations.NotNull;
 
