@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_command.annotation.persistance;
+package me.moonways.bridgenet.api.modern_command.annotation.value;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.moonways.bridgenet.api.modern_command.entity.EntityType;
-import me.moonways.bridgenet.api.modern_command.interval.IntervalInfo;
+import me.moonways.bridgenet.api.modern_command.interval.IntervalInfoImpl;
 
 @RequiredArgsConstructor
 @Getter
@@ -18,7 +18,7 @@ public abstract class AbstractCommandInfo implements StandardCommandInfo {
     private String permission;
 
     private EntityType entityType;
-    private IntervalInfo interval;
+    private IntervalInfoImpl interval;
 
     @Override
     public abstract CommandType getCommandType();

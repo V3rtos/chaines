@@ -1,6 +1,4 @@
-package me.moonways.bridgenet.api.modern_command.subcommand;
-
-import me.moonways.bridgenet.api.modern_command.annotation.persistance.SubcommandArgument;
+package me.moonways.bridgenet.api.modern_command.annotation.value.repeatable;
 
 import java.lang.annotation.*;
 

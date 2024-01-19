@@ -1,4 +1,6 @@
-package me.moonways.bridgenet.api.modern_command;
+package me.moonways.bridgenet.api.modern_command.annotation.value;
+
+import me.moonways.bridgenet.api.modern_command.entity.EntityType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface Aliases {
+public @interface EntityLevel {
 
-    String[] value();
+    EntityType value();
 }
