@@ -1,11 +1,9 @@
 package me.moonways.bridgenet.api.inject;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
@@ -13,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Set;
+import java.util.function.Consumer;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -23,7 +21,10 @@ public class FieldInjectManager implements Serializable {
 
     private final DependencyContainer container;
 
-    private final Queue<FieldQueueState> injectionQueue = new ArrayDeque<>();
+    private final Queue<QueuedInjection> injectionQueue = new ArrayDeque<>();
+    private final Map<Class<?>, Consumer<Object>> postInjectionQueueLeaveTasks = new HashMap<>();
+
+    private QueuedInjection[] previousInjectionQueueArray;
 
     public void injectFields(@NotNull Object instance) {
         this.injectFields(instance, this.findInjectors(instance), container.getStoredClasses());
@@ -31,8 +32,6 @@ public class FieldInjectManager implements Serializable {
     }
 
     private void injectFields(Object instance, Field[] fieldsArray, Set<Class<?>> dependenciesClasses) {
-        FieldQueueState[] fieldsInQueueByDependency = findFieldsInQueueByDependency(instance.getClass());
-
         for (Field field : fieldsArray) {
             Class<?> returnType = field.getType();
 
@@ -47,12 +46,27 @@ public class FieldInjectManager implements Serializable {
                 }
 
                 // or else offer to injection-queue
-                injectionQueue.offer(new FieldQueueState(field, instance));
+                injectionQueue.offer(new QueuedInjection(field, instance));
             }
         }
+    }
 
-        for (FieldQueueState fieldQueueState : fieldsInQueueByDependency) {
-            injectDependency(fieldQueueState.instance, fieldQueueState.field, instance);
+    public void flushInjectionsQueue(Object instance) {
+        QueuedInjection[] fieldsInQueueByDependency = findFieldsInQueueByDependency(instance.getClass());
+
+        for (QueuedInjection injection : fieldsInQueueByDependency) {
+            injectFields(injection.instance);
+            injectionQueue.remove(injection);
+
+            Class<?> instanceClass = injection.instance.getClass();
+            if (!isInInjectionQueue(instanceClass)) {
+
+                Consumer<Object> postTask = postInjectionQueueLeaveTasks.get(instanceClass);
+
+                if (postTask != null) {
+                    postTask.accept(injection.instance);
+                }
+            }
         }
     }
 
@@ -118,16 +132,38 @@ public class FieldInjectManager implements Serializable {
         return getFieldsListByAnnotation(cls, Property.class);
     }
 
-    private FieldQueueState[] findFieldsInQueueByDependency(Class<?> dependencyClass) {
-        return injectionQueue
-                .stream()
+    private QueuedInjection[] findFieldsInQueueByDependency(Class<?> dependencyClass) {
+        QueuedInjection[] previousInjectionQueueArray = this.previousInjectionQueueArray;
+        QueuedInjection[] newInjectionQueue = injectionQueue.stream()
                 .filter(state -> state.field.getType().isAssignableFrom(dependencyClass))
-                .toArray(FieldQueueState[]::new);
+                .toArray(QueuedInjection[]::new);
+
+        if (previousInjectionQueueArray == null) {
+            previousInjectionQueueArray = newInjectionQueue;
+        }
+
+        return previousInjectionQueueArray;
+    }
+
+    public boolean isInInjectionQueue(Class<?> cls) {
+        return injectionQueue.stream()
+                .anyMatch(state -> state.instance.getClass().isAssignableFrom(cls));
+    }
+
+    public void addPostInjectionQueueLeaveTask(Class<?> cls, Consumer<Object> task) {
+        Consumer<Object> currentTask = postInjectionQueueLeaveTasks.get(cls);
+        if (currentTask == null) {
+            currentTask = task;
+        } else {
+            currentTask = currentTask.andThen(task);
+        }
+        postInjectionQueueLeaveTasks.put(cls, currentTask);
     }
 
     @ToString
+    @EqualsAndHashCode
     @RequiredArgsConstructor
-    private static class FieldQueueState {
+    private static class QueuedInjection {
 
         private final Field field;
         private final Object instance;
