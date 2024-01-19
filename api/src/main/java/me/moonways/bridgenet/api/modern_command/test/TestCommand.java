@@ -1,18 +1,14 @@
 package me.moonways.bridgenet.api.modern_command.test;
 
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
-import me.moonways.bridgenet.api.modern_command.*;
+import me.moonways.bridgenet.api.modern_command.annotation.value.*;
+import me.moonways.bridgenet.api.modern_command.annotation.value.repeatable.SubcommandArgument;
 import me.moonways.bridgenet.api.modern_command.argument.StringArgument;
 import me.moonways.bridgenet.api.modern_command.entity.ConsoleCommandSender;
 import me.moonways.bridgenet.api.modern_command.entity.EntityType;
 import me.moonways.bridgenet.api.modern_command.message.MessageBuilder;
-import me.moonways.bridgenet.api.modern_command.annotation.persistance.Description;
-import me.moonways.bridgenet.api.modern_command.annotation.persistance.EntityLevel;
-import me.moonways.bridgenet.api.modern_command.annotation.persistance.Cooldown;
-import me.moonways.bridgenet.api.modern_command.annotation.persistance.Permission;
 import me.moonways.bridgenet.api.modern_command.session.CommandSession;
-import me.moonways.bridgenet.api.modern_command.annotation.persistance.SubcommandArgument;
-import me.moonways.bridgenet.api.modern_command.subcommand.SubcommandUsage;
+import me.moonways.bridgenet.api.modern_command.annotation.value.SubcommandUsage;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 
 import java.util.concurrent.TimeUnit;
@@ -26,7 +22,10 @@ public class TestCommand {
 
     @Parent
     public void parent(CommandSession session) {
+    }
 
+    @Help
+    public void help(CommandSession session) {
     }
 
     @Permission("primary")
