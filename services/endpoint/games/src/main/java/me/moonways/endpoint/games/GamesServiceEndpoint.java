@@ -1,63 +1,66 @@
 package me.moonways.endpoint.games;
 
-import gnu.trove.TCollections;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import me.moonways.bridgenet.api.inject.Autobind;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.PostConstruct;
+import me.moonways.bridgenet.model.games.Game;
+import me.moonways.bridgenet.model.games.GameServer;
 import me.moonways.bridgenet.model.games.GamesServiceModel;
-import me.moonways.bridgenet.model.games.data.Arena;
+import me.moonways.bridgenet.model.servers.EntityServer;
+import me.moonways.bridgenet.mtp.MTPDriver;
+import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.endpoint.games.handler.GamesInputMessageListener;
+import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;
-import java.util.Set;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
-@Autobind
 public final class GamesServiceEndpoint extends AbstractEndpointDefinition implements GamesServiceModel {
 
-    private static final long serialVersionUID = -1131200912946923881L;
+    private final GamesContainer container = new GamesContainer();
 
-    //private final TIntObjectMap<Game> registeredGamesMap = TCollections.synchronizedMap(new TIntObjectHashMap<>());
-    //private final TIntObjectMap<Mode> registeredModesMap = TCollections.synchronizedMap(new TIntObjectHashMap<>());
-
-    private final TIntObjectMap<Set<Arena>> registeredArenasMap = TCollections.synchronizedMap(new TIntObjectHashMap<>());
+    @Inject
+    private MTPDriver mtpDriver;
 
     public GamesServiceEndpoint() throws RemoteException {
         super();
     }
 
-    //public void registerGame(@NotNull Game game) {
-   //    registeredGamesMap.put(game.getId(), game);
-   //}
+    @PostConstruct
+    public void init() {
+        mtpDriver.bindHandler(new GamesInputMessageListener(container));
+    }
 
-   //public void registerMode(@NotNull Mode mode) {
-   //    registeredModesMap.put(mode.getId(), mode);
-   //}
+    @Override
+    public Game getGame(@NotNull UUID uuid) throws RemoteException {
+        return container.getGame(uuid);
+    }
 
-   //public void registerArena(@NotNull Game game, @NotNull Arena arena) {
-   //    int gameID = game.getId();
-   //    Set<Arena> arenasCollection = registeredArenasMap.get(gameID);
+    @Override
+    public Game getGame(@NotNull String name) throws RemoteException {
+        return container.getGameByName(name);
+    }
 
-   //    if (arenasCollection == null) {
-   //        arenasCollection = new HashSet<>();
-   //    }
+    @Override
+    public List<Game> getLoadedGames() throws RemoteException {
+        return Collections.unmodifiableList(container.getCollectedGames());
+    }
 
-   //    arenasCollection.add(arena);
-   //    registeredArenasMap.put(gameID, arenasCollection);
-   //}
+    @Override
+    public boolean isGame(@NotNull EntityServer server) throws RemoteException {
+        List<Game> loadedGamesList = getLoadedGames();
 
-   //public void registerArena(@NotNull GameArena gameArena) {
-   //    registerArena(gameArena.getGame(), gameArena.getArena());
-   //}
+        for (Game game : loadedGamesList) {
+            for (GameServer gameServer : game.getLoadedServers()) {
 
-   //public Game getRegisteredGame(int id) {
-   //    return registeredGamesMap.get(id);
-   //}
+                if (gameServer.getServerInfo().getName().equalsIgnoreCase(server.getName())) {
+                    return true;
+                }
+            }
+        }
 
-   //public Mode getRegisteredMode(int id) {
-   //    return registeredModesMap.get(id);
-   //}
-
-   //public Set<Arena> getRegisteredArenas(int gameID) {
-   //    return Collections.unmodifiableSet(registeredArenasMap.get(gameID));
-   //}
+        return false;
+    }
 }

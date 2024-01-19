@@ -1,7 +1,10 @@
 package me.moonways.bridgenet.mtp;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -10,7 +13,37 @@ import java.util.concurrent.CompletableFuture;
  * внутреннего протокола MTP, и способы к
  * транспортировке сообщений.
  */
-public interface MTPMessageSender {
+public interface MTPMessageSender extends Serializable {
+
+    /**
+     * Получить кешированное значение аттрибута.
+     * @param key - ключ аттрибута.
+     */
+    Optional<Object> getProperty(@NotNull String key);
+
+    /**
+     * Получить кешированное значение аттрибута
+     * в виде строки.
+     *
+     * @param key - ключ аттрибута.
+     */
+    Optional<String> getPropertyString(@NotNull String key);
+
+    /**
+     * Получить кешированное значение аттрибута
+     * в виде целочисленного числа.
+     *
+     * @param key - ключ аттрибута.
+     */
+    Optional<Integer> getPropertyInt(@NotNull String key);
+
+    /**
+     * Установить значение аттрибута.
+     *
+     * @param key - ключ аттрибута.
+     * @param value - значение аттрибута.
+     */
+    void setProperty(@NotNull String key, @Nullable Object value);
 
     /**
      * Отправить сообщение на подключенный канал.

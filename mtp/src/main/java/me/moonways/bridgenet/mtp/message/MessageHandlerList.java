@@ -11,7 +11,6 @@ import me.moonways.bridgenet.mtp.message.persistence.MessageHandler;
 import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;

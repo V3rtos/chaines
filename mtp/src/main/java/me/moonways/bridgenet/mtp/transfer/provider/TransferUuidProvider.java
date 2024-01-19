@@ -22,7 +22,7 @@ public class TransferUuidProvider implements TransferProvider {
         long mostSigBits = byteCodec.readLong(Arrays.copyOfRange(messageBytes.getArray(), 0, Long.BYTES));
         messageBytes.moveTo(Long.BYTES);
 
-        long leastSigBits = byteCodec.readLong(messageBytes.getArray());
+        long leastSigBits = byteCodec.readLong(Arrays.copyOfRange(messageBytes.getArray(), 0, Long.BYTES));
         messageBytes.moveTo(Long.BYTES);
 
         return new UUID(mostSigBits, leastSigBits);

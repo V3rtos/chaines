@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface EntityServer extends Remote {
+    String CHANNEL_PROPERTY = "entity.server.instance";
 
     /**
      * Получение уникального идентификатора сервера,
@@ -24,6 +25,11 @@ public interface EntityServer extends Remote {
      * он сам себя идентифицирует при рукопожатии.
      */
     String getName() throws RemoteException;
+
+    /**
+     * Получить информацию о сервере.
+     */
+    ServerInfo getServerInfo() throws RemoteException;
 
     /**
      * Получить канал сервера по протоколу MTP

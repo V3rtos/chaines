@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 public final class ServersContainer {
 
     @Inject
-    private DependencyInjection dependencyInjection;
+    private DependencyInjection injector;
 
     private final Map<UUID, ConnectedServerStub> registeredServersMap = Collections.synchronizedMap(new HashMap<>());
 
@@ -60,7 +60,7 @@ public final class ServersContainer {
 
     @Synchronized
     public UUID registerServer(@NotNull ConnectedServerStub server) {
-        dependencyInjection.injectFields(server);
+        injector.injectFields(server);
 
         UUID serverKey = newServerUUID();
         registeredServersMap.put(serverKey, server);
