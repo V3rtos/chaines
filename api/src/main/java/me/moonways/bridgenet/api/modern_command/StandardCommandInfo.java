@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.modern_command;
 
 import me.moonways.bridgenet.api.modern_command.entity.EntityType;
-import me.moonways.bridgenet.api.modern_command.interval.IntervalInfo;
+import me.moonways.bridgenet.api.modern_command.interval.IntervalInfoImpl;
 import org.jetbrains.annotations.NotNull;
 
 public interface StandardCommandInfo {
@@ -29,7 +29,7 @@ public interface StandardCommandInfo {
     /**
      * Получить интервал вводы команды.
      */
-    IntervalInfo getInterval();
+    IntervalInfoImpl getInterval();
     
     /**
      * Установить тип сущности, которая может выполнить команду.
@@ -43,7 +43,7 @@ public interface StandardCommandInfo {
      *
      * @param interval - параметры интервала.
      */
-    void setInterval(IntervalInfo interval);
+    void setInterval(IntervalInfoImpl interval);
 
     /**
      * Установить право.
