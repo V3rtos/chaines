@@ -2,6 +2,7 @@ package me.moonways.bridgenet.api.modern_command.session;
 
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.modern_command.argument.wrapper.CommandArgumentWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -16,6 +17,13 @@ public interface CommandSession {
      * Получить сущность выполняющую команду.
      */
     EntityCommandSender getEntity();
+
+    /**
+     * Закрыть сессию.
+     *
+     * @param reason - причина.
+     */
+    void close(@NotNull String reason);
 
     /**
      * Получить требуемый тип сущности.
