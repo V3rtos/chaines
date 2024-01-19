@@ -2,8 +2,8 @@ package me.moonways.endpoint.friend;
 
 import lombok.ToString;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.friends.FriendsList;
-import me.moonways.model.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.friends.FriendsList;
+import me.moonways.bridgenet.model.players.PlayersServiceModel;
 
 import java.rmi.RemoteException;
 import java.util.Set;

@@ -7,7 +7,7 @@ import me.moonways.bridgenet.api.command.annotation.*;
 import me.moonways.bridgenet.api.command.CommandArguments;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
-import me.moonways.model.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.players.PlayersServiceModel;
 
 import java.util.UUID;
 

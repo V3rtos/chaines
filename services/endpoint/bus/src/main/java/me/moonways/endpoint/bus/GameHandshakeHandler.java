@@ -1,7 +1,7 @@
 package me.moonways.endpoint.bus;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
+import me.moonways.bridgenet.mtp.message.persistence.MessageHandler;
 /*
 import me.moonways.bridgenet.service.game.GameService;
 import me.moonways.services.api.games.data.Game;

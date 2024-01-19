@@ -1,8 +1,8 @@
 package me.moonways.endpoint.players.permission;
 
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.players.permission.PermissionGroup;
-import me.moonways.model.players.permission.PlayerPermissions;
+import me.moonways.bridgenet.model.players.permission.PermissionGroup;
+import me.moonways.bridgenet.model.players.permission.PlayerPermissions;
 import net.conveno.jdbc.ConvenoRouter;
 
 import java.rmi.RemoteException;

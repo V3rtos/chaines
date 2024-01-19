@@ -1,7 +1,7 @@
 package me.moonways.endpoint.bus;
 
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.bus.BusServiceModel;
+import me.moonways.bridgenet.model.bus.BusServiceModel;
 
 import java.rmi.RemoteException;
 

@@ -1,8 +1,8 @@
 package me.moonways.endpoint.parties;
 
 import lombok.Getter;
+import me.moonways.bridgenet.model.parties.*;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.parties.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;

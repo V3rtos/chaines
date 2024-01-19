@@ -10,11 +10,8 @@ import me.moonways.bridgenet.api.inject.decorator.Decorated;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.mtp.message.ExportedMessage;
-import me.moonways.bridgenet.mtp.message.MessageRegistry;
-import me.moonways.bridgenet.mtp.message.MessageHandlerList;
+import me.moonways.bridgenet.mtp.message.*;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.mtp.message.MessageWrapper;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -70,8 +67,13 @@ public class MTPDriver {
     }
 
     @KeepTime
+    public void bindHandler(Object handler) {
+        handlerList.bind(handler);
+    }
+
+    @KeepTime
     @Synchronized
-    public void handle(@NotNull MessageWrapper wrapper, @NotNull Object message) {
-        handlerList.handle(wrapper, message);
+    public void handle(@NotNull InputMessageContext<?> context) {
+        handlerList.handle(context);
     }
 }

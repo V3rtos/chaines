@@ -1,21 +1,20 @@
 package me.moonways.bridgenet.mtp.message;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.util.autorun.persistance.AutoRunner;
-import me.moonways.bridgenet.mtp.message.exception.MessageHandleException;
-import me.moonways.bridgenet.mtp.message.inject.MessageHandler;
-import me.moonways.bridgenet.mtp.message.inject.MessageTrigger;
+import me.moonways.bridgenet.mtp.message.persistence.MessageHandler;
+import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,60 +22,90 @@ import java.util.stream.Collectors;
 public class MessageHandlerList {
 
     @Getter
-    private Set<TriggerMethodWrapper> messageHandlers;
+    private final Set<MethodTriggerState> messageHandlers = new HashSet<>();
 
     @Inject
     private DependencyInjection injector;
 
     public void bindHandlers() {
-        messageHandlers = injector.peekAnnotatedMembers(MessageHandler.class)
-                .flatMap(object -> Arrays.stream(object.getClass().getDeclaredMethods())
-                        .map(method -> new TriggerMethodWrapper(object, object.getClass(), method)))
-                .filter(method -> method.hasAnnotation(MessageTrigger.class))
-                .collect(Collectors.toSet());
+        injector.peekAnnotatedMembers(MessageHandler.class)
+                .forEachOrdered(this::bind);
     }
 
-    public void handle(@NotNull MessageWrapper wrapper, @NotNull Object message) {
-        for (TriggerMethodWrapper triggerMethod : messageHandlers) {
+    private List<MethodTriggerState> toStates(Object handler) {
+        return Arrays.stream(handler.getClass().getDeclaredMethods())
+                .filter(method -> method.getDeclaredAnnotation(MessageTrigger.class) != null)
+                .map(method -> new MethodTriggerState(handler, handler.getClass(), method))
+                .collect(Collectors.toList());
+    }
 
-            Method method = triggerMethod.getMethod();
-            Class<?> messageClass = wrapper.getMessageType();
+    public void bind(Object handler) {
+        if (messageHandlers.addAll(toStates(handler))) {
+
+            log.info("Bind message handler: §6{}", handler.getClass().getSimpleName());
+
+            injector.injectFields(handler);
+        }
+    }
+
+    public void handle(@NotNull InputMessageContext<?> context) {
+        Class<?> messageClass = context.getMessage().getClass();
+
+        int handlingCount = 0;
+        for (MethodTriggerState state : messageHandlers) {
+            Method method = state.getMethod();
 
             if (method.getParameterCount() != 1) {
                 throw new MessageHandleException(
                         String.format("Can't handle message %s in handler %s", messageClass.getName(),
-                                triggerMethod.getSourceClass().getName()));
+                                state.getSourceClass().getName()));
             }
 
-            Class<?> methodMessageClass = method.getParameterTypes()[0];
-            if (messageClass.equals(methodMessageClass)) {
-                try {
-                    method.invoke(triggerMethod.getSource(), message);
+            Class<?> parameterType = method.getParameterTypes()[0];
+            try {
+                Object value;
+                if (parameterType.isAssignableFrom(messageClass)) {
+                    value = context.getMessage();
+                } else if (parameterType.equals(InputMessageContext.class)) {
+                    value = context;
+                } else {
+                    continue;
                 }
-                catch (IllegalAccessException | InvocationTargetException exception) {
-                    Throwable cause = exception.getCause();
-                    if (cause == null) {
-                        cause = exception;
-                    }
 
-                    cause.printStackTrace();
+                method.setAccessible(true);
+                method.invoke(state.getSource(), value);
+
+                handlingCount++;
+
+                String handlerClassName = state.getSource().getClass().getSimpleName();
+
+                log.info("Received message §3{} §rhandled in §2{}", messageClass, handlerClassName);
+            }
+            catch (Throwable exception) {
+                if (isNotClassCastException(exception)) {
+                    throw new MessageHandleException(exception);
                 }
             }
         }
+
+        if (handlingCount == 0) {
+            log.info("§4No one founded message handler for '{}'", messageClass);
+        }
+    }
+
+    private boolean isNotClassCastException(Throwable exception) {
+        return !(exception instanceof ClassCastException) && !(exception.getCause() instanceof ClassCastException);
     }
 
     @Getter
     @ToString
+    @EqualsAndHashCode
     @RequiredArgsConstructor
-    public static class TriggerMethodWrapper {
+    public static class MethodTriggerState {
 
         private final Object source;
         private final Class<?> sourceClass;
 
         private final Method method;
-
-        public boolean hasAnnotation(Class<? extends Annotation> annotation) {
-            return method.isAnnotationPresent(annotation);
-        }
     }
 }

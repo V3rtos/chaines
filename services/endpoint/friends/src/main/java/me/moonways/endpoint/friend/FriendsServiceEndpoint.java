@@ -7,11 +7,11 @@ import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.friends.FriendsList;
-import me.moonways.model.friends.FriendsServiceModel;
-import me.moonways.model.friends.event.FriendJoinEvent;
-import me.moonways.model.friends.event.FriendLeaveEvent;
-import me.moonways.model.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.friends.FriendsList;
+import me.moonways.bridgenet.model.friends.FriendsServiceModel;
+import me.moonways.bridgenet.model.friends.event.FriendJoinEvent;
+import me.moonways.bridgenet.model.friends.event.FriendLeaveEvent;
+import me.moonways.bridgenet.model.players.PlayersServiceModel;
 import net.conveno.jdbc.ConvenoRouter;
 import net.conveno.jdbc.response.ConvenoResponse;
 

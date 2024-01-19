@@ -1,8 +1,8 @@
 package me.moonways.endpoint.players.connection;
 
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.players.connection.ConnectedEntityPlayer;
-import me.moonways.model.players.connection.PlayerConnection;
+import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
+import me.moonways.bridgenet.model.players.connection.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;

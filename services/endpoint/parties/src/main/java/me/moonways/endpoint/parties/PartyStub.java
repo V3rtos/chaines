@@ -4,9 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.parties.Party;
-import me.moonways.model.parties.PartyMembersContainer;
-import me.moonways.model.parties.PartyOwner;
+import me.moonways.bridgenet.model.parties.Party;
+import me.moonways.bridgenet.model.parties.PartyMembersContainer;
+import me.moonways.bridgenet.model.parties.PartyOwner;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;

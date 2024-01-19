@@ -2,7 +2,7 @@ package me.moonways.endpoint.bus;
 
 import lombok.AccessLevel;
 import lombok.Setter;
-import me.moonways.model.servers.ServersServiceModel;
+import me.moonways.bridgenet.model.servers.ServersServiceModel;
 //import me.moonways.service.entity.server.ServerConnectResponseType;
 //import me.moonways.service.entity.server.protocol.handshake.response.HandshakeResponseMessage;
 

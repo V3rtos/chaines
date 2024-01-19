@@ -1,7 +1,7 @@
 package me.moonways.endpoint.players.leveling;
 
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.model.players.leveling.PlayerLeveling;
+import me.moonways.bridgenet.model.players.leveling.PlayerLeveling;
 
 import java.rmi.RemoteException;
 
