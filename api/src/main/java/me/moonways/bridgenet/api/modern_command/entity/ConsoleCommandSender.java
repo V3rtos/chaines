@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.api.modern_command.entity;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Autobind;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +29,11 @@ public final class ConsoleCommandSender implements EntityCommandSender {
     @Override
     public EntityType getType() {
         return EntityType.CONSOLE;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 
     @Override

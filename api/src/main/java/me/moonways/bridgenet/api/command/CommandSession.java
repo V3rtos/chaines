@@ -3,7 +3,7 @@ package me.moonways.bridgenet.api.command;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_command.entity.EntityCommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

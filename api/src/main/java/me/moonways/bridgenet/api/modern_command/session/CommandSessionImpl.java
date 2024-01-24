@@ -2,32 +2,30 @@ package me.moonways.bridgenet.api.modern_command.session;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
-import me.moonways.bridgenet.api.modern_command.argument.wrapper.CommandArgumentWrapper;
-import me.moonways.bridgenet.api.modern_command.argument.wrapper.CommandArgumentWrapperImpl;
+import me.moonways.bridgenet.api.modern_command.cooldown.dao.CooldownDao;
+import me.moonways.bridgenet.api.modern_command.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_command.args.ArgumentWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
-@Getter
 public class CommandSessionImpl implements CommandSession {
 
+    @Getter
+    private final String commandName;
+    @Getter
     private final EntityCommandSender entity;
-    private final UUID uuid;
 
-    private final CommandArgumentWrapper argumentWrapper;
+    @Getter
+    private final ArgumentWrapper argumentWrapper;
 
-    public CommandSessionImpl(EntityCommandSender entity, UUID uuid, String[] args) {
-        this.entity = entity;
-        this.uuid = uuid;
-
-        this.argumentWrapper = new CommandArgumentWrapperImpl(args);
-    }
+    private final CooldownDao cooldownDao;
 
     @Override
     public UUID getUuid() {
-        return uuid;
+        return entity.getUuid();
     }
 
     @Override
@@ -37,14 +35,21 @@ public class CommandSessionImpl implements CommandSession {
 
     @Override
     public <E extends EntityCommandSender> E from(Class<E> entityClass) {
-        return null;
+        return entityClass.cast(entity);
     }
 
     @Override
-    public void block(long millis) {
+    public void block(long number, TimeUnit time) {
+        cooldownDao.set(commandName, entity.getName(), number, time);
+    }
+
+    @Override
+    public ArgumentWrapper getArgument() {
+        return argumentWrapper;
     }
 
     @Override
     public void block() {
+        cooldownDao.set(commandName, entity.getName(), -1, TimeUnit.SECONDS);
     }
 }

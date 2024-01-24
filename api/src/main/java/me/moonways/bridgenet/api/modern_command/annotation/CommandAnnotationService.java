@@ -4,83 +4,87 @@ import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.modern_command.annotation.value.Aliases;
+import me.moonways.bridgenet.api.modern_command.CommandAnnotationHandler;
+import me.moonways.bridgenet.api.modern_command.annotation.context.AnnotationContext;
+import me.moonways.bridgenet.api.modern_command.annotation.context.SessionAnnotationContext;
+import me.moonways.bridgenet.api.modern_command.data.CommandInfo;
 import me.moonways.bridgenet.api.modern_command.session.CommandSession;
-import org.jetbrains.annotations.NotNull;
+import me.moonways.bridgenet.api.modern_command.util.CommandReflectionUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Autobind
-@SuppressWarnings("unchecked")
 public class CommandAnnotationService {
 
-    private final Map<Class<?>, CommandAnnotationProcessor<?>> annotationProcessorsMap = new HashMap<>();
+    private final Map<Class<? extends Annotation>, AbstractCommandAnnotationHandler<?>> annotationProcessorsMap = new HashMap<>();
 
     @Inject
     private DependencyInjection injector;
 
     @PostConstruct
     private void initAnnotationProcessors() {
-        injector.peekAnnotatedMembers(AutoregisterCommandAnnotation.class);
+        injector.peekAnnotatedMembers(CommandAnnotationHandler.class);
 
-        annotationProcessorsMap.putAll(injector.getContainer().getStoredInstances(AutoregisterCommandAnnotation.class)
+        annotationProcessorsMap.putAll(injector.getContainer().getStoredInstances(CommandAnnotationHandler.class)
                 .stream()
-                .filter(resource -> resource instanceof CommandAnnotationProcessor)
-                .map(resource -> (CommandAnnotationProcessor<?>) resource)
-                .collect(Collectors.toMap(
-                        CommandAnnotationProcessor::getAnnotationType,
-                        processor -> processor
-                )));
+                .filter(resource -> resource instanceof AbstractCommandAnnotationHandler)
+                .map(resource -> (AbstractCommandAnnotationHandler<?>) resource)
+                .collect(Collectors.toMap(AbstractCommandAnnotationHandler::getAnnotationType, processor -> processor)));
+        //todo to new injector
     }
 
-    public Set<Class<?>> getRegisteredAnnotations() {
-        return Collections.unmodifiableSet(annotationProcessorsMap.keySet());
+    public void modifyAll(CommandInfo commandInfo, AnnotatedElement annotatedElement) {
+        for (Class<? extends Annotation> cls : getSortedAnnotations()) {
+            modify(commandInfo, annotatedElement, cls);
+        }
     }
 
-    public <V extends Annotation> CommandAnnotationProcessor<V> getAnnotationHandler(Class<V> annotationType) {
-        return (CommandAnnotationProcessor<V>) annotationProcessorsMap.get(annotationType);
+    private <T extends Annotation> void modify(CommandInfo commandInfo, AnnotatedElement annotatedElement, Class<T> cls) {
+        T annotation = annotatedElement.getDeclaredAnnotation(cls);
+        AnnotationContext<T> context = new AnnotationContext<>(annotation, commandInfo);
+
+        getHandler(cls).modify(context);
     }
 
-    public boolean isSubcommand(Method method) {
-        return method.isAnnotationPresent(Aliases.class);
-    }
+    public List<AbstractCommandAnnotationHandler.Result> getErrorResults(CommandInfo commandInfo, CommandSession session, AnnotatedElement annotatedElement) {
+        List<AbstractCommandAnnotationHandler.Result> results = new ArrayList<>();
 
-    public boolean processCommandAnnotations(@NotNull CommandSession session, @NotNull AnnotatedElement annotatedElement) {
-        Set<Class<?>> registeredAnnotations = getRegisteredAnnotations();
+        for (Class<? extends Annotation> cls : getSortedAnnotations()) {
+            AbstractCommandAnnotationHandler.Result result = getResult(commandInfo, session, annotatedElement, cls);
 
-        for (Class<?> registeredAnnotation : registeredAnnotations) {
-            if (applyCommandAnnotation(session, annotatedElement, (Class<? extends Annotation>) registeredAnnotation)) {
-                return true;
+            if (result.isError()) {
+                results.add(result);
             }
         }
 
-        return false;
+        return results;
     }
 
-    private <T extends Annotation> boolean applyCommandAnnotation(CommandSession session, AnnotatedElement annotatedElement, Class<T> annotationType) {
-        T annotation = annotatedElement.getDeclaredAnnotation(annotationType);
+    private <T extends Annotation> AbstractCommandAnnotationHandler.Result getResult(CommandInfo info, CommandSession session,
+                                                                                     AnnotatedElement annotatedElement, Class<T> cls) {
+        T annotation = annotatedElement.getDeclaredAnnotation(cls);
+        SessionAnnotationContext<T> context = new SessionAnnotationContext<>(annotation, info, session);
 
-        if (annotation != null) {
-            CommandAnnotationContext<T> context = new CommandAnnotationContext<>(annotation, session, null);
-            return processCommandAnnotation(context);
-        }
-
-        return false;
+        return getHandler(cls).verify(context);
     }
 
-    private <T extends Annotation> boolean processCommandAnnotation(CommandAnnotationContext<T> context) {
-        CommandAnnotationProcessor<T> annotationHandler = (CommandAnnotationProcessor<T>)
-                getAnnotationHandler(context.getAnnotation().annotationType());
+    @SuppressWarnings("unchecked")
+    private <T extends Annotation> AbstractCommandAnnotationHandler<T> getHandler(Class<T> cls) {
+        return (AbstractCommandAnnotationHandler<T>) annotationProcessorsMap.get(cls);
+    }
 
-        annotationHandler.updateCommandInfo(context);
+    public List<Class<? extends Annotation>> getSortedAnnotations() {
+        return annotationProcessorsMap.entrySet()
+                .stream()
+                .sorted(Comparator.comparingInt(entry -> getAnnotationHandler(entry.getClass()).priority()))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
 
-        return annotationHandler.verify(context);
+    private CommandAnnotationHandler getAnnotationHandler(Class<?> parentCls) {
+        return CommandReflectionUtil.getAnnotation(parentCls, CommandAnnotationHandler.class);
     }
 }
