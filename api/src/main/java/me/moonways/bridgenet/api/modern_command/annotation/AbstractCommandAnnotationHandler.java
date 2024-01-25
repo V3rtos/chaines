@@ -56,7 +56,7 @@ public abstract class AbstractCommandAnnotationHandler<T extends Annotation> {
             return value;
         }
 
-        public boolean isError() {
+        public boolean isFailed() {
             return !value;
         }
 
