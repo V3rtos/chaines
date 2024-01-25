@@ -78,11 +78,9 @@ public class CommandManagementServiceImpl implements CommandManagementService {
         AccessManagement accessManagement = new AccessManagement(commandInfo, session);
 
         if (!accessManagement.isAllowed()) {
-            Optional<AbstractCommandAnnotationHandler.Result> result = accessManagement.getFailedResult();
+            AbstractCommandAnnotationHandler.Result result = accessManagement.getFailedResult();
 
-            if (!result.isPresent()) return;
-
-            handleFailed(session.getEntity(), result.get().getMessage());
+            handleFailed(session.getEntity(), result.getMessage());
             return;
         }
 
@@ -163,12 +161,11 @@ public class CommandManagementServiceImpl implements CommandManagementService {
             return annotationService.getFailedResults(commandInfo, session);
         }
 
-        public Optional<AbstractCommandAnnotationHandler.Result> getFailedResult() {
+        public AbstractCommandAnnotationHandler.Result getFailedResult() {
             return getFailedResults()
                     .stream()
-                    .map(Optional::of)
                     .findFirst()
-                    .orElse(Optional.empty());
+                    .orElse(null);
         }
 
         public boolean isAllowed() {
