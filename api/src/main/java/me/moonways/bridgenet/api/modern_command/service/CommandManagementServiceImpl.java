@@ -2,6 +2,7 @@ package me.moonways.bridgenet.api.modern_command.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
@@ -20,7 +21,6 @@ import me.moonways.bridgenet.api.modern_command.session.CommandSessionImpl;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Optional;
 
 public class CommandManagementServiceImpl implements CommandManagementService {
 
@@ -75,10 +75,10 @@ public class CommandManagementServiceImpl implements CommandManagementService {
         CommandSession session = createSession(commandName, entity, argumentWrapper);
         CommandInfo commandInfo = get(commandName);
 
-        AccessManagement accessManagement = new AccessManagement(commandInfo, session);
+        AccessVerifier accessVerifier = new AccessVerifier(commandInfo, session);
 
-        if (!accessManagement.isAllowed()) {
-            AbstractCommandAnnotationHandler.Result result = accessManagement.getFailedResult();
+        if (!accessVerifier.isAllowed()) {
+            AbstractCommandAnnotationHandler.Result result = accessVerifier.completedResultsAccessor.getFailedResult();
 
             handleFailed(session.getEntity(), result.getMessage());
             return;
@@ -151,25 +151,35 @@ public class CommandManagementServiceImpl implements CommandManagementService {
         }
     }
 
+    class AccessVerifier {
+
+        private final CompletedResultsAccessor completedResultsAccessor;
+
+        private AccessVerifier(CommandInfo commandInfo, CommandSession session) {
+            this.completedResultsAccessor = new CompletedResultsAccessor(commandInfo, session);
+        }
+
+        private boolean isAllowed() {
+            return completedResultsAccessor.getFailedResults().isEmpty();
+        }
+    }
+
     @RequiredArgsConstructor
-    class AccessManagement {
+    class CompletedResultsAccessor {
 
         private final CommandInfo commandInfo;
         private final CommandSession session;
 
         private List<AbstractCommandAnnotationHandler.Result> getFailedResults() {
-            return annotationService.getFailedResults(commandInfo, session);
+            return annotationService.getResults(commandInfo, session);
         }
 
-        public AbstractCommandAnnotationHandler.Result getFailedResult() {
+        private AbstractCommandAnnotationHandler.Result getFailedResult() {
             return getFailedResults()
                     .stream()
+                    .filter(AbstractCommandAnnotationHandler.Result::isFailed)
                     .findFirst()
                     .orElse(null);
-        }
-
-        public boolean isAllowed() {
-            return getFailedResults().isEmpty();
         }
     }
 }
