@@ -50,7 +50,7 @@ public class CommandAnnotationService {
         getHandler(cls).modify(context);
     }
 
-    public List<AbstractCommandAnnotationHandler.Result> getFailedResults(CommandInfo commandInfo, CommandSession session) {
+    public List<AbstractCommandAnnotationHandler.Result> getResults(CommandInfo commandInfo, CommandSession session) { //переписать тут на получение всех результатов
         List<AbstractCommandAnnotationHandler.Result> results = new ArrayList<>();
 
         for (Class<? extends Annotation> cls : getSortedAnnotations()) {
@@ -73,7 +73,7 @@ public class CommandAnnotationService {
         SessionAnnotationContext<T> context = new SessionAnnotationContext<>(annotation, info, session);
 
         AbstractCommandAnnotationHandler.Result result = getHandler(cls).verify(context);
-        if (result.isError()) {
+        if (result.isFailed()) {
             return Optional.of(result);
         }
 
