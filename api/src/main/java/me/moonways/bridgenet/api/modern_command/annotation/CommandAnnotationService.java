@@ -13,6 +13,7 @@ import me.moonways.bridgenet.api.modern_command.util.CommandReflectionUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,26 +50,34 @@ public class CommandAnnotationService {
         getHandler(cls).modify(context);
     }
 
-    public List<AbstractCommandAnnotationHandler.Result> getErrorResults(CommandInfo commandInfo, CommandSession session, AnnotatedElement annotatedElement) {
+    public List<AbstractCommandAnnotationHandler.Result> getFailedResults(CommandInfo commandInfo, CommandSession session) {
         List<AbstractCommandAnnotationHandler.Result> results = new ArrayList<>();
 
         for (Class<? extends Annotation> cls : getSortedAnnotations()) {
-            AbstractCommandAnnotationHandler.Result result = getResult(commandInfo, session, annotatedElement, cls);
+            Class<?> parentCls = commandInfo.getParent().getClass();
+            Method handle = commandInfo.getHandle();
 
-            if (result.isError()) {
-                results.add(result);
-            }
+            Optional<AbstractCommandAnnotationHandler.Result> clsResult = getFailedResult(commandInfo, session, parentCls, cls);
+            Optional<AbstractCommandAnnotationHandler.Result> methodResult = getFailedResult(commandInfo, session, handle, cls); //todo перенести
+
+            clsResult.ifPresent(results::add);
+            methodResult.ifPresent(results::add);
         }
 
         return results;
     }
 
-    private <T extends Annotation> AbstractCommandAnnotationHandler.Result getResult(CommandInfo info, CommandSession session,
-                                                                                     AnnotatedElement annotatedElement, Class<T> cls) {
+    private <T extends Annotation> Optional<AbstractCommandAnnotationHandler.Result> getFailedResult(CommandInfo info, CommandSession session,
+                                                                                                     AnnotatedElement annotatedElement, Class<T> cls) {
         T annotation = annotatedElement.getDeclaredAnnotation(cls);
         SessionAnnotationContext<T> context = new SessionAnnotationContext<>(annotation, info, session);
 
-        return getHandler(cls).verify(context);
+        AbstractCommandAnnotationHandler.Result result = getHandler(cls).verify(context);
+        if (result.isError()) {
+            return Optional.of(result);
+        }
+
+        return Optional.empty();
     }
 
     @SuppressWarnings("unchecked")
@@ -76,7 +85,7 @@ public class CommandAnnotationService {
         return (AbstractCommandAnnotationHandler<T>) annotationProcessorsMap.get(cls);
     }
 
-    public List<Class<? extends Annotation>> getSortedAnnotations() {
+    private List<Class<? extends Annotation>> getSortedAnnotations() {
         return annotationProcessorsMap.entrySet()
                 .stream()
                 .sorted(Comparator.comparingInt(entry -> getAnnotationHandler(entry.getClass()).priority()))

@@ -1,25 +1,26 @@
 package me.moonways.bridgenet.api.modern_command.service;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.modern_command.InjectCommand;
 import me.moonways.bridgenet.api.modern_command.annotation.AbstractCommandAnnotationHandler;
-import me.moonways.bridgenet.api.modern_command.data.*;
-import me.moonways.bridgenet.api.modern_command.entity.EntityCommandSender;
-import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.modern_command.annotation.CommandAnnotationService;
 import me.moonways.bridgenet.api.modern_command.args.ArgumentWrapper;
 import me.moonways.bridgenet.api.modern_command.args.ArgumentWrapperImpl;
 import me.moonways.bridgenet.api.modern_command.cooldown.dao.CooldownDao;
+import me.moonways.bridgenet.api.modern_command.data.CommandContainer;
+import me.moonways.bridgenet.api.modern_command.data.CommandInfo;
+import me.moonways.bridgenet.api.modern_command.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.modern_command.session.CommandSession;
 import me.moonways.bridgenet.api.modern_command.session.CommandSessionImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.Optional;
 
 public class CommandManagementServiceImpl implements CommandManagementService {
 
@@ -64,55 +65,36 @@ public class CommandManagementServiceImpl implements CommandManagementService {
 
         //Парсим нужное имя команды в массиве аргументов
         ArgumentParser argumentParser = new ArgumentParser();
-        String name = argumentParser.getName(argumentWrapper);
+        String completedName = argumentParser.getName(argumentWrapper);
 
         //Пытаемся выполнить команду
-        tryHandle(entity, name, argumentWrapper);
+        performAccess(completedName, entity, argumentWrapper);
     }
 
-    private void tryHandle(EntityCommandSender entity, String name, ArgumentWrapper argumentWrapper) {
-        CommandSession session = createSession(name, entity, argumentWrapper);
-        tryExecute(session, name);
+    private void performAccess(String commandName, EntityCommandSender entity, ArgumentWrapper argumentWrapper) {
+        CommandSession session = createSession(commandName, entity, argumentWrapper);
+        CommandInfo commandInfo = get(commandName);
+
+        AccessManagement accessManagement = new AccessManagement(commandInfo, session);
+
+        if (!accessManagement.isAllowed()) {
+            Optional<AbstractCommandAnnotationHandler.Result> result = accessManagement.getFailedResult();
+
+            if (!result.isPresent()) return;
+
+            handleFailed(session.getEntity(), result.get().getMessage());
+            return;
+        }
+
+        handleSuccess(session, commandInfo);
     }
 
     private void handleFailed(EntityCommandSender entity, String message) {
         entity.sendMessage(message);
     }
 
-    private void tryExecute(CommandSession session, String commandName) {
-        CommandInfo commandInfo = get(commandName);
-
-        List<AbstractCommandAnnotationHandler.Result> results = getErrorResults(commandInfo, session);
-
-        if (!results.isEmpty()) {
-            AbstractCommandAnnotationHandler.Result firstResult = results.stream().findFirst().orElse(null);
-            handleFailed(session.getEntity(), firstResult.getMessage());
-            return;
-        }
-
-        execute(session, commandInfo);
-    }
-
-    private void execute(CommandSession session, CommandInfo commandInfo) {
+    private void handleSuccess(CommandSession session, CommandInfo commandInfo) {
         invoke(session, commandInfo);
-    }
-
-    private List<AbstractCommandAnnotationHandler.Result> getErrorResults(CommandInfo commandInfo, CommandSession session) {
-        return combineResults(getErrorResultsOfClass(commandInfo, session), getErrorResultsOfMethod(commandInfo, session));
-    }
-
-    private List<AbstractCommandAnnotationHandler.Result> getErrorResultsOfMethod(CommandInfo commandInfo, CommandSession session) {
-        return annotationService.getErrorResults(commandInfo, session, commandInfo.getHandle());
-    }
-
-    private List<AbstractCommandAnnotationHandler.Result> getErrorResultsOfClass(CommandInfo commandInfo, CommandSession session) {
-        return annotationService.getErrorResults(commandInfo, session, commandInfo.getParent().getClass());
-    }
-
-
-    private List<AbstractCommandAnnotationHandler.Result> combineResults(List<AbstractCommandAnnotationHandler.Result> a,
-                                                                         List<AbstractCommandAnnotationHandler.Result> b) {
-        return Stream.concat(a.stream(), b.stream()).collect(Collectors.toList());
     }
 
     @Override
@@ -167,7 +149,30 @@ public class CommandManagementServiceImpl implements CommandManagementService {
                 }
             }
 
-            return null; // а такое бывает? (-_-)
+            return null;
+        }
+    }
+
+    @RequiredArgsConstructor
+    class AccessManagement {
+
+        private final CommandInfo commandInfo;
+        private final CommandSession session;
+
+        private List<AbstractCommandAnnotationHandler.Result> getFailedResults() {
+            return annotationService.getFailedResults(commandInfo, session);
+        }
+
+        public Optional<AbstractCommandAnnotationHandler.Result> getFailedResult() {
+            return getFailedResults()
+                    .stream()
+                    .map(Optional::of)
+                    .findFirst()
+                    .orElse(Optional.empty());
+        }
+
+        public boolean isAllowed() {
+            return getFailedResults().isEmpty();
         }
     }
 }
