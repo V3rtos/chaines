@@ -19,7 +19,7 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<ExportedMes
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) {
-        log.info("§9New connection attempt was detected: {}", ctx);
+        log.info("§9New connection attempt was detected: {}", ctx.channel());
     }
 
     @Override
@@ -40,7 +40,7 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<ExportedMes
 
         MTPChannel mtpChannel = new MTPChannel(newDirection, channel.getHandle());
 
-        driver.getInjector().injectFields(mtpChannel);
+        driver.getBeansService().inject(mtpChannel);
 
         return mtpChannel;
     }

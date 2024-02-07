@@ -2,9 +2,12 @@ package me.moonways.bridgenet.api.util.autorun;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
-import me.moonways.bridgenet.api.inject.DependencyContainer;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.PostConstruct;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
+import me.moonways.bridgenet.api.inject.processor.persistance.GetTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistance.WaitTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.scheduler.ScheduledTime;
 import me.moonways.bridgenet.api.scheduler.Scheduler;
 import me.moonways.bridgenet.api.util.autorun.persistance.AutoRunner;
@@ -15,37 +18,39 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Log4j2
 @Autobind
+@WaitTypeAnnotationProcessor(AutoRunner.class)
 public class ScheduledRunnersService {
 
     private static final ScheduledTime DEFAULT_PERIOD = ScheduledTime.ofMillis(100);
 
     @Inject
-    private DependencyInjection injector;
-
+    private BeansService beansService;
     @Inject
     private Scheduler scheduler;
 
-    public void start() {
-        Set<Object> runners = injector.peekAnnotatedMembers(AutoRunner.class).collect(Collectors.toSet());
-        startGlobalTimer(runners);
+    @GetTypeAnnotationProcessor
+    private TypeAnnotationProcessorResult<Object> runnersResult;
+
+    @PostConstruct
+    private void init() {
+        startGlobalTimer(runnersResult.toList());
     }
 
-    private void startGlobalTimer(Set<Object> runners) {
+    private void startGlobalTimer(List<Object> runners) {
         List<RunnableUnit> units = toUnits(runners);
 
         Map<RunnableUnit, Long> unitsMap = units.stream()
                 .collect(Collectors.toMap(unit -> unit, unit -> 0L));
 
-        scheduler.schedule(DEFAULT_PERIOD, DEFAULT_PERIOD)
+        scheduler.schedule(ScheduledTime.ofSeconds(10), DEFAULT_PERIOD)
                 .follow(new ScheduledRunnersInvocationTask(unitsMap));
     }
 
-    private static List<RunnableUnit> toUnits(Set<Object> runners) {
+    private static List<RunnableUnit> toUnits(List<Object> runners) {
         List<RunnableUnit> result = new ArrayList<>();
 
         for (Object runner : runners) {

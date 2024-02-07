@@ -2,10 +2,10 @@ package me.moonways.bridgenet.bootstrap.hook;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.bootstrap.xml.XMLBootstrapConfigDescriptor;
 import me.moonways.bridgenet.bootstrap.xml.XMLHookDescriptor;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ public final class BootstrapHookContainer {
     private final Map<Class<?>, XMLHookDescriptor> xmlByHooksTypesMap = new HashMap<>();
 
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
 
     @Inject
     private XmlJaxbParser jaxbParser;
@@ -106,7 +106,7 @@ public final class BootstrapHookContainer {
 
     public ApplicationBootstrapHook findHookInstance(Class<? extends ApplicationBootstrapHook> cls) {
         ApplicationBootstrapHook bootstrapHook = instancesByHooksTypesMap.get(cls);
-        injector.injectFields(bootstrapHook);
+        beansService.inject(bootstrapHook);
         return bootstrapHook;
     }
 

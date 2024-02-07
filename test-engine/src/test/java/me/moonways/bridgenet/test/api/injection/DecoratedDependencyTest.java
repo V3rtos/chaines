@@ -1,9 +1,10 @@
 package me.moonways.bridgenet.test.api.injection;
 
 import lombok.SneakyThrows;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.decorator.Decorated;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
+import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
 import me.moonways.bridgenet.api.inject.decorator.persistance.*;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import org.junit.Before;
@@ -21,12 +22,15 @@ public class DecoratedDependencyTest {
     private AnyObjectWithDecorators subj;
 
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
+    @Inject
+    private BeansStore beansStore;
 
     @Before
     public void setUp() {
-        injector.bind(new AnyObjectWithDecorators());
-        subj = (AnyObjectWithDecorators) injector.getContainer().findInstance(AnyObjectWithDecorators.class);
+        beansService.bind(new AnyObjectWithDecorators());
+        subj = beansStore.find(AnyObjectWithDecorators.class)
+                .map(bean -> ((AnyObjectWithDecorators) bean.getRoot())).orElse(null);
     }
 
     @Test
@@ -40,7 +44,7 @@ public class DecoratedDependencyTest {
         assertEquals(subj.testSingleton(), subj.testSingleton(), 0);
     }
 
-    @Decorated
+    @EnableDecorators
     public static class AnyObjectWithDecorators {
 
         @LateExecution(delay = 4, unit = TimeUnit.SECONDS)

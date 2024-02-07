@@ -1,25 +1,23 @@
 package me.moonways.bridgenet.api.util.json;
 
 import com.google.gson.Gson;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.Inject;
+
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
 
 @Log4j2
 @RequiredArgsConstructor
 public abstract class AbstractJsonConfig<Source> {
 
+  private static final Gson GSON = new Gson();
+
   private final Class<Source> sourceType;
   private final String filename;
-
-  @Inject
-  private Gson gson;
 
   protected abstract void onReloaded(Source source);
 
@@ -27,7 +25,7 @@ public abstract class AbstractJsonConfig<Source> {
   public void reload() {
     String configurationContent = readContent();
 
-    Source source = gson.fromJson(configurationContent, sourceType);
+    Source source = GSON.fromJson(configurationContent, sourceType);
     onReloaded(source);
 
     log.info("Json configuration parsed from {}", filename);
@@ -36,9 +34,9 @@ public abstract class AbstractJsonConfig<Source> {
   @SuppressWarnings({"DataFlowIssue", "resource", "ResultOfMethodCallIgnored"})
   @SneakyThrows
   private String readContent() {
-    Path path = Paths.get(filename);
+    File file = new File(filename);
 
-    if (!Files.exists(path)) {
+    if (!file.exists()) {
 
       InputStream inputStream = getClass().getResourceAsStream("/" + filename);
       byte[] arr = new byte[inputStream.available()];
@@ -48,7 +46,7 @@ public abstract class AbstractJsonConfig<Source> {
       return new String(arr);
     }
 
-    byte[] bytes = Files.readAllBytes(path);
+    byte[] bytes = Files.readAllBytes(file.toPath());
     return new String(bytes);
   }
 }

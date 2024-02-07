@@ -17,13 +17,11 @@ import java.util.UUID;
 @Getter
 @ToString
 @ServerMessage
+@ClientMessage
 @AllArgsConstructor
 @NoArgsConstructor
 public class Handshake {
     public enum Type { SERVER, PLAYER }
-
-    @ByteTransfer
-    private String name;
 
     @ByteTransfer(provider = TransferEnumProvider.class)
     private Type type;
@@ -31,7 +29,9 @@ public class Handshake {
     @ByteTransfer(provider = TransferPropertiesProvider.class)
     private Properties properties;
 
-    public interface Result { }
+    public interface Result {
+        UUID getKey();
+    }
 
     @Getter
     @ToString

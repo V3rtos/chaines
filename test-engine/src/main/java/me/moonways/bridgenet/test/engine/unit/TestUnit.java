@@ -20,7 +20,7 @@ public class TestUnit {
     }
 
     public void invokeAnnotated(Class<? extends Annotation> annotation) throws Exception {
-        for (Method method : source.getClass().getMethods()) {
+        for (Method method : source.getClass().getDeclaredMethods()) {
 
             if (method.isAnnotationPresent(annotation)) {
                 method.invoke(source);
@@ -29,7 +29,7 @@ public class TestUnit {
     }
 
     public void peekAnnotated(Class<? extends Annotation> annotation, Consumer<Method> handler) throws Exception {
-        for (Method method : source.getClass().getMethods()) {
+        for (Method method : source.getClass().getDeclaredMethods()) {
 
             if (method.isAnnotationPresent(annotation)) {
                 handler.accept(method);
@@ -38,7 +38,7 @@ public class TestUnit {
     }
 
     public void invoke(String testName) throws Exception {
-        Method method = source.getClass().getMethod(testName);
+        Method method = source.getClass().getDeclaredMethod(testName);
 
         method.setAccessible(true);
         method.invoke(source);

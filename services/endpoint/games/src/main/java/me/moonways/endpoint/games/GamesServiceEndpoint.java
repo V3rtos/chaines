@@ -1,6 +1,5 @@
 package me.moonways.endpoint.games;
 
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.model.games.Game;

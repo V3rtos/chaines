@@ -3,8 +3,8 @@ package me.moonways.bridgenet.api.event;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscription;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscriptionApplier;
 import me.moonways.bridgenet.api.inject.Autobind;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.util.thread.Threads;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,11 +21,11 @@ public final class EventService {
     private final EventSubscriptionApplier eventSubscriptionApplier = new EventSubscriptionApplier(this);
 
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
 
     @NotNull
     public <E extends Event> EventFuture<E> fireEvent(@NotNull E event) {
-        injector.injectFields(event);
+        beansService.inject(event);
 
         EventFuture<E> eventFuture = eventExecutor.fireEvent(event);
         eventSubscriptionApplier.followSubscription(eventFuture);
@@ -34,7 +34,7 @@ public final class EventService {
     }
 
     public void registerHandler(@NotNull Object handler) {
-        injector.injectFields(handler);
+        beansService.inject(handler);
         eventRegistry.register(handler);
     }
 

@@ -7,9 +7,9 @@ import me.moonways.bridgenet.api.proxy.MethodPriority;
 import me.moonways.bridgenet.api.proxy.ProxiedMethod;
 import me.moonways.bridgenet.rest.client.repository.RestRepositoryHelper;
 import me.moonways.bridgenet.rest.client.repository.markers.mapping.*;
-import me.moonways.rest.api.exchange.message.RestMessageBuilder;
-import me.moonways.rest.api.exchange.message.RestMessageType;
-import me.moonways.rest.api.exchange.response.RestResponse;
+import me.moonways.bridgenet.rest.api.exchange.message.RestMessageBuilder;
+import me.moonways.bridgenet.rest.api.exchange.message.RestMessageType;
+import me.moonways.bridgenet.rest.api.exchange.response.RestResponse;
 import me.moonways.bridgenet.rest.client.repository.markers.header.RestHeaders;
 import me.moonways.bridgenet.rest.client.repository.markers.param.RestAttribute;
 

@@ -2,8 +2,8 @@ package me.moonways.bridgenet.rest.client.repository;
 
 import me.moonways.bridgenet.rest.client.repository.markers.mapping.DeleteMapping;
 import me.moonways.bridgenet.rest.client.repository.markers.mapping.PostMapping;
-import me.moonways.rest.api.StandardHeaders;
-import me.moonways.rest.api.exchange.response.RestResponse;
+import me.moonways.bridgenet.rest.api.StandardHeaders;
+import me.moonways.bridgenet.rest.api.exchange.response.RestResponse;
 import me.moonways.bridgenet.rest.client.repository.markers.RestClient;
 import me.moonways.bridgenet.rest.client.repository.markers.header.Header;
 import me.moonways.bridgenet.rest.client.repository.markers.header.RestHeaders;

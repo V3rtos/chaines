@@ -2,19 +2,20 @@ package me.moonways.bridgenet.rest.client.repository;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.UnsafeFactory;
 import me.moonways.bridgenet.api.proxy.ProxiedMethod;
 import me.moonways.bridgenet.rest.client.repository.markers.RestCertificatesSecurity;
 import me.moonways.bridgenet.rest.client.repository.markers.RestClient;
-import me.moonways.bridgenet.rest.client.repository.markers.mapping.RestJsonEntity;
-import me.moonways.bridgenet.rest.client.repository.markers.param.RestEntity;
-import me.moonways.rest.api.HttpHost;
-import me.moonways.rest.api.exchange.entity.ExchangeableEntity;
-import me.moonways.rest.api.exchange.entity.type.MultipartEntity;
-import me.moonways.rest.api.exchange.message.RestMessageBuilder;
-import me.moonways.rest.api.exchange.response.RestResponse;
 import me.moonways.bridgenet.rest.client.repository.markers.header.Header;
+import me.moonways.bridgenet.rest.client.repository.markers.mapping.RestJsonEntity;
 import me.moonways.bridgenet.rest.client.repository.markers.param.RestAttribute;
+import me.moonways.bridgenet.rest.client.repository.markers.param.RestEntity;
+import me.moonways.bridgenet.rest.api.HttpHost;
+import me.moonways.bridgenet.rest.api.exchange.entity.ExchangeableEntity;
+import me.moonways.bridgenet.rest.api.exchange.entity.type.MultipartEntity;
+import me.moonways.bridgenet.rest.api.exchange.message.RestMessageBuilder;
+import me.moonways.bridgenet.rest.api.exchange.response.RestResponse;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Parameter;
@@ -25,7 +26,7 @@ import java.util.List;
 public class RestRepositoryHelper {
 
     private final Gson gson;
-    private final UnsafeObjectFactory objectFactory = new UnsafeObjectFactory();
+    private final BeanFactory beanFactory = new UnsafeFactory();
 
     public void addParametersToMessage(RestMessageBuilder builder, Parameter[] parameters, Object[] args) {
         int index = 0;
@@ -74,7 +75,7 @@ public class RestRepositoryHelper {
     public ExchangeableEntity createBody(RestEntity annotation, Object value) {
         Class<? extends ExchangeableEntity> entityType = annotation.value();
 
-        ExchangeableEntity entity = objectFactory.create(entityType);
+        ExchangeableEntity entity = beanFactory.create(entityType);
         entity.setContent(value);
 
         return entity;

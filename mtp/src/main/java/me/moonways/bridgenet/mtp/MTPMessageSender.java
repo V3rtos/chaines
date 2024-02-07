@@ -19,23 +19,7 @@ public interface MTPMessageSender extends Serializable {
      * Получить кешированное значение аттрибута.
      * @param key - ключ аттрибута.
      */
-    Optional<Object> getProperty(@NotNull String key);
-
-    /**
-     * Получить кешированное значение аттрибута
-     * в виде строки.
-     *
-     * @param key - ключ аттрибута.
-     */
-    Optional<String> getPropertyString(@NotNull String key);
-
-    /**
-     * Получить кешированное значение аттрибута
-     * в виде целочисленного числа.
-     *
-     * @param key - ключ аттрибута.
-     */
-    Optional<Integer> getPropertyInt(@NotNull String key);
+    <T> Optional<T> getProperty(@NotNull String key);
 
     /**
      * Установить значение аттрибута.

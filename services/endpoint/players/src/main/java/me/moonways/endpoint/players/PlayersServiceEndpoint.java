@@ -1,9 +1,9 @@
 package me.moonways.endpoint.players;
 
 import lombok.Getter;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import me.moonways.endpoint.players.connection.PlayerConnectionStub;
 import me.moonways.endpoint.players.leveling.PlayerLevelingStub;
@@ -34,7 +34,7 @@ public final class PlayersServiceEndpoint extends AbstractEndpointDefinition imp
     private final PlayerOfflineManager playerOfflineManager = new PlayerOfflineManagerStub();
 
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
 
     public PlayersServiceEndpoint() throws RemoteException {
         super();
@@ -54,10 +54,10 @@ public final class PlayersServiceEndpoint extends AbstractEndpointDefinition imp
 
     @PostConstruct
     void postInject() {
-        injector.imitateFakeBind(playerConnection);
-        injector.imitateFakeBind(playerLeveling);
-        injector.imitateFakeBind(playerPermissions);
-        injector.imitateFakeBind(playerSocials);
-        injector.imitateFakeBind(playerOfflineManager);
+        beansService.fakeBind(playerConnection);
+        beansService.fakeBind(playerLeveling);
+        beansService.fakeBind(playerPermissions);
+        beansService.fakeBind(playerSocials);
+        beansService.fakeBind(playerOfflineManager);
     }
 }

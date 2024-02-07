@@ -1,8 +1,9 @@
 package me.moonways.bridgenet.endpoint.servers;
 
 import lombok.Synchronized;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.model.servers.ServerFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +18,7 @@ import java.util.stream.Stream;
 public final class ServersContainer {
 
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
 
     private final Map<UUID, ConnectedServerStub> registeredServersMap = Collections.synchronizedMap(new HashMap<>());
 
@@ -60,7 +61,7 @@ public final class ServersContainer {
 
     @Synchronized
     public UUID registerServer(@NotNull ConnectedServerStub server) {
-        injector.injectFields(server);
+        beansService.inject(server);
 
         UUID serverKey = newServerUUID();
         registeredServersMap.put(serverKey, server);

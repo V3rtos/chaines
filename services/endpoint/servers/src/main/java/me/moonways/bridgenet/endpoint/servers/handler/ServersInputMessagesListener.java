@@ -2,8 +2,8 @@ package me.moonways.bridgenet.endpoint.servers.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.endpoint.servers.ConnectedServerStub;
 import me.moonways.bridgenet.endpoint.servers.ServersContainer;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
@@ -31,7 +31,7 @@ public class ServersInputMessagesListener {
     private final ServersServiceModel serversServiceModel;
 
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
 
     @Inject
     private PlayersOnServersConnectionService playersOnServersConnectionService;

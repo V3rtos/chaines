@@ -11,7 +11,7 @@ import me.moonways.bridgenet.mtp.transfer.ByteCompression;
 import me.moonways.bridgenet.mtp.exception.CompressionException;
 import me.moonways.bridgenet.mtp.message.MessageWrapper;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
-import me.moonways.bridgenet.mtp.message.MessageNotFoundException;
+import me.moonways.bridgenet.mtp.message.exception.MessageNotFoundException;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 
 import java.io.IOException;

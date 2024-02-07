@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.rest.client.repository.markers.param;
 
-import me.moonways.rest.api.exchange.entity.ExchangeableEntity;
-import me.moonways.rest.api.exchange.entity.type.TextEntity;
+import me.moonways.bridgenet.rest.api.exchange.entity.ExchangeableEntity;
+import me.moonways.bridgenet.rest.api.exchange.entity.type.TextEntity;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

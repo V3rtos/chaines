@@ -5,15 +5,19 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
+import me.moonways.bridgenet.api.inject.processor.persistance.GetTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistance.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.mtp.message.exception.MessageHandleException;
 import me.moonways.bridgenet.mtp.message.persistence.MessageHandler;
 import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -21,17 +25,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Log4j2
+@Autobind
+@WaitTypeAnnotationProcessor(MessageHandler.class)
 public class MessageHandlerList {
 
     @Getter
     private final Set<MethodTriggerState> messageHandlers = new HashSet<>();
 
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
+
+    @GetTypeAnnotationProcessor
+    private TypeAnnotationProcessorResult<Object> handlersResult;
 
     public void bindHandlers() {
-        injector.peekAnnotatedMembers(MessageHandler.class)
-                .forEachOrdered(this::bind);
+        handlersResult.toList().forEach(this::bind);
     }
 
     private List<MethodTriggerState> toStates(Object handler) {
@@ -45,8 +53,7 @@ public class MessageHandlerList {
         if (messageHandlers.addAll(toStates(handler))) {
 
             log.info("Bind message handler: §6{}", handler.getClass().getSimpleName());
-
-            injector.injectFields(handler);
+            beansService.inject(handler);
         }
     }
 

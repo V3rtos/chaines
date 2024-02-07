@@ -7,8 +7,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
-import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.UnsafeFactory;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 
 @Log4j2
@@ -16,7 +16,7 @@ import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 public final class MessageTransfer {
 
     private static final ByteCodec BYTE_CODEC = new ByteCodec();
-    private static final ObjectFactory OBJECT_FACTORY = new UnsafeObjectFactory();
+    private static final BeanFactory OBJECT_FACTORY = new UnsafeFactory();
 
     public static MessageTransfer decode(byte[] bytes) {
         return new MessageTransfer(null, bytes);

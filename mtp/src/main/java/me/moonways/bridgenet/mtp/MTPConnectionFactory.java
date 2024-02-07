@@ -5,9 +5,8 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
-import me.moonways.bridgenet.mtp.config.Settings;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
+import me.moonways.bridgenet.mtp.config.Settings;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,16 +18,13 @@ import java.net.SocketAddress;
 @RequiredArgsConstructor
 public class MTPConnectionFactory {
 
-    public static MTPConnectionFactory createConnectionFactory(DependencyInjection injector) {
+    public static MTPConnectionFactory createConnectionFactory() {
         MTPConfiguration configuration = new MTPConfiguration();
-        injector.injectFields(configuration);
-
         configuration.reload();
 
         Settings settings = configuration.getSettings();
 
-        return new MTPConnectionFactory(
-                configuration,
+        return new MTPConnectionFactory(configuration,
                 new InetSocketAddress(settings.getHost(), settings.getPort())
         );
     }

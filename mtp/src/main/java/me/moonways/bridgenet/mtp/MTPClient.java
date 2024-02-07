@@ -4,6 +4,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.util.thread.Threads;
@@ -16,6 +17,8 @@ import java.util.concurrent.CompletableFuture;
 public class MTPClient implements MTPConnection {
 
     private final Bootstrap bootstrap;
+
+    @Getter
     private MTPChannel channel;
 
     private void handleChannelFuture(ChannelFuture channelFuture, CompletableFuture<MTPChannel> completableFuture) {

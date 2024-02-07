@@ -19,11 +19,7 @@ public class RandomValueRunner {
     private Properties props;
 
     @Runnable
-    public void run_updateValue() {
-        props.setProperty(KEY, generateStringValue());
-    }
-
-    private String generateStringValue() {
-        return UUID.randomUUID().toString();
+    public void regenerate() {
+        props.setProperty(KEY, UUID.randomUUID().toString());
     }
 }

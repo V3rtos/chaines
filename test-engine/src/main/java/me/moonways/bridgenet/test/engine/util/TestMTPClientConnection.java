@@ -1,48 +1,28 @@
 package me.moonways.bridgenet.test.engine.util;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFactory;
-import io.netty.channel.EventLoopGroup;
-import lombok.Getter;
 import me.moonways.bridgenet.api.inject.Autobind;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.mtp.*;
-import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.mtp.client.MTPClientConnectionFactory;
+import me.moonways.bridgenet.mtp.MTPMessageSender;
 
 @Autobind
 public class TestMTPClientConnection {
 
     @Inject
-    private DependencyInjection injector;
-    @Inject
-    private MTPDriver driver;
+    private BeansService beansService;
 
-    private MTPConnectionFactory connectionFactory;
+    private MTPMessageSender channel;
+    private MTPClientConnectionFactory clientConnectionFactory;
 
-    @Getter
-    private MTPChannel channel;
-
-    private void connect() {
-        ChannelFactory<? extends Channel> clientChannelFactory = NettyFactory.createClientChannelFactory();
-
-        NettyPipelineInitializer channelInitializer = NettyPipelineInitializer.create(driver, connectionFactory.getConfiguration());
-        EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(2);
-
-        MTPClient client = MTPConnectionFactory.newClientBuilder(connectionFactory)
-                .setGroup(parentWorker)
-                .setChannelFactory(clientChannelFactory)
-                .setChannelInitializer(channelInitializer)
-                .build();
-
-        channel = client.connectSync();
-        channel.initAttributes();
-
-        injector.injectFields(channel);
-    }
-
-    public void prepareTest() {
-        connectionFactory = MTPConnectionFactory.createConnectionFactory(injector);
-        connect();
+    public MTPMessageSender getChannel() {
+        if (clientConnectionFactory == null) {
+            clientConnectionFactory = new MTPClientConnectionFactory();
+            beansService.inject(clientConnectionFactory);
+        }
+        if (channel == null) {
+            channel = clientConnectionFactory.newClient();
+        }
+        return channel;
     }
 }

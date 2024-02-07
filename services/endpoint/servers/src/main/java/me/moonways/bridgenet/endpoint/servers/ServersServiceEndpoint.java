@@ -1,8 +1,9 @@
 package me.moonways.bridgenet.endpoint.servers;
 
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.endpoint.servers.handler.ServersInputMessagesListener;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerFlag;
@@ -24,7 +25,7 @@ public class ServersServiceEndpoint extends AbstractEndpointDefinition implement
     @Inject
     private MTPDriver mtpDriver;
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
 
     public ServersServiceEndpoint() throws RemoteException {
         super();
@@ -32,7 +33,7 @@ public class ServersServiceEndpoint extends AbstractEndpointDefinition implement
 
     @PostConstruct
     public void bindListeners() {
-        injector.injectFields(serversContainer);
+        beansService.inject(serversContainer);
         mtpDriver.bindHandler(new ServersInputMessagesListener(serversContainer, this));
     }
 

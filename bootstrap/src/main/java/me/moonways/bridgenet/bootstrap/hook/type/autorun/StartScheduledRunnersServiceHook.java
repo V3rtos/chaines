@@ -13,6 +13,6 @@ public class StartScheduledRunnersServiceHook extends ApplicationBootstrapHook {
 
     @Override
     protected void process(@NotNull AppBootstrap bootstrap) throws Exception {
-        scheduledRunnersService.start();
+        //scheduledRunnersService.start();
     }
 }

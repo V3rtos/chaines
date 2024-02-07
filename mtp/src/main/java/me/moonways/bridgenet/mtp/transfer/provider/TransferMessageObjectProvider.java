@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.mtp.transfer.provider;
 
-import me.moonways.bridgenet.api.inject.factory.DependObjectFactory;
-import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.ConstructorFactory;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.MessageBytes;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class TransferMessageObjectProvider implements TransferProvider {
 
-    private static final ObjectFactory OBJECT_FACTORY = new DependObjectFactory();
+    private static final BeanFactory OBJECT_FACTORY = new ConstructorFactory();
 
     @Override
     public Object fromByteArray(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {

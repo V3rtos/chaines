@@ -103,13 +103,13 @@ public class GamesInputMessageListener {
     }
 
     private GameServerStub toGameServerStub(InputMessageContext<CreateGame> context) throws RemoteException {
-        Optional<Object> entityServerOptional = context.getChannel().getProperty(EntityServer.CHANNEL_PROPERTY);
+        Optional<EntityServer> entityServerOptional = context.getChannel().getProperty(EntityServer.CHANNEL_PROPERTY);
 
         if (!entityServerOptional.isPresent()) {
             throw new GamesEndpointException("parent server of created game is`nt initialized");
         }
 
-        EntityServer server = (EntityServer) entityServerOptional.get();
+        EntityServer server = entityServerOptional.get();
         return new GameServerStub(server.getServerInfo());
     }
 
