@@ -49,7 +49,7 @@ public class BeansAnnotationsAwaitService {
             return false;
         }
 
-        boolean isNotNeeds = !service.isAnnotationInitialized(awaitsAnnotationType);
+        boolean isNotNeeds = !service.isAnnotationsInitialized(awaitsAnnotationType);
         if (!isNotNeeds) {
             initAnnotationProcessorResult(bean);
         }

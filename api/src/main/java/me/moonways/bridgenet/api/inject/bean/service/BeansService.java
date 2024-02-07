@@ -2,10 +2,8 @@ package me.moonways.bridgenet.api.inject.bean.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanConstructFunction;
-import me.moonways.bridgenet.api.inject.bean.BeanType;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
 import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
@@ -17,7 +15,6 @@ import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -85,8 +82,8 @@ public final class BeansService {
      * уже проинициализированной при помощи процессора
      * аннотаций.
      */
-    public boolean isAnnotationInitialized(Class<? extends Annotation>... annotationTypes) {
-        return Stream.of(annotationTypes).anyMatch(initializedAnnotationsSet::contains);
+    public boolean isAnnotationsInitialized(Class<? extends Annotation>... annotationTypes) {
+        return Stream.of(annotationTypes).allMatch(initializedAnnotationsSet::contains);
     }
 
     /**
