@@ -1,13 +1,12 @@
 package me.moonways.bridgenet.connector;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
+import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
+import me.moonways.bridgenet.model.bus.message.Disconnect;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPConnectionFactory;
 import me.moonways.bridgenet.mtp.MTPDriver;
@@ -40,17 +39,19 @@ public abstract class BridgenetConnector {
     @Inject
     private BeansStore beansStore;
     @Inject
+    private BeansScanningService beansScanner;
+    @Inject
     private RemoteServiceRegistry remoteServiceRegistry;
     @Inject
     private MTPDriver mtpDriver;
 
     @Getter
-    protected UUID serverUuid;
+    @Setter(AccessLevel.PROTECTED)
+    private UUID serverUuid;
 
     private final BaseBridgenetConnectorChannelHandler channelHandler = new BaseBridgenetConnectorChannelHandler();
 
-    @PostConstruct
-    protected void initBase() {
+    protected void doConnectBasically() {
         log.info("******************************** BEGIN BRIDGENET-CONNECTOR INITIALIZATION ********************************");
 
         setProperties();
@@ -59,6 +60,8 @@ public abstract class BridgenetConnector {
 
         connectToEndpoints();
         connectBridgenetServer();
+
+        beansStore.store(beansScanner.createBean(BridgenetConnector.class, this));
 
         log.info("******************************** END BRIDGENET-CONNECTOR INITIALIZATION ********************************");
     }
@@ -143,6 +146,12 @@ public abstract class BridgenetConnector {
 
         serverUuid = result.getKey();
         return result;
+    }
+
+    public void sendDisconnect() {
+        if (serverUuid != null) {
+            getChannel().sendMessage(new Disconnect(serverUuid, Disconnect.Type.SERVER));
+        }
     }
 
     public void onConnected(MTPMessageSender channel) {

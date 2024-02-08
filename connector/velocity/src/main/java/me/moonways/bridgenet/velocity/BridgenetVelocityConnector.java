@@ -2,24 +2,30 @@ package me.moonways.bridgenet.velocity;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Getter;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.connector.BridgenetConnector;
+import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
-import me.moonways.bridgenet.velocity.cloudnet.CloudnetWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.util.UUID;
 
 @Plugin(id = "velocity-connector", name = "BridgeNetSync", version = "1.0", authors =  {"GitCoder", "lyx"})
 public class BridgenetVelocityConnector extends BridgenetConnector {
 
     @Inject
     private CloudnetWrapper cloudnetWrapper;
+    @Inject
+    private BeansService beansService; // todo - заинжектить плагины, которые будут инициализироваться после коннектора в Velocity.
     @Inject
     private BeansStore beansStore;
     @Inject
@@ -38,13 +44,20 @@ public class BridgenetVelocityConnector extends BridgenetConnector {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        initBase();
-        beansStore.store(beansScanner.createBean(BridgenetConnector.class, this));
+        doConnectBasically();
+    }
+
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) {
+        sendDisconnect();
     }
 
     @Override
     public void onConnected(MTPMessageSender channel) {
-        Handshake.Result result = sendServerHandshake(cloudnetWrapper.getFullCurrentServiceName(),
+        beansService.bind(new CloudnetWrapper());
+
+        Handshake.Result result = sendServerHandshake(
+                cloudnetWrapper.getFullCurrentServiceName(),
                 cloudnetWrapper.getCurrentSnapshotHost(),
                 cloudnetWrapper.getCurrentSnapshotPort());
 
@@ -52,12 +65,15 @@ public class BridgenetVelocityConnector extends BridgenetConnector {
     }
 
     private void handleHandshakeResult(Handshake.Result result) {
-        serverUuid = result.getKey();
+        UUID serverUuid = result.getKey();
+
+        setServerUuid(serverUuid);
 
         if (result instanceof Handshake.Failure) {
-            logger.info("§4Handshake failed: Server has already registered by " + serverUuid);
+            setServerUuid(null);
 
-            serverUuid = null;
+            logger.info("§4Handshake failed: Server has already registered by " + serverUuid);
+            proxyServer.shutdown();
         }
     }
 }

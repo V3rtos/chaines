@@ -1,14 +1,12 @@
-package me.moonways.bridgenet.velocity.cloudnet;
+package me.moonways.bridgenet.connector.cloudnet;
 
 import de.dytanic.cloudnet.driver.network.HostAndPort;
 import de.dytanic.cloudnet.driver.service.ServiceId;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import de.dytanic.cloudnet.wrapper.Wrapper;
-import me.moonways.bridgenet.api.inject.Autobind;
 
 import java.net.InetSocketAddress;
 
-@Autobind
 public final class CloudnetWrapper {
 
     private static final Wrapper WRAPPER = Wrapper.getInstance();
@@ -41,7 +39,7 @@ public final class CloudnetWrapper {
         return String.format(SERVICE_NAME_FORMAT, currentTaskName, currentTaskId);
     }
 
-    public InetSocketAddress buildSocketAddress() {
+    public InetSocketAddress getCurrentSocketAddress() {
         HostAndPort address = getCurrentServiceAddress();
         return new InetSocketAddress(address.getHost(), address.getPort());
     }

@@ -1,7 +1,5 @@
 package me.moonways.bridgenet.test.connector;
 
-import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.connector.BridgenetConnector;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
@@ -18,6 +16,10 @@ public class BridgenetConnectorTest {
 
     private static class TestConnector extends BridgenetConnector {
 
+        public void start() {
+            super.doConnectBasically();
+        }
+
         @Override
         public void onConnected(MTPMessageSender channel) {
             System.out.println("CONNECTED !");
@@ -27,12 +29,9 @@ public class BridgenetConnectorTest {
 
     private static final TestConnector TEST_CONNECTOR = new TestConnector();
 
-    @Inject
-    private BeansService beans;
-
     @Before
     public void setUp() {
-        beans.bind(TEST_CONNECTOR);
+        TEST_CONNECTOR.start();
     }
 
     @Test

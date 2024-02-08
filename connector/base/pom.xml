@@ -17,4 +17,20 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>cloudnet-releases</id>
+            <url>https://repo.cloudnetservice.eu/repository/releases/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-wrapper-jvm</artifactId>
+            <version>3.4.5-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
