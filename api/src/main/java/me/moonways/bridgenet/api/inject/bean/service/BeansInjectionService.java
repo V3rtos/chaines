@@ -53,7 +53,7 @@ public class BeansInjectionService {
         Optional<Bean> beanOptional = store.find(component.getType());
 
         if (!beanOptional.isPresent()) {
-            if (tryInjectSelf(component)) {
+            if (!tryInjectSelf(component)) {
                 componentsInjectionQueueSet.add(component);
             }
             return;
