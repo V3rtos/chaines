@@ -3,7 +3,7 @@ package me.moonways.bridgenet.api.inject.bean.service;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.IgnoredRegistry;
 import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.persistance.UseTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.reflections.Configuration;
 import org.reflections.Reflections;

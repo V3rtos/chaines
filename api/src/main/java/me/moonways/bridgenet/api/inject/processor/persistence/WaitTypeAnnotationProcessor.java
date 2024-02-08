@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.processor.persistance;
+package me.moonways.bridgenet.api.inject.processor.persistence;
 
 import java.lang.annotation.*;
 

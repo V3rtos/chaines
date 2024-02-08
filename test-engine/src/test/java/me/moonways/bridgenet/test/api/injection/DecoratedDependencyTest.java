@@ -5,7 +5,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
-import me.moonways.bridgenet.api.inject.decorator.persistance.*;
+import me.moonways.bridgenet.api.inject.decorator.persistence.*;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import org.junit.Before;
 import org.junit.Test;

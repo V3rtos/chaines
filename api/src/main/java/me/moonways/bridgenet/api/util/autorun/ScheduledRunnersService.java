@@ -6,13 +6,13 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
-import me.moonways.bridgenet.api.inject.processor.persistance.GetTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.persistance.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.scheduler.ScheduledTime;
 import me.moonways.bridgenet.api.scheduler.Scheduler;
-import me.moonways.bridgenet.api.util.autorun.persistance.AutoRunner;
-import me.moonways.bridgenet.api.util.autorun.persistance.Runnable;
-import me.moonways.bridgenet.api.util.autorun.persistance.RunningPeriod;
+import me.moonways.bridgenet.api.util.autorun.persistence.AutoRunner;
+import me.moonways.bridgenet.api.util.autorun.persistence.Runnable;
+import me.moonways.bridgenet.api.util.autorun.persistence.RunningPeriod;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

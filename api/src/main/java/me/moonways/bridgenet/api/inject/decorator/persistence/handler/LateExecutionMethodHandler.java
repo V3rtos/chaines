@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.inject.decorator.persistance.handler;
+package me.moonways.bridgenet.api.inject.decorator.persistence.handler;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
-import me.moonways.bridgenet.api.inject.decorator.persistance.LateExecution;
+import me.moonways.bridgenet.api.inject.decorator.persistence.LateExecution;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedMethodHandler;
 import me.moonways.bridgenet.api.util.thread.Threads;
 

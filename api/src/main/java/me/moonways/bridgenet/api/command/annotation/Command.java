@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.command.annotation;
 
 
-import me.moonways.bridgenet.api.inject.processor.persistance.UseTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

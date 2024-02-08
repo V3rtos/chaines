@@ -1,9 +1,9 @@
 package me.moonways.bridgenet.test.api.util.autorun;
 
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.util.autorun.persistance.AutoRunner;
-import me.moonways.bridgenet.api.util.autorun.persistance.Runnable;
-import me.moonways.bridgenet.api.util.autorun.persistance.RunningPeriod;
+import me.moonways.bridgenet.api.util.autorun.persistence.AutoRunner;
+import me.moonways.bridgenet.api.util.autorun.persistence.Runnable;
+import me.moonways.bridgenet.api.util.autorun.persistence.RunningPeriod;
 
 import java.util.Properties;
 import java.util.UUID;

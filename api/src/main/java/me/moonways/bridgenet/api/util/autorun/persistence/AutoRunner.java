@@ -1,6 +1,6 @@
-package me.moonways.bridgenet.api.util.autorun.persistance;
+package me.moonways.bridgenet.api.util.autorun.persistence;
 
-import me.moonways.bridgenet.api.inject.processor.persistance.UseTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

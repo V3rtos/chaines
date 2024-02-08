@@ -106,7 +106,6 @@ public enum Material {
     CAKE_BLOCK(92),
     DIODE_BLOCK_OFF(93),
     DIODE_BLOCK_ON(94),
-    @Deprecated
     LOCKED_CHEST(95),
     STAINED_GLASS(95),
     TRAP_DOOR(96),
@@ -365,6 +364,7 @@ public enum Material {
     ;
 
     private final int id;
+
     private int maxStack;
     private short durability;
 }

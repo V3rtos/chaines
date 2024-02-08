@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.inject;
 
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
-import me.moonways.bridgenet.api.inject.processor.persistance.UseTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 
 import java.lang.annotation.*;
 

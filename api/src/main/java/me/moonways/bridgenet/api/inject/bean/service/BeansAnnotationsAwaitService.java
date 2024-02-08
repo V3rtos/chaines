@@ -7,8 +7,8 @@ import me.moonways.bridgenet.api.inject.bean.BeanException;
 import me.moonways.bridgenet.api.inject.bean.BeanType;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorAdapter;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
-import me.moonways.bridgenet.api.inject.processor.persistance.GetTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.persistance.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
