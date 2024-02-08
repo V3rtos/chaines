@@ -11,8 +11,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public abstract class AnnotatedBeanComponent<V extends AnnotatedElement> {
 
+    @Getter
     @ToString.Exclude
-    @Getter(AccessLevel.PROTECTED)
     private final transient Bean bean;
 
     @Getter
