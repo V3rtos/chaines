@@ -164,6 +164,18 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
 
     /**
      * Получить весь список вложенных компонентов (полей)
+     * бина, нуждающихся в применении автоматической инжекции
+     * инстанса экземпляра, в котором они и находятся.
+     */
+    public List<BeanComponent> getInjectSelfComponents() {
+        Class<?> root = beanRef.get().getRoot().getClass();
+        return Stream.of(getDeclaredFields(root)).map(this::toComponent)
+                .filter(BeanComponent::isInject).filter(component -> component.getType().isAssignableFrom(root))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Получить весь список вложенных компонентов (полей)
      * бина, нуждающихся в применении автоматической
      * инициализации пропертей.
      */

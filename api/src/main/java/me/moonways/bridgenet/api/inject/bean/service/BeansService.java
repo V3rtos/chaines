@@ -3,6 +3,7 @@ package me.moonways.bridgenet.api.inject.bean.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.Bean;
+import me.moonways.bridgenet.api.inject.bean.BeanComponent;
 import me.moonways.bridgenet.api.inject.bean.BeanConstructFunction;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
@@ -263,6 +264,11 @@ public final class BeansService {
 
         if (bean.getType().isAnnotated(EnableDecorators.class)) {
             bean = reconstructWithDecorators(bean);
+        }
+
+        // self-injection process
+        for (BeanComponent component : bean.getType().getInjectSelfComponents()) {
+            injector.tryInjectSelf(component);
         }
 
         store.store(bean);

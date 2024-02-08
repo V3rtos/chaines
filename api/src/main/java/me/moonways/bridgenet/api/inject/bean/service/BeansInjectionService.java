@@ -53,9 +53,7 @@ public class BeansInjectionService {
         Optional<Bean> beanOptional = store.find(component.getType());
 
         if (!beanOptional.isPresent()) {
-            if (!tryInjectSelf(component)) {
-                componentsInjectionQueueSet.add(component);
-            }
+            componentsInjectionQueueSet.add(component);
             return;
         }
 
@@ -73,7 +71,7 @@ public class BeansInjectionService {
      *
      * @return - true, если удалось воспроизвести, и false если не удалось.
      */
-    private boolean tryInjectSelf(BeanComponent component) {
+    public boolean tryInjectSelf(BeanComponent component) {
         Bean bean = component.getBean();
 
         if (component.getType().isAssignableFrom(bean.getType().getRoot())) {
