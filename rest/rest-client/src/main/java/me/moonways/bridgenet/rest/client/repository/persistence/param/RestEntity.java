@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.rest.client.repository.markers.param;
+package me.moonways.bridgenet.rest.client.repository.persistence.param;
 
 import me.moonways.bridgenet.rest.api.exchange.entity.ExchangeableEntity;
 import me.moonways.bridgenet.rest.api.exchange.entity.type.TextEntity;

@@ -1,15 +1,13 @@
-package me.moonways.bridgenet.rest.client.repository.markers;
+package me.moonways.bridgenet.rest.client.repository.persistence.mapping;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RestClient {
+public @interface PostMapping {
 
-    String host() default "127.0.0.1";
-
-    int port() default 0;
+    String value();
 }
