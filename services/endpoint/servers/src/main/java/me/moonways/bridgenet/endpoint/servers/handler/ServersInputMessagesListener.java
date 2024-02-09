@@ -31,7 +31,6 @@ import java.util.UUID;
 public class ServersInputMessagesListener {
 
     private final ServersContainer container;
-    private final ServersServiceModel serversServiceModel;
 
     @Inject
     private BeansService beansService;

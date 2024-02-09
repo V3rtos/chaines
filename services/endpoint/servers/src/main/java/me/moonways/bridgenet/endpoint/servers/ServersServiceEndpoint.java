@@ -34,7 +34,7 @@ public class ServersServiceEndpoint extends AbstractEndpointDefinition implement
     @PostConstruct
     public void bindListeners() {
         beansService.inject(serversContainer);
-        mtpDriver.bindHandler(new ServersInputMessagesListener(serversContainer, this));
+        mtpDriver.bindHandler(new ServersInputMessagesListener(serversContainer));
     }
 
     @Override
