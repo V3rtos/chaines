@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.connector;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import me.moonways.bridgenet.model.bus.message.Disconnect;
@@ -14,7 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 public final class BridgenetServerSync {
 
-    @Setter
+    @Getter
+    @Setter(AccessLevel.PACKAGE)
     private MTPMessageSender channel;
     @Getter
     private UUID serverUuid;
