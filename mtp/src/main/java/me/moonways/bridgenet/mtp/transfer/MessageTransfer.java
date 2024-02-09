@@ -174,6 +174,7 @@ public final class MessageTransfer {
             int size = BYTE_CODEC.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
             messageBytes.moveTo(Integer.BYTES);
 
+            // todo - в будущем нужно будет переделать на получение класса дженерика у листа (класс листа лежит в field.getType()), обычные методы не помогают - выдают null
             if (size > 0) {
                 int nameLength = BYTE_CODEC.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
                 messageBytes.moveTo(Integer.BYTES);
@@ -216,6 +217,7 @@ public final class MessageTransfer {
             bytes.add(b);
         }
 
+        // todo - в будущем нужно будет переделать на получение класса дженерика у листа (класс листа лежит в field.getType()), обычные методы не помогают - выдают null
         if (size > 0) {
             Object first = iterable.iterator().next();
             String classname = first.getClass().getName();
