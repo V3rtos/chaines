@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.model.players.connection;
 
-import me.moonways.bridgenet.model.bus.message.SendChatMessage;
-import me.moonways.bridgenet.model.bus.message.SendTitleMessage;
+import me.moonways.bridgenet.model.bus.message.SendMessage;
+import me.moonways.bridgenet.model.bus.message.SendTitle;
 import me.moonways.bridgenet.model.players.EntityPlayer;
 import me.moonways.bridgenet.model.players.Title;
 import me.moonways.bridgenet.model.servers.EntityServer;
@@ -39,7 +39,7 @@ public class ConnectedEntityPlayer extends OfflineEntityPlayer implements Entity
         try {
             MTPMessageSender channel = spigotServer.getChannel();
             channel.sendMessage(
-                    new SendChatMessage(getUniqueId(), message, SendChatMessage.ChatType.CHAT));
+                    new SendMessage(getUniqueId(), message, SendMessage.ChatType.CHAT));
         }
         catch (RemoteException exception) {
             throw new RuntimeException(exception);
@@ -74,7 +74,7 @@ public class ConnectedEntityPlayer extends OfflineEntityPlayer implements Entity
         try {
             MTPMessageSender channel = spigotServer.getChannel();
             channel.sendMessage(
-                    new SendTitleMessage(getUniqueId(), title.getTitle(), title.getSubtitle(),
+                    new SendTitle(getUniqueId(), title.getTitle(), title.getSubtitle(),
                             title.getFadeIn(), title.getStay(), title.getFadeOut()));
         }
         catch (RemoteException exception) {

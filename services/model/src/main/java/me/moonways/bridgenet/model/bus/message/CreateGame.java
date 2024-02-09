@@ -12,9 +12,9 @@ import java.util.UUID;
 @Getter
 @ToString
 @ServerMessage
-@NoArgsConstructor(onConstructor_ = @Inject)
-@AllArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor(onConstructor_ = @Inject)
 public class CreateGame {
 
     @ByteTransfer

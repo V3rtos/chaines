@@ -3,6 +3,7 @@ package me.moonways.bridgenet.connector.spigot;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.connector.BridgenetConnector;
+import me.moonways.bridgenet.connector.BridgenetServerSync;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
@@ -31,7 +32,9 @@ public final class BridgenetSpigotConnector extends BridgenetConnector {
     public void onConnected(MTPMessageSender channel) {
         beansService.bind(new CloudnetWrapper());
 
-        Handshake.Result result = sendServerHandshake(
+        BridgenetServerSync bridgenet = getBridgenetServerSync();
+
+        Handshake.Result result = bridgenet.sendServerHandshake(
                 cloudnetWrapper.getFullCurrentServiceName(),
                 cloudnetWrapper.getCurrentSnapshotHost(),
                 cloudnetWrapper.getCurrentSnapshotPort());
@@ -42,10 +45,7 @@ public final class BridgenetSpigotConnector extends BridgenetConnector {
     private void handleHandshakeResult(Handshake.Result result) {
         UUID serverUuid = result.getKey();
 
-        setServerUuid(serverUuid);
-
         if (result instanceof Handshake.Failure) {
-            setServerUuid(null);
 
             logger.info("§4Handshake failed: Server has already registered by " + serverUuid);
             Bukkit.shutdown();

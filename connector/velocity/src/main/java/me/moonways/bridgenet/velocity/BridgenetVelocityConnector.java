@@ -11,6 +11,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.connector.BridgenetConnector;
+import me.moonways.bridgenet.connector.BridgenetServerSync;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
@@ -44,19 +45,22 @@ public class BridgenetVelocityConnector extends BridgenetConnector {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        doConnectBasically();
+        super.doConnectBasically();
     }
 
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
-        sendDisconnect();
+        BridgenetServerSync bridgenet = getBridgenetServerSync();
+        bridgenet.sendServerDisconnect();
     }
 
     @Override
     public void onConnected(MTPMessageSender channel) {
         beansService.bind(new CloudnetWrapper());
 
-        Handshake.Result result = sendServerHandshake(
+        BridgenetServerSync bridgenet = getBridgenetServerSync();
+
+        Handshake.Result result = bridgenet.sendServerHandshake(
                 cloudnetWrapper.getFullCurrentServiceName(),
                 cloudnetWrapper.getCurrentSnapshotHost(),
                 cloudnetWrapper.getCurrentSnapshotPort());
@@ -67,10 +71,7 @@ public class BridgenetVelocityConnector extends BridgenetConnector {
     private void handleHandshakeResult(Handshake.Result result) {
         UUID serverUuid = result.getKey();
 
-        setServerUuid(serverUuid);
-
         if (result instanceof Handshake.Failure) {
-            setServerUuid(null);
 
             logger.info("§4Handshake failed: Server has already registered by " + serverUuid);
             proxyServer.shutdown();

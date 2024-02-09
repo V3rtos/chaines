@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.mtp.transfer;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.util.*;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -113,7 +113,13 @@ public final class MessageTransfer {
             byte[] bytesArray;
             try {
                 field.setAccessible(true);
-                bytesArray = transferProvider.toByteArray(BYTE_CODEC, field.get(messagePacket));
+
+                Object value = field.get(messagePacket);
+                if (Iterable.class.isAssignableFrom(field.getType())) {
+                    bytesArray = bufIterableField((Iterable) value, transferProvider);
+                } else {
+                    bytesArray = bufField(value, transferProvider);
+                }
             }
             catch (IllegalAccessException exception) {
                 throw new MessageTransferException(exception);
@@ -144,15 +150,70 @@ public final class MessageTransfer {
             Class<? extends TransferProvider> provider = getFieldProvider(field);
 
             TransferProvider transferProvider = OBJECT_FACTORY.create(provider);
-            Object providedObject = transferProvider.fromByteArray(BYTE_CODEC, field.getType(), messageBytes);
 
-            try {
-                field.setAccessible(true);
-                field.set(messagePacket, providedObject);
-            }
-            catch (IllegalAccessException exception) {
-                throw new MessageTransferException(exception);
+            if (List.class.isAssignableFrom(field.getType())) {
+                unbufIterableField(new ArrayList(), field, transferProvider, messageBytes);
+            } else if (Set.class.isAssignableFrom(field.getType())) {
+                unbufIterableField(new HashSet(), field, transferProvider, messageBytes);
+            } else {
+                unbufField(field, transferProvider, messageBytes);
             }
         }
+    }
+
+    private void unbufIterableField(Collection collection, Field field, TransferProvider provider, MessageBytes messageBytes) {
+        try {
+            int size = BYTE_CODEC.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
+            messageBytes.moveTo(Integer.BYTES);
+
+            for (int i = 0; i < size; i++) {
+                collection.add(provider.fromByteArray(BYTE_CODEC, field.getType(), messageBytes));
+            }
+
+            field.setAccessible(true);
+            field.set(messagePacket, collection);
+        }
+        catch (IllegalAccessException exception) {
+            throw new MessageTransferException(exception);
+        }
+    }
+
+    private void unbufField(Field field, TransferProvider provider, MessageBytes messageBytes) {
+        Object providedObject = provider.fromByteArray(BYTE_CODEC, field.getType(), messageBytes);
+
+        try {
+            field.setAccessible(true);
+            field.set(messagePacket, providedObject);
+        }
+        catch (IllegalAccessException exception) {
+            throw new MessageTransferException(exception);
+        }
+    }
+
+    private byte[] bufIterableField(Iterable iterable, TransferProvider provider) {
+        List<Byte> bytes = new ArrayList<>();
+
+        int size = (int) iterable.spliterator().estimateSize();
+        for (byte b : BYTE_CODEC.toByteArray(size)) {
+            bytes.add(b);
+        }
+
+        Iterator iterator = iterable.iterator();
+        while (iterator.hasNext()) {
+            for (byte b : bufField(iterator.next(), provider)) {
+                bytes.add(b);
+            }
+        }
+
+        byte[] result = new byte[bytes.size()];
+        for (int i = 0; i < bytes.size(); i++) {
+            result[i] = bytes.get(i);
+        }
+
+        return result;
+    }
+
+    private byte[] bufField(Object fieldValue, TransferProvider provider) {
+        return provider.toByteArray(BYTE_CODEC, fieldValue);
     }
 }

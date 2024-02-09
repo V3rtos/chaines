@@ -40,7 +40,7 @@ public class ServersInputMessagesListener {
     private PlayersServiceModel playersServiceModel;
 
     @MessageTrigger
-    public void handle(InputMessageContext<Handshake> input) {
+    public void handleHandshake(InputMessageContext<Handshake> input) {
         Handshake handshake = input.getMessage();
 
         if (handshake.getType() == Handshake.Type.SERVER) {
@@ -51,7 +51,9 @@ public class ServersInputMessagesListener {
     }
 
     @MessageTrigger
-    public void handle(Redirect redirect) {
+    public void handleRedirect(InputMessageContext<Redirect> input) {
+        Redirect redirect = input.getMessage();
+
         UUID playerUUID = redirect.getPlayerUUID();
         UUID serverKey = redirect.getServerKey();
 
@@ -62,11 +64,15 @@ public class ServersInputMessagesListener {
             return;
         }
 
-        redirectPlayer(server, playerUUID);
-    }
+        UUID currentServerKey = playersOnServersConnectionService.getPlayerCurrentServerKey(playerUUID)
+                .orElse(null);
 
-    private void redirectPlayer(ConnectedServerStub serverTo, UUID playerUUID) {
-        playersOnServersConnectionService.insert(playerUUID, serverTo.getUniqueId());
+        if (!serverKey.equals(currentServerKey)) {
+            playersOnServersConnectionService.insert(playerUUID, serverKey);
+            input.answer(new Redirect.Success(playerUUID, serverKey));
+        } else {
+            input.answer(new Redirect.Failure(playerUUID, serverKey));
+        }
     }
 
     private void registerServer(InputMessageContext<Handshake> input, ServerInfo serverInfo) {

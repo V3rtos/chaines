@@ -4,8 +4,6 @@ import me.moonways.bridgenet.model.bus.message.CreateGame;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 

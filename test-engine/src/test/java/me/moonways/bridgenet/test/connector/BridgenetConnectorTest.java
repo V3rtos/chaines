@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.test.connector;
 
 import me.moonways.bridgenet.connector.BridgenetConnector;
+import me.moonways.bridgenet.connector.BridgenetServerSync;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
@@ -36,7 +37,8 @@ public class BridgenetConnectorTest {
 
     @Test
     public void test_handshakeSuccess() {
-        Handshake.Result result = TEST_CONNECTOR.sendServerHandshake("BungeeCord-1", "127.0.0.1", 25565);
+        BridgenetServerSync bridgenet = TEST_CONNECTOR.getBridgenetServerSync();
+        Handshake.Result result = bridgenet.sendServerHandshake("BungeeCord-1", "127.0.0.1", 25565);
 
         assertTrue(result instanceof Handshake.Success);
         assertNotNull(TEST_CONNECTOR.getServerUuid());
@@ -44,7 +46,9 @@ public class BridgenetConnectorTest {
 
     @Test
     public void test_handshakeFailed() {
-        Handshake.Result result = TEST_CONNECTOR.sendServerHandshake("BungeeCord-1", "127.0.0.1", 25565);
+        BridgenetServerSync bridgenet = TEST_CONNECTOR.getBridgenetServerSync();
+        Handshake.Result result = bridgenet.sendServerHandshake("BungeeCord-1", "127.0.0.1", 25565);
+
         assertTrue(result instanceof Handshake.Failure); // server has already registered
     }
 }

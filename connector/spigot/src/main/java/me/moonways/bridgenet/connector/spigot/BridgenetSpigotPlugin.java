@@ -2,6 +2,7 @@ package me.moonways.bridgenet.connector.spigot;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.connector.BridgenetServerSync;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -24,7 +25,8 @@ public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        CONNECTOR.sendDisconnect();
+        BridgenetServerSync bridgenet = CONNECTOR.getBridgenetServerSync();
+        bridgenet.sendServerDisconnect();
     }
 
     private void bindLoadedPlugins() {
