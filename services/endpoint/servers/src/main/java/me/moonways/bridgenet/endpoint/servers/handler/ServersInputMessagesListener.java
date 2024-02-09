@@ -7,6 +7,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.endpoint.servers.ConnectedServerStub;
 import me.moonways.bridgenet.endpoint.servers.ServersContainer;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
+import me.moonways.bridgenet.model.bus.message.Disconnect;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.model.bus.message.Redirect;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
@@ -53,7 +54,7 @@ public class ServersInputMessagesListener {
     }
 
     @SubscribeMessage
-    public void handleRedirect(InputMessageContext<Redirect> input) {
+    public void handleRedirection(InputMessageContext<Redirect> input) {
         Redirect redirect = input.getMessage();
 
         UUID playerUUID = redirect.getPlayerUUID();
@@ -74,6 +75,13 @@ public class ServersInputMessagesListener {
             input.answer(new Redirect.Success(playerUUID, serverKey));
         } else {
             input.answer(new Redirect.Failure(playerUUID, serverKey));
+        }
+    }
+
+    @SubscribeMessage
+    public void handle(Disconnect disconnect) {
+        if (disconnect.getType() == Disconnect.Type.SERVER) {
+            container.unregisterServer(disconnect.getUuid());
         }
     }
 
