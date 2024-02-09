@@ -13,7 +13,7 @@ import java.util.List;
 public class TestConnector extends BridgenetConnector {
 
     public static final DeviceDescription DEVICE_DESCRIPTION = DeviceDescription.builder()
-            .name("BungeeCord-1")
+            .name("Test-01")
             .host("127.0.0.1")
             .port(25565)
             .build();
