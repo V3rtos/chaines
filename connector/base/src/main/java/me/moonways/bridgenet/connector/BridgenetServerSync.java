@@ -31,7 +31,6 @@ public final class BridgenetServerSync {
      */
     private static Properties prepareHandshakeProperties(String serverName, String serverHost, int serverPort) {
         Properties properties = new Properties();
-
         properties.setProperty("server.name", serverName);
         properties.setProperty("server.address.host", serverHost);
         properties.setProperty("server.address.port", Integer.toString(serverPort));
@@ -53,7 +52,7 @@ public final class BridgenetServerSync {
                         prepareHandshakeProperties(serverName, serverHost, serverPort)));
 
         Handshake.Result result = completableFuture.join();
-        serverUuid = result.getKey();
+        result.onSuccess(() -> this.serverUuid = result.getKey());
 
         return result;
     }
