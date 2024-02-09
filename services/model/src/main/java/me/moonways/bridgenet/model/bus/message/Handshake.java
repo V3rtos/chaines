@@ -31,6 +31,18 @@ public class Handshake {
 
     public interface Result {
         UUID getKey();
+
+        default void onSuccess(Runnable runnable) {
+            if (this instanceof Success) {
+                runnable.run();
+            }
+        }
+
+        default void onFailure(Runnable runnable) {
+            if (this instanceof Failure) {
+                runnable.run();
+            }
+        }
     }
 
     @Getter

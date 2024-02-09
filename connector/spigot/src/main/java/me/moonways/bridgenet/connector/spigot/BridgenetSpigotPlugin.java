@@ -14,17 +14,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
 
-    private static final BridgenetSpigotConnector CONNECTOR = new BridgenetSpigotConnector();
-
     @Inject
     private BeansService beansService;
     @Inject
     private BridgenetCommandsExecutor bridgenetCommandsExecutor;
 
+    private final BridgenetSpigotConnector spigotConnector = new BridgenetSpigotConnector(this);
+
     @Override
     public void onEnable() {
-        CONNECTOR.start(this);
-        bridgenetCommandsExecutor.init(CONNECTOR);
+        spigotConnector.doConnectBasically();
+        bridgenetCommandsExecutor.init(spigotConnector);
 
         bindLoadedPlugins();
 
@@ -33,8 +33,8 @@ public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        BridgenetServerSync bridgenet = CONNECTOR.getBridgenetServerSync();
-        bridgenet.sendServerDisconnect();
+        BridgenetServerSync bridgenet = spigotConnector.getBridgenetServerSync();
+        bridgenet.exportDisconnectMessage();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

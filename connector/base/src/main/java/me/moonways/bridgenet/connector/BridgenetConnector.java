@@ -7,6 +7,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
+import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPDriver;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
 import me.moonways.bridgenet.mtp.client.MTPClientConnectionFactory;
@@ -35,13 +36,15 @@ public abstract class BridgenetConnector {
     @Getter
     private final BridgenetServerSync bridgenetServerSync = new BridgenetServerSync();
 
+    protected abstract ConnectedDeviceInfo createDeviceInfo();
+
     /**
      * Исполнить процесс базового подключения к
      * серверу системы Bridgenet и инициализации всех
      * компонентов и ресурсов проекта для поддержания
      * стабильного соединения со всеми сервисами системы Bridgenet.
      */
-    protected final void doConnectBasically() {
+    public void doConnectBasically() {
         log.info("******************************** BEGIN BRIDGENET-CONNECTOR INITIALIZATION ********************************");
 
         engine.setProperties();
@@ -64,9 +67,27 @@ public abstract class BridgenetConnector {
      */
     private void tryConnectToBridgenetServer() {
         MTPMessageSender channel = engine.connectBridgenetServer(mtpDriver, clientConnectionFactory, channelHandler);
+
         bridgenetServerSync.setChannel(channel);
 
         onConnected(channel);
+        exportDeviceHandshake();
+    }
+
+    /**
+     * Отправить запрос с текущего устройства
+     * на рукопожатие.
+     */
+    private void exportDeviceHandshake() {
+        BridgenetServerSync bridgenet = getBridgenetServerSync();
+        ConnectedDeviceInfo deviceInfo = createDeviceInfo();
+
+        Handshake.Result result = bridgenet.exchangeHandshake(
+                deviceInfo.getName(),
+                deviceInfo.getHost(),
+                deviceInfo.getPort());
+
+        onHandshake(result);
     }
 
     /**
@@ -76,6 +97,16 @@ public abstract class BridgenetConnector {
      * @param channel - клиентский канал, которому удалось подключиться.
      */
     public void onConnected(MTPMessageSender channel) {
+        // override me.
+    }
+
+    /**
+     * Переопределяющаяся функция, вызываемая при обмене
+     * рукопожатием с единым сервером Bridgenet.
+     *
+     * @param result - результат рукопожатия.
+     */
+    public void onHandshake(Handshake.Result result) {
         // override me.
     }
 
@@ -95,5 +126,25 @@ public abstract class BridgenetConnector {
      */
     public final UUID getServerUuid() {
         return bridgenetServerSync.getServerUuid();
+    }
+
+    /**
+     * Полностью обрубить соединение с единым сервером
+     * Bridgenet и деинициализировать сервисы.
+     */
+    public final void shutdownConnection() {
+        MTPMessageSender channel = getChannel();
+
+        if (channel != null) {
+            channel.close();
+        }
+
+        bridgenetServerSync.setChannel(null);
+
+        clientConnectionFactory = null;
+        beansStore = null;
+        beansScanner = null;
+        remoteServiceRegistry = null;
+        mtpDriver = null;
     }
 }

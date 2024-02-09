@@ -47,7 +47,7 @@ public final class BridgenetServerSync {
      * @param serverHost - адрес подключаемого сервера.
      * @param serverPort - порт подключаемого сервера.
      */
-    public Handshake.Result sendServerHandshake(String serverName, String serverHost, int serverPort) {
+    public Handshake.Result exchangeHandshake(String serverName, String serverHost, int serverPort) {
         CompletableFuture<Handshake.Result> completableFuture = channel.sendMessageWithResponse(Handshake.Result.class,
                 new Handshake(Handshake.Type.SERVER,
                         prepareHandshakeProperties(serverName, serverHost, serverPort)));
@@ -61,7 +61,7 @@ public final class BridgenetServerSync {
     /**
      * Отправить сообщение об отсоединении текущего устройства
      */
-    public void sendServerDisconnect() {
+    public void exportDisconnectMessage() {
         if (serverUuid != null) {
             channel.sendMessage(new Disconnect(serverUuid, Disconnect.Type.SERVER));
         }

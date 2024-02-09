@@ -162,5 +162,10 @@ public class MTPClientConnectionFactory {
         public <R> CompletableFuture<R> sendMessageWithResponse(int timeout, @NotNull Class<R> responseType, @NotNull Object message) {
             return channelRef.get().sendMessageWithResponse(timeout, responseType, message);
         }
+
+        @Override
+        public void close() {
+            channelRef.get().close();
+        }
     }
 }

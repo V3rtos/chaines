@@ -53,4 +53,9 @@ public interface MTPMessageSender extends Serializable {
      * @param message - отправляемое сообщение.
      */
     <R> CompletableFuture<R> sendMessageWithResponse(int timeout, @NotNull Class<R> responseType, @NotNull Object message);
+
+    /**
+     * Закрыть соединение с сервером.
+     */
+    void close();
 }

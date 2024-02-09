@@ -12,6 +12,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.connector.BridgenetConnector;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
+import me.moonways.bridgenet.connector.ConnectedDeviceInfo;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
@@ -45,36 +46,34 @@ public class BridgenetVelocityConnector extends BridgenetConnector {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        super.doConnectBasically();
+        doConnectBasically();
     }
 
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
         BridgenetServerSync bridgenet = getBridgenetServerSync();
-        bridgenet.sendServerDisconnect();
+        bridgenet.exportDisconnectMessage();
     }
 
     @Override
-    public void onConnected(MTPMessageSender channel) {
-        beansService.bind(new CloudnetWrapper());
+    protected ConnectedDeviceInfo createDeviceInfo() {
+        CloudnetWrapper cloudnetWrapper = new CloudnetWrapper();
+        beansService.bind(cloudnetWrapper);
 
-        BridgenetServerSync bridgenet = getBridgenetServerSync();
-
-        Handshake.Result result = bridgenet.sendServerHandshake(
-                cloudnetWrapper.getFullCurrentServiceName(),
-                cloudnetWrapper.getCurrentSnapshotHost(),
-                cloudnetWrapper.getCurrentSnapshotPort());
-
-        handleHandshakeResult(result);
+        return ConnectedDeviceInfo.builder()
+                .name(cloudnetWrapper.getFullCurrentServiceName())
+                .host(cloudnetWrapper.getCurrentSnapshotHost())
+                .port(cloudnetWrapper.getCurrentSnapshotPort())
+                .build();
     }
 
-    private void handleHandshakeResult(Handshake.Result result) {
-        UUID serverUuid = result.getKey();
+    @Override
+    public void onHandshake(Handshake.Result result) {
+        result.onSuccess(() -> beansService.bind(this));
+        result.onFailure(() -> {
 
-        if (result instanceof Handshake.Failure) {
-
-            logger.info("§4Handshake failed: Server has already registered by " + serverUuid);
+            logger.info("§4Handshake failed: Server has already registered by " + result.getKey());
             proxyServer.shutdown();
-        }
+        });
     }
 }

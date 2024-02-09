@@ -79,6 +79,7 @@ public class MTPChannel implements MTPMessageSender {
     }
 
     @Synchronized
+    @Override
     public void close() {
         handle.closeFuture();
     }
