@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.test.connector.subj;
 
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.connector.BridgenetConnector;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
 import me.moonways.bridgenet.connector.DeviceDescription;
@@ -8,6 +9,7 @@ import me.moonways.bridgenet.mtp.MTPMessageSender;
 
 import java.util.List;
 
+@Log4j2
 public class TestConnector extends BridgenetConnector {
 
     public static final DeviceDescription DEVICE_DESCRIPTION = DeviceDescription.builder()
@@ -23,7 +25,13 @@ public class TestConnector extends BridgenetConnector {
 
     @Override
     public void onConnected(MTPMessageSender channel) {
-        System.out.println("SUCCESSFUL CONNECTED TO BRIDGENET SERVER!");
+        log.info("§d§nSUCCESSFUL CONNECTED TO BRIDGENET SERVER!");
+    }
+
+    @Override
+    public void onHandshake(Handshake.Result result) {
+        result.onSuccess(() -> log.info("§d§nHANDSHAKE SUCCESS EXCHANGED"));
+        result.onFailure(() -> log.info("§d§nHANDSHAKE HAS FAILED"));
     }
 
     public Handshake.Result retryHandshakeExchanging() {
