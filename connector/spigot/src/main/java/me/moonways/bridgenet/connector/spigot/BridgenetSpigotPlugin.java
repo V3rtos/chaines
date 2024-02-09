@@ -14,12 +14,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
 
+    private final BridgenetSpigotConnector spigotConnector = new BridgenetSpigotConnector(this);
+
     @Inject
     private BeansService beansService;
     @Inject
     private BridgenetCommandsExecutor bridgenetCommandsExecutor;
-
-    private final BridgenetSpigotConnector spigotConnector = new BridgenetSpigotConnector(this);
 
     @Override
     public void onEnable() {

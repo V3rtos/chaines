@@ -12,6 +12,7 @@ import me.moonways.bridgenet.mtp.*;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.endpoint.bus.handler.GetCommandsMessageHandler;
 
 import java.rmi.RemoteException;
 
@@ -39,9 +40,14 @@ public class BusServiceEndpoint extends AbstractEndpointDefinition implements Bu
         driver.bindHandlers();
 
         bindServer();
+        registerIncomingMessagesListeners();
     }
 
-    public void bindServer() {
+    private void registerIncomingMessagesListeners() {
+        driver.bindHandler(new GetCommandsMessageHandler());
+    }
+
+    private void bindServer() {
         ChannelFactory<? extends ServerChannel> serverChannelFactory = NettyFactory.createServerChannelFactory();
 
         MTPConfiguration configuration = connectionFactory.getConfiguration();

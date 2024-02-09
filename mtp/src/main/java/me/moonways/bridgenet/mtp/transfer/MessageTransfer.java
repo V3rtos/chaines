@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.mtp.transfer;
 
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import lombok.AccessLevel;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.factory.UnsafeFactory;
+import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorAdapter;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 
 @Log4j2
@@ -79,9 +81,11 @@ public final class MessageTransfer {
 
     public void buf() {
         validatePacket();
-
         ensureBuffers();
-        reflectiveBuf();
+
+        if (bytes.length > 0) {
+            reflectiveBuf();
+        }
     }
 
     private Class<? extends TransferProvider> getFieldProvider(Field field) {
@@ -134,10 +138,12 @@ public final class MessageTransfer {
     }
 
     public void unbuf(Object message) {
-        validateMessage(1);
+        //validateMessage(0);
         this.messagePacket = message;
 
-        reflectiveUnbuf();
+        if (bytes.length > 0) {
+            reflectiveUnbuf();
+        }
     }
 
     private void reflectiveUnbuf() {
@@ -163,17 +169,29 @@ public final class MessageTransfer {
 
     private void unbufIterableField(Collection collection, Field field, TransferProvider provider, MessageBytes messageBytes) {
         try {
+            Class<?> genericType = null;
+
             int size = BYTE_CODEC.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
             messageBytes.moveTo(Integer.BYTES);
 
+            if (size > 0) {
+                int nameLength = BYTE_CODEC.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
+                messageBytes.moveTo(Integer.BYTES);
+
+                String classname = BYTE_CODEC.readString(Arrays.copyOfRange(messageBytes.getArray(), 0, nameLength), StandardCharsets.UTF_16LE);
+                messageBytes.moveTo(nameLength);
+
+                genericType = Class.forName(classname);
+            }
+
             for (int i = 0; i < size; i++) {
-                collection.add(provider.fromByteArray(BYTE_CODEC, field.getType(), messageBytes));
+                collection.add(provider.fromByteArray(BYTE_CODEC, genericType, messageBytes));
             }
 
             field.setAccessible(true);
             field.set(messagePacket, collection);
         }
-        catch (IllegalAccessException exception) {
+        catch (Exception exception) {
             throw new MessageTransferException(exception);
         }
     }
@@ -196,6 +214,20 @@ public final class MessageTransfer {
         int size = (int) iterable.spliterator().estimateSize();
         for (byte b : BYTE_CODEC.toByteArray(size)) {
             bytes.add(b);
+        }
+
+        if (size > 0) {
+            Object first = iterable.iterator().next();
+            String classname = first.getClass().getName();
+
+            byte[] stringBytes = classname.getBytes(StandardCharsets.UTF_16LE);
+
+            for (byte b : BYTE_CODEC.toByteArray(stringBytes.length)) {
+                bytes.add(b);
+            }
+            for (byte b : stringBytes) {
+                bytes.add(b);
+            }
         }
 
         Iterator iterator = iterable.iterator();

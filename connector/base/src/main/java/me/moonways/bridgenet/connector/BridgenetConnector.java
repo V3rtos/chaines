@@ -36,7 +36,7 @@ public abstract class BridgenetConnector {
     @Getter
     private final BridgenetServerSync bridgenetServerSync = new BridgenetServerSync();
 
-    protected abstract ConnectedDeviceInfo createDeviceInfo();
+    protected abstract DeviceDescription createDescription();
 
     /**
      * Исполнить процесс базового подключения к
@@ -80,12 +80,12 @@ public abstract class BridgenetConnector {
      */
     private void exportDeviceHandshake() {
         BridgenetServerSync bridgenet = getBridgenetServerSync();
-        ConnectedDeviceInfo deviceInfo = createDeviceInfo();
+        DeviceDescription description = createDescription();
 
         Handshake.Result result = bridgenet.exchangeHandshake(
-                deviceInfo.getName(),
-                deviceInfo.getHost(),
-                deviceInfo.getPort());
+                description.getName(),
+                description.getHost(),
+                description.getPort());
 
         onHandshake(result);
     }

@@ -54,7 +54,7 @@ public class MTPChannel implements MTPMessageSender {
     public void sendMessage(@NotNull Object message) {
         ExportedMessage exported = messageRegistry.export(message);
 
-        log.info("§9[{}]: §r{}", String.format(getMessageSendLogPrefix(), handle.id()), message);
+        log.info("§9[{}]: §r{}", String.format(getMessageSendLogPrefix(), handle.remoteAddress()), message);
         handle.writeAndFlush(exported);
     }
 
@@ -104,6 +104,6 @@ public class MTPChannel implements MTPMessageSender {
     }
 
     public String getMessageSendLogPrefix() {
-        return direction == ProtocolDirection.TO_CLIENT ? "Client[ID=%s] -> Server" : "Server -> Client[ID=%s]";
+        return direction == ProtocolDirection.TO_CLIENT ? "Client[%s] -> Server" : "Server -> Client[%s]";
     }
 }

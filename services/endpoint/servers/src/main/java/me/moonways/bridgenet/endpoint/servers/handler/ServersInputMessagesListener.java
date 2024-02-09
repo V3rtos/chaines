@@ -15,7 +15,8 @@ import me.moonways.bridgenet.model.servers.ServerFlag;
 import me.moonways.bridgenet.model.servers.ServerInfo;
 import me.moonways.bridgenet.model.servers.ServersServiceModel;
 import me.moonways.bridgenet.mtp.message.InputMessageContext;
-import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
+import me.moonways.bridgenet.mtp.message.persistence.IncomingMessageListener;
+import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.UUID;
 
 @Log4j2
 @RequiredArgsConstructor
+@IncomingMessageListener
 public class ServersInputMessagesListener {
 
     private final ServersContainer container;
@@ -39,7 +41,7 @@ public class ServersInputMessagesListener {
     @Inject
     private PlayersServiceModel playersServiceModel;
 
-    @MessageTrigger
+    @SubscribeMessage
     public void handleHandshake(InputMessageContext<Handshake> input) {
         Handshake handshake = input.getMessage();
 
@@ -50,7 +52,7 @@ public class ServersInputMessagesListener {
         }
     }
 
-    @MessageTrigger
+    @SubscribeMessage
     public void handleRedirect(InputMessageContext<Redirect> input) {
         Redirect redirect = input.getMessage();
 

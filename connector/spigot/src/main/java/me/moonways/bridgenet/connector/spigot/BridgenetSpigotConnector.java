@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.connector.BridgenetConnector;
-import me.moonways.bridgenet.connector.ConnectedDeviceInfo;
+import me.moonways.bridgenet.connector.DeviceDescription;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import org.bukkit.Bukkit;
@@ -18,11 +18,11 @@ public final class BridgenetSpigotConnector extends BridgenetConnector {
     private final BridgenetSpigotPlugin plugin;
 
     @Override
-    protected ConnectedDeviceInfo createDeviceInfo() {
+    protected DeviceDescription createDescription() {
         CloudnetWrapper cloudnetWrapper = new CloudnetWrapper();
         beansService.bind(cloudnetWrapper);
 
-        return ConnectedDeviceInfo.builder()
+        return DeviceDescription.builder()
                 .name(cloudnetWrapper.getFullCurrentServiceName())
                 .host(cloudnetWrapper.getCurrentSnapshotHost())
                 .port(cloudnetWrapper.getCurrentSnapshotPort())

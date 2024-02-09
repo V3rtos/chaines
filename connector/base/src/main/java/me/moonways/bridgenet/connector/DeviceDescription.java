@@ -9,7 +9,7 @@ import lombok.ToString;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class ConnectedDeviceInfo {
+public class DeviceDescription {
 
     private final String name;
     private final String host;

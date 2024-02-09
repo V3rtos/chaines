@@ -8,8 +8,8 @@ import me.moonways.bridgenet.model.bus.message.UpdateGame;
 import me.moonways.bridgenet.model.games.*;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.mtp.message.InputMessageContext;
-import me.moonways.bridgenet.mtp.message.persistence.MessageHandler;
-import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
+import me.moonways.bridgenet.mtp.message.persistence.IncomingMessageListener;
+import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
 import me.moonways.endpoint.games.GamesContainer;
 import me.moonways.endpoint.games.GamesEndpointException;
 import me.moonways.endpoint.games.stub.ActiveGameStub;
@@ -22,13 +22,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Log4j2
-@MessageHandler
+@IncomingMessageListener
 @RequiredArgsConstructor
 public class GamesInputMessageListener {
 
     private final GamesContainer container;
 
-    @MessageTrigger
+    @SubscribeMessage
     public void handle(InputMessageContext<CreateGame> context) throws RemoteException {
         ActiveGame activeGame = addActiveGame(context);
 
@@ -40,7 +40,7 @@ public class GamesInputMessageListener {
         context.answer(new CreateGame.Result(parent.getUniqueId(), activeId));
     }
 
-    @MessageTrigger
+    @SubscribeMessage
     public void handle(DeleteGame message) throws RemoteException {
         Optional<ActiveGame> activeGameOptional = findActiveGame(message.getGameId(), message.getActiveId());
         if (activeGameOptional.isPresent()) {
@@ -71,7 +71,7 @@ public class GamesInputMessageListener {
         }
     }
 
-    @MessageTrigger
+    @SubscribeMessage
     public void handle(UpdateGame message) throws RemoteException {
         Optional<ActiveGame> activeGameOptional = findActiveGame(message.getGameId(), message.getActiveId());
         if (activeGameOptional.isPresent()) {

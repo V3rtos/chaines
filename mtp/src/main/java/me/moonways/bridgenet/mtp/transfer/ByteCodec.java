@@ -132,7 +132,7 @@ public final class ByteCodec {
         INT_BUFFER.putInt(value);
 
         byte[] array = INT_BUFFER.array();
-        INT_BUFFER.clear();
+        ((Buffer)INT_BUFFER).clear();
 
         return array;
     }
@@ -141,7 +141,7 @@ public final class ByteCodec {
         LONG_BUFFER.putLong(value);
 
         byte[] array = LONG_BUFFER.array();
-        LONG_BUFFER.clear();
+        ((Buffer)LONG_BUFFER).clear();
 
         return array;
     }

@@ -130,6 +130,10 @@ public final class CommandRegistry {
         return commandWrapperMap.get(name.toLowerCase());
     }
 
+    public String[] getRegisteredCommandsArray() {
+        return commandWrapperMap.keySet().toArray(new String[0]);
+    }
+
     private List<CommandChild> findChildren(@NotNull Object object) {
         List<CommandChild> childrenList = new ArrayList<>();
 

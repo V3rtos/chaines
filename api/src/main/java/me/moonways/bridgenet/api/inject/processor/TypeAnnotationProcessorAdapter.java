@@ -16,8 +16,12 @@ public abstract class TypeAnnotationProcessorAdapter<V extends Annotation> imple
     public static <V> Class<V> getGenericType(int index, Class<?> root) {
         try {
             return (Class<V>) ((ParameterizedType) root.getGenericSuperclass()).getActualTypeArguments()[index];
-        } catch (Throwable exception) {
-            return root.getGenericSuperclass().equals(Object.class) ? (Class<V>) Object.class : null;
+        } catch (Throwable ex1) {
+            try {
+                return (Class<V>) ((ParameterizedType) root.getGenericInterfaces()[0]).getActualTypeArguments()[index];
+            } catch (Throwable ex2) {
+                return root.getGenericSuperclass().equals(Object.class) ? (Class<V>) Object.class : null;
+            }
         }
     }
 

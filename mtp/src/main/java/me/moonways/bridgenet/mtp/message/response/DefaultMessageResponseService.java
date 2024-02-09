@@ -123,7 +123,7 @@ public final class DefaultMessageResponseService {
         }
 
         public boolean isSimilar(Class<?> responseType) {
-            return this.responseType.isAssignableFrom(responseType);
+            return this.responseType.equals(responseType) || this.responseType.isAssignableFrom(responseType);
         }
 
         public void complete(Object message) {

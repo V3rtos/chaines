@@ -12,14 +12,11 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.connector.BridgenetConnector;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
-import me.moonways.bridgenet.connector.ConnectedDeviceInfo;
+import me.moonways.bridgenet.connector.DeviceDescription;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
 import me.moonways.bridgenet.model.bus.message.Handshake;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-
-import java.util.UUID;
 
 @Plugin(id = "velocity-connector", name = "BridgeNetSync", version = "1.0", authors =  {"GitCoder", "lyx"})
 public class BridgenetVelocityConnector extends BridgenetConnector {
@@ -56,11 +53,11 @@ public class BridgenetVelocityConnector extends BridgenetConnector {
     }
 
     @Override
-    protected ConnectedDeviceInfo createDeviceInfo() {
+    protected DeviceDescription createDescription() {
         CloudnetWrapper cloudnetWrapper = new CloudnetWrapper();
         beansService.bind(cloudnetWrapper);
 
-        return ConnectedDeviceInfo.builder()
+        return DeviceDescription.builder()
                 .name(cloudnetWrapper.getFullCurrentServiceName())
                 .host(cloudnetWrapper.getCurrentSnapshotHost())
                 .port(cloudnetWrapper.getCurrentSnapshotPort())
