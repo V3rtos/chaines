@@ -3,6 +3,7 @@ package me.moonways.bridgenet.mtp.client;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.util.thread.Threads;
@@ -14,6 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+@Log4j2
 @RequiredArgsConstructor
 public class MTPClientReconnectHandler extends ChannelInboundHandlerAdapter {
 
@@ -32,6 +34,8 @@ public class MTPClientReconnectHandler extends ChannelInboundHandlerAdapter {
         if (currentReconnectTaskFuture == null) {
             clientHandler.onDisconnected(client.getChannel());
         }
+
+        log.warn("§4Bridgenet server channel has inactive, trying reconnect...");
         startReconnect();
     }
 
@@ -41,12 +45,12 @@ public class MTPClientReconnectHandler extends ChannelInboundHandlerAdapter {
         }
 
         clientHandler.onReconnect(null);
-        currentReconnectTaskFuture = reconnectScheduledExecutor.schedule(() -> {
+        currentReconnectTaskFuture = reconnectScheduledExecutor.scheduleAtFixedRate(() -> {
             if (tryReconnect()) {
                 completeReconnect();
             }
 
-        }, 10, TimeUnit.SECONDS);
+        }, 3, 5, TimeUnit.SECONDS);
     }
 
     private synchronized void completeReconnect() {
@@ -60,14 +64,16 @@ public class MTPClientReconnectHandler extends ChannelInboundHandlerAdapter {
 
     private synchronized boolean tryReconnect() {
         try {
-            MTPChannel channel = client.connectSync();
+            MTPChannel channel = client.connect().join();
 
             beansService.inject(channel);
             clientHandler.onReconnect(channel); // обновляем канал коннектора на только что подключенный
 
+            log.info("§2Reconnection attempt is successful!");
             return true;
-        } catch (ChannelException exception) {
-           return false; // ошибку выкидывать незачем, просто пробуем переподключиться вновь
+        } catch (Exception exception) {
+            log.error("§4Reconnection attempt is failed, try again: {}", exception.toString());
+            return false; // ошибку выкидывать незачем, просто пробуем переподключиться вновь
         }
     }
 }

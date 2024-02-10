@@ -31,11 +31,12 @@ public abstract class BridgenetConnector {
     @Inject
     private MTPDriver mtpDriver;
 
-    private final BaseBridgenetConnectorChannelHandler channelHandler = new BaseBridgenetConnectorChannelHandler(this);
+    @Getter
     private final ConnectorEngine engine = new ConnectorEngine();
-
     @Getter
     private final BridgenetServerSync bridgenetServerSync = new BridgenetServerSync();
+
+    private final BaseBridgenetConnectorChannelHandler channelHandler = new BaseBridgenetConnectorChannelHandler(this);
 
     protected abstract DeviceDescription createDescription();
 
@@ -52,8 +53,7 @@ public abstract class BridgenetConnector {
 
         BeansService beansService = engine.bindAll();
         beansService.inject(this);
-
-        engine.connectToEndpoints(remoteServiceRegistry);
+        beansService.inject(channelHandler);
 
         tryConnectToBridgenetServer();
 
@@ -73,7 +73,7 @@ public abstract class BridgenetConnector {
         exportDeviceHandshake();
 
         Runtime.getRuntime().addShutdownHook(
-                new Thread(bridgenetServerSync::exportDisconnectMessage));
+                new Thread(() -> channelHandler.onDisconnected(getChannel())));
     }
 
     /**

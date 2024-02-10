@@ -35,8 +35,8 @@ public class NettyPipelineInitializer extends ChannelInitializer<Channel> {
     private final List<ChannelHandler> channelHandlerList = new ArrayList<>();
 
     private void initHandlers(@NotNull ChannelPipeline pipeline) {
-        pipeline.addLast(new NettyChannelHandler(driver));
-        channelHandlerList.forEach(pipeline::addLast);
+        NettyChannelHandler handler = new NettyChannelHandler(channelHandlerList, driver);
+        pipeline.addLast(handler);
     }
 
     private void initCodec(@NotNull ChannelPipeline pipeline) {

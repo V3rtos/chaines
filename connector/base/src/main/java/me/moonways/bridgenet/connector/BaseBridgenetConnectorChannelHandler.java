@@ -2,8 +2,10 @@ package me.moonways.bridgenet.connector;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
 import me.moonways.bridgenet.mtp.client.MTPClientChannelHandler;
+import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -16,16 +18,19 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
     private CompletableFuture<MTPMessageSender> future;
     private MTPMessageSender channel;
 
-    private MTPMessageSender awaitNewChannel() {
-        future = new CompletableFuture<>();
-        channel = null;
+    @Inject
+    private RemoteServiceRegistry remoteServiceRegistry;
 
-        return channel = future.join();
+    private void awaitNewChannel() {
+        channel = null;
+        future = new CompletableFuture<>();
     }
 
     public MTPMessageSender getChannel() {
         if (channel == null) {
-            channel = awaitNewChannel();
+            if (future != null) {
+                return future.join();
+            }
         }
         return channel;
     }
@@ -42,12 +47,16 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
     @Override
     public void onConnected(MTPMessageSender channel) {
         completeAndFlush(channel);
+
+        connector.getEngine().connectToEndpoints(remoteServiceRegistry);
         connector.onConnected(channel);
     }
 
     @Override
     public void onDisconnected(MTPMessageSender channel) {
-        this.connector.getBridgenetServerSync().exportDisconnectMessage();
+        connector.getEngine().disconnectToEndpoints(remoteServiceRegistry);
+        connector.getBridgenetServerSync().exportDisconnectMessage();
+
         this.channel = null;
     }
 
@@ -56,7 +65,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
         if (channel != null) {
             onConnected(channel);
         } else {
-            this.channel = awaitNewChannel();
+            awaitNewChannel();
         }
     }
 }

@@ -66,6 +66,17 @@ public final class ConnectorEngine {
         }
     }
 
+    public void disconnectToEndpoints(RemoteServiceRegistry registry) {
+        registry.initializeXmlConfiguration();
+
+        XMLServicesConfigDescriptor xmlConfiguration = registry.getXmlConfiguration();
+        List<XmlServiceInfoDescriptor> servicesList = xmlConfiguration.getServicesList();
+
+        for (XmlServiceInfoDescriptor descriptor : servicesList) {
+            disconnectToEndpoint(descriptor);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @SneakyThrows({ClassNotFoundException.class})
     private <T extends RemoteService> void connectToEndpoint(XmlServiceInfoDescriptor descriptor, XMLServiceModulePropertyDescriptor hostPropertyDescriptor) {
@@ -83,6 +94,17 @@ public final class ConnectorEngine {
 
         beansService.bind(modelClass, service);
         log.info("Success connected to rmi service - §2" + descriptor);
+    }
+
+    @SuppressWarnings("unchecked")
+    @SneakyThrows({ClassNotFoundException.class})
+    private <T extends RemoteService> void disconnectToEndpoint(XmlServiceInfoDescriptor descriptor) {
+        Class<T> modelClass = (Class<T>) getClass().getClassLoader()
+                .loadClass(descriptor.getModelPath())
+                .asSubclass(RemoteService.class);
+
+        beansService.unbind(modelClass);
+        log.info("§4Disconnected from rmi service - " + descriptor);
     }
 
     public MTPMessageSender connectBridgenetServer(MTPDriver mtpDriver, MTPClientConnectionFactory connectionFactory,
