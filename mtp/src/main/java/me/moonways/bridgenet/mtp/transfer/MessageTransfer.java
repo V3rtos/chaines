@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.factory.UnsafeFactory;
-import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorAdapter;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 
 @Log4j2
@@ -35,17 +34,7 @@ public final class MessageTransfer {
 
     private void validatePacket() {
         if (messagePacket == null) {
-            throw new IllegalArgumentException("packet");
-        }
-    }
-
-    private void validateMessage(int minSize) {
-        if (bytes == null) {
-            throw new IllegalArgumentException("message");
-        }
-
-        if (bytes.length < minSize) {
-            throw new IllegalArgumentException("message size must be >= " + minSize);
+            log.error(new IllegalArgumentException("packet"));
         }
     }
 
@@ -98,7 +87,7 @@ public final class MessageTransfer {
 
         Class<? extends TransferProvider> provider = declaredAnnotation.provider();
         if (provider == null)
-            throw new MessageTransferException("Provider for " + field + " is not initialized");
+            log.error(new MessageTransferException("Provider for " + field + " is not initialized"));
 
         return provider;
     }
@@ -126,7 +115,8 @@ public final class MessageTransfer {
                 }
             }
             catch (IllegalAccessException exception) {
-                throw new MessageTransferException(exception);
+                log.error(new MessageTransferException(exception));
+                return;
             }
 
             System.arraycopy(bytesArray, 0, bytes, lastIndex, bytesArray.length);
@@ -138,7 +128,6 @@ public final class MessageTransfer {
     }
 
     public void unbuf(Object message) {
-        //validateMessage(0);
         this.messagePacket = message;
 
         if (bytes.length > 0) {
@@ -193,7 +182,7 @@ public final class MessageTransfer {
             field.set(messagePacket, collection);
         }
         catch (Exception exception) {
-            throw new MessageTransferException(exception);
+            log.error(new MessageTransferException(exception));
         }
     }
 
@@ -205,7 +194,7 @@ public final class MessageTransfer {
             field.set(messagePacket, providedObject);
         }
         catch (IllegalAccessException exception) {
-            throw new MessageTransferException(exception);
+            log.error(new MessageTransferException(exception));
         }
     }
 

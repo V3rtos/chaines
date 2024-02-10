@@ -119,18 +119,18 @@ public final class RemoteServiceRegistry {
 
     private ServiceInfo createServiceInfo(XmlServiceInfoDescriptor wrapper) {
         String name = wrapper.getName();
-        Class<?> modelClass;
+        Class<?> modelClass = null;
 
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             modelClass = classLoader.loadClass(wrapper.getModelPath());
         }
         catch (ClassNotFoundException exception) {
-            throw new ServiceException(exception);
+            log.error(new ServiceException(exception));
         }
 
         if (!RemoteService.class.isAssignableFrom(modelClass) || !modelClass.isInterface()) {
-            throw new ServiceException("model of service " + name + " is not valid");
+            log.error(new ServiceException("model of service " + name + " is not valid"));
         }
 
         int port = Integer.parseInt(wrapper.getBindPort());
@@ -154,21 +154,21 @@ public final class RemoteServiceRegistry {
     }
 
     private ModuleID getModuleID(Class<? extends RemoteModule> cls) {
-        ModuleID moduleID;
+        ModuleID moduleID = null;
         try {
             RemoteModule<?> module = cls.newInstance();
             moduleID = module.getId();
         }
         catch (InstantiationException | IllegalAccessException exception) {
-            throw new ServiceException(exception);
+            log.error(new ServiceException(exception));
         };
 
         return moduleID;
     }
 
     private ModuleFactory createModuleFactory(XMLServiceModuleDescriptor wrapper) {
-        Class<?> targetClass;
-        Class<?> configClass;
+        Class<?> targetClass = null;
+        Class<?> configClass = null;
 
         try {
             ClassLoader classLoader = getClass().getClassLoader();
@@ -177,12 +177,13 @@ public final class RemoteServiceRegistry {
             configClass = classLoader.loadClass(wrapper.getConfigClass());
         }
         catch (ClassNotFoundException exception) {
-            throw new ServiceException(exception);
+            log.error(new ServiceException(exception));
         }
 
         final Class<? extends RemoteModule> checkedModuleClass = targetClass.asSubclass(RemoteModule.class);
         final ModuleID moduleID = getModuleID(checkedModuleClass);
 
+        Class<?> finalConfigClass = configClass;
         Function<ServiceInfo, RemoteModule<?>> factoryFunc = (serviceInfo) -> {
             try {
                 RemoteModule<?> module = checkedModuleClass.newInstance();
@@ -193,12 +194,13 @@ public final class RemoteServiceRegistry {
                         .findFirst()
                         .orElse(null);
 
-                bindMethod.invoke(module, xmlConfiguration, serviceInfo, configClass);
+                bindMethod.invoke(module, xmlConfiguration, serviceInfo, finalConfigClass);
 
                 return (RemoteModule<?>) module;
             }
             catch (InvocationTargetException | InstantiationException | IllegalAccessException exception) {
-                throw new ServiceException(exception);
+                log.error(new ServiceException(exception));
+                return null;
             }
         };
 

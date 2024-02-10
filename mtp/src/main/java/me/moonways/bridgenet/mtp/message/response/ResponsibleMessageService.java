@@ -99,7 +99,7 @@ public final class ResponsibleMessageService {
 
         if (!completed.isEmpty()) {
             responseDescriptorSet.removeIf(completed::contains);
-            log.info("§2Awaited response message §3{} §2was completed", inputMessage.getClass());
+            log.info("Awaited response message §2{} §rwas completed", inputMessage.getClass().getName());
         }
     }
 

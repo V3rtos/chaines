@@ -2,6 +2,7 @@ package me.moonways.bridgenet.rest.server.controller.verify;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.rest.api.HttpHeader;
 import me.moonways.bridgenet.rest.api.exception.RestVerifyException;
 import me.moonways.bridgenet.rest.server.HttpServerConfig;
@@ -18,6 +19,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Log4j2
 @RequiredArgsConstructor
 public class VerifyHelper {
 
@@ -32,7 +34,7 @@ public class VerifyHelper {
 
                     if (verifier.matchesInternal(element)) {
                         if (!verifier.confirm(element, verificationConfig)) {
-                            throw new RestVerifyException(verifyType.name());
+                            log.error(new RestVerifyException(verifyType.name()));
                         }
                     }
                 });

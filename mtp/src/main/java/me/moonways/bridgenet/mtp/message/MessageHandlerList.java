@@ -97,7 +97,6 @@ public class MessageHandlerList {
                 handlingCount++;
 
                 String handlerClassName = subscriber.getSource().getClass().getSimpleName();
-
                 log.info("Received message §3{} §rhandling redirected to §2{}", messageClass, handlerClassName);
             }
             catch (Throwable exception) {
@@ -108,7 +107,7 @@ public class MessageHandlerList {
         }
 
         if (handlingCount == 0) {
-            log.info("§4No one founded message subscriber for '{}'", messageClass);
+            log.info("§4No one founded message subscriber for '{}'", messageClass.getName());
         }
     }
 

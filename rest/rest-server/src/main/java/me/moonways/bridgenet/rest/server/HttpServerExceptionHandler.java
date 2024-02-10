@@ -22,7 +22,7 @@ public class HttpServerExceptionHandler implements ExceptionLogger {
         log.error(INTERNAL_ERROR_MSG, exception.toString());
 
         if (printStackTrace) {
-            exception.printStackTrace();
+            log.error(exception);
         }
     }
 }

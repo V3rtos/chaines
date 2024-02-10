@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.encryption.MessageEncryption;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
+@Log4j2
 @RequiredArgsConstructor
 public class MessageDecoder extends ByteToMessageDecoder {
 
@@ -28,7 +30,8 @@ public class MessageDecoder extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
         try {
             if (byteBuf.readableBytes() == 0) {
-                throw new MessageNotFoundException("Get empty packet from decoder");
+                log.error(new MessageNotFoundException("Get empty packet from decoder"));
+                return;
             }
 
             int messageId = byteBuf.readIntLE();
@@ -45,7 +48,8 @@ public class MessageDecoder extends ByteToMessageDecoder {
         MessageWrapper wrapper = registry.lookupWrapperByID(messageId);
 
         if (wrapper == null) {
-            throw new MessageNotFoundException("Decoded message (ID: " + messageId + ") is`nt registered");
+            log.error(new MessageNotFoundException("Decoded message (ID: " + messageId + ") is`nt registered"));
+            return null;
         }
 
         MessageTransfer messageTransfer = createTransfer(byteBuf, wrapper);
@@ -69,7 +73,8 @@ public class MessageDecoder extends ByteToMessageDecoder {
             return MessageTransfer.decode(array);
         }
         catch (DataFormatException | IOException exception) {
-            throw new CompressionException(exception);
+            log.error(new CompressionException(exception));
+            return null;
         }
     }
 }

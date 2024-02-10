@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.rsi.service.ServiceException;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import me.moonways.bridgenet.rsi.xml.XMLServiceModuleDescriptor;
@@ -15,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Getter
+@Log4j2
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 @RequiredArgsConstructor
@@ -54,7 +56,7 @@ public abstract class AbstractRemoteModule<Configuration extends ModuleConfigura
                 propertyField.set(config, property.getValue());
             }
             catch (IllegalAccessException | NoSuchFieldException exception) {
-                throw new ServiceException(exception);
+                log.error(new ServiceException(exception));
             }
         }
 
@@ -66,7 +68,8 @@ public abstract class AbstractRemoteModule<Configuration extends ModuleConfigura
             return cls.getConstructor().newInstance();
         }
         catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
-            throw new ServiceException(exception);
+            log.error(new ServiceException(exception));
+            return null;
         }
     }
 }
