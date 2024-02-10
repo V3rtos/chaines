@@ -7,6 +7,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
+import me.moonways.bridgenet.connector.description.DeviceDescription;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPDriver;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
@@ -82,10 +83,7 @@ public abstract class BridgenetConnector {
         BridgenetServerSync bridgenet = getBridgenetServerSync();
         DeviceDescription description = createDescription();
 
-        Handshake.Result result = bridgenet.exchangeHandshake(
-                description.getName(),
-                description.getHost(),
-                description.getPort());
+        Handshake.Result result = bridgenet.exchangeHandshake(description);
 
         onHandshake(result);
     }

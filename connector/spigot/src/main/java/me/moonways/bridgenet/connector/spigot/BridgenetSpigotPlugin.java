@@ -3,6 +3,7 @@ package me.moonways.bridgenet.connector.spigot;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,16 +20,18 @@ public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
     @Inject
     private BeansService beansService;
     @Inject
-    private BridgenetCommandsExecutor bridgenetCommandsExecutor;
+    private BridgenetCommandsExporter commandsExporter;
 
     @Override
     public void onEnable() {
         spigotConnector.doConnectBasically();
-        bridgenetCommandsExecutor.init(spigotConnector);
+
+        commandsExporter.init(spigotConnector);
 
         bindLoadedPlugins();
 
-        getServer().getPluginManager().registerEvents(this, this);
+        Server server = getServer();
+        server.getPluginManager().registerEvents(this, this);
     }
 
     @Override
@@ -41,9 +44,9 @@ public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
     public void handle(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if (bridgenetCommandsExecutor.isExecutable(event.getMessage())) {
+        if (commandsExporter.isExportable(event.getMessage())) {
             event.setCancelled(
-                    bridgenetCommandsExecutor.exportCommand(player, event.getMessage()));
+                    commandsExporter.exportCommand(player, event.getMessage()));
         }
     }
 

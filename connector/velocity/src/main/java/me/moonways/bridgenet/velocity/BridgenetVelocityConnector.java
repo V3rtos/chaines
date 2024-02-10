@@ -12,7 +12,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.connector.BridgenetConnector;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
-import me.moonways.bridgenet.connector.DeviceDescription;
+import me.moonways.bridgenet.connector.description.DeviceDescription;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import org.jetbrains.annotations.NotNull;

@@ -1,17 +1,19 @@
-package me.moonways.bridgenet.connector;
+package me.moonways.bridgenet.connector.description;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.UUID;
+
 @Getter
 @Builder
 @ToString
 @EqualsAndHashCode
-public class DeviceDescription {
+public class UserDescription {
 
     private final String name;
-    private final String host;
-    private final int port;
+    private final UUID proxyUuid;
+    private final UUID uniqueId;
 }

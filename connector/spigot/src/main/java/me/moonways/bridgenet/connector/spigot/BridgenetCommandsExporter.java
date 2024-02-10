@@ -2,6 +2,7 @@ package me.moonways.bridgenet.connector.spigot;
 
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
+import me.moonways.bridgenet.connector.description.UserDescription;
 import me.moonways.bridgenet.model.bus.message.SendCommand;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
 import org.bukkit.entity.Player;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Autobind
-public class BridgenetCommandsExecutor {
+public class BridgenetCommandsExporter {
 
     private List<String> bridgenetCommandAliases;
     private BridgenetServerSync bridgenet;
@@ -34,7 +35,7 @@ public class BridgenetCommandsExecutor {
      *
      * @param label - введенная игроком строка команды.
      */
-    public boolean isExecutable(String label) {
+    public boolean isExportable(String label) {
         String commandName = label.replaceFirst("\\/", "").split(" ")[0];
         return bridgenetCommandAliases.contains(commandName.toLowerCase());
     }
@@ -47,21 +48,17 @@ public class BridgenetCommandsExecutor {
      * @param player - игрок, который исполняет команду
      * @param label - введенная игроком строка команды.
      *
-     * @return - возвращает TRUE если команда была успешно исполнена на стороне
-     *          системы Bridgenet, и FALSE в противном случае.
+     * @return - возвращает TRUE если команда была успешно исполнена.
      */
     public boolean exportCommand(Player player, String label) {
-        if (!isExecutable(label)) {
+        if (!isExportable(label)) {
             throw new IllegalArgumentException(label);
         }
 
-        MTPMessageSender channel = bridgenet.getChannel();
+        UserDescription userDescription = UserDescription.builder()
+                .uniqueId(player.getUniqueId())
+                .build();
 
-        CompletableFuture<SendCommand.Result> future
-                = channel.sendMessageWithResponse(SendCommand.Result.class,
-                    new SendCommand(player.getUniqueId(), label));
-
-        SendCommand.Result commandSendResult = future.join();
-        return (commandSendResult instanceof SendCommand.Success);
+        return bridgenet.exportSendCommand(userDescription, label);
     }
 }

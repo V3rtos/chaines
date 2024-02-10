@@ -3,7 +3,7 @@ package me.moonways.bridgenet.test.connector.subj;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.connector.BridgenetConnector;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
-import me.moonways.bridgenet.connector.DeviceDescription;
+import me.moonways.bridgenet.connector.description.DeviceDescription;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
 
@@ -36,10 +36,7 @@ public class TestConnector extends BridgenetConnector {
 
     public Handshake.Result retryHandshakeExchanging() {
         BridgenetServerSync bridgenet = getBridgenetServerSync();
-        return bridgenet.exchangeHandshake(
-                TestConnector.DEVICE_DESCRIPTION.getName(),
-                TestConnector.DEVICE_DESCRIPTION.getHost(),
-                TestConnector.DEVICE_DESCRIPTION.getPort());
+        return bridgenet.exchangeHandshake(DEVICE_DESCRIPTION);
     }
 
     public List<String> lookupBridgenetRegisteredComamndsList() {
