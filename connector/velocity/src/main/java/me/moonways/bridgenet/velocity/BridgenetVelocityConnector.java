@@ -43,7 +43,7 @@ public class BridgenetVelocityConnector extends BridgenetConnector {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        doConnectBasically();
+        start();
     }
 
     @Subscribe

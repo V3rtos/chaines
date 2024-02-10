@@ -39,9 +39,8 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
         if (this.future != null) {
             this.future.complete(channel);
             this.future = null;
-        } else {
-            this.channel = channel;
         }
+        this.channel = channel;
     }
 
     @Override
@@ -54,8 +53,8 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
 
     @Override
     public void onDisconnected(MTPMessageSender channel) {
-        connector.getEngine().disconnectToEndpoints(remoteServiceRegistry);
         connector.getBridgenetServerSync().exportDisconnectMessage();
+        connector.getEngine().disconnectToEndpoints(remoteServiceRegistry);
 
         this.channel = null;
     }
@@ -63,6 +62,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
     @Override
     public void onReconnect(MTPMessageSender channel) {
         if (channel != null) {
+            connector.handleConnection(channel);
             onConnected(channel);
         } else {
             awaitNewChannel();

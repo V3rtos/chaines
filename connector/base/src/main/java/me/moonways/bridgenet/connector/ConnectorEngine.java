@@ -67,13 +67,14 @@ public final class ConnectorEngine {
     }
 
     public void disconnectToEndpoints(RemoteServiceRegistry registry) {
-        registry.initializeXmlConfiguration();
-
         XMLServicesConfigDescriptor xmlConfiguration = registry.getXmlConfiguration();
-        List<XmlServiceInfoDescriptor> servicesList = xmlConfiguration.getServicesList();
 
-        for (XmlServiceInfoDescriptor descriptor : servicesList) {
-            disconnectToEndpoint(descriptor);
+        if (xmlConfiguration != null) {
+            List<XmlServiceInfoDescriptor> servicesList = xmlConfiguration.getServicesList();
+
+            for (XmlServiceInfoDescriptor descriptor : servicesList) {
+                disconnectToEndpoint(descriptor);
+            }
         }
     }
 

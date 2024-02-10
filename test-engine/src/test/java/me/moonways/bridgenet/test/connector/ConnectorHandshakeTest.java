@@ -25,7 +25,7 @@ public class ConnectorHandshakeTest {
 
     @Before
     public void setUp() {
-        subj.doConnectBasically();
+        subj.start();
     }
 
     @Test

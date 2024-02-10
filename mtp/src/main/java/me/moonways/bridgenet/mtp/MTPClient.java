@@ -33,8 +33,7 @@ public class MTPClient implements MTPConnection {
             if (completableFuture != null) {
                 completableFuture.complete(this.channel);
             }
-        }
-        else {
+        } else {
             Throwable cause = channelFuture.cause();
             log.error("§4Client connection proceed with exception: §c{}", cause.toString());
 
@@ -44,6 +43,8 @@ public class MTPClient implements MTPConnection {
             else {
                 log.error("Internal asynchronous connect error", cause);
             }
+
+            channelFuture.channel().pipeline().fireChannelInactive();
         }
     }
 

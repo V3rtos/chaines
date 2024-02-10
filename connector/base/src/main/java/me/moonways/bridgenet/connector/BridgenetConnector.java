@@ -46,20 +46,30 @@ public abstract class BridgenetConnector {
      * компонентов и ресурсов проекта для поддержания
      * стабильного соединения со всеми сервисами системы Bridgenet.
      */
-    public void doConnectBasically() {
-        log.info("******************************** BEGIN BRIDGENET-CONNECTOR INITIALIZATION ********************************");
-
+    public void start() {
+        log.info("***************************** BEGIN BRIDGENET-CONNECTOR INITIALIZATION *****************************");
         engine.setProperties();
 
         BeansService beansService = engine.bindAll();
         beansService.inject(this);
         beansService.inject(channelHandler);
 
-        tryConnectToBridgenetServer();
+        log.info("****************************** END BRIDGENET-CONNECTOR INITIALIZATION ******************************");
 
+        doConnect();
+    }
+
+    /**
+     * Исполнить процесс базового подключения к
+     * серверу системы Bridgenet и инициализации всех
+     * компонентов и ресурсов проекта для поддержания
+     * стабильного соединения со всеми сервисами системы Bridgenet.
+     */
+    private void doConnect() {
+        tryConnectToBridgenetServer();
         beansStore.store(beansScanner.createBean(BridgenetConnector.class, this));
 
-        log.info("******************************** END BRIDGENET-CONNECTOR INITIALIZATION ********************************");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> channelHandler.onDisconnected(getChannel())));
     }
 
     /**
@@ -68,12 +78,18 @@ public abstract class BridgenetConnector {
      */
     private void tryConnectToBridgenetServer() {
         MTPMessageSender channel = engine.connectBridgenetServer(mtpDriver, clientConnectionFactory, channelHandler);
+        handleConnection(channel);
+    }
 
+    /**
+     * Обработать подключенное клиентское соединения для
+     * последующей инициализации и корректного запуска процессов.
+     *
+     * @param channel - клиентский канал.
+     */
+    protected void handleConnection(MTPMessageSender channel) {
         bridgenetServerSync.setChannel(channel);
         exportDeviceHandshake();
-
-        Runtime.getRuntime().addShutdownHook(
-                new Thread(() -> channelHandler.onDisconnected(getChannel())));
     }
 
     /**
@@ -135,6 +151,8 @@ public abstract class BridgenetConnector {
         MTPMessageSender channel = getChannel();
 
         if (channel != null) {
+            channelHandler.onDisconnected(channel);
+
             channel.close();
         }
 

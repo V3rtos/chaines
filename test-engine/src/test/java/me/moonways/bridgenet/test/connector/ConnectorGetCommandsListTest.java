@@ -18,7 +18,7 @@ public class ConnectorGetCommandsListTest {
 
     @Before
     public void setUp() {
-        subj.doConnectBasically();
+        subj.start();
     }
 
     @Test

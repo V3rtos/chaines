@@ -24,7 +24,7 @@ public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        spigotConnector.doConnectBasically();
+        spigotConnector.start();
 
         commandsExporter.init(spigotConnector);
 

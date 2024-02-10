@@ -22,16 +22,16 @@ public class MTPClientReconnectHandler extends ChannelInboundHandlerAdapter {
     private final MTPClient client;
     private final ScheduledExecutorService reconnectScheduledExecutor = Threads.newSingleThreadScheduledExecutor();
 
-    private ScheduledFuture<?> currentReconnectTaskFuture;
-
     private final MTPClientChannelHandler clientHandler;
+
+    private boolean isRunning;
 
     @Inject
     private BeansService beansService;
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        if (currentReconnectTaskFuture == null) {
+        if (!isRunning) {
             clientHandler.onDisconnected(client.getChannel());
         }
 
@@ -40,40 +40,24 @@ public class MTPClientReconnectHandler extends ChannelInboundHandlerAdapter {
     }
 
     private synchronized void startReconnect() {
-        if (currentReconnectTaskFuture != null && !currentReconnectTaskFuture.isCancelled()) {
-            throw new UnsupportedOperationException("reconnect operation is not cancelled");
-        }
+        isRunning = true;
 
         clientHandler.onReconnect(null);
-        currentReconnectTaskFuture = reconnectScheduledExecutor.scheduleAtFixedRate(() -> {
-            if (tryReconnect()) {
-                completeReconnect();
-            }
-
-        }, 3, 5, TimeUnit.SECONDS);
+        reconnectScheduledExecutor.schedule(this::tryReconnect, 5, TimeUnit.SECONDS);
     }
 
-    private synchronized void completeReconnect() {
-        if (currentReconnectTaskFuture == null) {
-            throw new UnsupportedOperationException("reconnect operation is not exists");
-        }
-
-        currentReconnectTaskFuture.cancel(true);
-        currentReconnectTaskFuture = null;
-    }
-
-    private synchronized boolean tryReconnect() {
+    private synchronized void tryReconnect() {
         try {
             MTPChannel channel = client.connect().join();
 
             beansService.inject(channel);
             clientHandler.onReconnect(channel); // обновляем канал коннектора на только что подключенный
 
+            isRunning = false;
+
             log.info("§2Reconnection attempt is successful!");
-            return true;
         } catch (Exception exception) {
             log.error("§4Reconnection attempt is failed, try again: {}", exception.toString());
-            return false; // ошибку выкидывать незачем, просто пробуем переподключиться вновь
         }
     }
 }
