@@ -42,6 +42,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
     @Override
     public void onConnected(MTPMessageSender channel) {
         completeAndFlush(channel);
+        connector.onConnected(channel);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
     @Override
     public void onReconnect(MTPMessageSender channel) {
         if (channel != null) {
-            completeAndFlush(channel);
+            onConnected(channel);
         } else {
             this.channel = awaitNewChannel();
         }

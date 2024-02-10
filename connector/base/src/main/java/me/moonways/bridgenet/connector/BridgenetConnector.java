@@ -70,8 +70,6 @@ public abstract class BridgenetConnector {
         MTPMessageSender channel = engine.connectBridgenetServer(mtpDriver, clientConnectionFactory, channelHandler);
 
         bridgenetServerSync.setChannel(channel);
-
-        onConnected(channel);
         exportDeviceHandshake();
 
         Runtime.getRuntime().addShutdownHook(
