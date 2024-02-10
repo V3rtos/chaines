@@ -96,11 +96,8 @@ public final class BridgenetServerSync {
 
         Handshake.Result result = completableFuture.join();
 
-        if (result instanceof Handshake.Success) {
-            return result.getKey().toString().equals(description.getUniqueId().toString());
-        }
-
-        return false;
+        boolean equals = result.getKey().equals(description.getUniqueId());
+        return (result instanceof Handshake.Success) && equals;
     }
 
     /**
