@@ -13,7 +13,7 @@
                 configClass="me.moonways.bridgenet.rsi.module.access.AccessConfig">
 
             <!-- RMI Protocol basically services bind host -->
-            <property name="remoteHost" value="127.0.0.1"/>
+            <property name="remoteHost" value="78.24.181.28"/>
         </module>
     </modules>
     <services>

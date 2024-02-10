@@ -31,7 +31,7 @@ public abstract class BridgenetConnector {
     @Inject
     private MTPDriver mtpDriver;
 
-    private final BaseBridgenetConnectorChannelHandler channelHandler = new BaseBridgenetConnectorChannelHandler();
+    private final BaseBridgenetConnectorChannelHandler channelHandler = new BaseBridgenetConnectorChannelHandler(this);
     private final ConnectorEngine engine = new ConnectorEngine();
 
     @Getter
@@ -73,6 +73,9 @@ public abstract class BridgenetConnector {
 
         onConnected(channel);
         exportDeviceHandshake();
+
+        Runtime.getRuntime().addShutdownHook(
+                new Thread(bridgenetServerSync::exportDisconnectMessage));
     }
 
     /**

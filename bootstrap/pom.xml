@@ -119,7 +119,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>me.moonways.bridgenet.BridgenetBootstrap</mainClass>
+                            <mainClass>me.moonways.bridgenet.bootstrap.AppStarter</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

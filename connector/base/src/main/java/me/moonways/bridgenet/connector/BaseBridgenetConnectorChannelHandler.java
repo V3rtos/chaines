@@ -11,6 +11,8 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHandler {
 
+    private final BridgenetConnector connector;
+
     private CompletableFuture<MTPMessageSender> future;
     private MTPMessageSender channel;
 
@@ -44,6 +46,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
 
     @Override
     public void onDisconnected(MTPMessageSender channel) {
+        this.connector.getBridgenetServerSync().exportDisconnectMessage();
         this.channel = null;
     }
 
