@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.connector;
 
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.mtp.MTPConnectionFactory;
 import me.moonways.bridgenet.mtp.MTPDriver;
@@ -21,6 +22,7 @@ import net.conveno.jdbc.ConvenoRouter;
 import java.util.List;
 import java.util.Properties;
 
+@Log4j2
 public final class ConnectorEngine {
 
     private BeansService beansService;
@@ -80,6 +82,7 @@ public final class ConnectorEngine {
         T service = accessModule.lookupStub();
 
         beansService.bind(modelClass, service);
+        log.info("Success connected to rmi service - §2" + descriptor);
     }
 
     public MTPMessageSender connectBridgenetServer(MTPDriver mtpDriver, MTPClientConnectionFactory connectionFactory,
