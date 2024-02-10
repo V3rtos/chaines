@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class ResponsibleMessageCleanUpRunner {
 
     @Inject
-    private DefaultMessageResponseService service;
+    private ResponsibleMessageService service;
 
     @Runnable
     public void run() {

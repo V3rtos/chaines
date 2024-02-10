@@ -11,7 +11,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
-import me.moonways.bridgenet.mtp.message.response.DefaultMessageResponseService;
+import me.moonways.bridgenet.mtp.message.response.ResponsibleMessageService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +34,7 @@ public class MTPChannel implements MTPMessageSender {
     private long lastResponseSessionId;
 
     @Inject
-    private DefaultMessageResponseService responseService;
+    private ResponsibleMessageService responseService;
 
     @Inject
     private MessageRegistry messageRegistry;

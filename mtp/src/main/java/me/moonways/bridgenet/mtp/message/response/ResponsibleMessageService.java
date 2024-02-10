@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Log4j2
 @Autobind
 @SuppressWarnings("unchecked")
-public final class DefaultMessageResponseService {
+public final class ResponsibleMessageService {
 
     private final Set<ResponseDescriptor> responseDescriptorSet = new CopyOnWriteArraySet<>();
 

@@ -52,7 +52,7 @@ public final class BridgenetServerSync {
                         prepareHandshakeProperties(serverName, serverHost, serverPort)));
 
         Handshake.Result result = completableFuture.join();
-        result.onSuccess(() -> this.serverUuid = result.getKey());
+        result.onSuccess(() -> serverUuid = result.getKey());
 
         return result;
     }

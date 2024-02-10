@@ -16,6 +16,7 @@ import me.moonways.bridgenet.mtp.message.*;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
+import me.moonways.bridgenet.mtp.message.response.ResponsibleMessageService;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -34,6 +35,8 @@ public class MTPDriver implements Serializable {
     private BeansService beansService;
     @Inject
     private MessageHandlerList handlerList;
+    @Inject
+    private ResponsibleMessageService responsibleMessageService;
 
     @GetTypeAnnotationProcessor
     private TypeAnnotationProcessorResult<Object> messagesResult;
@@ -85,5 +88,11 @@ public class MTPDriver implements Serializable {
     @Synchronized
     public void handle(@NotNull InputMessageContext<?> context) {
         handlerList.handle(context);
+
+        Object message = context.getMessage();
+
+        if (responsibleMessageService.isWaiting(message.getClass())) {
+            responsibleMessageService.complete(message);
+        }
     }
 }

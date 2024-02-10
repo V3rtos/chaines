@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.mtp.message.def;
+package me.moonways.bridgenet.mtp.message;
 
 import lombok.NoArgsConstructor;
 import lombok.ToString;
