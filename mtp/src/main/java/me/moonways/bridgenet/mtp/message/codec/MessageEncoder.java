@@ -44,7 +44,7 @@ public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
             ByteCompression.write(ByteCodec.readBytesArray(buffer), byteBuf);
         }
         catch (Exception exception) {
-            throw new ChannelException(exception);
+            throw new MessageCodecException(exception);
         }
     }
 }
