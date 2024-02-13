@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.mtp.transfer;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -113,15 +114,8 @@ public final class MessageTransfer {
 
     private void unbufIterableField(Collection collection, Field field, TransferProvider provider, ByteBuf byteBuf) {
         try {
-            Class<?> genericType = null;
-
+            Class<?> genericType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
             int size = byteBuf.readInt();
-
-            // todo - в будущем нужно будет переделать на получение класса дженерика у листа (класс листа лежит в field.getType()), обычные методы не помогают - выдают null
-            if (size > 0) {
-                String classname = ByteCodec.readString(byteBuf);
-                genericType = Class.forName(classname);
-            }
 
             for (int i = 0; i < size; i++) {
                 collection.add(provider.readObject(byteBuf, genericType));
@@ -150,16 +144,6 @@ public final class MessageTransfer {
     private void bufIterableField(Iterable iterable, TransferProvider provider, ByteBuf byteBuf) {
         int size = (int) iterable.spliterator().estimateSize();
         byteBuf.writeInt(size);
-
-        // todo - в будущем нужно будет переделать на получение класса дженерика у листа (класс листа лежит в field.getType()), обычные методы не помогают - выдают null
-        if (size > 0) {
-            String classname = iterable.iterator().next().getClass().getName();
-
-            byte[] stringBytes = classname.getBytes(StandardCharsets.UTF_16LE);
-
-            byteBuf.writeInt(stringBytes.length);
-            byteBuf.writeBytes(stringBytes);
-        }
 
         for (Object object : iterable) {
             provider.writeObject(byteBuf, object);
