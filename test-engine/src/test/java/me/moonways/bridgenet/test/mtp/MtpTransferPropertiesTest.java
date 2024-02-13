@@ -14,6 +14,7 @@ import me.moonways.bridgenet.mtp.transfer.provider.TransferPropertiesProvider;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -24,7 +25,7 @@ public class MtpTransferPropertiesTest {
     private static final String KEY = "output.message.text";
     private static final String VALUE = "Hello World!";
 
-    private static final byte[] EXPECTED_BYTES = {0, 0, 0, 1, 0, 0, 0, 19, 0, 0, 0, 12, 111, 117, 116, 112, 117, 116, 46, 109, 101, 115, 115, 97, 103, 101, 46, 116, 101, 120, 116, 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33};
+    private static final byte[] EXPECTED_BYTES = {0, 0, 0, 1, 0, 0, 0, 19, 111, 117, 116, 112, 117, 116, 46, 109, 101, 115, 115, 97, 103, 101, 46, 116, 101, 120, 116, 0, 0, 0, 12, 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33};
 
     private Properties properties;
 
