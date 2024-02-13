@@ -1,9 +1,11 @@
 package me.moonways.bridgenet.mtp.transfer.provider;
 
+import io.netty.buffer.ByteBuf;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.MessageBytes;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class TransferPropertiesProvider implements TransferProvider {
@@ -15,54 +17,34 @@ public class TransferPropertiesProvider implements TransferProvider {
     }
 
     @Override
-    public Object fromByteArray(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
-        validateType(cls);
-
-        int propertiesSize = byteCodec.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
-        messageBytes.moveTo(Integer.BYTES);
-
+    public Object readObject(ByteBuf buf, Class<?> type) {
+        validateType(type);
         Properties properties = new Properties();
 
-        for (int index = 0; index < propertiesSize; index++) {
-            int keyLength = byteCodec.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
-            messageBytes.moveTo(Integer.BYTES);
+        int size = buf.readInt();
 
-            int valueLength = byteCodec.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
-            messageBytes.moveTo(Integer.BYTES);
+        for (int index = 0; index < size; index++) {
+            String key = ByteCodec.readString(buf);
+            String val = ByteCodec.readString(buf);
 
-            String key = byteCodec.readString(Arrays.copyOfRange(messageBytes.getArray(), 0, keyLength));
-            messageBytes.moveTo(keyLength);
-
-            String value = byteCodec.readString(Arrays.copyOfRange(messageBytes.getArray(), 0, valueLength));
-            messageBytes.moveTo(valueLength);
-
-            properties.put(key, value);
+            properties.put(key, val);
         }
 
         return properties;
     }
 
     @Override
-    public byte[] toByteArray(ByteCodec byteCodec, Object object) {
+    public void writeObject(ByteBuf buf, Object object) {
         validateType(object.getClass());
 
         Properties properties = ((Properties) object);
         Set<String> propertyNames = properties.stringPropertyNames();
 
-        int stringsTotalCapacity = propertyNames.stream().mapToInt(n -> Integer.BYTES * 2 + (properties.getProperty(n) + n).length()).sum();
+        buf.writeInt(propertyNames.size());
 
-        ByteBuffer byteBuffer = ByteBuffer.allocate(Integer.BYTES + stringsTotalCapacity);
-        byteCodec.write(propertyNames.size(), byteBuffer);
-
-        for (String key : propertyNames) {
-            String value = properties.getProperty(key);
-
-            byteCodec.write(key.length(), byteBuffer);
-            byteCodec.write(value.length(), byteBuffer);
-            byteCodec.write(key, byteBuffer);
-            byteCodec.write(value, byteBuffer);
+        for (String name : propertyNames) {
+            ByteCodec.writeString(buf, name);
+            ByteCodec.writeString(buf, properties.getProperty(name));
         }
-
-        return byteBuffer.array();
     }
 }

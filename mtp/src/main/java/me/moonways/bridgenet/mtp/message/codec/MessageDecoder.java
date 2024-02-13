@@ -58,15 +58,15 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
     private MessageTransfer createTransfer(ByteBuf byteBuf, MessageWrapper wrapper) {
         try {
-            byte[] array = ByteCompression.read(byteBuf);
+            ByteBuf buf = ByteCompression.read(byteBuf);
 
             if (wrapper.needsEncryption()) {
 
                 MessageEncryption encryption = configuration.getEncryption();
-                array = encryption.decode(array);
+                buf = encryption.decode(buf);
             }
 
-            return MessageTransfer.decode(array);
+            return MessageTransfer.decode(buf);
         }
         catch (DataFormatException | IOException exception) {
             throw new CompressionException(exception);

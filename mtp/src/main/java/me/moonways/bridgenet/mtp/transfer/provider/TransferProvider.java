@@ -1,13 +1,10 @@
 package me.moonways.bridgenet.mtp.transfer.provider;
 
-import me.moonways.bridgenet.mtp.transfer.ByteCodec;
-import me.moonways.bridgenet.mtp.transfer.MessageBytes;
+import io.netty.buffer.ByteBuf;
 
 public interface TransferProvider {
 
-    // todo - переписать на нетти ByteBuf
+    Object readObject(ByteBuf buf, Class<?> type);
 
-    Object fromByteArray(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes);
-
-    byte[] toByteArray(ByteCodec byteCodec, Object object);
+    void writeObject(ByteBuf buf, Object object);
 }

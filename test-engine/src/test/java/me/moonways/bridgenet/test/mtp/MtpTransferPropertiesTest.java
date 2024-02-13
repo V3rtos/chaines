@@ -1,9 +1,13 @@
 package me.moonways.bridgenet.test.mtp;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferPropertiesProvider;
@@ -35,14 +39,17 @@ public class MtpTransferPropertiesTest {
         MessageTransfer messageTransfer = MessageTransfer.encode(new TestPropertiesMessage(properties));
         messageTransfer.buf();
 
-        byte[] transferedBytesArray = messageTransfer.getBytes();
+        byte[] transferedBytesArray = ByteCodec.readBytesArray(messageTransfer.getByteBuf());
 
         assertArrayEquals(transferedBytesArray, EXPECTED_BYTES);
     }
 
     @Test
     public void test_fromBytes() {
-        MessageTransfer messageTransfer = MessageTransfer.decode(EXPECTED_BYTES);
+        ByteBuf byteBuf = Unpooled.buffer();
+        byteBuf.writeBytes(EXPECTED_BYTES);
+
+        MessageTransfer messageTransfer = MessageTransfer.decode(byteBuf);
 
         TestPropertiesMessage message = new TestPropertiesMessage();
         messageTransfer.unbuf(message);

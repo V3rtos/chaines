@@ -1,6 +1,10 @@
 package me.moonways.bridgenet.test.mtp;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import me.moonways.bridgenet.model.bus.message.CreateGame;
+import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 import org.junit.Test;
 
@@ -17,14 +21,17 @@ public class MtpTransferCreateGameTest {
         MessageTransfer messageTransfer = MessageTransfer.encode(DEF_MESSAGE);
         messageTransfer.buf();
 
-        byte[] transferedBytesArray = messageTransfer.getBytes();
+        byte[] transferedBytesArray = ByteCodec.readBytesArray(messageTransfer.getByteBuf());
 
         assertArrayEquals(transferedBytesArray, EXPECTED_BYTES);
     }
 
     @Test
     public void test_fromBytes() {
-        MessageTransfer messageTransfer = MessageTransfer.decode(EXPECTED_BYTES);
+        ByteBuf byteBuf = Unpooled.buffer();
+        byteBuf.writeBytes(EXPECTED_BYTES);
+
+        MessageTransfer messageTransfer = MessageTransfer.decode(byteBuf);
 
         CreateGame input = new CreateGame();
         messageTransfer.unbuf(input);
