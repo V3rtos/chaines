@@ -199,9 +199,9 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * быть выполнены перед инициализацией и конструированием
      * инстанса бина.
      */
-    public List<BeanConstructFunction> getPreConstructFunctions() {
+    public List<BeanMethod> getPreConstructFunctions() {
         Class<?> root = beanRef.get().getRoot().getClass();
-        return Stream.of(root.getMethods()).map(this::toConstructFunction).filter(BeanConstructFunction::isBefore)
+        return Stream.of(root.getMethods()).map(this::toBeanMethod).filter(BeanMethod::isBefore)
                 .collect(Collectors.toList());
     }
 
@@ -210,9 +210,9 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * быть выполнены после инициализации и конструирования
      * инстанса бина.
      */
-    public List<BeanConstructFunction> getPostConstructFunctions() {
+    public List<BeanMethod> getPostConstructFunctions() {
         Class<?> root = beanRef.get().getRoot().getClass();
-        return Stream.of(getDeclaredMethods(root)).map(this::toConstructFunction).filter(BeanConstructFunction::isAfter)
+        return Stream.of(getDeclaredMethods(root)).map(this::toBeanMethod).filter(BeanMethod::isAfter)
                 .collect(Collectors.toList());
     }
 
@@ -233,7 +233,7 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      *
      * @param method - метод из класса бина.
      */
-    private BeanConstructFunction toConstructFunction(Method method) {
-        return new BeanConstructFunction(beanRef.get(), method);
+    private BeanMethod toBeanMethod(Method method) {
+        return new BeanMethod(beanRef.get(), method);
     }
 }

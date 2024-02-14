@@ -1,6 +1,6 @@
 {
-  "host": "78.24.181.28",
-  "port": 5465,
+  "host": "localhost",
+  "port": 8080,
   "workers": {
     "bossThreads": 1,
     "childThreads": 2

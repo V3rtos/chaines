@@ -9,8 +9,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 @Log4j2
-public class BeanConstructFunction extends AnnotatedBeanComponent<Method> {
-    public BeanConstructFunction(Bean bean, Method root) {
+public class BeanMethod extends AnnotatedBeanComponent<Method> {
+    public BeanMethod(Bean bean, Method root) {
         super(bean, root);
     }
 

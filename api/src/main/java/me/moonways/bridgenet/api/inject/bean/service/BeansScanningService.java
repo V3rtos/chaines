@@ -13,7 +13,7 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanComponent;
-import me.moonways.bridgenet.api.inject.bean.BeanConstructFunction;
+import me.moonways.bridgenet.api.inject.bean.BeanMethod;
 import me.moonways.bridgenet.api.inject.bean.BeanType;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProvider;
@@ -197,7 +197,7 @@ public class BeansScanningService {
      */
     private void processPreConstructs(Bean bean) {
         bean.getType().getPreConstructFunctions()
-                .forEach(BeanConstructFunction::invoke);
+                .forEach(BeanMethod::invoke);
     }
 
     /**

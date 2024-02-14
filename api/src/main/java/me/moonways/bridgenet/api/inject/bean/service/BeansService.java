@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanComponent;
-import me.moonways.bridgenet.api.inject.bean.BeanConstructFunction;
+import me.moonways.bridgenet.api.inject.bean.BeanMethod;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
 import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
@@ -219,8 +219,8 @@ public final class BeansService {
         inject(bean.getRoot());
 
         // call @PostConstruct functions.
-        List<BeanConstructFunction> postConstructFunctions = bean.getType().getPostConstructFunctions();
-        postConstructFunctions.forEach(BeanConstructFunction::invoke);
+        List<BeanMethod> postConstructFunctions = bean.getType().getPostConstructFunctions();
+        postConstructFunctions.forEach(BeanMethod::invoke);
     }
 
     /**
@@ -277,8 +277,8 @@ public final class BeansService {
         log.info("Binding a bean of §6{}", bean.getType().getRoot().getName());
 
         // call @PostConstruct functions.
-        List<BeanConstructFunction> postConstructFunctions = bean.getType().getPostConstructFunctions();
-        postConstructFunctions.forEach(BeanConstructFunction::invoke);
+        List<BeanMethod> postConstructFunctions = bean.getType().getPostConstructFunctions();
+        postConstructFunctions.forEach(BeanMethod::invoke);
     }
 
     /**
