@@ -200,7 +200,7 @@ public class WrappedHttpServer {
     private HttpContextPattern createControllerPattern(JaxbHttpController httpContext) {
         HttpController controller = loadClassUnsafeInstance(httpContext.getHandlerClasspath());
         if (controller == null) {
-            throw new NullPointerException("jaxb context pattern - " + httpContext.getPattern() + ".handler");
+            log.error(new NullPointerException("jaxb context pattern - " + httpContext.getPattern() + ".handler"));
         }
 
         return new HttpContextPattern(

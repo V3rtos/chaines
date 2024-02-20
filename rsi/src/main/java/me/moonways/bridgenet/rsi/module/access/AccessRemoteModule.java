@@ -72,8 +72,7 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
             }
         }
         catch (Exception exception) {
-            log.error("§4Cannot be allocate endpoint '{}': §c{}", name, exception.toString());
-            exception.printStackTrace();
+            log.error("§4Cannot be allocate endpoint '{}'", name, exception);
         }
     }
 

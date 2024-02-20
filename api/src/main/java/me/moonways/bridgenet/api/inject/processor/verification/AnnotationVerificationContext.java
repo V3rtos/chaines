@@ -4,11 +4,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.processor.AnnotationProcessorConfig;
 
 import java.lang.annotation.Annotation;
 
+@Log4j2
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -32,7 +34,7 @@ public class AnnotationVerificationContext<V extends Annotation> {
         }
 
         public AnnotationVerificationResult asFailureExceptionally(Exception exception) {
-            exception.printStackTrace();
+            log.error(exception);
             return asFailure(exception.getMessage());
         }
 

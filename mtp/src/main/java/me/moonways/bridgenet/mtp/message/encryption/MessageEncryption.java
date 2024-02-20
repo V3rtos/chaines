@@ -73,8 +73,7 @@ public final class MessageEncryption {
             return keyFactory.generatePublic(encodedKeySpec);
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
-            log.error("§4Cannot be generate public-key: §c{}", exception.toString());
-            exception.printStackTrace();
+            log.error("§4Cannot be generate public-key", exception);
         }
 
         return null;

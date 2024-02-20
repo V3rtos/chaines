@@ -58,7 +58,7 @@ public final class MessageTransfer {
 
         Class<? extends TransferProvider> provider = declaredAnnotation.provider();
         if (provider == null)
-            throw new MessageTransferException("Provider for " + field + " is not initialized");
+            log.error(new MessageTransferException("Provider for " + field + " is not initialized"));
 
         return provider;
     }
@@ -83,7 +83,8 @@ public final class MessageTransfer {
                 }
             }
             catch (IllegalAccessException exception) {
-                throw new MessageTransferException(exception);
+                log.error(new MessageTransferException(exception));
+                return;
             }
         }
     }
@@ -125,7 +126,7 @@ public final class MessageTransfer {
             field.set(messagePacket, collection);
         }
         catch (Exception exception) {
-            throw new MessageTransferException(exception);
+            log.error(new MessageTransferException(exception));
         }
     }
 
@@ -137,7 +138,7 @@ public final class MessageTransfer {
             field.set(messagePacket, providedObject);
         }
         catch (IllegalAccessException exception) {
-            throw new MessageTransferException(exception);
+            log.error(new MessageTransferException(exception));
         }
     }
 
