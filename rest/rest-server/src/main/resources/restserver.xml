@@ -13,7 +13,7 @@
         <controller>
             <method>GET</method>
             <pattern>/users</pattern>
-            <handler>me.moonways.rest.server.handler.GetUserInfo</handler>
+            <handler>me.moonways.bridgenet.rest.server.handler.GetUserInfo</handler>
         </controller>
     </controllers>
 </serverContext>

@@ -1,23 +1,23 @@
 package me.moonways.bridgenet.mtp.transfer;
 
+import io.netty.buffer.ByteBuf;
+import lombok.experimental.UtilityClass;
 import org.mockito.internal.util.Primitives;
 
 import java.lang.reflect.Field;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@UtilityClass
 public final class ByteCodec {
 
     private static final int DEFAULT_PRIMITIVE_BUFFER_SIZE = 256;
     private static final int DEFAULT_OBJ_BUFFER_SIZE = 512;
 
-    public static final ByteBuffer INT_BUFFER = ByteBuffer.allocate(Integer.BYTES);
-    public static final ByteBuffer LONG_BUFFER = ByteBuffer.allocate(Long.BYTES);
-
     private final static Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_MAP = new HashMap<>();
-
     static {
         PRIMITIVE_TO_WRAPPER_MAP.put(boolean.class, Boolean.class);
         PRIMITIVE_TO_WRAPPER_MAP.put(byte.class, Byte.class);
@@ -54,123 +54,28 @@ public final class ByteCodec {
         return DEFAULT_OBJ_BUFFER_SIZE;
     }
 
-    public Object read(Class<?> cls, ByteBuffer byteBuffer) {
-        if (byte.class.equals(cls) || Byte.class.equals(cls)) {
-            return byteBuffer.get();
-        }
+    public void writeString(ByteBuf buf, String string) {
+        byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
 
-        if (short.class.equals(cls) || Short.class.equals(cls)) {
-            return byteBuffer.getShort();
-        }
-
-        if (int.class.equals(cls) || Integer.class.equals(cls)) {
-            return byteBuffer.getInt();
-        }
-
-        if (double.class.equals(cls) || Double.class.equals(cls)) {
-            return byteBuffer.getDouble();
-        }
-
-        if (float.class.equals(cls) || Float.class.equals(cls)) {
-            return byteBuffer.getFloat();
-        }
-
-        if (long.class.equals(cls) || Long.class.equals(cls)) {
-            return byteBuffer.getLong();
-        }
-
-        if (char.class.equals(cls) || Character.class.equals(cls)) {
-            return byteBuffer.getChar();
-        }
-
-        if (String.class.equals(cls)) {
-            return readString(byteBuffer.array());
-        }
-
-        return Primitives.defaultValueForPrimitiveOrWrapper(cls);
+        buf.writeInt(bytes.length);
+        buf.writeBytes(bytes);
     }
 
-    public void write(Object obj, ByteBuffer byteBuffer) {
-        if (obj instanceof byte[]) {
-            byteBuffer.put((byte[]) obj);
-        }
+    public String readString(ByteBuf buf) {
+        int length = buf.readInt();
+        byte[] arr = readBytesArray(length, buf);
 
-        if (obj instanceof Byte) {
-            byteBuffer.put((Byte) obj);
-        }
-
-        if (obj instanceof Short) {
-            byteBuffer.putShort((Short) obj);
-        }
-
-        if (obj instanceof Integer) {
-            byteBuffer.putInt((Integer) obj);
-        }
-
-        if (obj instanceof Double) {
-            byteBuffer.putDouble((Double) obj);
-        }
-
-        if (obj instanceof Float) {
-            byteBuffer.putFloat((Float) obj);
-        }
-
-        if (obj instanceof Long) {
-            byteBuffer.putLong((Long) obj);
-        }
-
-        if (obj instanceof Character) {
-            byteBuffer.putChar((Character) obj);
-        }
-
-        if (obj instanceof String) {
-            byteBuffer.put(((String) obj).getBytes());
-        }
+        return new String(arr, StandardCharsets.UTF_8);
     }
 
-    public byte[] toByteArray(int value) {
-        INT_BUFFER.putInt(value);
+    public byte[] readBytesArray(int length, ByteBuf byteBuf) {
+        byte[] arr = new byte[length];
 
-        byte[] array = INT_BUFFER.array();
-        INT_BUFFER.clear();
-
-        return array;
+        byteBuf.readBytes(arr);
+        return arr;
     }
 
-    public byte[] toByteArray(long value) {
-        LONG_BUFFER.putLong(value);
-
-        byte[] array = LONG_BUFFER.array();
-        LONG_BUFFER.clear();
-
-        return array;
-    }
-
-    public int readInt(byte[] array) {
-        INT_BUFFER.put(array, 0, array.length);
-        ((Buffer)INT_BUFFER).flip(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
-
-        int value = INT_BUFFER.getInt();
-        ((Buffer)INT_BUFFER).clear(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
-
-        return value;
-    }
-
-    public long readLong(byte[] array) {
-        LONG_BUFFER.put(array, 0, array.length);
-        ((Buffer)LONG_BUFFER).flip(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
-
-        long value = LONG_BUFFER.getLong();
-        ((Buffer)LONG_BUFFER).clear(); // так надо, я не знаю почему, иначе выдает NoSuchMethod
-
-        return value;
-    }
-
-    public String readString(byte[] bytes, Charset charset) {
-        return new String(bytes, 0, bytes.length, charset);
-    }
-
-    public String readString(byte[] bytes) {
-        return readString(bytes, Charset.defaultCharset());
+    public byte[] readBytesArray(ByteBuf byteBuf) {
+        return readBytesArray(byteBuf.readableBytes(), byteBuf);
     }
 }

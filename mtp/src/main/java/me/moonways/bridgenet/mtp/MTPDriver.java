@@ -3,61 +3,74 @@ package me.moonways.bridgenet.mtp;
 import lombok.Getter;
 import lombok.Synchronized;
 import me.moonways.bridgenet.api.inject.Autobind;
-import me.moonways.bridgenet.api.inject.decorator.persistance.Async;
-import me.moonways.bridgenet.api.inject.decorator.persistance.KeepTime;
-import me.moonways.bridgenet.api.inject.decorator.persistance.RequiredNotNull;
-import me.moonways.bridgenet.api.inject.decorator.Decorated;
-import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.inject.decorator.persistence.Async;
+import me.moonways.bridgenet.api.inject.decorator.persistence.KeepTime;
+import me.moonways.bridgenet.api.inject.decorator.persistence.RequiredNotNull;
+import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
+import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.mtp.message.*;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
+import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
+import me.moonways.bridgenet.mtp.message.response.ResponsibleMessageService;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
+import java.util.Comparator;
+import java.util.List;
 
 @Getter
 @Autobind
-@Decorated
-public class MTPDriver {
+@EnableDecorators
+@WaitTypeAnnotationProcessor({ClientMessage.class, ServerMessage.class})
+public class MTPDriver implements Serializable {
 
-    private final MessageRegistry messages = new MessageRegistry();
-    private final MessageHandlerList handlerList = new MessageHandlerList();
-
-    @Inject
-    private DependencyInjection injector;
+    private MessageRegistry messageRegistry;
 
     @Inject
-    private AnnotationInterceptor interceptor;
+    private BeansService beansService;
+    @Inject
+    private MessageHandlerList handlerList;
+    @Inject
+    private ResponsibleMessageService responsibleMessageService;
+
+    @GetTypeAnnotationProcessor
+    private TypeAnnotationProcessorResult<Object> messagesResult;
 
     @PostConstruct
     void init() {
-        injector.injectFields(messages);
-        injector.injectFields(handlerList);
+        List<Object> messagesList = messagesResult.toList();
+        messagesList.sort(Comparator.comparing(o -> o.getClass().getSimpleName()));
+
+        messageRegistry = new MessageRegistry(messagesList);
+
+        beansService.bind(messageRegistry);
     }
 
     @Async
     @KeepTime
     public void bindMessages() {
-        messages.bindMessages();
+        messageRegistry.bindMessages(false);
     }
 
-    public void register(@NotNull Class<?> messageClass) {
-        messages.register(messageClass);
+    @Async
+    @KeepTime
+    public void bindMessagesWithDirectionReverse() {
+        messageRegistry.bindMessages(true);
     }
 
     @RequiredNotNull(message = "message wrapper")
     public MessageWrapper lookupWrapperByID(int id) {
-        return messages.lookupWrapperByID(id);
+        return messageRegistry.lookupWrapperByID(id);
     }
 
     @RequiredNotNull(message = "message wrapper")
     public MessageWrapper lookupWrapperByClass(@NotNull Class<?> messageClass) {
-        return messages.lookupWrapperByClass(messageClass);
-    }
-
-    @RequiredNotNull(message = "message export")
-    @Synchronized
-    public ExportedMessage export(@NotNull Object message) {
-        return messages.export(message);
+        return messageRegistry.lookupWrapperByClass(messageClass);
     }
 
     @Async
@@ -75,5 +88,11 @@ public class MTPDriver {
     @Synchronized
     public void handle(@NotNull InputMessageContext<?> context) {
         handlerList.handle(context);
+
+        Object message = context.getMessage();
+
+        if (responsibleMessageService.isWaiting(message.getClass())) {
+            responsibleMessageService.complete(message);
+        }
     }
 }

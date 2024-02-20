@@ -2,8 +2,8 @@ package me.moonways.bridgenet.rsi.module.access;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.rsi.module.AbstractRemoteModule;
 import me.moonways.bridgenet.rsi.module.ModuleConst;
 import me.moonways.bridgenet.rsi.module.ModuleID;
@@ -27,7 +27,7 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
     private Class<?> endpointClass;
 
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
 
     public AccessRemoteModule() {
         super(ModuleID.of(ModuleConst.REMOTE_ACCESS_ID, "accessModule"));
@@ -59,7 +59,7 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
             Constructor<? extends RemoteService> constructor = subclass.getConstructor();
             RemoteService stub = constructor.newInstance();
 
-            injector.bind(serviceInfo.getModelClass(), stub);
+            beansService.bind(serviceInfo.getModelClass(), stub);
 
             try {
                 LocateRegistry.createRegistry(serviceInfo.getPort());

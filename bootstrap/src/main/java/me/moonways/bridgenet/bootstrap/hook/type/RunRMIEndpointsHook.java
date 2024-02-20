@@ -15,5 +15,7 @@ public class RunRMIEndpointsHook extends ApplicationBootstrapHook {
     protected void process(@NotNull AppBootstrap bootstrap) {
         remoteServiceRegistry.initializeXmlConfiguration();
         remoteServiceRegistry.initializeEndpointsController();
+
+        remoteServiceRegistry.bindEndpoints();
     }
 }

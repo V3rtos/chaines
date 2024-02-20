@@ -51,10 +51,10 @@ public class InterceptController {
 
     private Object createSuperclassProxy() {
         ProxyFactory proxyFactory = new ProxyFactory();
-        proxyFactory.setSuperclass(cls);
 
+        proxyFactory.setSuperclass(cls);
         proxyFactory.setUseWriteReplace(true);
-        proxyFactory.setUseCache(true);
+        proxyFactory.setUseCache(false);
 
         try {
             Object source = this.source;

@@ -1,0 +1,292 @@
+package me.moonways.bridgenet.api.inject.bean.service;
+
+import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.api.inject.IgnoredRegistry;
+import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
+import org.reflections.Configuration;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
+import me.moonways.bridgenet.api.inject.bean.Bean;
+import me.moonways.bridgenet.api.inject.bean.BeanComponent;
+import me.moonways.bridgenet.api.inject.bean.BeanMethod;
+import me.moonways.bridgenet.api.inject.bean.BeanType;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProvider;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.processor.AnnotationProcessorConfig;
+import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+@SuppressWarnings("rawtypes")
+@RequiredArgsConstructor
+public class BeansScanningService {
+
+    private final AnnotationInterceptor interceptor;
+
+    /**
+     * Создание базовой комплектации конфигурации сканнера
+     * для поиска необходимых ресурсов в проекте.
+     */
+    private ConfigurationBuilder createScannerConfigurationBaseBuilder() {
+        List<ClassLoader> classLoadersList = new ArrayList<>();
+
+        classLoadersList.add(ClasspathHelper.contextClassLoader());
+        classLoadersList.add(ClasspathHelper.staticClassLoader());
+
+        Collection<URL> urls = ClasspathHelper.forClassLoader(
+                classLoadersList.toArray(new ClassLoader[0]));
+
+        return new ConfigurationBuilder()
+                .setUrls(urls)
+                .setParallel(false);
+    }
+
+    /**
+     * Воспроизвести сканирование проекта для поиска
+     * и дальнейшей инициализации и применения процессоров
+     * аннотаций классов, относящихся к технологии Dependency Injection.
+     */
+    public List<TypeAnnotationProcessor<?>> scanTypeAnnotationProcessors() {
+        Configuration configuration = createScannerConfigurationBaseBuilder();
+        Reflections reflections = new Reflections(configuration);
+
+        Set<Class<? extends TypeAnnotationProcessor>> result = reflections.getSubTypesOf(TypeAnnotationProcessor.class);
+        List<TypeAnnotationProcessor<?>> typeAnnotationProcessors = toTypeAnnotationsProcessors(result);
+
+        Set<Class<?>> usageAnnotationsTypes = reflections.getTypesAnnotatedWith(UseTypeAnnotationProcessor.class);
+
+        for (Class<?> annotationType : usageAnnotationsTypes) {
+            if (Annotation.class.isAssignableFrom(annotationType)) {
+                typeAnnotationProcessors.add(new JustBindTypeAnnotationProcessor((Class<? extends Annotation>) annotationType));
+            }
+        }
+
+        return typeAnnotationProcessors;
+    }
+
+    /**
+     * Преобразовать результат сканирования в список
+     * процессоров для аннотаций.
+     *
+     * @param scannerResultSet - результат сканирования проекта.
+     */
+    private List<TypeAnnotationProcessor<?>> toTypeAnnotationsProcessors(Set<Class<? extends TypeAnnotationProcessor>> scannerResultSet) {
+        List<TypeAnnotationProcessor<?>> result = new ArrayList<>();
+
+        BeanFactoryProvider factoryProvider = BeanFactoryProviders.UNSAFE.getImpl();
+        BeanFactory beanFactory = factoryProvider.get();
+
+        for (Class<? extends TypeAnnotationProcessor> type : scannerResultSet) {
+            if (type.isInterface() || (type.getModifiers() & Modifier.ABSTRACT) == Modifier.ABSTRACT) {
+                continue;
+            }
+
+            TypeAnnotationProcessor typeAnnotationProcessor = beanFactory.create(type);
+            result.add(typeAnnotationProcessor);
+        }
+
+        return result;
+    }
+
+    /**
+     * Создание конфигурации для сканирования и поиска бинов.
+     * @param config - конфигурация фильтра для процесса сканирования.
+     */
+    private Configuration createBeansScannerConfiguration(AnnotationProcessorConfig<?> config) {
+        ConfigurationBuilder builder = createScannerConfigurationBaseBuilder();
+
+        FilterBuilder filter = new FilterBuilder();
+        config.getPackages().forEach(filter::includePackage);
+
+        return builder
+                .setScanners(Scanners.TypesAnnotated, Scanners.SubTypes)
+                .filterInputsBy(filter);
+    }
+
+    /**
+     * Воспроизвести сканирование проекта.
+     * Внутри процесса создается конфигурация фильтра вложений
+     * результата и конфигурация самого сканирования, после которой
+     * все аннотированные (помеченные аннотацией) ресурсы помещаются
+     * в общий результат, и идут на преобразование в бины.
+     *
+     * @param config - конфигурация процессора аннотаций
+     */
+    public List<Bean> scanBeans(AnnotationProcessorConfig<?> config) {
+        Configuration configuration = createBeansScannerConfiguration(config);
+        Reflections reflections = new Reflections(configuration);
+
+        Set<Class<?>> result = reflections.getTypesAnnotatedWith(config.getAnnotationType());
+
+        return toBeansList(result);
+    }
+
+    /**
+     * Преобразования результата сканирования ресурсов
+     * пакейджа в готовые бины, содержащие необходимую
+     * информацию для дальнейших процессов системы.
+     *
+     * @param scannerResultSet - результат сканирования в виде java.util.Set
+     */
+    private List<Bean> toBeansList(Set<Class<?>> scannerResultSet) {
+        List<Bean> result = new ArrayList<>();
+
+        for (Class<?> resourceType : scannerResultSet) {
+            result.add(createBean(resourceType));
+        }
+        return sort(result);
+    }
+
+    /**
+     * Создать бин по подобию образа полученного
+     * класса ресурса из процесса сканирования.
+     *
+     * @param resourceType - полученный класс ресурса.
+     */
+    public Bean createBean(Class<?> resourceType) {
+        return createBean(resourceType, this::createRoot);
+    }
+
+    /**
+     * Создать бин по подобию образа полученного
+     * класса ресурса из процесса сканирования.
+     *
+     * @param resourceType - полученный класс ресурса.
+     * @param root - инстанс бина.
+     */
+    public Bean createBean(Class<?> resourceType, Object root) {
+        return createBean(resourceType, ((type) -> root));
+    }
+
+    /**
+     * Создать бин по подобию образа полученного
+     * класса ресурса из процесса сканирования.
+     *
+     * @param resourceType - полученный класс ресурса.
+     * @param functionOfRoot - функция получения инстанса бина.
+     */
+    private Bean createBean(Class<?> resourceType, Function<BeanType, Object> functionOfRoot) {
+        AtomicReference<Bean> beanRef = new AtomicReference<>();
+
+        BeanType beanType = new BeanType(beanRef, resourceType, getInterfaces(resourceType));
+        Bean bean = new Bean(new Properties(), UUID.randomUUID(), beanType, functionOfRoot.apply(beanType));
+
+        beanRef.set(bean);
+
+        processPreConstructs(bean);
+        return bean;
+    }
+
+    /**
+     * Исполнить предварительные функции бина
+     * перед его конструированием.
+     *
+     * @param bean - бин.
+     */
+    private void processPreConstructs(Bean bean) {
+        bean.getType().getPreConstructFunctions()
+                .forEach(BeanMethod::invoke);
+    }
+
+    /**
+     * Создание основного инстанса бина
+     * @param beanType - тип бина.
+     */
+    public Object createRoot(BeanType beanType) {
+        BeanFactoryProvider factoryProvider = BeanFactoryProviders.DEFAULT.getImpl();
+        Class<?> rootType = beanType.getRoot();
+
+        if (beanType.isAuto()) {
+            factoryProvider = beanType.getAutoFactoryProvider();
+        }
+
+        return factoryProvider.get().create(rootType);
+    }
+
+    /**
+     * Получение интерфейсов исходя из основного типа ресурса.
+     * Здесь происходит отбрасывание общеиспользованных и не неужных
+     * для кеширования интерфейсов.
+     *
+     * @param resourceType - основной тип ресурса.
+     */
+    public Class<?>[] getInterfaces(Class<?> resourceType) {
+        return Stream.of(resourceType.getInterfaces()).filter(this::canInterfaceInclude)
+                .toArray(Class<?>[]::new);
+    }
+
+    /**
+     * Проверяем, может ли данный интерфейс войти в результат
+     * типов бина, которые будут кешированы.
+     *
+     * @param interfaceType - проверяемый тип интерфейса.
+     */
+    public boolean canInterfaceInclude(Class<?> interfaceType) {
+        if (interfaceType.isAnnotationPresent(IgnoredRegistry.class)) {
+            return false;
+        }
+
+        String packageName = interfaceType.getPackage().getName();
+        return !packageName.startsWith("java.") && !packageName.startsWith("com.sun.");
+    }
+
+    /**
+     * Сортировка бинов для дальнейшей инжекции.
+     * @param beans - список всех готовых бинов.
+     */
+    private List<Bean> sort(List<Bean> beans) {
+        List<Class<?>> resources = toResources(beans);
+
+        int sortedBeans = 0;
+        for (Bean bean : new ArrayList<>(beans) /* fix CME */) {
+            BeanType beanType = bean.getType();
+
+            for (BeanComponent component : beanType.getInjectComponents()) {
+
+                int rootIndex = resources.indexOf(beanType.getRoot());
+                int componentIndex = resources.indexOf(component.getType());
+
+                if (rootIndex < componentIndex) {
+
+                    // rewrite bean to end of list.
+                    beans.remove(bean);
+                    beans.add(bean);
+
+                    sortedBeans++;
+                }
+            }
+        }
+        return sortedBeans > 0 ? sort(beans) : beans;
+    }
+
+    /**
+     * Преобразовать список подготовленных бинов
+     * в список ресурсов, относящихся к бинам.
+     *
+     * @param beans - список подготовленных бинов.
+     */
+    private List<Class<?>> toResources(List<Bean> beans) {
+        List<Class<?>> resources = new ArrayList<>();
+
+        for (Bean bean : beans) {
+            BeanType beanType = bean.getType();
+
+            resources.add(beanType.getRoot());
+            resources.addAll(Arrays.asList(beanType.getInterfaces()));
+        }
+
+        return resources;
+    }
+}

@@ -9,6 +9,8 @@ import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.MessageWrapper;
 import me.moonways.bridgenet.mtp.message.encryption.MessageEncryption;
+import me.moonways.bridgenet.mtp.message.exception.MessageCodecException;
+import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.ByteCompression;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 
@@ -20,7 +22,7 @@ public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, ExportedMessage exportedMessage, ByteBuf byteBuf) {
         if (exportedMessage == null || exportedMessage.getMessage() == null || exportedMessage.getWrapper() == null) {
-            throw new NullPointerException("encoding for " + exportedMessage);
+            throw new MessageCodecException("can not encode " + exportedMessage + " null");
         }
 
         MessageWrapper wrapper = exportedMessage.getWrapper();
@@ -31,18 +33,18 @@ public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
             messageTransfer.buf();
 
             byteBuf.writeIntLE(wrapper.getId());
-            byte[] messageBytes = messageTransfer.getBytes();
+            ByteBuf buffer = messageTransfer.getByteBuf();
 
             if (wrapper.needsEncryption()) {
 
                 MessageEncryption encryption = configuration.getEncryption();
-                messageBytes = encryption.encode(messageBytes);
+                buffer = encryption.encode(buffer);
             }
 
-            ByteCompression.write(messageBytes, byteBuf);
+            ByteCompression.write(ByteCodec.readBytesArray(buffer), byteBuf);
         }
         catch (Exception exception) {
-            throw new ChannelException(exception);
+            throw new MessageCodecException(exception);
         }
     }
 }

@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 public class SuperclassProxy implements MethodHandler {
 
     private final Object interceptor;
+
     private final ProxyManager proxyManager;
 
     @Override

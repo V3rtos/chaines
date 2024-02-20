@@ -1,17 +1,10 @@
 package me.moonways.bridgenet.test.mtp;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFactory;
-import io.netty.channel.EventLoopGroup;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.bus.message.Handshake;
-import me.moonways.bridgenet.mtp.*;
-import me.moonways.bridgenet.mtp.message.DefaultMessage;
-import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
+import me.moonways.bridgenet.mtp.MTPMessageSender;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import me.moonways.bridgenet.test.engine.util.TestMTPClientConnection;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -28,13 +21,8 @@ public class MtpServerHandshakeTest {
     @Inject
     private TestMTPClientConnection clientConnection;
 
-    @Before
-    public void bindProtocolThings() {
-        clientConnection.prepareTest();
-    }
-
     private Handshake.Result sendHandshakeMessage() {
-        MTPChannel channel = clientConnection.getChannel();
+        MTPMessageSender channel = clientConnection.getChannel();
 
         Handshake message = newHandshakeMessage("Test-1");
         CompletableFuture<Handshake.Result> future = channel.sendMessageWithResponse(Handshake.Result.class, message);
@@ -51,7 +39,7 @@ public class MtpServerHandshakeTest {
         properties.setProperty("server.address.host", "127.0.0.1");
         properties.setProperty("server.address.port", "1298");
         properties.setProperty("server.flag.default", "true");
-        return new Handshake(name, Handshake.Type.SERVER, properties);
+        return new Handshake(Handshake.Type.SERVER, properties);
     }
 
     @Test

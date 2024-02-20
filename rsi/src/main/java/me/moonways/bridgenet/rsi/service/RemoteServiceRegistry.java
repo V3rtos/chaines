@@ -3,6 +3,7 @@ package me.moonways.bridgenet.rsi.service;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
 import me.moonways.bridgenet.rsi.endpoint.EndpointController;
@@ -10,7 +11,6 @@ import me.moonways.bridgenet.rsi.module.*;
 import me.moonways.bridgenet.rsi.xml.XMLServiceModuleDescriptor;
 import me.moonways.bridgenet.rsi.xml.XMLServicesConfigDescriptor;
 import me.moonways.bridgenet.rsi.xml.XmlServiceInfoDescriptor;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.Inject;
 
@@ -24,6 +24,7 @@ import java.util.function.Function;
 @Autobind
 public final class RemoteServiceRegistry {
 
+    @Getter
     private XMLServicesConfigDescriptor xmlConfiguration;
 
     private final Map<String, ServiceInfo> servicesInfos = Collections.synchronizedMap(new HashMap<>());
@@ -34,8 +35,7 @@ public final class RemoteServiceRegistry {
     private final Map<ServiceInfo, ServiceModulesContainer> modulesContainerMap = Collections.synchronizedMap(new HashMap<>());
 
     @Inject
-    private DependencyInjection injector;
-
+    private BeansService beansService;
     @Inject
     private XmlJaxbParser jaxbParser;
 
@@ -43,7 +43,7 @@ public final class RemoteServiceRegistry {
 
     @PostConstruct
     void init() {
-        injector.injectFields(endpointController);
+        beansService.inject(endpointController);
     }
 
     public void initializeXmlConfiguration() {
@@ -80,7 +80,9 @@ public final class RemoteServiceRegistry {
 
             modulesContainerMap.put(serviceInfo, serviceModulesContainer);
         }
+    }
 
+    public void bindEndpoints() {
         endpointController.bindEndpoints();
     }
 
@@ -145,7 +147,7 @@ public final class RemoteServiceRegistry {
     }
 
     private void registerService(ServiceInfo serviceInfo, RemoteService remoteService) {
-        injector.injectFields(remoteService);
+        beansService.inject(remoteService);
 
         log.info("Service {} was registered", serviceInfo.getName());
         servicesImplements.put(serviceInfo, remoteService);
@@ -184,7 +186,7 @@ public final class RemoteServiceRegistry {
         Function<ServiceInfo, RemoteModule<?>> factoryFunc = (serviceInfo) -> {
             try {
                 RemoteModule<?> module = checkedModuleClass.newInstance();
-                injector.injectFields(module);
+                beansService.inject(module);
 
                 Method bindMethod = Arrays.stream(checkedModuleClass.getMethods())
                         .filter(method -> method.getName().equals("bind"))

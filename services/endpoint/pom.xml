@@ -32,6 +32,7 @@
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rsi</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
@@ -43,6 +44,7 @@
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>mtp</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

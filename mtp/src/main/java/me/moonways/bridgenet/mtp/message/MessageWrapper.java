@@ -4,8 +4,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
-import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.UnsafeFactory;
 import me.moonways.bridgenet.mtp.ProtocolDirection;
 import me.moonways.bridgenet.mtp.message.encryption.EncryptedMessage;
 
@@ -15,7 +15,7 @@ import me.moonways.bridgenet.mtp.message.encryption.EncryptedMessage;
 @RequiredArgsConstructor
 public class MessageWrapper {
 
-    private static final ObjectFactory FACTORY = new UnsafeObjectFactory();
+    private static final BeanFactory FACTORY = new UnsafeFactory();
 
     @ToString.Include
     private final int id;

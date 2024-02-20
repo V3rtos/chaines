@@ -6,12 +6,12 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
-import me.moonways.bridgenet.mtp.message.encryption.MessageEncryption;
-import me.moonways.bridgenet.mtp.transfer.ByteCompression;
-import me.moonways.bridgenet.mtp.exception.CompressionException;
-import me.moonways.bridgenet.mtp.message.MessageWrapper;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
-import me.moonways.bridgenet.mtp.message.MessageNotFoundException;
+import me.moonways.bridgenet.mtp.message.MessageWrapper;
+import me.moonways.bridgenet.mtp.message.encryption.MessageEncryption;
+import me.moonways.bridgenet.mtp.message.exception.MessageCodecException;
+import me.moonways.bridgenet.mtp.message.exception.MessageNotFoundException;
+import me.moonways.bridgenet.mtp.transfer.ByteCompression;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 
 import java.io.IOException;
@@ -58,18 +58,18 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
     private MessageTransfer createTransfer(ByteBuf byteBuf, MessageWrapper wrapper) {
         try {
-            byte[] array = ByteCompression.read(byteBuf);
+            ByteBuf buf = ByteCompression.read(byteBuf);
 
             if (wrapper.needsEncryption()) {
 
                 MessageEncryption encryption = configuration.getEncryption();
-                array = encryption.decode(array);
+                buf = encryption.decode(buf);
             }
 
-            return MessageTransfer.decode(array);
+            return MessageTransfer.decode(buf);
         }
         catch (DataFormatException | IOException exception) {
-            throw new CompressionException(exception);
+            throw new MessageCodecException(exception);
         }
     }
 }

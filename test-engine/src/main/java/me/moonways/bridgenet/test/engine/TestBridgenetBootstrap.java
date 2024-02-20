@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.test.engine;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 
 @Log4j2
@@ -20,7 +20,7 @@ public final class TestBridgenetBootstrap {
             bootstrap.start(new String[0]);
         }
 
-        DependencyInjection injector = bootstrap.getInjector();
+        BeansService injector = bootstrap.getBeansService();
         injector.bind(testObject);
     }
 

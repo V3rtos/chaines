@@ -1,9 +1,9 @@
 package me.moonways.bridgenet.test.api.util.autorun;
 
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.util.autorun.persistance.AutoRunner;
-import me.moonways.bridgenet.api.util.autorun.persistance.Runnable;
-import me.moonways.bridgenet.api.util.autorun.persistance.RunningPeriod;
+import me.moonways.bridgenet.api.util.autorun.persistence.AutoRunner;
+import me.moonways.bridgenet.api.util.autorun.persistence.Runnable;
+import me.moonways.bridgenet.api.util.autorun.persistence.RunningPeriod;
 
 import java.util.Properties;
 import java.util.UUID;
@@ -19,11 +19,7 @@ public class RandomValueRunner {
     private Properties props;
 
     @Runnable
-    public void run_updateValue() {
-        props.setProperty(KEY, generateStringValue());
-    }
-
-    private String generateStringValue() {
-        return UUID.randomUUID().toString();
+    public void regenerate() {
+        props.setProperty(KEY, UUID.randomUUID().toString());
     }
 }

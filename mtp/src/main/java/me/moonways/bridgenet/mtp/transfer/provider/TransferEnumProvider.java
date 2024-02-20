@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.mtp.transfer.provider;
 
+import io.netty.buffer.ByteBuf;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.MessageBytes;
 
@@ -15,26 +16,18 @@ public class TransferEnumProvider implements TransferProvider {
     }
 
     @Override
-    public Object fromByteArray(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
-        validateType(cls);
+    public Object readObject(ByteBuf buf, Class<?> type) {
+        validateType(type);
 
-        int ordinal = byteCodec.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
-        messageBytes.moveTo(Integer.BYTES);
-
-        Object[] enumConstants = cls.getEnumConstants();
-
-        return enumConstants[ordinal];
+        Object[] enumConstants = type.getEnumConstants();
+        return enumConstants[buf.readInt()];
     }
 
     @Override
-    public byte[] toByteArray(ByteCodec byteCodec, Object object) {
+    public void writeObject(ByteBuf buf, Object object) {
         validateType(object.getClass());
-
         int ordinal = ((Enum<?>) object).ordinal();
 
-        ByteBuffer byteBuffer = ByteBuffer.allocate(Integer.BYTES);
-        byteCodec.write(ordinal, byteBuffer);
-
-        return byteBuffer.array();
+        buf.writeInt(ordinal);
     }
 }

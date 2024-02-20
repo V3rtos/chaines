@@ -5,62 +5,76 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.mtp.message.persistence.MessageHandler;
-import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.mtp.message.exception.MessageHandleException;
+import me.moonways.bridgenet.mtp.message.persistence.IncomingMessageListener;
+import me.moonways.bridgenet.mtp.message.persistence.Priority;
+import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.TypeVariable;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
+@Autobind
+@WaitTypeAnnotationProcessor(IncomingMessageListener.class)
 public class MessageHandlerList {
 
+    private static final Comparator<MessageSubscriberState> SORTING = Comparator.comparingInt(MessageSubscriberState::getPriority);
+
     @Getter
-    private final Set<MethodTriggerState> messageHandlers = new HashSet<>();
+    private final List<MessageSubscriberState> subscribers
+            = Collections.synchronizedList(new ArrayList<>());
 
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
+
+    @GetTypeAnnotationProcessor
+    private TypeAnnotationProcessorResult<Object> handlersResult;
 
     public void bindHandlers() {
-        injector.peekAnnotatedMembers(MessageHandler.class)
-                .forEachOrdered(this::bind);
+        handlersResult.toList().forEach(this::bind);
     }
 
-    private List<MethodTriggerState> toStates(Object handler) {
+    private List<MessageSubscriberState> toStates(Object handler) {
+        int priority = Optional.ofNullable(handler.getClass().getDeclaredAnnotation(IncomingMessageListener.class))
+                .map(IncomingMessageListener::priority)
+                .orElse(Priority.MONITOR)
+                .ordinal();
+
         return Arrays.stream(handler.getClass().getDeclaredMethods())
-                .filter(method -> method.getDeclaredAnnotation(MessageTrigger.class) != null)
-                .map(method -> new MethodTriggerState(handler, handler.getClass(), method))
+                .filter(method -> method.getDeclaredAnnotation(SubscribeMessage.class) != null)
+                .map(method -> new MessageSubscriberState(handler, handler.getClass(), method, priority))
                 .collect(Collectors.toList());
     }
 
     public void bind(Object handler) {
-        if (messageHandlers.addAll(toStates(handler))) {
+        if (subscribers.addAll(toStates(handler))) {
 
-            log.info("Bind message handler: §6{}", handler.getClass().getSimpleName());
-
-            injector.injectFields(handler);
+            log.info("Registered incoming messages listener: §6{}", handler.getClass().getSimpleName());
+            beansService.inject(handler);
         }
     }
 
     public void handle(@NotNull InputMessageContext<?> context) {
         Class<?> messageClass = context.getMessage().getClass();
+        subscribers.sort(SORTING);
 
         int handlingCount = 0;
-        for (MethodTriggerState state : messageHandlers) {
-            Method method = state.getMethod();
+        for (MessageSubscriberState subscriber : subscribers) {
+            Method method = subscriber.getMethod();
 
             if (method.getParameterCount() != 1) {
                 throw new MessageHandleException(
                         String.format("Can't handle message %s in handler %s", messageClass.getName(),
-                                state.getSourceClass().getName()));
+                                subscriber.getSourceClass().getName()));
             }
 
             Parameter parameter = method.getParameters()[0];
@@ -78,13 +92,13 @@ public class MessageHandlerList {
                 }
 
                 method.setAccessible(true);
-                method.invoke(state.getSource(), value);
+                method.invoke(subscriber.getSource(), value);
 
                 handlingCount++;
 
-                String handlerClassName = state.getSource().getClass().getSimpleName();
+                String handlerClassName = subscriber.getSource().getClass().getSimpleName();
 
-                log.info("Received message §3{} §rhandled in §2{}", messageClass, handlerClassName);
+                log.info("Received message §3{} §rhandling redirected to §2{}", messageClass, handlerClassName);
             }
             catch (Throwable exception) {
                 if (isNotClassCastException(exception)) {
@@ -94,7 +108,7 @@ public class MessageHandlerList {
         }
 
         if (handlingCount == 0) {
-            log.info("§4No one founded message handler for '{}'", messageClass);
+            log.info("§4No one founded message subscriber for '{}'", messageClass);
         }
     }
 
@@ -106,11 +120,13 @@ public class MessageHandlerList {
     @ToString
     @EqualsAndHashCode
     @RequiredArgsConstructor
-    public static class MethodTriggerState {
+    public static class MessageSubscriberState {
 
         private final Object source;
         private final Class<?> sourceClass;
 
         private final Method method;
+
+        private final int priority;
     }
 }

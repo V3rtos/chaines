@@ -1,11 +1,15 @@
 package me.moonways.bridgenet.model.players.connection;
 
+import me.moonways.bridgenet.model.bus.message.SendMessage;
+import me.moonways.bridgenet.model.bus.message.SendTitle;
 import me.moonways.bridgenet.model.players.EntityPlayer;
+import me.moonways.bridgenet.model.players.Title;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.players.offline.OfflineEntityPlayer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import me.moonways.bridgenet.mtp.MTPMessageSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +36,14 @@ public class ConnectedEntityPlayer extends OfflineEntityPlayer implements Entity
 
     @Override
     public void sendMessage(@Nullable String message) {
-        // todo
+        try {
+            MTPMessageSender channel = spigotServer.getChannel();
+            channel.sendMessage(
+                    new SendMessage(getUniqueId(), message, SendMessage.ChatType.CHAT));
+        }
+        catch (RemoteException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
     @Override
@@ -47,5 +58,27 @@ public class ConnectedEntityPlayer extends OfflineEntityPlayer implements Entity
         }
 
         return connectFuture;
+    }
+
+    @Override
+    public void sendTitle(@Nullable String title, @Nullable String subtitle) {
+        sendTitle(Title.builder()
+                .fadeIn(0).stay(3).fadeOut(2)
+                .title(title)
+                .subtitle(subtitle)
+                .build());
+    }
+
+    @Override
+    public void sendTitle(@NotNull Title title) {
+        try {
+            MTPMessageSender channel = spigotServer.getChannel();
+            channel.sendMessage(
+                    new SendTitle(getUniqueId(), title.getTitle(), title.getSubtitle(),
+                            title.getFadeIn(), title.getStay(), title.getFadeOut()));
+        }
+        catch (RemoteException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 }
