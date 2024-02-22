@@ -28,7 +28,7 @@ public final class BootstrapHookContainer {
 
     @SneakyThrows
     private XMLBootstrapConfigDescriptor parseConfiguration() {
-        return jaxbParser.parseCopiedResource(ResourcesTypes.BOOTSTRAP_XML,
+        return jaxbParser.parseToDescriptorByType(ResourcesTypes.BOOTSTRAP_XML,
                 XMLBootstrapConfigDescriptor.class);
     }
 

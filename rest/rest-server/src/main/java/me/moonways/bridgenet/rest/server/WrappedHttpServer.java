@@ -87,7 +87,7 @@ public class WrappedHttpServer {
     }
 
     private void initConfig() {
-        JaxbServerContext jaxbServerContext = jaxbParser.parseCopiedResource(ResourcesTypes.REST_SERVER_XML, JaxbServerContext.class);
+        JaxbServerContext jaxbServerContext = jaxbParser.parseToDescriptorByType(ResourcesTypes.REST_SERVER_XML, JaxbServerContext.class);
         this.exceptionHandler = new HttpServerExceptionHandler(jaxbServerContext.getPrintExceptions());
 
         initConfigInstance(jaxbServerContext);

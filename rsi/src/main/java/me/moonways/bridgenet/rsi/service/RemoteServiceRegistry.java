@@ -48,7 +48,7 @@ public final class RemoteServiceRegistry {
     }
 
     public void initializeXmlConfiguration() {
-        xmlConfiguration = jaxbParser.parseCopiedResource(ResourcesTypes.RSI_CONFIG_XML,
+        xmlConfiguration = jaxbParser.parseToDescriptorByType(ResourcesTypes.RSI_CONFIG_XML,
                 XMLServicesConfigDescriptor.class);
 
         log.info("Parsed RMI XML-Configuration content: {}", xmlConfiguration);

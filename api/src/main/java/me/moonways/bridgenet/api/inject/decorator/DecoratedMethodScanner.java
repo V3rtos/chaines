@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.decorator.config.XMLMethodHandlerDescriptor;
 import me.moonways.bridgenet.api.inject.decorator.config.XMLInterceptorDescriptor;
 import me.moonways.bridgenet.api.inject.decorator.config.XMLInputDescriptor;
@@ -22,16 +24,16 @@ public final class DecoratedMethodScanner {
 
     private final Map<Class<?>, DecoratedMethodHandler> handlersByAnnotationsMap = new HashMap<>();
     private final Map<Class<?>, String> namesByAnnotationsMap = new HashMap<>();
+    private final Map<String, Set<String>> conflictsMap = new HashMap<>(), inheritsMap = new HashMap<>();
 
-    private final Map<String, Set<String>>
-        conflictsMap = new HashMap<>(),
-        inheritsMap = new HashMap<>();
+    @Inject
+    private XmlJaxbParser xmlJaxbParser;
 
     private XMLInterceptorDescriptor parseXmlInterceptor() {
-        final XmlJaxbParser parser = new XmlJaxbParser();
-        return parser.parseResource(ResourcesTypes.DECORATORS_XML, XMLInterceptorDescriptor.class);
+        return xmlJaxbParser.parseToDescriptorByType(ResourcesTypes.DECORATORS_XML, XMLInterceptorDescriptor.class);
     }
 
+    @PostConstruct
     public void bindHandlers() {
         XMLInterceptorDescriptor rootXML = parseXmlInterceptor();
 
