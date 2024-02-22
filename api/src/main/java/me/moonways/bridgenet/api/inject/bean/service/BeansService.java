@@ -58,7 +58,7 @@ public final class BeansService {
     private Properties properties;
 
     public BeansService() {
-        this.scanner = new BeansScanningService(interceptor);
+        this.scanner = new BeansScanningService();
         this.store = new BeansStore(scanner);
         this.injector = new BeansInjectionService(store, scanner);
         this.annotationsAwaits = new BeansAnnotationsAwaitService(this, store);

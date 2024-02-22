@@ -27,13 +27,12 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SuppressWarnings("rawtypes")
 @RequiredArgsConstructor
 public class BeansScanningService {
-
-    private final AnnotationInterceptor interceptor;
 
     /**
      * Создание базовой комплектации конфигурации сканнера
@@ -51,6 +50,35 @@ public class BeansScanningService {
         return new ConfigurationBuilder()
                 .setUrls(urls)
                 .setParallel(false);
+    }
+
+    /**
+     * Воспроизвести сканирование проекта для поиска
+     * и дальнейшей инициализации и применения объектов,
+     * которые наследуют указанный тип класса.
+     *
+     * @param superclass - класс наследник, по которому собираемся искать объекты.
+     */
+    public Set<Bean> scanBeansBySuperclass(Class<?> superclass) {
+        return scanTypesBySuperclass(superclass).stream().map(this::createBean)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Воспроизвести сканирование проекта для поиска
+     * и дальнейшей инициализации и применения объектов,
+     * которые наследуют указанный тип класса.
+     *
+     * @param superclass - класс наследник, по которому собираемся искать объекты.
+     */
+    public Set<Class<?>> scanTypesBySuperclass(Class<?> superclass) {
+        Configuration configuration = createScannerConfigurationBaseBuilder();
+        Reflections reflections = new Reflections(configuration);
+
+        @SuppressWarnings("unchecked")
+        Set<Class<?>> classes = (Set<Class<?>>) reflections.getSubTypesOf(superclass);
+
+        return classes;
     }
 
     /**
