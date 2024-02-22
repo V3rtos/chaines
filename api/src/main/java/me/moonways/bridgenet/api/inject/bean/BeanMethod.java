@@ -60,7 +60,10 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
 
         try {
             method.invoke(bean.getRoot(), args);
-            log.info("Invoked bean construct-function of §2" + method);
+
+            if (isBefore() || isAfter()) {
+                log.info("Invoked bean construct-function of §2" + method);
+            }
 
         } catch (IllegalAccessException | InvocationTargetException exception) {
             throw new BeanException(exception);
