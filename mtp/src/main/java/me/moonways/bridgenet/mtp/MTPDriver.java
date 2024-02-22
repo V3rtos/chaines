@@ -29,6 +29,8 @@ import java.util.List;
 @WaitTypeAnnotationProcessor({ClientMessage.class, ServerMessage.class})
 public class MTPDriver implements Serializable {
 
+    private static final long serialVersionUID = 2199366969666560453L;
+
     private MessageRegistry messageRegistry;
 
     @Inject
