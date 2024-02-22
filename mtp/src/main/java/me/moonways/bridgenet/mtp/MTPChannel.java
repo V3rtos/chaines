@@ -10,7 +10,8 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
-import me.moonways.bridgenet.mtp.pipeline.response.DefaultMessageResponseService;
+import me.moonways.bridgenet.mtp.message.MessageRegistry;
+import me.moonways.bridgenet.mtp.message.response.ResponsibleMessageService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,9 +34,10 @@ public class MTPChannel implements MTPMessageSender {
     private long lastResponseSessionId;
 
     @Inject
-    private MTPDriver driver;
+    private ResponsibleMessageService responseService;
+
     @Inject
-    private DefaultMessageResponseService responseService;
+    private MessageRegistry messageRegistry;
 
     @PostConstruct
     public void initAttributes() {
@@ -50,9 +52,9 @@ public class MTPChannel implements MTPMessageSender {
     @Synchronized
     @Override
     public void sendMessage(@NotNull Object message) {
-        ExportedMessage exported = driver.export(message);
+        ExportedMessage exported = messageRegistry.export(message);
 
-        log.info("§9[{}]: §r{}", String.format(getMessageSendLogPrefix(), handle.id()), message);
+        log.info("§9[{}]: §r{}", String.format(getMessageSendLogPrefix(), handle.remoteAddress()), message);
         handle.writeAndFlush(exported);
     }
 
@@ -77,6 +79,7 @@ public class MTPChannel implements MTPMessageSender {
     }
 
     @Synchronized
+    @Override
     public void close() {
         handle.closeFuture();
     }
@@ -89,19 +92,9 @@ public class MTPChannel implements MTPMessageSender {
     }
 
     @Override
-    public Optional<Object> getProperty(@NotNull String key) {
-        Attribute<Object> attribute = handle.attr(AttributeKey.valueOf(key));
+    public <T> Optional<T> getProperty(@NotNull String key) {
+        Attribute<T> attribute = handle.attr(AttributeKey.valueOf(key));
         return Optional.ofNullable(attribute.get());
-    }
-
-    @Override
-    public Optional<String> getPropertyString(@NotNull String key) {
-        return getProperty(key).map(Object::toString);
-    }
-
-    @Override
-    public Optional<Integer> getPropertyInt(@NotNull String key) {
-        return getPropertyString(key).map(Integer::parseInt);
     }
 
     @Override
@@ -111,6 +104,6 @@ public class MTPChannel implements MTPMessageSender {
     }
 
     public String getMessageSendLogPrefix() {
-        return direction == ProtocolDirection.TO_CLIENT ? "Client[ID=%s] -> Server" : "Server -> Client[ID=%s]";
+        return direction == ProtocolDirection.TO_CLIENT ? "Client[%s] -> Server" : "Server -> Client[%s]";
     }
 }

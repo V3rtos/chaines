@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.model.bus.message;
 
 import lombok.*;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @ClientMessage
 @ServerMessage
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(onConstructor_ = @Inject)
 public class Redirect {
 
     @ByteTransfer(provider = TransferUuidProvider.class)
@@ -27,7 +28,8 @@ public class Redirect {
     @Getter
     @ToString
     @ServerMessage
-    @RequiredArgsConstructor
+    @AllArgsConstructor
+    @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Failure implements Result {
 
         @ByteTransfer(provider = TransferUuidProvider.class)
@@ -40,7 +42,8 @@ public class Redirect {
     @Getter
     @ToString
     @ServerMessage
-    @RequiredArgsConstructor
+    @AllArgsConstructor
+    @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Success implements Result {
 
         @ByteTransfer(provider = TransferUuidProvider.class)

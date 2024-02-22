@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.mtp.transfer.provider;
 
+import io.netty.buffer.ByteBuf;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.MessageBytes;
 
@@ -16,31 +17,18 @@ public class TransferUuidProvider implements TransferProvider {
     }
 
     @Override
-    public Object fromByteArray(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
-        validateType(cls);
-
-        long mostSigBits = byteCodec.readLong(Arrays.copyOfRange(messageBytes.getArray(), 0, Long.BYTES));
-        messageBytes.moveTo(Long.BYTES);
-
-        long leastSigBits = byteCodec.readLong(Arrays.copyOfRange(messageBytes.getArray(), 0, Long.BYTES));
-        messageBytes.moveTo(Long.BYTES);
-
-        return new UUID(mostSigBits, leastSigBits);
+    public Object readObject(ByteBuf buf, Class<?> type) {
+        validateType(type);
+        return new UUID(buf.readLong(), buf.readLong());
     }
 
     @Override
-    public byte[] toByteArray(ByteCodec byteCodec, Object object) {
+    public void writeObject(ByteBuf buf, Object object) {
         validateType(object.getClass());
 
         UUID uuid = (UUID) object;
 
-        long mostSignificantBits = uuid.getMostSignificantBits();
-        long leastSignificantBits = uuid.getLeastSignificantBits();
-
-        ByteBuffer byteBuffer = ByteBuffer.allocate(Long.BYTES * 2);
-        byteCodec.write(mostSignificantBits, byteBuffer);
-        byteCodec.write(leastSignificantBits, byteBuffer);
-
-        return byteBuffer.array();
+        buf.writeLong(uuid.getMostSignificantBits());
+        buf.writeLong(uuid.getLeastSignificantBits());
     }
 }

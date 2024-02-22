@@ -4,19 +4,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.util.thread.Threads;
-import me.moonways.rest.api.HttpHost;
-import me.moonways.rest.api.exchange.entity.ExchangeableEntity;
-import me.moonways.rest.api.exchange.message.RestMessage;
-import me.moonways.rest.api.exchange.message.RestMessageBuilder;
-import me.moonways.rest.api.exchange.message.RestMessageType;
-import me.moonways.rest.api.exchange.response.RestResponse;
+import me.moonways.bridgenet.rest.api.HttpHost;
+import me.moonways.bridgenet.rest.api.exchange.entity.ExchangeableEntity;
+import me.moonways.bridgenet.rest.api.exchange.message.RestMessage;
+import me.moonways.bridgenet.rest.api.exchange.message.RestMessageBuilder;
+import me.moonways.bridgenet.rest.api.exchange.message.RestMessageType;
+import me.moonways.bridgenet.rest.api.exchange.response.RestResponse;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class WrappedHttpClient implements Closeable {

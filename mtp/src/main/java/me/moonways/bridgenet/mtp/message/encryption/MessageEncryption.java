@@ -1,8 +1,12 @@
 package me.moonways.bridgenet.mtp.message.encryption;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.mtp.config.CipherSecurity;
+import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 
 import javax.crypto.Cipher;
 import java.security.*;
@@ -69,8 +73,7 @@ public final class MessageEncryption {
             return keyFactory.generatePublic(encodedKeySpec);
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
-            log.error("§4Cannot be generate public-key: §c{}", exception.toString());
-            exception.printStackTrace();
+            log.error("§4Cannot be generate public-key", exception);
         }
 
         return null;
@@ -107,12 +110,12 @@ public final class MessageEncryption {
         }
     }
 
-    public byte[] decode(byte[] encoded) {
+    public ByteBuf decode(ByteBuf byteBuf) {
         try {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-            return cipher.doFinal(encoded);
+            return Unpooled.buffer().writeBytes(cipher.doFinal(ByteCodec.readBytesArray(byteBuf)));
         }
         catch (Exception exception) {
             log.error("§4Cannot be decode encrypted message: §c{}", exception.toString());
@@ -121,12 +124,12 @@ public final class MessageEncryption {
         return null;
     }
 
-    public byte[] encode(byte[] decoded) {
+    public ByteBuf encode(ByteBuf byteBuf) {
         try {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
-            return cipher.doFinal(decoded);
+            return Unpooled.buffer().writeBytes(cipher.doFinal(ByteCodec.readBytesArray(byteBuf)));
         }
         catch (Exception exception) {
             log.error("§4Cannot be encode message with encryption: §c{}", exception.toString());

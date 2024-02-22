@@ -1,13 +1,13 @@
 package me.moonways.bridgenet.rest.client.repository;
 
-import me.moonways.bridgenet.rest.client.repository.markers.mapping.DeleteMapping;
-import me.moonways.bridgenet.rest.client.repository.markers.mapping.PostMapping;
-import me.moonways.rest.api.StandardHeaders;
-import me.moonways.rest.api.exchange.response.RestResponse;
-import me.moonways.bridgenet.rest.client.repository.markers.RestClient;
-import me.moonways.bridgenet.rest.client.repository.markers.header.Header;
-import me.moonways.bridgenet.rest.client.repository.markers.header.RestHeaders;
-import me.moonways.bridgenet.rest.client.repository.markers.mapping.GetMapping;
+import me.moonways.bridgenet.rest.client.repository.persistence.mapping.DeleteMapping;
+import me.moonways.bridgenet.rest.client.repository.persistence.mapping.PostMapping;
+import me.moonways.bridgenet.rest.api.StandardHeaders;
+import me.moonways.bridgenet.rest.api.exchange.response.RestResponse;
+import me.moonways.bridgenet.rest.client.repository.persistence.RestClient;
+import me.moonways.bridgenet.rest.client.repository.persistence.header.Header;
+import me.moonways.bridgenet.rest.client.repository.persistence.header.RestHeaders;
+import me.moonways.bridgenet.rest.client.repository.persistence.mapping.GetMapping;
 
 @RestClient(host = "127.0.0.1:4590")
 public interface RestClientRepository {

@@ -1,7 +1,9 @@
 package me.moonways.bridgenet.mtp.transfer.provider;
 
+import io.netty.buffer.ByteBuf;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.MessageBytes;
+import me.moonways.bridgenet.mtp.transfer.MessageTransferException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,34 +15,30 @@ import java.util.Arrays;
 
 public class TransferSerializeProvider implements TransferProvider {
 
-    private void validateType(ByteCodec byteCodec, Class<?> cls) {
-        if (!Serializable.class.isAssignableFrom(byteCodec.getPrimitiveWrapper(cls))) {
+    private void validateType(Class<?> cls) {
+        if (!Serializable.class.isAssignableFrom(ByteCodec.getPrimitiveWrapper(cls))) {
             throw new IllegalArgumentException(cls + " not serializable");
         }
     }
 
     @Override
-    public Object fromByteArray(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
-        validateType(byteCodec, cls);
+    public Object readObject(ByteBuf buf, Class<?> type) {
+        validateType(type);
 
-        int bytesLength = byteCodec.readInt(Arrays.copyOfRange(messageBytes.getArray(), 0, Integer.BYTES));
-        messageBytes.moveTo(Integer.BYTES);
+        int length = buf.readInt();
+        byte[] bytes = ByteCodec.readBytesArray(length, buf);
 
-        try (ByteArrayInputStream stream = new ByteArrayInputStream(messageBytes.getArray(), 0, bytesLength);
+        try (ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
              ObjectInputStream objectInputStream = new ObjectInputStream(stream)) {
 
             return objectInputStream.readObject();
         } catch (ClassNotFoundException | IOException exception) {
-            throw new RuntimeException(exception);
-        } finally {
-            messageBytes.moveTo(bytesLength);
+            throw new MessageTransferException(exception);
         }
     }
 
     @Override
-    public byte[] toByteArray(ByteCodec byteCodec, Object object) {
-        validateType(byteCodec, object.getClass());
-
+    public void writeObject(ByteBuf buf, Object object) {
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(stream)) {
 
@@ -49,16 +47,11 @@ public class TransferSerializeProvider implements TransferProvider {
 
             byte[] serializedObjectArray = stream.toByteArray();
 
-            byte[] startSizeIndexAsBytesArray = byteCodec.toByteArray(serializedObjectArray.length);
-            byte[] resultArray = new byte[serializedObjectArray.length + startSizeIndexAsBytesArray.length];
-
-            System.arraycopy(startSizeIndexAsBytesArray, 0, resultArray, 0, startSizeIndexAsBytesArray.length);
-            System.arraycopy(serializedObjectArray, 0, resultArray, startSizeIndexAsBytesArray.length, serializedObjectArray.length);
-
-            return resultArray;
+            buf.writeInt(serializedObjectArray.length);
+            buf.writeBytes(serializedObjectArray);
 
         } catch (IOException exception) {
-            throw new RuntimeException(exception);
+            throw new MessageTransferException(exception);
         }
     }
 }

@@ -1,11 +1,13 @@
 package me.moonways.endpoint.players.offline;
 
-import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.api.inject.bean.Bean;
+import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.model.players.offline.OfflineDao;
 import me.moonways.bridgenet.model.players.offline.OfflineEntityPlayer;
 import me.moonways.bridgenet.model.players.offline.PlayerOfflineManager;
+import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import net.conveno.jdbc.ConvenoRouter;
 import net.conveno.jdbc.response.ConvenoResponse;
 import net.conveno.jdbc.response.ConvenoResponseLine;
@@ -25,15 +27,17 @@ public class PlayerOfflineManagerStub extends AbstractEndpointDefinition impleme
     private OfflinePlayerRepository offlinePlayerRepository;
     private OfflineMessageRepository offlineMessageRepository;
 
+    @Inject
+    private BeansStore beansStore;
+
     public PlayerOfflineManagerStub() throws RemoteException {
         super();
     }
 
     @PostConstruct
     public void injectRepositories() {
-        DependencyInjection injector = getInjector();
-
-        ConvenoRouter convenoRouter = (ConvenoRouter) injector.getContainer().findInstance(ConvenoRouter.class);
+        ConvenoRouter convenoRouter = (ConvenoRouter) beansStore.find(ConvenoRouter.class)
+                .map(Bean::getRoot).orElse(null);
 
         offlinePlayerRepository = convenoRouter.getRepository(OfflinePlayerRepository.class);
         offlinePlayerRepository.executeTableValid();

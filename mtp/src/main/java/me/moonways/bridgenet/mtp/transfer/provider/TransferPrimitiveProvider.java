@@ -1,16 +1,15 @@
 package me.moonways.bridgenet.mtp.transfer.provider;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-
+import io.netty.buffer.ByteBuf;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
-import me.moonways.bridgenet.mtp.transfer.MessageBytes;
+import me.moonways.bridgenet.mtp.transfer.MessageTransferException;
+
+import java.nio.charset.StandardCharsets;
 
 public class TransferPrimitiveProvider implements TransferProvider {
 
-    private void validateAsPrimitive(ByteCodec byteCodec, Class<?> cls) {
-        if (!byteCodec.isPrimitiveOrWrapper(cls)) {
+    private void validateAsPrimitive(Class<?> cls) {
+        if (!ByteCodec.isPrimitiveOrWrapper(cls)) {
             throw new IllegalArgumentException("type");
         }
     }
@@ -19,68 +18,82 @@ public class TransferPrimitiveProvider implements TransferProvider {
         return cls == Boolean.class || cls == Boolean.TYPE;
     }
 
-    @Override
-    public Object fromByteArray(ByteCodec byteCodec, Class<?> cls, MessageBytes messageBytes) {
-        byte[] array = messageBytes.getArray();
-
-        if (String.class.isAssignableFrom(cls)) {
-
-            int length = byteCodec.readInt(Arrays.copyOfRange(array, 0, Integer.BYTES));
-            messageBytes.moveTo(Integer.BYTES);
-
-            String value = new String(Arrays.copyOfRange(array, Integer.BYTES, Integer.BYTES + length));
-            messageBytes.moveTo(length);
-
-            return value;
-        }
-
-        validateAsPrimitive(byteCodec, cls);
-
-        if (isBoolean(cls)) {
-            messageBytes.moveTo(1);
-            return (array[0] == 1);
-        }
-
-        int bufferSize = byteCodec.toBufferSize(cls);
-        messageBytes.moveTo(bufferSize);
-
-        ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
-
-        byte[] src = Arrays.copyOfRange(array, 0, bufferSize);
-
-        byteBuffer.put(src, 0, src.length);
-        ((Buffer) byteBuffer).flip();
-
-        return byteCodec.read(cls, byteBuffer);
+    private boolean isAssignableFrom(Class<?> primitiveType, Class<?> target) {
+        Class<?> wrapper = ByteCodec.getPrimitiveWrapper(primitiveType);
+        return primitiveType.equals(target) || wrapper.isAssignableFrom(target) || target.isAssignableFrom(wrapper);
     }
 
     @Override
-    public byte[] toByteArray(ByteCodec byteCodec, Object object) {
-        final Class<?> cls = object.getClass();
-
-        if (String.class.isAssignableFrom(cls)) {
-            byte[] bytes = ((String) object).getBytes();
-
-            ByteBuffer byteBuffer = ByteBuffer.allocate(Integer.BYTES + bytes.length);
-
-            byteCodec.write(bytes.length, byteBuffer);
-            byteCodec.write(bytes, byteBuffer);
-
-            return byteBuffer.array();
+    public Object readObject(ByteBuf buf, Class<?> type) {
+        if (String.class.isAssignableFrom(type)) {
+            return ByteCodec.readString(buf);
         }
 
-        validateAsPrimitive(byteCodec, cls);
+        validateAsPrimitive(type);
+        if (isBoolean(type)) {
+            return buf.readBoolean();
+        }
+        if (isAssignableFrom(int.class, type)) {
+            return buf.readInt();
+        }
+        if (isAssignableFrom(long.class, type)) {
+            return buf.readLong();
+        }
+        if (isAssignableFrom(double.class, type)) {
+            return buf.readDouble();
+        }
+        if (isAssignableFrom(float.class, type)) {
+            return buf.readFloat();
+        }
+        if (isAssignableFrom(byte.class, type)) {
+            return buf.readByte();
+        }
+        if (isAssignableFrom(short.class, type)) {
+            return buf.readShort();
+        }
+        throw new MessageTransferException("not primitive");
+    }
 
-        if (isBoolean(cls)) {
-            return new byte[]{(byte) ((Boolean) object ? 1 : 0)};
+    @Override
+    public void writeObject(ByteBuf buf, Object object) {
+        Class<?> type = object.getClass();
+
+        if (String.class.isAssignableFrom(type)) {
+            ByteCodec.writeString(buf, object.toString());
+            return;
         }
 
-        ByteBuffer byteBuffer = ByteBuffer.allocate(byteCodec.toBufferSize(cls));
-        byteCodec.write(object, byteBuffer);
+        validateAsPrimitive(type);
 
-        byte[] array = byteBuffer.array();
+        if (isBoolean(type)) {
+            buf.writeBoolean((Boolean) object);
+            return;
+        }
+        else if (isAssignableFrom(int.class, type)) {
+            buf.writeInt((Integer) object);
+            return;
+        }
+        else if (isAssignableFrom(long.class, type)) {
+            buf.writeLong((Long) object);
+            return;
+        }
+        else if (isAssignableFrom(double.class, type)) {
+            buf.writeDouble((Double) object);
+            return;
+        }
+        else if (isAssignableFrom(float.class, type)) {
+            buf.writeFloat((Float) object);
+            return;
+        }
+        else if (isAssignableFrom(byte.class, type)) {
+            buf.writeByte((Byte) object);
+            return;
+        }
+        else if (isAssignableFrom(short.class, type)) {
+            buf.writeShort((Short) object);
+            return;
+        }
 
-        ((Buffer) byteBuffer).clear();
-        return array;
+        throw new MessageTransferException(type + " not primitive");
     }
 }

@@ -28,7 +28,7 @@ public final class CommandArguments implements Iterable<String> {
             return Optional.empty();
         }
 
-        return Optional.ofNullable(handle[position]);
+        return Optional.ofNullable(handle.length > position ? handle[position] : null);
     }
 
     public Optional<String> get(int position) {

@@ -1,25 +1,28 @@
 package me.moonways.bridgenet.mtp.transfer;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.lang.reflect.ParameterizedType;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
+import io.netty.buffer.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.factory.ObjectFactory;
-import me.moonways.bridgenet.api.inject.factory.UnsafeObjectFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.UnsafeFactory;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 
 @Log4j2
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MessageTransfer {
 
-    private static final ByteCodec BYTE_CODEC = new ByteCodec();
-    private static final ObjectFactory OBJECT_FACTORY = new UnsafeObjectFactory();
+    private static final BeanFactory OBJECT_FACTORY = new UnsafeFactory();
 
-    public static MessageTransfer decode(byte[] bytes) {
-        return new MessageTransfer(null, bytes);
+    public static MessageTransfer decode(ByteBuf byteBuf) {
+        return new MessageTransfer(null, byteBuf);
     }
 
     public static MessageTransfer encode(Object message) {
@@ -29,58 +32,19 @@ public final class MessageTransfer {
     private Object messagePacket;
 
     @Getter
-    private byte[] bytes;
+    private ByteBuf byteBuf;
 
     private void validatePacket() {
         if (messagePacket == null) {
             throw new IllegalArgumentException("packet");
         }
-    }
-
-    private void validateMessage(int minSize) {
-        if (bytes == null) {
-            throw new IllegalArgumentException("message");
+        if (byteBuf == null) {
+            byteBuf = Unpooled.buffer();
         }
-
-        if (bytes.length < minSize) {
-            throw new IllegalArgumentException("message size must be >= " + minSize);
-        }
-    }
-
-    private void ensureBuffers() {
-        if (bytes == null)
-            bytes = new byte[0];
-
-        int collectedSize = collectSize();
-        bytes = Arrays.copyOfRange(bytes, 0, collectedSize);
-    }
-
-    private int collectSize() {
-        validatePacket();
-        return reflectiveSizeCollect();
-    }
-
-    private int reflectiveSizeCollect() {
-        final Class<?> packetType = messagePacket.getClass();
-        int size = 0;
-
-        Field[] declaredFieldsArray = packetType.getDeclaredFields();
-
-        for (Field field : declaredFieldsArray) {
-            if (!field.isAnnotationPresent(ByteTransfer.class))
-                continue;
-
-            Class<?> type = field.getType();
-            size += BYTE_CODEC.toBufferSize(type);
-        }
-
-        return size;
     }
 
     public void buf() {
         validatePacket();
-
-        ensureBuffers();
         reflectiveBuf();
     }
 
@@ -94,7 +58,7 @@ public final class MessageTransfer {
 
         Class<? extends TransferProvider> provider = declaredAnnotation.provider();
         if (provider == null)
-            throw new MessageTransferException("Provider for " + field + " is not initialized");
+            log.error(new MessageTransferException("Provider for " + field + " is not initialized"));
 
         return provider;
     }
@@ -103,34 +67,30 @@ public final class MessageTransfer {
         Class<?> packetType = messagePacket.getClass();
         Field[] declaredFieldsArray = packetType.getDeclaredFields();
 
-        int lastIndex = 0;
-
         for (Field field : declaredFieldsArray) {
             Class<? extends TransferProvider> provider = getFieldProvider(field);
 
             TransferProvider transferProvider = OBJECT_FACTORY.create(provider);
 
-            byte[] bytesArray;
             try {
                 field.setAccessible(true);
-                bytesArray = transferProvider.toByteArray(BYTE_CODEC, field.get(messagePacket));
+
+                Object value = field.get(messagePacket);
+                if (Iterable.class.isAssignableFrom(field.getType())) {
+                    bufIterableField((Iterable) value, transferProvider, byteBuf);
+                } else {
+                    bufField(value, transferProvider, byteBuf);
+                }
             }
             catch (IllegalAccessException exception) {
-                throw new MessageTransferException(exception);
+                log.error(new MessageTransferException(exception));
+                return;
             }
-
-            System.arraycopy(bytesArray, 0, bytes, lastIndex, bytesArray.length);
-            lastIndex += bytesArray.length;
         }
-
-        if (lastIndex < bytes.length)
-            bytes = Arrays.copyOfRange(bytes, 0, lastIndex);
     }
 
     public void unbuf(Object message) {
-        validateMessage(1);
         this.messagePacket = message;
-
         reflectiveUnbuf();
     }
 
@@ -138,21 +98,60 @@ public final class MessageTransfer {
         Class<?> packetType = messagePacket.getClass();
         Field[] declaredFieldsArray = packetType.getDeclaredFields();
 
-        MessageBytes messageBytes = MessageBytes.create(bytes);
-
         for (Field field : declaredFieldsArray) {
             Class<? extends TransferProvider> provider = getFieldProvider(field);
 
             TransferProvider transferProvider = OBJECT_FACTORY.create(provider);
-            Object providedObject = transferProvider.fromByteArray(BYTE_CODEC, field.getType(), messageBytes);
 
-            try {
-                field.setAccessible(true);
-                field.set(messagePacket, providedObject);
-            }
-            catch (IllegalAccessException exception) {
-                throw new MessageTransferException(exception);
+            if (List.class.isAssignableFrom(field.getType())) {
+                unbufIterableField(new ArrayList(), field, transferProvider, byteBuf);
+            } else if (Set.class.isAssignableFrom(field.getType())) {
+                unbufIterableField(new HashSet(), field, transferProvider, byteBuf);
+            } else {
+                unbufField(field, transferProvider, byteBuf);
             }
         }
+    }
+
+    private void unbufIterableField(Collection collection, Field field, TransferProvider provider, ByteBuf byteBuf) {
+        try {
+            Class<?> genericType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+            int size = byteBuf.readInt();
+
+            for (int i = 0; i < size; i++) {
+                collection.add(provider.readObject(byteBuf, genericType));
+            }
+
+            field.setAccessible(true);
+            field.set(messagePacket, collection);
+        }
+        catch (Exception exception) {
+            log.error(new MessageTransferException(exception));
+        }
+    }
+
+    private void unbufField(Field field, TransferProvider provider, ByteBuf byteBuf) {
+        Object providedObject = provider.readObject(byteBuf, field.getType());
+
+        try {
+            field.setAccessible(true);
+            field.set(messagePacket, providedObject);
+        }
+        catch (IllegalAccessException exception) {
+            log.error(new MessageTransferException(exception));
+        }
+    }
+
+    private void bufIterableField(Iterable iterable, TransferProvider provider, ByteBuf byteBuf) {
+        int size = (int) iterable.spliterator().estimateSize();
+        byteBuf.writeInt(size);
+
+        for (Object object : iterable) {
+            provider.writeObject(byteBuf, object);
+        }
+    }
+
+    private void bufField(Object fieldValue, TransferProvider provider, ByteBuf byteBuf) {
+        provider.writeObject(byteBuf, fieldValue);
     }
 }

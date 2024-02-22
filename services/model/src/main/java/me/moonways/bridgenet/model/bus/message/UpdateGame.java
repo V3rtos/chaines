@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.games.GameStatus;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Getter
 @ToString
 @ServerMessage
-@NoArgsConstructor
+@NoArgsConstructor(onConstructor_ = @Inject)
 @AllArgsConstructor
 public class UpdateGame {
 

@@ -2,11 +2,12 @@ package me.moonways.bridgenet.endpoint.servers.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.endpoint.servers.ConnectedServerStub;
 import me.moonways.bridgenet.endpoint.servers.ServersContainer;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
+import me.moonways.bridgenet.model.bus.message.Disconnect;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.model.bus.message.Redirect;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
@@ -15,7 +16,8 @@ import me.moonways.bridgenet.model.servers.ServerFlag;
 import me.moonways.bridgenet.model.servers.ServerInfo;
 import me.moonways.bridgenet.model.servers.ServersServiceModel;
 import me.moonways.bridgenet.mtp.message.InputMessageContext;
-import me.moonways.bridgenet.mtp.message.persistence.MessageTrigger;
+import me.moonways.bridgenet.mtp.message.persistence.IncomingMessageListener;
+import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -25,13 +27,13 @@ import java.util.UUID;
 
 @Log4j2
 @RequiredArgsConstructor
+@IncomingMessageListener
 public class ServersInputMessagesListener {
 
     private final ServersContainer container;
-    private final ServersServiceModel serversServiceModel;
 
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
 
     @Inject
     private PlayersOnServersConnectionService playersOnServersConnectionService;
@@ -39,8 +41,8 @@ public class ServersInputMessagesListener {
     @Inject
     private PlayersServiceModel playersServiceModel;
 
-    @MessageTrigger
-    public void handle(InputMessageContext<Handshake> input) {
+    @SubscribeMessage
+    public void handleHandshake(InputMessageContext<Handshake> input) {
         Handshake handshake = input.getMessage();
 
         if (handshake.getType() == Handshake.Type.SERVER) {
@@ -50,8 +52,10 @@ public class ServersInputMessagesListener {
         }
     }
 
-    @MessageTrigger
-    public void handle(Redirect redirect) {
+    @SubscribeMessage
+    public void handleRedirection(InputMessageContext<Redirect> input) {
+        Redirect redirect = input.getMessage();
+
         UUID playerUUID = redirect.getPlayerUUID();
         UUID serverKey = redirect.getServerKey();
 
@@ -62,11 +66,22 @@ public class ServersInputMessagesListener {
             return;
         }
 
-        redirectPlayer(server, playerUUID);
+        UUID currentServerKey = playersOnServersConnectionService.getPlayerCurrentServerKey(playerUUID)
+                .orElse(null);
+
+        if (!serverKey.equals(currentServerKey)) {
+            playersOnServersConnectionService.insert(playerUUID, serverKey);
+            input.answer(new Redirect.Success(playerUUID, serverKey));
+        } else {
+            input.answer(new Redirect.Failure(playerUUID, serverKey));
+        }
     }
 
-    private void redirectPlayer(ConnectedServerStub serverTo, UUID playerUUID) {
-        playersOnServersConnectionService.insert(playerUUID, serverTo.getUniqueId());
+    @SubscribeMessage
+    public void handle(Disconnect disconnect) {
+        if (disconnect.getType() == Disconnect.Type.SERVER) {
+            container.unregisterServer(disconnect.getUuid());
+        }
     }
 
     private void registerServer(InputMessageContext<Handshake> input, ServerInfo serverInfo) {
