@@ -1,10 +1,9 @@
 package me.moonways.bridgenet.api.modern_command.test;
 
 import me.moonways.bridgenet.api.modern_command.*;
-import me.moonways.bridgenet.api.modern_command.entity.ConsoleCommandSender;
-import me.moonways.bridgenet.api.modern_command.entity.EntityCommandSender;
-import me.moonways.bridgenet.api.modern_command.entity.EntityType;
-import me.moonways.bridgenet.api.modern_command.session.CommandSession;
+import me.moonways.bridgenet.api.modern_command.depend.*;
+import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.entity.EntitySenderType;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,13 +13,13 @@ public class TestCommand {
     @Parent
     @Aliases("test")
     @Permission("test.use")
-    @Entity(EntityType.CONSOLE)
+    @Entity(EntitySenderType.CONSOLE)
     @Cooldown(time = 1, unit = TimeUnit.MINUTES)
-    public void parent(CommandSession session) {
+    public void parent(ExecutionContext<EntityCommandSender> context) {
     }
 
     @Help
-    public void help(CommandSession session) {
+    public void help(ExecutionContext<EntityCommandSender> context) {
     }
 
     @Permission("primary")
@@ -29,12 +28,10 @@ public class TestCommand {
     @Usage("<string> <boolean>")
     @Pattern(position = 0, value = "^(?=.+[a-z])", exception = "Команда должна содержать символы")
     @Cooldown(time = 1, unit = TimeUnit.MINUTES)
-    @Entity(EntityType.USER)
-    public void primary_subcommand(CommandSession session) {
-        EntityCommandSender console = session.from(ConsoleCommandSender.class);
-        console.sendMessage("привет я гитдрочилдрен");
-
-        session.block(1, TimeUnit.MINUTES);
+    @Entity(EntitySenderType.USER)
+    public void primary_subcommand(ExecutionContext<EntityCommandSender> context) {
+        EntityCommandSender console = context.getEntity();
+        console.sendMessage("test command");
     }
 
     @Permission("secondary")
@@ -42,6 +39,6 @@ public class TestCommand {
     @Description("строка / строка / число   ")
     @Usage("<string> <string> <integer>")
     @Cooldown(time = 1, unit = TimeUnit.MINUTES)
-    public void secondary_subcommand(CommandSession session) {
+    public void secondary_subcommand(ExecutionContext<EntityCommandSender> context) {
     }
 }

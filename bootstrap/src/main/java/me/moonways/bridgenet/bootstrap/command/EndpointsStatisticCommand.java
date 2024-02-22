@@ -3,7 +3,7 @@ package me.moonways.bridgenet.bootstrap.command;
 import me.moonways.bridgenet.api.command.CommandSession;
 import me.moonways.bridgenet.api.command.annotation.*;
 import me.moonways.bridgenet.api.command.option.CommandParameterOnlyConsoleUse;
-import me.moonways.bridgenet.api.modern_command.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
 import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;

@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.command.annotation.Command;
 import me.moonways.bridgenet.api.command.annotation.CommandParameter;
 import me.moonways.bridgenet.api.command.annotation.MentorExecutor;
 import me.moonways.bridgenet.api.command.option.CommandParameterOnlyConsoleUse;
-import me.moonways.bridgenet.api.modern_command.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;

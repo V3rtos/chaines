@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.api.modern_command;
 
-import me.moonways.bridgenet.api.modern_command.entity.EntityType;
+import me.moonways.bridgenet.api.modern_x2_command.entity.EntitySenderType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Entity {
 
-    EntityType value();
+    EntitySenderType value();
 }
