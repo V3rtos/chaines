@@ -48,7 +48,7 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
      * Вызвать исполнение функции
      * инициализации бина.
      */
-    public void invoke() {
+    public void invoke(Object... args) {
         if (hasConflicts()) {
             throw new BeanException("Init function " + this + " has conflicts");
         }
@@ -59,7 +59,7 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
         method.setAccessible(true);
 
         try {
-            method.invoke(bean.getRoot());
+            method.invoke(bean.getRoot(), args);
             log.info("Invoked bean construct-function of §2" + method);
 
         } catch (IllegalAccessException | InvocationTargetException exception) {
