@@ -1,52 +1,55 @@
 package me.moonways.bridgenet.assembly;
 
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.assembly.util.StreamToStringUtil;
+import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.function.Function;
 
 @Log4j2
 public class ResourcesAssembly {
 
-    private static final String REQUIRED_RESOURCES_DIR = "required/";
-
-    private static final String LOCAL_RESOURCES_DIR = "local/";
-
+    @Getter
     private final ResourcesClassLoader classLoader = new ResourcesClassLoader(ResourcesAssembly.class.getClassLoader());
+    @Getter
     private final ResourcesFileSystem fileSystem = new ResourcesFileSystem(this);
 
     public InputStream readResourceStream(String resourceName) {
-        return readResourceTotals(resourceName, classLoader::readResourceStream);
-    }
-
-    public URL readResourceURL(String resourceName) {
-        return readResourceTotals(resourceName, classLoader::readResourceURL);
+        InputStream inputStream = classLoader.readResourceStream(resourceName);
+        if (inputStream != null) {
+            return inputStream;
+        }
+        try {
+            File resourceFile = fileSystem.findAsFile(resourceName);
+            return new FileInputStream(resourceFile);
+        }
+        catch (FileNotFoundException exception) {
+            return null;
+        }
     }
 
     public String readResourcePath(String resourceName) {
-        return readResourceURL(resourceName).toString();
+        URL url = classLoader.readResourceURL(resourceName);
+        if (url != null) {
+            return url.toString();
+        }
+
+        File resourceFile = fileSystem.findAsFile(resourceName);
+        return resourceFile.toURI().toString();
     }
 
     public String readResourceFullContent(String resourceName, Charset charset) {
-        return StreamToStringUtil.toStringFull(readResourceStream(resourceName), charset);
+        return StreamToStringUtils.toStringFull(readResourceStream(resourceName), charset);
     }
 
     public String readResourceFullContent(String resourceName) {
-        return StreamToStringUtil.toStringFull(readResourceStream(resourceName));
+        return StreamToStringUtils.toStringFull(readResourceStream(resourceName));
     }
 
-    private <T> T readResourceTotals(String resourceName, Function<String, T> read) {
-        T result = read.apply(resourceName);
-        if (result == null) {
-            result = read.apply(REQUIRED_RESOURCES_DIR + resourceName);
-            if (result == null) {
-                result = read.apply(LOCAL_RESOURCES_DIR + resourceName);
-            }
-        }
-        return result;
+    @SuppressWarnings("resource")
+    private boolean hasInClassLoader(String resourceName) {
+        return classLoader.readResourceStream(resourceName) != null;
     }
 }

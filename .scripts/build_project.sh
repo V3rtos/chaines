@@ -1,16 +1,11 @@
 #!/bin/bash
 mvn clean install -N
+
+rm -rf "$BUILD_DIR"
 mkdir "$BUILD_DIR"
 
-function cleanup() {
-  # shellcheck disable=SC2115
-  rm -f "*.xml"
-  rm -f "*.json"
-  rm -f "*.jar"
-}
-
 function assembly_resources() {
-  cp -R assembly/src/main/resources/required/. "$BUILD_DIR"
+  cp -R assembly/etc/. "$BUILD_DIR/etc"
   cp -R bootstrap/target/bridgenet-server.jar "$BUILD_DIR"
 }
 
@@ -19,7 +14,6 @@ function install() {
   except_code
 }
 
-cleanup
 # shellcheck disable=SC2054
 declare -a modules_array=("assembly" "api" "rsi" "mtp" "rest" "services" "bootstrap" "connector" "test-engine")
 

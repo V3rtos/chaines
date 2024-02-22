@@ -27,9 +27,8 @@ public abstract class ApplicationBootstrapHook {
     private void executeUnchecked(AppBootstrap bootstrap, String namespace) {
         try {
             process(bootstrap);
-        }
-        catch (Exception exception) {
-            log.error("§4Bootstrap hook '{}' execution aborted:", namespace, exception);
+        } catch (Exception exception) {
+            log.error("§4Aborted bootstrap hook execution '{}' caused by {}", namespace, exception.toString(), exception);
         }
     }
 }

@@ -35,10 +35,8 @@ public class EndpointRunner {
     public void start(Endpoint endpoint) {
         String name = endpoint.getServiceInfo().getName();
 
-        boolean integrationStatus = validate(endpoint);
-
-        if (!integrationStatus) {
-            log.warn("§4Endpoint '{}' integration aborted: §cfailed", name);
+        if (!validate(endpoint)) {
+            log.warn("§4Endpoint '{}' integration aborted: §cFailed", name);
             return;
         }
 

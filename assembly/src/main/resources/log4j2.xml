@@ -1,45 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Configuration status="INFO" packages="net.minecrell.terminalconsole">
+<Configuration status="WARN" packages="net.minecrell.terminalconsole">
     <Properties>
         <Property name="logfile_pattern">%d{HH:mm:ss.SSS} [%c{0} %level] %msg%n</Property>
-        <Property name="terminal_pattern">§f%d{HH:mm:ss.SSS} §a[%c{1} %level] §r%msg}%n</Property>
+        <Property name="terminal_info_pattern">§f%d{HH:mm:ss.SSS} §a[%c{1} %level] §r%msg%n</Property>
+        <Property name="terminal_error_pattern">§f%d{HH:mm:ss.SSS} §c[%c{1} %level] §4%msg%n</Property>
     </Properties>
     <Appenders>
-        <Console name="SystemOut" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{DEFAULT} %-5p level %c{1.1.~.~} - %msg %throwable{10}%n"/>
-        </Console>
-        <RollingFile name="InfoLog" fileName="logs/latest.log" filePattern="logs/info-%d{dd-MM-yyyy}-%i.log">
+        <RollingFile name="latest_logs" fileName="logs/latest.log" filePattern="logs/info-%d{dd-MM-yyyy}-%i.log">
             <PatternLayout pattern="${logfile_pattern}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="250 MB"/>
             </Policies>
         </RollingFile>
-        <RollingFile name="ErrorLog" fileName="logs/error.log" filePattern="logs/error-%d{dd-MM-yyyy}-%i.log">
+        <RollingFile name="error_logs" fileName="logs/error.log" filePattern="logs/error-%d{dd-MM-yyyy}-%i.log">
             <PatternLayout pattern="${logfile_pattern}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="250 MB"/>
             </Policies>
         </RollingFile>
-        <RollingFile name="DebugLog" fileName="logs/debug.log" filePattern="logs/debug-%d{dd-MM-yyyy}-%i.log">
-            <PatternLayout pattern="${logfile_pattern}"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="250 MB"/>
-            </Policies>
-        </RollingFile>
-        <TerminalConsole name="TerminalConsole">
-            <PatternLayout pattern="%minecraftFormatting{${terminal_pattern}"/>
+        <TerminalConsole name="terminal_console_info">
+            <PatternLayout pattern="%minecraftFormatting{${terminal_info_pattern}}"/>
+        </TerminalConsole>
+        <TerminalConsole name="terminal_console_error">
+            <PatternLayout pattern="%minecraftFormatting{${terminal_error_pattern}}"/>
         </TerminalConsole>
     </Appenders>
     <Loggers>
-        <Root level="trace">
-            <AppenderRef ref="SystemOut"/>
-            <AppenderRef ref="ErrorLog" level="error"/>
-            <AppenderRef ref="InfoLog" level="info"/>
-            <AppenderRef ref="DebugLog" level="debug"/>
-            <AppenderRef ref="TerminalConsole" level="info"/>
+        <Root level="trace" additivity="false">
+            <AppenderRef ref="error_logs" level="error"/>
+            <AppenderRef ref="latest_logs"/>
+            <!--AppenderRef ref="terminal_console_error" level="error"/-->
+            <AppenderRef ref="terminal_console_info"/>
         </Root>
     </Loggers>
 </Configuration>

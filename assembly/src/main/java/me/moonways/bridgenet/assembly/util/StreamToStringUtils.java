@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 import java.util.Scanner;
 
 @UtilityClass
-public class StreamToStringUtil {
+public class StreamToStringUtils {
 
     private static final Charset STANDARD_CHARSET = Charset.defaultCharset();
 

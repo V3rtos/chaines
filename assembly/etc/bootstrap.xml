@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<bootstrap>
+    <hooks>
+        <hook>
+            <displayName>ConvenoJDBC</displayName>
+            <priorityID>1</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.ConvenoCreateDatabaseConnectionHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>GoogleJsonLib</displayName>
+            <priorityID>2</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.BindGsonLibraryHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>REST</displayName>
+            <priorityID>3</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.StartRestServerHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>AutoRunners</displayName>
+            <priorityID>4</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.autorun.StartScheduledRunnersServiceHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>Endpoints</displayName>
+            <priorityID>5</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.RunRMIEndpointsHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>ConsoleStart</displayName>
+            <priority>POST_RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.console.ApacheConsoleStartHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>Goodbye</displayName>
+            <priority>SHUTDOWN</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.GoodbyeOnShutdownHook</executorPath>
+        </hook>
+    </hooks>
+</bootstrap>

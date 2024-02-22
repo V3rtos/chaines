@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
 import me.moonways.bridgenet.rsi.endpoint.EndpointController;
@@ -17,6 +18,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.rmi.RMISecurityManager;
 import java.util.*;
 import java.util.function.Function;
 
@@ -39,12 +41,23 @@ public final class RemoteServiceRegistry {
     private BeansService beansService;
     @Inject
     private XmlJaxbParser jaxbParser;
+    @Inject
+    private ResourcesAssembly assembly;
 
     private final EndpointController endpointController = new EndpointController();
 
     @PostConstruct
     void init() {
+        injectSecurityPolicy();
         beansService.inject(endpointController);
+    }
+
+    @SuppressWarnings("deprecation")
+    private void injectSecurityPolicy() {
+        String policyFilepath = assembly.readResourcePath(ResourcesTypes.RMI_POLICY);
+
+        System.setProperty("java.security.policy", policyFilepath);
+        System.setSecurityManager(new RMISecurityManager());
     }
 
     public void initializeXmlConfiguration() {

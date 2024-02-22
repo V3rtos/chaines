@@ -4,6 +4,8 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 
+import java.io.File;
+
 @Log4j2
 public final class TestBridgenetBootstrap {
 

@@ -13,6 +13,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 

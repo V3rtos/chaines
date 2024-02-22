@@ -30,25 +30,13 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
 
     @Inject
     private BeansService beansService;
-    @Inject
-    private ResourcesAssembly resourcesAssembly;
 
     public AccessRemoteModule() {
         super(ModuleID.of(ModuleConst.REMOTE_ACCESS_ID, "accessModule"));
     }
 
-    @SuppressWarnings("deprecation")
-    private void injectSecurityPolicy() {
-        String policyFilepath = resourcesAssembly.readResourcePath(ResourcesTypes.RMI_POLICY);
-
-        System.setProperty("java.security.policy", policyFilepath);
-        System.setSecurityManager(new RMISecurityManager());
-    }
-
     @Override
     public void init(ServiceInfo serviceInfo, AccessConfig config) {
-        injectSecurityPolicy();
-
         String host = config.getRemoteHost();
         int port = serviceInfo.getPort();
 
