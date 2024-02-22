@@ -27,8 +27,6 @@ public abstract class BridgenetConnector {
     @Inject
     private BeansScanningService beansScanner;
     @Inject
-    private RemoteServiceRegistry remoteServiceRegistry;
-    @Inject
     private MTPDriver mtpDriver;
 
     @Getter
@@ -161,7 +159,6 @@ public abstract class BridgenetConnector {
         clientConnectionFactory = null;
         beansStore = null;
         beansScanner = null;
-        remoteServiceRegistry = null;
         mtpDriver = null;
     }
 }

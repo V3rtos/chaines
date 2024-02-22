@@ -5,6 +5,7 @@ import lombok.ToString;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProvider;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -191,6 +192,44 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
     public List<BeanComponent> getAllComponents() {
         Class<?> root = beanRef.get().getRoot().getClass();
         return Stream.of(getDeclaredFields(root)).map(this::toComponent)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Получить список всех функций внутри бина.
+     */
+    public List<BeanMethod> getAllFunctions() {
+        Class<?> root = beanRef.get().getRoot().getClass();
+        return Stream.of(root.getMethods()).map(this::toBeanMethod).collect(Collectors.toList());
+    }
+
+    /**
+     * Получить список всех функций внутри бина.
+     */
+    public List<BeanMethod> getAllDeclaredFunctions() {
+        Class<?> root = beanRef.get().getRoot().getClass();
+        return Stream.of(getDeclaredMethods(root)).map(this::toBeanMethod).collect(Collectors.toList());
+    }
+
+    /**
+     * Получить список всех функций внутри бина
+     * и профильтровать по указанной аннотации.
+     *
+     * @param filterAnnotation - аннотация, по которой фильтруем функции.
+     */
+    public List<BeanMethod> getAllFunctionsByAnnotation(Class<? extends Annotation> filterAnnotation) {
+        return getAllFunctions().stream().filter(beanMethod -> beanMethod.isAnnotated(filterAnnotation))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Получить список всех функций внутри бина
+     * и профильтровать по указанной аннотации.
+     *
+     * @param filterAnnotation - аннотация, по которой фильтруем функции.
+     */
+    public List<BeanMethod> getAllDeclaredFunctionsByAnnotation(Class<? extends Annotation> filterAnnotation) {
+        return getAllDeclaredFunctions().stream().filter(beanMethod -> beanMethod.isAnnotated(filterAnnotation))
                 .collect(Collectors.toList());
     }
 
