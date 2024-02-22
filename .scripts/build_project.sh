@@ -1,31 +1,17 @@
 #!/bin/bash
-application_jarfile="bridgenet-server.jar"
-bootstrap_file="bootstrap.xml";
-rsiconfig_file="rsiconfig.xml";
-
 mvn clean install -N
 mkdir "$BUILD_DIR"
 
 function cleanup() {
   # shellcheck disable=SC2115
-  rm -f "$BUILD_DIR/$application_jarfile"
-  # shellcheck disable=SC2115
-  rm -f "$BUILD_DIR/$bootstrap_file"
-  # shellcheck disable=SC2115
-  rm -f "$BUILD_DIR/$rsiconfig_file"
+  rm -f "*.xml"
+  rm -f "*.json"
+  rm -f "*.jar"
 }
 
-function application() {
-  local -a files_to_copy=(
-    bootstrap/target/$application_jarfile
-    bootstrap/src/main/resources/$bootstrap_file
-    rsi/src/main/resources/$rsiconfig_file
-  )
-
-  for file in "${files_to_copy[@]}"
-  do
-    cp -R "$file" "$BUILD_DIR"
-  done
+function assembly_resources() {
+  cp -R assembly/src/main/resources/required/. "$BUILD_DIR"
+  cp -R bootstrap/target/bridgenet-server.jar "$BUILD_DIR"
 }
 
 function install() {
@@ -35,7 +21,7 @@ function install() {
 
 cleanup
 # shellcheck disable=SC2054
-declare -a modules_array=("api" "rsi" "mtp" "rest" "services" "bootstrap" "connector" "test-engine")
+declare -a modules_array=("assembly" "api" "rsi" "mtp" "rest" "services" "bootstrap" "connector" "test-engine")
 
 # shellcheck disable=SC2128
 for module in "${modules_array[@]}"
@@ -43,5 +29,5 @@ do
   install "$module"
 done
 
-application
+assembly_resources
 except_code

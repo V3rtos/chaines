@@ -4,6 +4,8 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.rsi.module.AbstractRemoteModule;
 import me.moonways.bridgenet.rsi.module.ModuleConst;
 import me.moonways.bridgenet.rsi.module.ModuleID;
@@ -28,6 +30,8 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
 
     @Inject
     private BeansService beansService;
+    @Inject
+    private ResourcesAssembly resourcesAssembly;
 
     public AccessRemoteModule() {
         super(ModuleID.of(ModuleConst.REMOTE_ACCESS_ID, "accessModule"));
@@ -35,7 +39,7 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
 
     @SuppressWarnings("deprecation")
     private void injectSecurityPolicy() {
-        String policyFilepath = getClass().getResource("/rmi.policy").toString();
+        String policyFilepath = resourcesAssembly.readResourcePath(ResourcesTypes.RMI_POLICY);
 
         System.setProperty("java.security.policy", policyFilepath);
         System.setSecurityManager(new RMISecurityManager());

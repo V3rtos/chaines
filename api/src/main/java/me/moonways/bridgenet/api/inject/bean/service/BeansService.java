@@ -13,6 +13,7 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationContext;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationResult;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -76,6 +77,7 @@ public final class BeansService {
         bind(injector);
         bind(annotationsAwaits);
         bind(interceptor);
+        bind(new ResourcesAssembly());
     }
 
     /**

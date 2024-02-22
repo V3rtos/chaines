@@ -12,6 +12,7 @@ import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
 import me.moonways.bridgenet.api.inject.decorator.persistence.Async;
 import me.moonways.bridgenet.api.inject.decorator.persistence.KeepTime;
 import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.rest.api.HttpHost;
 import me.moonways.bridgenet.rest.server.controller.HttpContextPattern;
 import me.moonways.bridgenet.rest.server.controller.HttpController;
@@ -45,8 +46,6 @@ import java.util.stream.Collectors;
 public class WrappedHttpServer {
 
     private static final int BUFFER_SIZE = (5 * 1024);
-
-    private static final String CONFIG_FILENAME = "restserver.xml";
     private static final BeanFactory UNSAFE_FACTORY = new UnsafeFactory();
 
     private HttpServerConfig config;
@@ -88,11 +87,8 @@ public class WrappedHttpServer {
     }
 
     private void initConfig() {
-        JaxbServerContext jaxbServerContext = jaxbParser.parseCopiedResource(getClass().getClassLoader(),
-                CONFIG_FILENAME, JaxbServerContext.class);
-
-        this.exceptionHandler =
-                new HttpServerExceptionHandler(jaxbServerContext.getPrintExceptions());
+        JaxbServerContext jaxbServerContext = jaxbParser.parseCopiedResource(ResourcesTypes.REST_SERVER_XML, JaxbServerContext.class);
+        this.exceptionHandler = new HttpServerExceptionHandler(jaxbServerContext.getPrintExceptions());
 
         initConfigInstance(jaxbServerContext);
         initConfigHttpControllers(jaxbServerContext);

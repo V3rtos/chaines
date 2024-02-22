@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
 import me.moonways.bridgenet.rsi.endpoint.EndpointController;
 import me.moonways.bridgenet.rsi.module.*;
@@ -47,7 +48,8 @@ public final class RemoteServiceRegistry {
     }
 
     public void initializeXmlConfiguration() {
-        xmlConfiguration = jaxbParser.parseCopiedResource(getClass().getClassLoader(), "rsiconfig.xml", XMLServicesConfigDescriptor.class);
+        xmlConfiguration = jaxbParser.parseCopiedResource(ResourcesTypes.RSI_CONFIG_XML,
+                XMLServicesConfigDescriptor.class);
 
         log.info("Parsed RMI XML-Configuration content: {}", xmlConfiguration);
 

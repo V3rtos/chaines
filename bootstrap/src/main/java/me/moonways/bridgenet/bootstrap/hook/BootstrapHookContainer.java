@@ -2,11 +2,12 @@ package me.moonways.bridgenet.bootstrap.hook;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.bootstrap.xml.XMLBootstrapConfigDescriptor;
 import me.moonways.bridgenet.bootstrap.xml.XMLHookDescriptor;
-import me.moonways.bridgenet.api.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -14,8 +15,6 @@ import java.util.stream.Collectors;
 
 @Log4j2
 public final class BootstrapHookContainer {
-
-    private static final String BOOTSTRAP_XML_CONFIGURATION_NAME = "bootstrap.xml";
 
     private final Map<Class<? extends ApplicationBootstrapHook>, ApplicationBootstrapHook> instancesByHooksTypesMap = new HashMap<>();
     private final Map<Class<?>, BootstrapHookPriority> prioririesByHooksTypesMap = new HashMap<>();
@@ -29,10 +28,7 @@ public final class BootstrapHookContainer {
 
     @SneakyThrows
     private XMLBootstrapConfigDescriptor parseConfiguration() {
-        if (jaxbParser == null) {
-            jaxbParser = new XmlJaxbParser();
-        }
-        return jaxbParser.parseCopiedResource(getClass().getClassLoader(), BOOTSTRAP_XML_CONFIGURATION_NAME,
+        return jaxbParser.parseCopiedResource(ResourcesTypes.BOOTSTRAP_XML,
                 XMLBootstrapConfigDescriptor.class);
     }
 

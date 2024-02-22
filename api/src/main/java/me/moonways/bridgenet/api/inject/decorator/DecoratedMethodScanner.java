@@ -10,6 +10,7 @@ import me.moonways.bridgenet.api.inject.decorator.config.XMLMethodHandlerDescrip
 import me.moonways.bridgenet.api.inject.decorator.config.XMLInterceptorDescriptor;
 import me.moonways.bridgenet.api.inject.decorator.config.XMLInputDescriptor;
 import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -28,10 +29,7 @@ public final class DecoratedMethodScanner {
 
     private XMLInterceptorDescriptor parseXmlInterceptor() {
         final XmlJaxbParser parser = new XmlJaxbParser();
-        final ClassLoader classLoader = getClass().getClassLoader();
-
-        return parser.parseResource(classLoader, "decorators.xml",
-                XMLInterceptorDescriptor.class);
+        return parser.parseResource(ResourcesTypes.DECORATORS_XML, XMLInterceptorDescriptor.class);
     }
 
     public void bindHandlers() {

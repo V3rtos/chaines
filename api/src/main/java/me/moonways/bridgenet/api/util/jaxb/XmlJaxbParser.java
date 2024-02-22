@@ -2,6 +2,8 @@ package me.moonways.bridgenet.api.util.jaxb;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -18,13 +20,8 @@ import java.nio.file.Paths;
 @Autobind
 public final class XmlJaxbParser {
 
-    private String correctLocalFilepathName(String filepath) {
-        String prefix = "/";
-        if (filepath.startsWith(prefix)) {
-            return filepath;
-        }
-        return prefix.concat(filepath);
-    }
+    @Inject
+    private ResourcesAssembly assembly;
 
     @SuppressWarnings("unchecked")
     private <X extends XmlRootObject> X parseRoot(InputStream inputStream, Class<X> cls) {
@@ -45,9 +42,8 @@ public final class XmlJaxbParser {
         return parseRoot(inputStream, cls);
     }
 
-    public <X extends XmlRootObject> X parseResource(ClassLoader classLoader, String resourceFilepath, Class<X> cls) {
-        String filepathName = correctLocalFilepathName(resourceFilepath);
-        return parseRoot(classLoader.getClass().getResourceAsStream(filepathName), cls);
+    public <X extends XmlRootObject> X parseResource(String resourceFilepath, Class<X> cls) {
+        return parseRoot(assembly.readResourceStream(resourceFilepath), cls);
     }
 
     public <X extends XmlRootObject> X parseResource(File file, Class<X> cls) {
@@ -64,13 +60,13 @@ public final class XmlJaxbParser {
         return parseResource(path.toFile(), cls);
     }
 
-    public <X extends XmlRootObject> X parseCopiedResource(ClassLoader classLoader, String filepath, Class<X> cls) {
+    public <X extends XmlRootObject> X parseCopiedResource(String filepath, Class<X> cls) {
         Path path = Paths.get(filepath);
 
         if (Files.exists(path)) {
             return parseResource(path, cls);
         }
 
-        return parseResource(classLoader, filepath, cls);
+        return parseResource(filepath, cls);
     }
 }
