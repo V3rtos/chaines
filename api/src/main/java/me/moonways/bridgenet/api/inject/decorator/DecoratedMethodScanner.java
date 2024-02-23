@@ -33,7 +33,6 @@ public final class DecoratedMethodScanner {
         return xmlJaxbParser.parseToDescriptorByType(ResourcesTypes.DECORATORS_XML, XMLInterceptorDescriptor.class);
     }
 
-    @PostConstruct
     public void bindHandlers() {
         XMLInterceptorDescriptor rootXML = parseXmlInterceptor();
 

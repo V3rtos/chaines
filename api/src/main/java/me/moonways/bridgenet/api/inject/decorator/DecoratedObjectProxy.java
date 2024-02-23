@@ -23,6 +23,12 @@ public class DecoratedObjectProxy {
     @Inject
     private BeansService beansService;
 
+    @InterceptionFactory
+    private void init() {
+        beansService.inject(decoratedMethodScanner);
+        decoratedMethodScanner.bindHandlers();
+    }
+
     private Object executeInvocation(DecoratorInvocation invocation) {
         Set<Class<?>> annotationsTypes = decoratedMethodScanner.getAnnotationsTypes()
             .stream()

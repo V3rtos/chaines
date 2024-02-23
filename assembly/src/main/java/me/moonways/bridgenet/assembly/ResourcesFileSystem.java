@@ -60,7 +60,6 @@ public final class ResourcesFileSystem {
     public File findAsFile(String resourceName) {
         Path path = findPath(resourceName);
         if (!Files.exists(path)) {
-            System.out.println(path.toAbsolutePath());
             log.warn("§eCouldn't find resource {} in 'etc' directory", resourceName);
         }
         return path.toFile();
