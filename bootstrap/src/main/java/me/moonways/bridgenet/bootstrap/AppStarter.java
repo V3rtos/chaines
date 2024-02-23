@@ -27,6 +27,9 @@ public class AppStarter {
 
     private static void compressPreviousLogs() {
         Path logsPath = Paths.get("logs");
+        if (!Files.exists(logsPath)) {
+            return;
+        }
 
         try (Stream<Path> filesList = Files.list(logsPath)) {
             List<File> previousLogFilesList = filesList
