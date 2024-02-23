@@ -8,9 +8,6 @@ import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 @Log4j2
@@ -40,6 +37,6 @@ public final class XmlJaxbParser {
     }
 
     public <X extends XmlRootObject> X parseToDescriptorByType(String resourceFilepath, Class<X> cls) {
-        return parseInputStream(assembly.readResourceStream(resourceFilepath), cls);
+        return parseToDescriptorByType(assembly.readResourceStream(resourceFilepath), cls);
     }
 }

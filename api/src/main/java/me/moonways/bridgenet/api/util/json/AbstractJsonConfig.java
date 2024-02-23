@@ -14,7 +14,6 @@ public abstract class AbstractJsonConfig<O> {
     private static final Gson GSON = new Gson();
 
     private final Class<O> sourceType;
-
     private final String filename;
 
     @Synchronized
