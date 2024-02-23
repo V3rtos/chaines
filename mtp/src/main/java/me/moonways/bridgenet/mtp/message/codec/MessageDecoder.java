@@ -37,7 +37,9 @@ public class MessageDecoder extends ByteToMessageDecoder {
             int messageId = byteBuf.readIntLE();
 
             ExportedMessage message = decodeMessage(messageId, byteBuf);
-            list.add(message);
+            if (message != null) {
+                list.add(message);
+            }
         }
         finally {
             byteBuf.skipBytes(byteBuf.readableBytes());
