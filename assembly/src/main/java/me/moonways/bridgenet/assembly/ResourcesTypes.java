@@ -1,5 +1,10 @@
 package me.moonways.bridgenet.assembly;
 
+/**
+ * Данный класс отвечает за хранения наименований
+ * ресурсов, хранящихся в модуле 'assembly' в константах
+ * для более быстрого и удобного доступа к ним.
+ */
 public final class ResourcesTypes {
 
     // general resources into 'etc' directory.

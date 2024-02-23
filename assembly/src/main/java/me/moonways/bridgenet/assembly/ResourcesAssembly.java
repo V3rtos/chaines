@@ -16,6 +16,13 @@ public class ResourcesAssembly {
     @Getter
     private final ResourcesFileSystem fileSystem = new ResourcesFileSystem(this);
 
+    /**
+     * Найти и прочитать ресурс во всевозможных файловых системах
+     * (локальная из ClassLoader в приоритете), и получить его в
+     * виде InputStream.
+     *
+     * @param resourceName - наименование ресурса.
+     */
     public InputStream readResourceStream(String resourceName) {
         InputStream inputStream = classLoader.readResourceStream(resourceName);
         if (inputStream != null) {
@@ -30,6 +37,13 @@ public class ResourcesAssembly {
         }
     }
 
+    /**
+     * Найти и прочитать ресурс во всевозможных файловых системах
+     * (локальная из ClassLoader в приоритете), и получить его в
+     * виде строкового пути URI.
+     *
+     * @param resourceName - наименование ресурса.
+     */
     public String readResourcePath(String resourceName) {
         URL url = classLoader.readResourceURL(resourceName);
         if (url != null) {
@@ -40,16 +54,35 @@ public class ResourcesAssembly {
         return resourceFile.toURI().toString();
     }
 
+    /**
+     * Прочитать и получить полное содержание ресурса
+     * как файла в виде строки.
+     *
+     * @param resourceName - наименование ресурса.
+     * @param charset - кодировка, в которой воспроизводить чтение.
+     */
     public String readResourceFullContent(String resourceName, Charset charset) {
         return StreamToStringUtils.toStringFull(readResourceStream(resourceName), charset);
     }
 
+    /**
+     * Прочитать и получить полное содержание ресурса
+     * как файла в виде строки.
+     *
+     * @param resourceName - наименование ресурса.
+     */
     public String readResourceFullContent(String resourceName) {
         return StreamToStringUtils.toStringFull(readResourceStream(resourceName));
     }
 
+    /**
+     * Проверить на существование ресурса в
+     * локальной файловой системе ClassLoader.
+     *
+     * @param resourceName - наименование ресурса.
+     */
     @SuppressWarnings("resource")
-    private boolean hasInClassLoader(String resourceName) {
+    public boolean hasInClassLoader(String resourceName) {
         return classLoader.readResourceStream(resourceName) != null;
     }
 }

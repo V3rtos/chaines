@@ -18,6 +18,12 @@ public final class ResourcesFileSystem {
 
     private final ResourcesAssembly assembly;
 
+    /**
+     * Найти путь к ресурсу по его имени в файловой
+     * системе сборки Bridgenet.
+     *
+     * @param resourceName - наименование ресурса.
+     */
     private Path findPath(String resourceName) {
         Path etcDirectoryPath = Paths.get("assembly", ETC_DIRECTORY_PREFIX);
         if (!Files.exists(etcDirectoryPath)) {
@@ -28,6 +34,15 @@ public final class ResourcesFileSystem {
         return !Files.exists(result) ? findPathWithExclude(resourceName): result;
     }
 
+    /**
+     * Найти путь к ресурсу по его имени в файловой
+     * системе сборки Bridgenet, учитывая и сравнивая
+     * родительские директории с теми, что находится в EXCLUDE
+     * и обрезая их, давая возможность найти необходимый
+     * нам ресурс в любом случае.
+     *
+     * @param resourceName - наименование ресурса.
+     */
     private Path findPathWithExclude(String resourceName) {
         String rootPathname = Paths.get("").toAbsolutePath().toString();
 
@@ -46,6 +61,12 @@ public final class ResourcesFileSystem {
         return new File(absolutePathname).toPath();
     }
 
+    /**
+     * Скопировать локальный ресурс из ClassLoader в
+     * общую директорию ресурсов.
+     *
+     * @param resourceName - наименование ресурса.
+     */
     public void copy(String resourceName) {
         Path path = findPath(resourceName);
         if (!Files.exists(path)) {
@@ -57,6 +78,12 @@ public final class ResourcesFileSystem {
         }
     }
 
+    /**
+     * Воспроизвести поиск ресурса как файла
+     * в файловой системе сборки Bridgenet.
+     *
+     * @param resourceName - наименование ресурса.
+     */
     public File findAsFile(String resourceName) {
         Path path = findPath(resourceName);
         if (!Files.exists(path)) {

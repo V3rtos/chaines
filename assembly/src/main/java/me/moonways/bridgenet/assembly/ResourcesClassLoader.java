@@ -14,6 +14,13 @@ public class ResourcesClassLoader {
 
     private final ClassLoader classLoader;
 
+    /**
+     * Найти и прочитать локальный ресурс, который
+     * находится в ClassLoader модуля сборки системы
+     * Bridgenet, и прочитать его в виде URI.
+     *
+     * @param resourceName - наименование ресурса.
+     */
     public URI readResourceURI(String resourceName) {
         try {
             return readResourceURL(resourceName).toURI();
@@ -22,14 +29,35 @@ public class ResourcesClassLoader {
         }
     }
 
-    public URL readResourceURL(String resource) {
-        return classLoader.getResource(correctlyName(resource));
+    /**
+     * Найти и прочитать локальный ресурс, который
+     * находится в ClassLoader модуля сборки системы
+     * Bridgenet, и прочитать его в виде URL.
+     *
+     * @param resourceName - наименование ресурса.
+     */
+    public URL readResourceURL(String resourceName) {
+        return classLoader.getResource(correctlyName(resourceName));
     }
 
-    public InputStream readResourceStream(String resource) {
-        return classLoader.getResourceAsStream(correctlyName(resource));
+    /**
+     * Найти и прочитать локальный ресурс, который
+     * находится в ClassLoader модуля сборки системы
+     * Bridgenet, и прочитать его в виде InputStream.
+     *
+     * @param resourceName - наименование ресурса.
+     */
+    public InputStream readResourceStream(String resourceName) {
+        return classLoader.getResourceAsStream(correctlyName(resourceName));
     }
 
+    /**
+     * Скорректировать наименование ресурса для
+     * воспроизведения более быстрого поиска его
+     * в локальной файловой системе ClassLoader.
+     *
+     * @param resourceName - наименование ресурса.
+     */
     private String correctlyName(String resourceName) {
         if (resourceName.startsWith(RESOURCE_NAME_PREFIX))
             return resourceName;
