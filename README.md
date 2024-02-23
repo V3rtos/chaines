@@ -91,7 +91,7 @@ $ ./bridgenet --fullbuild
 <br>
 На актуальный момент написания документации полное содержимое выглядит следующим образом:
 
-<img src=".assets/build_folder_screenshot.png"/>
+<img src=".assets/build_directory_view.png"/>
 
 Так выглядит полноценная и готовая сборка системы BridgeNet.
 
