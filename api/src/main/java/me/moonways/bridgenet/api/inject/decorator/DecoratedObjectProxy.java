@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.proxy.InterceptionFactory;
 import me.moonways.bridgenet.api.proxy.MethodHandler;
 import me.moonways.bridgenet.api.proxy.MethodInterceptor;
@@ -16,13 +18,19 @@ import me.moonways.bridgenet.api.proxy.ProxiedMethod;
 @MethodInterceptor
 public class DecoratedObjectProxy {
 
-    private final DecoratedMethodScanner scanner = new DecoratedMethodScanner();
+    private final DecoratedMethodScanner decoratedMethodScanner = new DecoratedMethodScanner();
+
+    @Inject
+    private BeansService beansService;
 
     @InterceptionFactory
-    void onInit() { scanner.bindHandlers(); }
+    private void init() {
+        beansService.inject(decoratedMethodScanner);
+        decoratedMethodScanner.bindHandlers();
+    }
 
     private Object executeInvocation(DecoratorInvocation invocation) {
-        Set<Class<?>> annotationsTypes = scanner.getAnnotationsTypes()
+        Set<Class<?>> annotationsTypes = decoratedMethodScanner.getAnnotationsTypes()
             .stream()
             .<Class<? extends Annotation>>map(cls -> cls.asSubclass(Annotation.class))
             .filter(invocation::hasAnnotation)
@@ -58,7 +66,7 @@ public class DecoratedObjectProxy {
         for (Class<?> cls : annotationTypes) {
 
             Class<? extends Annotation> annotationType = cls.asSubclass(Annotation.class);
-            Set<Class<?>> inheritsAnnotations = scanner.findInheritsAnnotations(annotationType);
+            Set<Class<?>> inheritsAnnotations = decoratedMethodScanner.findInheritsAnnotations(annotationType);
 
             for (Class<?> inherit : inheritsAnnotations) {
                 if (annotationTypes.contains(inherit)) {
@@ -81,7 +89,7 @@ public class DecoratedObjectProxy {
     private Object handleAnnotation(Class<?> cls, DecoratorInvocation invocation) {
         Class<? extends Annotation> annotationType = cls.asSubclass(Annotation.class);
 
-        DecoratedMethodHandler handler = scanner.findMethodHandler(annotationType);
+        DecoratedMethodHandler handler = decoratedMethodScanner.findMethodHandler(annotationType);
         return handler.handleProxyInvocation(invocation);
     }
 
@@ -106,11 +114,11 @@ public class DecoratedObjectProxy {
     }
 
     private boolean matchesDecoratorsConflicts(ProxiedMethod proxiedMethod) {
-        for (Class<?> annotationType : scanner.getAnnotationsTypes()) {
+        for (Class<?> annotationType : decoratedMethodScanner.getAnnotationsTypes()) {
             Class<? extends Annotation> annotation = annotationType.asSubclass(Annotation.class);
 
             if (proxiedMethod.hasAnnotation(annotation)) {
-                Set<Class<?>> conflictedAnnotations = scanner.findConflictedAnnotations(annotation);
+                Set<Class<?>> conflictedAnnotations = decoratedMethodScanner.findConflictedAnnotations(annotation);
 
                 for (Class<?> conflictedAnnotation : conflictedAnnotations) {
                     if (proxiedMethod.hasAnnotation(conflictedAnnotation.asSubclass(Annotation.class))) {

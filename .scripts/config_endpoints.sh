@@ -11,10 +11,8 @@ function apply() {
 
 function copy_endpoint_confs() {
   local target_path="$ENDPOINTS_TARGET_PATH/$1"
-
   cp -R $ENDPOINT_ETC_PATH/.gen/. "$target_path"
   except_code
-
   cp -R $ENDPOINT_ETC_PATH/$1/. "$target_path"
 }
 

@@ -15,10 +15,8 @@ public class BridgenetConsole extends SimpleTerminalConsole {
 
     @Inject
     private ConsoleCommandSender consoleSender;
-
     @Inject
     private CommandExecutor commandExecutor;
-
     @Inject
     private AppBootstrap bootstrap;
 

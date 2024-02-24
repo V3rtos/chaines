@@ -15,6 +15,7 @@
         <module>mtp</module>
         <module>api</module>
         <module>test-engine</module>
+        <module>assembly</module>
     </modules>
 
     <properties>
