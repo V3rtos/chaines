@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.jdbc.provider;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.jdbc.core.ConnectionID;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+@Log4j2
 public final class DatabaseProvider {
 
     private final Set<DatabaseConnection> activeConnections = new CopyOnWriteArraySet<>();
@@ -42,7 +44,7 @@ public final class DatabaseProvider {
                 .id(connectionID)
                 .jdbcWrapper(JdbcWrapper.builder()
                         .connectionID(connectionID)
-                        .exceptionHandler((t, e) -> e.printStackTrace())
+                        .exceptionHandler((t, e) -> log.error("§4Bridgenet jdbc framework thread '{}' caught an exception:", t.getName(), e))
                         .credentials(credentials)
                         .build())
                 .build();

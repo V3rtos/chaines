@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.jdbc.core;
 
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.jdbc.core.util.result.Result;
 import me.moonways.bridgenet.jdbc.core.wrap.JdbcWrapper;
 import me.moonways.bridgenet.jdbc.core.wrap.ResponseProvider;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+@Log4j2
 @Builder
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class DatabaseConnection {

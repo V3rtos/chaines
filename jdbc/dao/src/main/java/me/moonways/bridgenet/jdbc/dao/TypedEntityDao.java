@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.jdbc.dao;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import lombok.var;
 import me.moonways.bridgenet.jdbc.dao.entity.EntityTransmitter;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
@@ -10,9 +11,11 @@ import me.moonways.bridgenet.jdbc.dao.entity.Element;
 import me.moonways.bridgenet.jdbc.dao.entity.Entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @RequiredArgsConstructor
 public class TypedEntityDao<E> implements EntityDao<E> {
 
@@ -31,12 +34,16 @@ public class TypedEntityDao<E> implements EntityDao<E> {
 
     @Override
     public void deleteMonoById(Long id) {
+        log.info("deleteMonoById({}) for '{}'", id, type.getName());
+
         var generatedKeyLabel = getGeneratedKeyLabel();
         delete(EntityAccessCondition.createMono(generatedKeyLabel, id));
     }
 
     @Override
     public void deleteMono(E entityObj) {
+        log.info("deleteMono({}) for '{}'", entityObj, type.getName());
+
         var entityAccessCondition = EntityAccessCondition.create();
         writeAccessCondition(entityAccessCondition,
                 EntityTransmitter.transmitEntity(entityObj));
@@ -46,12 +53,16 @@ public class TypedEntityDao<E> implements EntityDao<E> {
 
     @Override
     public void deleteManyById(Long... ids) {
+        log.info("deleteManyById({}) for '{}'", Arrays.toString(ids), type.getName());
+
         var generatedKeyLabel = getGeneratedKeyLabel();
         delete(EntityAccessCondition.createMany(generatedKeyLabel, ids));
     }
 
     @Override
     public void deleteMany(E... entities) {
+        log.info("deleteMany({}) for '{}'", Arrays.toString(entities), type.getName());
+
         connection.openTransaction();
 
         for (E entity : entities) {
@@ -63,6 +74,8 @@ public class TypedEntityDao<E> implements EntityDao<E> {
 
     @Override
     public void delete(EntityAccessCondition condition) {
+        log.info("delete({}) for '{}'", condition, type.getName());
+
         var entityTemplate = getEntityTemplate();
         markContainerExisted(entityTemplate);
 
@@ -73,6 +86,8 @@ public class TypedEntityDao<E> implements EntityDao<E> {
 
     @Override
     public Optional<Long> insertMono(E entityObj) {
+        log.info("insertMono({}) for '{}'", entityObj, type.getName());
+
         var transactional = connection.ofTransactionalGet(() -> {
 
             var entity = EntityTransmitter.transmitEntity(entityObj);
@@ -99,6 +114,8 @@ public class TypedEntityDao<E> implements EntityDao<E> {
 
     @Override
     public List<Long> insertMany(E... entities) {
+        log.info("insertMany({}) for '{}'", Arrays.toString(entities), type.getName());
+
         return connection.ofTransactionalGet(() -> {
             List<Long> entityIds = new ArrayList<>();
 
@@ -126,11 +143,14 @@ public class TypedEntityDao<E> implements EntityDao<E> {
 
     @Override
     public Optional<E> findMonoById(Long id) {
+        log.info("findMonoById({}) for '{}'", id, type.getName());
         return findMono(EntityAccessCondition.createMono("id", id));
     }
 
     @Override
     public Optional<E> findMono(EntityAccessCondition condition) {
+        log.info("findMono({}) for '{}'", condition, type.getName());
+
         List<E> list = findManyWithLimit(1, condition);
         if (list.isEmpty()) {
             return Optional.empty();
@@ -140,26 +160,31 @@ public class TypedEntityDao<E> implements EntityDao<E> {
 
     @Override
     public List<E> findManyById(Long... ids) {
+        log.info("findManyById({}) for '{}'", Arrays.toString(ids), type.getName());
         return findMany(EntityAccessCondition.createMany("id", ids));
     }
 
     @Override
     public List<E> findMany(EntityAccessCondition condition) {
+        log.info("findMany({}) for '{}'", condition, type.getName());
         return doFind(condition, UNLIMITED_LIMIT);
     }
 
     @Override
     public List<E> findManyWithLimit(int limit, EntityAccessCondition condition) {
+        log.info("findManyWithLimit({}, {}) for '{}'", limit, condition, type.getName());
         return doFind(condition, limit);
     }
 
     @Override
     public List<E> findWithLimit(int limit) {
+        log.info("findWithLimit({}) for '{}'", limit, type.getName());
         return doFind(null, UNLIMITED_LIMIT);
     }
 
     @Override
     public List<E> findAll() {
+        log.info("findAll() for '{}'", type.getName());
         return findWithLimit(UNLIMITED_LIMIT);
     }
 

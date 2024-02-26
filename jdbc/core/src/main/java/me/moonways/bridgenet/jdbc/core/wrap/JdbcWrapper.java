@@ -3,9 +3,7 @@ package me.moonways.bridgenet.jdbc.core.wrap;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import me.moonways.bridgenet.jdbc.core.observer.event.*;
-import me.moonways.bridgenet.jdbc.core.util.SqlFunction;
-import me.moonways.bridgenet.jdbc.core.util.result.Result;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.jdbc.core.ConnectionID;
 import me.moonways.bridgenet.jdbc.core.TransactionIsolation;
 import me.moonways.bridgenet.jdbc.core.TransactionState;
@@ -13,6 +11,8 @@ import me.moonways.bridgenet.jdbc.core.observer.DatabaseObserver;
 import me.moonways.bridgenet.jdbc.core.observer.Observable;
 import me.moonways.bridgenet.jdbc.core.observer.event.*;
 import me.moonways.bridgenet.jdbc.core.security.Credentials;
+import me.moonways.bridgenet.jdbc.core.util.SqlFunction;
+import me.moonways.bridgenet.jdbc.core.util.result.Result;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Log4j2
 @Builder
 public class JdbcWrapper {
 
@@ -78,6 +79,8 @@ public class JdbcWrapper {
     private void initConnection() throws SQLException {
         String passwordString = new String(credentials.getPassword());
         jdbc = DriverManager.getConnection(credentials.getUri(), credentials.getUsername(), passwordString);
+
+        log.info("Connection '{}' was initialized by {}", connectionID.getUniqueId(), credentials);
     }
 
     public void reconnect() {
@@ -96,6 +99,8 @@ public class JdbcWrapper {
             if (jdbc != null && (jdbc.isClosed() || !jdbc.isValid(VALID_TIMEOUT))) {
                 observe(new DbClosedEvent(System.currentTimeMillis(), connectionID));
                 jdbc.close();
+
+                log.info("Connection was closed as force");
             }
         } catch (SQLException exception) {
             exceptionHandler.uncaughtException(Thread.currentThread(), exception);
@@ -105,6 +110,8 @@ public class JdbcWrapper {
     @SneakyThrows
     private Result<ResultWrapper> executeOrdered(String sql,
                                                  SqlFunction<PreparedQuerySession, ResultWrapper> resultLookup) {
+        log.info("Begin sql-query execution: §2{}", sql);
+
         final Thread thread = Thread.currentThread();
         final Result<ResultWrapper> result = Result.ofEmpty();
         try {
@@ -172,6 +179,8 @@ public class JdbcWrapper {
         try {
             if (jdbc.getAutoCommit()) {
                 jdbc.setTransactionIsolation(isolation.getLevel());
+
+                log.info("Transaction session isolation was changed to {}", isolation);
             }
         } catch (SQLException exception) {
             exceptionHandler.uncaughtException(Thread.currentThread(), exception);
@@ -183,7 +192,11 @@ public class JdbcWrapper {
         switch (state) {
             case ACTIVE: {
                 try {
-                    jdbc.setAutoCommit(false);
+                    if (jdbc.getAutoCommit()) {
+
+                        jdbc.setAutoCommit(false);
+                        log.info("Transaction session state is opened");
+                    }
                 } catch (SQLException exception) {
                     exceptionHandler.uncaughtException(thread, exception);
                 }
@@ -191,15 +204,18 @@ public class JdbcWrapper {
             }
             case INACTIVE: {
                 try {
-                    jdbc.commit();
-                    //jdbc.setTransactionIsolation(Connection.TRANSACTION_NONE); todo
-                    jdbc.setAutoCommit(true);
+                    if (!jdbc.getAutoCommit()) {
+                        jdbc.commit();
+                        //jdbc.setTransactionIsolation(Connection.TRANSACTION_NONE); todo
+                        jdbc.setAutoCommit(true);
 
+                        log.info("Transaction session state is closed");
+                    }
                 } catch (SQLException exception) {
                     try {
                         jdbc.rollback();
                     } catch (SQLException e) {
-                        exceptionHandler.uncaughtException(thread, exception);
+                        exception.addSuppressed(e);
                     }
                     exceptionHandler.uncaughtException(thread, exception);
                 }

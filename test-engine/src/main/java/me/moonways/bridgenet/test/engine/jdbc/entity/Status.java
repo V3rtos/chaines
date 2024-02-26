@@ -8,7 +8,6 @@ import me.moonways.bridgenet.jdbc.dao.entity.EntityAutoPersistence;
 @EntityAccessible(name = "Groups")
 @Getter
 @RequiredArgsConstructor
-@AllArgsConstructor
 @ToString
 @EqualsAndHashCode
 public class Status {
