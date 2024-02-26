@@ -29,20 +29,15 @@ public class FriendsServiceConnectTest {
     }
 
     @Test
-    public void test_success() {
+    public void test_success() throws RemoteException {
         FriendsServiceModel stub = subj.lookupStub();
 
-        try {
-            UUID friendID = UUID.randomUUID();
-            UUID playerID = UUID.randomUUID();
+        UUID friendID = UUID.randomUUID();
+        UUID playerID = UUID.randomUUID();
 
-            FriendsList friendsList = stub.findFriends(playerID);
-            friendsList.addFriend(friendID);
+        FriendsList friendsList = stub.getFriends(playerID);
+        friendsList.addFriend(friendID);
 
-            assertEquals(1, friendsList.getFriendsIDs().size());
-        }
-        catch (RemoteException exception) {
-            exception.printStackTrace();
-        }
+        assertEquals(1, friendsList.getFriendsIDs().size());
     }
 }

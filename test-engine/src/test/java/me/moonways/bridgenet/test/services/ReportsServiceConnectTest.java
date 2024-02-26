@@ -30,22 +30,17 @@ public class ReportsServiceConnectTest {
     }
 
     @Test
-    public void test_success() {
+    public void test_success() throws RemoteException {
         ReportsServiceModel stub = subj.lookupStub();
 
-        try {
-            Report report = stub.createReport(
-                    ReportReason.CHEATING, "GitCoder", "xxcoldinme",
-                    "читерил на хайпе", "Hypixel");
+        Report report = stub.createReport(
+                ReportReason.CHEATING, "GitCoder", "xxcoldinme",
+                "читерил на хайпе", "Hypixel");
 
-            assertEquals("GitCoder", report.getWhoReportedName());
-            assertEquals("читерил на хайпе", report.getComment());
+        assertEquals("GitCoder", report.getWhoReportedName());
+        assertEquals("читерил на хайпе", report.getComment());
 
-            assertEquals(1, stub.getTotalReportedPlayersCount());
-        }
-        catch (RemoteException exception) {
-            exception.printStackTrace();
-        }
+        assertEquals(1, stub.getTotalReportedPlayersCount());
     }
 }
 

@@ -31,41 +31,29 @@ public class PlayersServiceConnectTest {
     }
 
     @Test
-    public void test_successPlayerAdd() {
+    public void test_successPlayerAdd() throws RemoteException {
         PlayersServiceModel stub = subj.lookupStub();
+        PlayerConnection playerConnection = stub.getPlayerConnection();
+        playerConnection.addConnectedPlayer(
+                new ConnectedEntityPlayer(UUID.randomUUID(), "itzstonlex", null, null)
+        );
 
-        try {
-            PlayerConnection playerConnection = stub.getPlayerConnection();
-            playerConnection.addConnectedPlayer(
-                    new ConnectedEntityPlayer(UUID.randomUUID(), "itzstonlex", null, null)
-            );
+        ConnectedEntityPlayer connectedPlayer = playerConnection.getConnectedPlayer("itzstonlex");
 
-            ConnectedEntityPlayer connectedPlayer = playerConnection.getConnectedPlayer("itzstonlex");
-
-            assertEquals(connectedPlayer.getName(), "itzstonlex");
-        }
-        catch (RemoteException exception) {
-            exception.printStackTrace();
-        }
+        assertEquals(connectedPlayer.getName(), "itzstonlex");
     }
 
     @Test
-    public void test_successPlayerLeveling() {
+    public void test_successPlayerLeveling() throws RemoteException {
         PlayersServiceModel stub = subj.lookupStub();
+        PlayerLeveling playerLeveling = stub.getPlayerLeveling();
 
-        try {
-            PlayerLeveling playerLeveling = stub.getPlayerLeveling();
+        int secondLevelExp = playerLeveling.calculateTotalExperience(2);
 
-            int secondLevelExp = playerLeveling.calculateTotalExperience(2);
-
-            assertEquals(10000, secondLevelExp);
-            assertEquals(2, playerLeveling.calculateLevel(secondLevelExp));
-            assertEquals(2, playerLeveling.calculateLevel(secondLevelExp + 1000));
-            assertEquals(12500, playerLeveling.calculateExperienceToNextLevel(2));
-            assertEquals(0, playerLeveling.calculateExperiencePercentToNextLevel(secondLevelExp + 5000));
-        }
-        catch (RemoteException exception) {
-            exception.printStackTrace();
-        }
+        assertEquals(10000, secondLevelExp);
+        assertEquals(2, playerLeveling.calculateLevel(secondLevelExp));
+        assertEquals(2, playerLeveling.calculateLevel(secondLevelExp + 1000));
+        assertEquals(12500, playerLeveling.calculateExperienceToNextLevel(2));
+        assertEquals(0, playerLeveling.calculateExperiencePercentToNextLevel(secondLevelExp + 5000));
     }
 }

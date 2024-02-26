@@ -28,17 +28,12 @@ public class PartiesServiceConnectTest {
     }
 
     @Test
-    public void test_success() {
+    public void test_success() throws RemoteException {
         PartiesServiceModel serviceModel = subj.lookupStub();
 
-        try {
-            Party party = serviceModel.createParty("GitCoder");
+        Party party = serviceModel.createParty("GitCoder");
 
-            assertEquals(party.getOwner().getName(), "GitCoder");
-            assertEquals(party.getTotalMembersCount(), 0);
-        }
-        catch (RemoteException exception) {
-            exception.printStackTrace();
-        }
+        assertEquals(party.getOwner().getName(), "GitCoder");
+        assertEquals(party.getTotalMembersCount(), 0);
     }
 }
