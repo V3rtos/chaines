@@ -83,10 +83,10 @@ public class EntityTransmitter {
     }
 
     private boolean isNotTransportable(Class<?> type) {
-        String packageName = type.getPackage().getName();
-        if (packageName.startsWith("java.")) {
-            return false;
-        }
+        //String packageName = type.getPackage().getName();
+        //if (packageName.startsWith("java.")) {
+        //    return false;
+        //}
 
         return !ExternalElement.class.equals(type)
                 && !isNumber(type)
