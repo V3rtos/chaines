@@ -11,6 +11,11 @@ import java.util.UUID;
 public interface ServersServiceModel extends RemoteService {
 
     /**
+     * Получить список всех зарегистрированных серверов.
+     */
+    List<EntityServer> getTotalServers() throws RemoteException;
+
+    /**
      * Получить список стандартных серверов для входа
      * игроков или других возможных операций.
      */

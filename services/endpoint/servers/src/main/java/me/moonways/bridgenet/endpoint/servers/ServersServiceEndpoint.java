@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 public class ServersServiceEndpoint extends AbstractEndpointDefinition implements ServersServiceModel {
 
+    private static final long serialVersionUID = -1037167251538756291L;
     private final ServersContainer serversContainer = new ServersContainer();
 
     @Inject
@@ -44,6 +45,11 @@ public class ServersServiceEndpoint extends AbstractEndpointDefinition implement
         mtpDriver.bindHandler(new ServersInputMessagesListener(serversContainer));
 
         commandRegistry.registerCommand(new ServersInfoCommand());
+    }
+
+    @Override
+    public List<EntityServer> getTotalServers() throws RemoteException {
+        return serversContainer.getConnectedServers().collect(Collectors.toList());
     }
 
     @Override

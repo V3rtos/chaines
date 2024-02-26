@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
+import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(BridgenetJUnitTestRunner.class)
@@ -43,9 +44,11 @@ public class MtpServerHandshakeTest {
     }
 
     @Test
-    public void test_handshakeSuccess() {
+    public void test_handshakeSuccess() throws Exception {
         Handshake.Result result = sendHandshakeMessage();
         assertTrue(result instanceof Handshake.Success);
+
+        sleep(1000);
     }
 
     @Test

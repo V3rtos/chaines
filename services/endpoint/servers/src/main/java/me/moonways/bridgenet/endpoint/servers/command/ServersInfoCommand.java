@@ -56,25 +56,12 @@ public class ServersInfoCommand {
     @ProducerExecutor("list")
     @ProducerDescription("Get a total servers list")
     public void list(CommandSession session) throws RemoteException {
-        List<EntityServer> serversList = new ArrayList<>();
-        serversList.addAll(servers.getDefaultServers());
-        serversList.addAll(servers.getFallbackServers());
-
-        List<String> serversNamesList = new ArrayList<>();
-
-        for (EntityServer server : serversList) {
-            serversNamesList.add(server.getName());
+        for (EntityServer server : servers.getTotalServers()) {
+            sendServerInfo(server, session.getSender());
         }
-
-        session.getSender().sendMessage(String.join(", ", serversNamesList));
     }
 
     private void sendServerInfo(EntityServer entityServer, EntityCommandSender sender) throws RemoteException {
-        StringBuilder result = new StringBuilder();
-
-        result.append(entityServer.getServerInfo()).append("\n");
-        result.append(entityServer.getTotalOnline());
-
-        sender.sendMessage(result.toString());
+        sender.sendMessage("{info=" + entityServer.getServerInfo() + ", online=" + entityServer.getTotalOnline() + "}");
     }
 }

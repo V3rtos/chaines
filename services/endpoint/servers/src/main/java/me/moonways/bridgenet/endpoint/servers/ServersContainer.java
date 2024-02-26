@@ -90,8 +90,10 @@ public final class ServersContainer {
     }
 
     public Stream<ConnectedServerStub> getConnectedServersWithFlag(@NotNull ServerFlag flag) {
-        return registeredServersMap.values()
-                .stream()
-                .filter(server -> server.getServerInfo().hasFlag(flag));
+        return getConnectedServers().filter(server -> server.getServerInfo().hasFlag(flag));
+    }
+
+    public Stream<ConnectedServerStub> getConnectedServers() {
+        return registeredServersMap.values().stream();
     }
 }
