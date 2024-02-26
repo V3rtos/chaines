@@ -78,7 +78,7 @@ public class FriendsListStub extends AbstractEndpointDefinition implements Frien
     }
 
     @Override
-    public Set<UUID> getFriendsUUIDs() {
+    public Set<UUID> getFriendsIDs() {
         return uuids;
     }
 

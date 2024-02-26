@@ -392,12 +392,8 @@ public class EntityTransmitter {
             List<Element> elementList = new ArrayList<>();
 
             for (Element element : clone.getElements()) {
-                Object valueObject = row.field(element.getShortName()).getAsObject();
-                Class<?> valueType = valueObject.getClass();
-
-                if (!element.getType().isPrimitive() && !element.getType().equals(valueType)) {
-                    valueObject = findExternalEntity(valueObject, element);
-                }
+                Object valueObject = getElementObject(element,
+                        row.field(element.getShortName()).getAsObject());
 
                 elementList.add(element.toBuilder()
                         .value(valueObject)
@@ -406,6 +402,20 @@ public class EntityTransmitter {
 
             elementList.sort(ELEMENT_COMPARATOR);
             return clone.toBuilder().elements(elementList).build();
+        }
+
+        private Object getElementObject(Element element, Object valueObject) {
+            Class<?> valueType = valueObject.getClass();
+
+            if (!element.getType().isPrimitive() && !element.getType().equals(valueType)) {
+                if (UUID.class.equals(element.getType())) {
+                    return UUID.fromString(valueObject.toString());
+                }
+
+                valueObject = findExternalEntity(valueObject, element);
+            }
+
+            return valueObject;
         }
 
         private Entity findExternalEntity(Object dbValue, Element element) {
