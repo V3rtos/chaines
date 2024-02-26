@@ -49,7 +49,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Apache logging dependencies-->
+        <!-- Apache logger dependency -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
