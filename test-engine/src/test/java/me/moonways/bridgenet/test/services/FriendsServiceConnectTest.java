@@ -33,10 +33,13 @@ public class FriendsServiceConnectTest {
         FriendsServiceModel stub = subj.lookupStub();
 
         try {
-            FriendsList friendsList = stub.findFriends(UUID.randomUUID());
-            friendsList.addFriend(UUID.randomUUID());
+            UUID friendID = UUID.randomUUID();
+            UUID playerID = UUID.randomUUID();
 
-            assertEquals(1, friendsList.getFriendsUUIDs().size());
+            FriendsList friendsList = stub.findFriends(playerID);
+            friendsList.addFriend(friendID);
+
+            assertEquals(1, friendsList.getFriendsIDs().size());
         }
         catch (RemoteException exception) {
             exception.printStackTrace();

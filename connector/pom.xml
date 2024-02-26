@@ -44,13 +44,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- GitHub ItzStonlex database management dependency -->
-        <dependency>
-            <groupId>com.github.itzstonlex</groupId>
-            <artifactId>conveno-jdbc</artifactId>
-            <version>1.1</version>
-            <scope>compile</scope>
-        </dependency>
+        <!-- H2-Database dependency for database's smoking -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -71,17 +65,25 @@
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>mtp</artifactId>
             <version>1.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>model</artifactId>
             <version>1.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rsi</artifactId>
             <version>1.0</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>jdbc-provider</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

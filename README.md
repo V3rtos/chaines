@@ -36,27 +36,39 @@ built on layer-services architecture.
 ---
 
 ```shell
-$ ./bridgenet -ep
+$ ./bridgenet -e
 ```
 _или можно иначе:_
 ```shell
-$ ./bridgenet --endpoints
+$ ./bridgenet endpoints
 ```
 
 - Данная команда выполняет полную компиляцию, конфигурацию и 
-    последующую сборку всех сервисов и их эндпоинтов.
+последующую сборку всех сервисов и их эндпоинтов.
 
 ---
 
 ```shell
-$ ./bridgenet -epc
+$ ./bridgenet -a
 ```
 _или можно иначе:_
 ```shell
-$ ./bridgenet --endpointsconfig
+$ ./bridgenet assemblyEndpoints
 ```
 
 - Данная команда выполняет конфигурацию скомпилированных сервисов в сборке.
+
+---
+
+```shell
+$ ./bridgenet -j
+```
+_или можно иначе:_
+```shell
+$ ./bridgenet jar
+```
+
+- Данная команда выполняет последовательную Maven компиляцию основных модулей проекта BridgeNet.
 
 ---
 
@@ -65,19 +77,7 @@ $ ./bridgenet -b
 ```
 _или можно иначе:_
 ```shell
-$ ./bridgenet --build
-```
-
-- Данная команда выполняет последовательную Maven компиляцию основных модулей проекта BridgeNet.
-
----
-
-```shell
-$ ./bridgenet -fb
-```
-_или можно иначе:_
-```shell
-$ ./bridgenet --fullbuild
+$ ./bridgenet build
 ```
 
 - Данная команда выполняет полную (включая сервисы) и последовательную компиляцию всех модулей проекта BridgeNet.

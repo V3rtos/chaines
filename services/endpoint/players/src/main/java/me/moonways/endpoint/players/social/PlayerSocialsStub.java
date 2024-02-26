@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public class PlayerSocialsStub extends AbstractEndpointDefinition implements PlayerSocials {
 
+    private static final long serialVersionUID = 5247316255128009253L;
+
     public PlayerSocialsStub() throws RemoteException {
         super();
     }

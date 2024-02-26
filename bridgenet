@@ -3,29 +3,31 @@
 source .scripts/utils.sh
 
 exec_help() {
-  echo "$PREF Usage: ./$APP <subcommand> <flags>"
-  echo "$PREF Available subcommands list:"
-  echo " > -ep, --endpoints             Build endpoints modules to build."
-  echo " > -epc, --endpointsconfig      Configure endpoints modules before build."
-  echo " > -b, --build                  Build only maintained project modules."
-  echo " > -fb, --fullbuild              Run full build of all modules with endpoints."
+  echo ">> Executable subcommands list:"
+  echo " > -h, --help, help             |  Print this commands information block."
+  echo " > -e, endpoints                |  Build endpoints modules to build."
+  echo " > -a, assemblyEndpoints        |  Configure services modules before build."
+  echo " > -j, jar                      |  Build only maintained project modules."
+  echo " > -b, build                    |  Run full build of all modules with endpoints."
+  echo ""
+  echo ">> Commands usage examples: './$APP <subcommand> <flags>' or 'sh $APP <subcommand> <flags>'"
 }
 
 case $1 in
-    "" | "-h" | "--help")
+    "" | "-h" | "--help" | "help")
         exec_help
         ;;
-    "-epc" | "--endpointsconfig")
+    "-a" | "assemblyEndpoints")
         source .scripts/config_endpoints.sh
         ;;
-    "-ep" | "--endpoints")
+    "-e" | "endpoints")
         source .scripts/build_endpoints.sh
         source .scripts/config_endpoints.sh
         ;;
-    "-b" | "--build")
+    "-j" | "jar")
         source .scripts/build_project.sh
         ;;
-    "-fb" | "--fullbuild")
+    "-b" | "--build")
         source .scripts/build_project.sh
         source .scripts/build_endpoints.sh
         source .scripts/config_endpoints.sh

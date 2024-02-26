@@ -9,10 +9,6 @@ import org.jetbrains.annotations.NotNull;
 @RequiredArgsConstructor
 public abstract class ApplicationBootstrapHook {
 
-    public void onBefore() {
-        // override me.
-    }
-
     protected abstract void process(@NotNull AppBootstrap bootstrap) throws Exception;
 
     public final void apply(@NotNull AppBootstrap bootstrap,
