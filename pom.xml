@@ -11,12 +11,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>assembly</module>
-        <module>jdbc</module>
         <module>api</module>
-        <module>mtp</module>
         <module>bootstrap</module>
-        <module>test-engine</module>
     </modules>
 
     <properties>

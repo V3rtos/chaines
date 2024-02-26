@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>me.moonways.bridgenet.connector</groupId>
-    <artifactId>spigot</artifactId>
+    <artifactId>connector-spigot</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -39,7 +39,7 @@
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet.connector</groupId>
-            <artifactId>base</artifactId>
+            <artifactId>connector-base</artifactId>
             <version>1.0</version>
         </dependency>
 
