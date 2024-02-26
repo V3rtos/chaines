@@ -41,8 +41,6 @@ public class AppBootstrap {
         hooksByPriority.forEach(hook -> {
 
             String namespace = hooksContainer.findHookName(hook.getClass());
-
-            hook.onBefore();
             hook.apply(this, namespace);
         });
 

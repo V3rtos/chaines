@@ -1,8 +1,18 @@
 package me.moonways.bridgenet.connector;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
+import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
+import me.moonways.bridgenet.jdbc.core.security.Credentials;
+import me.moonways.bridgenet.jdbc.core.security.DbCredentials;
+import me.moonways.bridgenet.jdbc.provider.BridgenetJdbcProvider;
+import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
 import me.moonways.bridgenet.mtp.MTPConnectionFactory;
 import me.moonways.bridgenet.mtp.MTPDriver;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
@@ -17,8 +27,8 @@ import me.moonways.bridgenet.rsi.xml.XMLServiceModuleDescriptor;
 import me.moonways.bridgenet.rsi.xml.XMLServiceModulePropertyDescriptor;
 import me.moonways.bridgenet.rsi.xml.XMLServicesConfigDescriptor;
 import me.moonways.bridgenet.rsi.xml.XmlServiceInfoDescriptor;
-import net.conveno.jdbc.ConvenoRouter;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
@@ -26,6 +36,11 @@ import java.util.Properties;
 public final class ConnectorEngine {
 
     private BeansService beansService;
+
+    @Inject
+    private ResourcesAssembly assembly;
+    @Inject
+    private Gson gson;
 
     public void setProperties() {
         // jdbc settings.
@@ -39,10 +54,33 @@ public final class ConnectorEngine {
         beansService.bind(MTPConnectionFactory.createConnectionFactory());
         beansService.start(BeansService.generateDefaultProperties());
 
-        beansService.bind(ConvenoRouter.create());
         beansService.bind(new Properties());
+        beansService.bind(new GsonBuilder().setLenient().create());
+
+        beansService.inject(this);
+
+        bindJdbcConnection();
 
         return beansService;
+    }
+
+    private void bindJdbcConnection() {
+        BridgenetJdbcProvider.JdbcSettingsConfig jdbcSettingsConfig = readSettings();
+        BridgenetJdbcProvider bridgenetJdbcProvider = new BridgenetJdbcProvider();
+
+        bridgenetJdbcProvider.initConnection(jdbcSettingsConfig);
+
+        beansService.bind(bridgenetJdbcProvider.getDatabaseProvider());
+        beansService.bind(bridgenetJdbcProvider.getDatabaseProvider().getComposer());
+        beansService.bind(bridgenetJdbcProvider.getDatabaseConnection());
+    }
+
+    private BridgenetJdbcProvider.JdbcSettingsConfig readSettings() {
+        return gson.fromJson(
+                assembly.readResourceFullContent(
+                        ResourcesTypes.JDBC_SETTINGS_JSON,
+                        StandardCharsets.UTF_8),
+                BridgenetJdbcProvider.JdbcSettingsConfig.class);
     }
 
     public void connectToEndpoints(RemoteServiceRegistry registry) {

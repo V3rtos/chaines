@@ -2,16 +2,16 @@
 <bootstrap>
     <hooks>
         <hook>
-            <displayName>ConvenoJDBC</displayName>
+            <displayName>GoogleJsonLib</displayName>
             <priorityID>1</priorityID>
             <priority>RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.ConvenoCreateDatabaseConnectionHook</executorPath>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.BindGsonLibraryHook</executorPath>
         </hook>
         <hook>
-            <displayName>GoogleJsonLib</displayName>
+            <displayName>OpenJdbcConnection</displayName>
             <priorityID>2</priorityID>
             <priority>RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.BindGsonLibraryHook</executorPath>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.OpenJdbcConnectionHook</executorPath>
         </hook>
         <hook>
             <displayName>REST</displayName>
@@ -35,6 +35,11 @@
             <displayName>ConsoleStart</displayName>
             <priority>POST_RUNNER</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.type.console.ApacheConsoleStartHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>CloseJdbcConnection</displayName>
+            <priority>SHUTDOWN</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.CloseJdbcConnectionHook</executorPath>
         </hook>
         <hook>
             <displayName>Goodbye</displayName>

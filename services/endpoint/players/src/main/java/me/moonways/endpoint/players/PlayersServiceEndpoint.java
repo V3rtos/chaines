@@ -7,8 +7,6 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import me.moonways.endpoint.players.connection.PlayerConnectionStub;
 import me.moonways.endpoint.players.leveling.PlayerLevelingStub;
-import me.moonways.endpoint.players.offline.PlayerOfflineManagerStub;
-import me.moonways.endpoint.players.permission.PlayerPermissionsStub;
 import me.moonways.endpoint.players.social.PlayerSocialsStub;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
 import me.moonways.bridgenet.model.players.connection.PlayerConnection;
@@ -29,9 +27,9 @@ public final class PlayersServiceEndpoint extends AbstractEndpointDefinition imp
 
     private final PlayerConnection playerConnection = new PlayerConnectionStub();
     private final PlayerLeveling playerLeveling = new PlayerLevelingStub();
-    private final PlayerPermissions playerPermissions = new PlayerPermissionsStub();
+    private final PlayerPermissions playerPermissions = null;
     private final PlayerSocials playerSocials = new PlayerSocialsStub();
-    private final PlayerOfflineManager playerOfflineManager = new PlayerOfflineManagerStub();
+    private final PlayerOfflineManager playerOfflineManager = null;
 
     @Inject
     private BeansService beansService;
@@ -56,8 +54,8 @@ public final class PlayersServiceEndpoint extends AbstractEndpointDefinition imp
     void postInject() {
         beansService.fakeBind(playerConnection);
         beansService.fakeBind(playerLeveling);
-        beansService.fakeBind(playerPermissions);
+        //beansService.fakeBind(playerPermissions);
         beansService.fakeBind(playerSocials);
-        beansService.fakeBind(playerOfflineManager);
+        //beansService.fakeBind(playerOfflineManager);
     }
 }
