@@ -36,11 +36,11 @@ public class TestConnector extends BridgenetConnector {
 
     public Handshake.Result retryHandshakeExchanging() {
         BridgenetServerSync bridgenet = getBridgenetServerSync();
-        return bridgenet.exchangeHandshake(DEVICE_DESCRIPTION);
+        return bridgenet.exportDeviceHandshake(DEVICE_DESCRIPTION);
     }
 
     public List<String> lookupBridgenetRegisteredComamndsList() {
         BridgenetServerSync bridgenet = getBridgenetServerSync();
-        return bridgenet.lookupBridgenetServerCommandsList();
+        return bridgenet.lookupServerCommandsList();
     }
 }

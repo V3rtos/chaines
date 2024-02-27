@@ -30,7 +30,7 @@ public class ConnectorHandshakeTest {
 
     @Test
     public void test_handshakeSuccess() {
-        assertNotNull(subj.getServerUuid());
+        assertNotNull(subj.getCurrentDeviceId());
         command();
     }
 

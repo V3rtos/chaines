@@ -49,7 +49,7 @@ public class BridgenetVelocityConnector extends BridgenetConnector {
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
         BridgenetServerSync bridgenet = getBridgenetServerSync();
-        bridgenet.exportDisconnectMessage();
+        bridgenet.exportDeviceDisconnect();
     }
 
     @Override

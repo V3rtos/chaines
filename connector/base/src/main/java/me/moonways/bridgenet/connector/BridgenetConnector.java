@@ -12,7 +12,6 @@ import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.MTPDriver;
 import me.moonways.bridgenet.mtp.MTPMessageSender;
 import me.moonways.bridgenet.mtp.client.MTPClientConnectionFactory;
-import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
 
 import java.util.UUID;
 
@@ -33,6 +32,8 @@ public abstract class BridgenetConnector {
     private final ConnectorEngine engine = new ConnectorEngine();
     @Getter
     private final BridgenetServerSync bridgenetServerSync = new BridgenetServerSync();
+    @Getter
+    private final BridgenetGamesSync bridgenetGamesSync = new BridgenetGamesSync(bridgenetServerSync);
 
     private final BaseBridgenetConnectorChannelHandler channelHandler = new BaseBridgenetConnectorChannelHandler(this);
 
@@ -51,6 +52,9 @@ public abstract class BridgenetConnector {
         BeansService beansService = engine.bindAll();
         beansService.inject(this);
         beansService.inject(channelHandler);
+
+        beansService.bind(bridgenetServerSync);
+        beansService.bind(bridgenetGamesSync);
 
         log.info("****************************** END BRIDGENET-CONNECTOR INITIALIZATION ******************************");
 
@@ -98,7 +102,7 @@ public abstract class BridgenetConnector {
         BridgenetServerSync bridgenet = getBridgenetServerSync();
         DeviceDescription description = createDescription();
 
-        Handshake.Result result = bridgenet.exchangeHandshake(description);
+        Handshake.Result result = bridgenet.exportDeviceHandshake(description);
 
         onHandshake(result);
     }
@@ -134,11 +138,11 @@ public abstract class BridgenetConnector {
     }
 
     /**
-     * Получить уникальный идентификатор текущего сервера,
+     * Получить уникальный идентификатор текущего устройства,
      * который вернул нам Bridgenet при рукопожатии.
      */
-    public final UUID getServerUuid() {
-        return bridgenetServerSync.getServerUuid();
+    public final UUID getCurrentDeviceId() {
+        return bridgenetServerSync.getCurrentDeviceId();
     }
 
     /**

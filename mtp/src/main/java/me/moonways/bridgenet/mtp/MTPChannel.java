@@ -23,6 +23,8 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class MTPChannel implements MTPMessageSender {
 
+    private static final long serialVersionUID = -4718332193161413564L;
+
     public static final AttributeKey<ProtocolDirection> DIRECTION_ATTRIBUTE = AttributeKey.valueOf("direction_attribute");
     public static final int DEFAULT_RESPONSE_TIMEOUT = 5000;
 

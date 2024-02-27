@@ -3,12 +3,9 @@ package me.moonways.bridgenet.connector.spigot;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
 import me.moonways.bridgenet.connector.description.UserDescription;
-import me.moonways.bridgenet.model.bus.message.SendCommand;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Autobind
 public class BridgenetCommandsExporter {
@@ -25,7 +22,7 @@ public class BridgenetCommandsExporter {
     public void init(BridgenetSpigotConnector connector) {
         bridgenet = connector.getBridgenetServerSync();
 
-        bridgenetCommandAliases = bridgenet.lookupBridgenetServerCommandsList();
+        bridgenetCommandAliases = bridgenet.lookupServerCommandsList();
         bridgenetCommandAliases.replaceAll(String::toLowerCase);
     }
 
@@ -59,6 +56,6 @@ public class BridgenetCommandsExporter {
                 .uniqueId(player.getUniqueId())
                 .build();
 
-        return bridgenet.exportSendCommand(userDescription, label);
+        return bridgenet.exportCommandSend(userDescription, label);
     }
 }

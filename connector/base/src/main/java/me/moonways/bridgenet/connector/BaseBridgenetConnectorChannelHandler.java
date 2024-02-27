@@ -53,7 +53,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
 
     @Override
     public void onDisconnected(MTPMessageSender channel) {
-        connector.getBridgenetServerSync().exportDisconnectMessage();
+        connector.getBridgenetServerSync().exportDeviceDisconnect();
         connector.getEngine().disconnectToEndpoints(remoteServiceRegistry);
 
         this.channel = null;

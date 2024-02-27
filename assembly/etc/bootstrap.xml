@@ -38,11 +38,13 @@
         </hook>
         <hook>
             <displayName>CloseJdbcConnection</displayName>
+            <priorityID>1</priorityID>
             <priority>SHUTDOWN</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.type.CloseJdbcConnectionHook</executorPath>
         </hook>
         <hook>
             <displayName>Goodbye</displayName>
+            <priorityID>2</priorityID>
             <priority>SHUTDOWN</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.type.GoodbyeOnShutdownHook</executorPath>
         </hook>

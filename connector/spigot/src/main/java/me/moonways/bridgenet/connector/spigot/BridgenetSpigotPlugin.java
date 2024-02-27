@@ -37,7 +37,7 @@ public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         BridgenetServerSync bridgenet = spigotConnector.getBridgenetServerSync();
-        bridgenet.exportDisconnectMessage();
+        bridgenet.exportDeviceDisconnect();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
