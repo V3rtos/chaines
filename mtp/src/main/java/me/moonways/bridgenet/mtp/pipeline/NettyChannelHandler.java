@@ -3,7 +3,10 @@ package me.moonways.bridgenet.mtp.pipeline;
 import io.netty.channel.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.util.ExceptionallyConsumer;
+import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
+import me.moonways.bridgenet.metrics.MetricType;
 import me.moonways.bridgenet.mtp.MTPChannel;
 import me.moonways.bridgenet.mtp.MTPDriver;
 import me.moonways.bridgenet.mtp.ProtocolDirection;
@@ -19,10 +22,12 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<ExportedMes
     private final List<ChannelHandler> afterHandlersList;
     private final MTPDriver driver;
 
+    @Inject
+    private BridgenetMetricsLogger bridgenetMetricsLogger;
+
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) {
         log.info("§9New connection attempt was detected: {}", ctx.channel());
-
         fireAfterInboundHandlers(subj -> subj.channelRegistered(ctx));
     }
 
@@ -33,6 +38,7 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<ExportedMes
         log.info("  §7- Remote channel connection address: {}", ctx.channel().remoteAddress());
 
         fireAfterInboundHandlers(subj -> subj.channelActive(ctx));
+        bridgenetMetricsLogger.logNetworkConnectionOpened(MetricType.MTP_CONNECTIONS);
     }
 
     @Override
@@ -40,6 +46,7 @@ public class NettyChannelHandler extends SimpleChannelInboundHandler<ExportedMes
         log.info("§4Connected client connection channel has been severed from the server: (ID={})", ctx.channel().id());
 
         fireAfterInboundHandlers(subj -> subj.channelInactive(ctx));
+        bridgenetMetricsLogger.logNetworkConnectionClosed(MetricType.MTP_CONNECTIONS);
     }
 
     private MTPChannel newHandlerChannel(MTPChannel channel) {

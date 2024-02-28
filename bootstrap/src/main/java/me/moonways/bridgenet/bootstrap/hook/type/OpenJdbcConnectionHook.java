@@ -7,7 +7,11 @@ import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 import me.moonways.bridgenet.bootstrap.hook.ApplicationBootstrapHook;
+import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
+import me.moonways.bridgenet.jdbc.core.observer.ObserverAdapter;
+import me.moonways.bridgenet.jdbc.core.observer.event.*;
 import me.moonways.bridgenet.jdbc.provider.BridgenetJdbcProvider;
+import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
@@ -19,6 +23,8 @@ public class OpenJdbcConnectionHook extends ApplicationBootstrapHook {
     @Inject
     private ResourcesAssembly assembly;
     @Inject
+    private BridgenetMetricsLogger bridgenetMetricsLogger;
+    @Inject
     private Gson gson;
 
     @Override
@@ -26,8 +32,9 @@ public class OpenJdbcConnectionHook extends ApplicationBootstrapHook {
         BridgenetJdbcProvider.JdbcSettingsConfig jdbcSettingsConfig = readSettings();
 
         BridgenetJdbcProvider bridgenetJdbcProvider = new BridgenetJdbcProvider();
-
         bridgenetJdbcProvider.initConnection(jdbcSettingsConfig);
+
+        handleDatabaseEventsForMetric(bridgenetJdbcProvider.getDatabaseConnection());
 
         beansService.bind(bridgenetJdbcProvider.getDatabaseProvider());
         beansService.bind(bridgenetJdbcProvider.getDatabaseProvider().getComposer());
@@ -40,5 +47,30 @@ public class OpenJdbcConnectionHook extends ApplicationBootstrapHook {
                         ResourcesTypes.JDBC_SETTINGS_JSON,
                         StandardCharsets.UTF_8),
                 BridgenetJdbcProvider.JdbcSettingsConfig.class);
+    }
+
+    private void handleDatabaseEventsForMetric(DatabaseConnection connection) {
+        connection.addObserver(new ObserverAdapter() {
+
+            @Override
+            protected void observe(DbRequestCompletedEvent event) {
+                bridgenetMetricsLogger.logDatabaseSuccessQuery();
+            }
+
+            @Override
+            protected void observe(DbRequestFailureEvent event) {
+                bridgenetMetricsLogger.logDatabaseFailureQuery();
+            }
+
+            @Override
+            protected void observe(DbTransactionOpenEvent event) {
+                bridgenetMetricsLogger.logDatabaseTransaction();
+            }
+
+            @Override
+            protected void observe(DbTransactionRollbackEvent event) {
+                bridgenetMetricsLogger.logDatabaseRollbackQuery();
+            }
+        });
     }
 }

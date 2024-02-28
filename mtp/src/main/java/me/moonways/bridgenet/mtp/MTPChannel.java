@@ -9,6 +9,7 @@ import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
 import me.moonways.bridgenet.mtp.message.response.ResponsibleMessageService;
@@ -37,9 +38,10 @@ public class MTPChannel implements MTPMessageSender {
 
     @Inject
     private ResponsibleMessageService responseService;
-
     @Inject
     private MessageRegistry messageRegistry;
+    @Inject
+    private BeansService beansService;
 
     @PostConstruct
     public void initAttributes() {

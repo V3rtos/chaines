@@ -18,6 +18,8 @@ public abstract class ObserverAdapter implements DatabaseObserver {
 
     protected void observe(DbRequestCompletedEvent event) {}
 
+    protected void observe(DbRequestFailureEvent event) {}
+
     protected void observe(DbConnectEvent event) {}
 
     protected void observe(DbClosedEvent event) {}
@@ -25,6 +27,12 @@ public abstract class ObserverAdapter implements DatabaseObserver {
     protected void observe(DbRequestPreprocessEvent event) {}
 
     protected void observe(DbReconnectPreprocessEvent event) {}
+
+    protected void observe(DbTransactionOpenEvent event) {}
+
+    protected void observe(DbTransactionCloseEvent event) {}
+
+    protected void observe(DbTransactionRollbackEvent event) {}
 
 // =========================================================================== //
 

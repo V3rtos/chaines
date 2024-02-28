@@ -5,6 +5,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
+import me.moonways.bridgenet.metrics.MetricType;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.MessageWrapper;
@@ -19,6 +22,9 @@ import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
 
     private final MTPConfiguration configuration;
+
+    @Inject
+    private BridgenetMetricsLogger bridgenetMetricsLogger;
 
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, ExportedMessage exportedMessage, ByteBuf byteBuf) {
@@ -43,7 +49,10 @@ public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
                 buffer = encryption.encode(buffer);
             }
 
-            ByteCompression.write(ByteCodec.readBytesArray(buffer), byteBuf);
+            byte[] array = ByteCodec.readBytesArray(buffer);
+            ByteCompression.write(array, byteBuf);
+
+            bridgenetMetricsLogger.logNetworkTrafficBytesWrite(MetricType.MTP_TRAFFIC, array.length);
         }
         catch (Exception exception) {
             log.error(new MessageCodecException(exception));
