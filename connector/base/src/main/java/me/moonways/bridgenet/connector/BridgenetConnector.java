@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
@@ -39,6 +40,11 @@ public abstract class BridgenetConnector {
 
     protected abstract DeviceDescription createDescription();
 
+    @PostConstruct
+    private void postBind() {
+        doConnect();
+    }
+
     /**
      * Исполнить процесс базового подключения к
      * серверу системы Bridgenet и инициализации всех
@@ -50,15 +56,15 @@ public abstract class BridgenetConnector {
         engine.setProperties();
 
         BeansService beansService = engine.bindAll();
-        beansService.inject(this);
-        beansService.inject(channelHandler);
 
         beansService.bind(bridgenetServerSync);
         beansService.bind(bridgenetGamesSync);
 
-        log.info("****************************** END BRIDGENET-CONNECTOR INITIALIZATION ******************************");
+        beansService.inject(channelHandler);
 
-        doConnect();
+        beansService.bind(this);
+
+        log.info("****************************** END BRIDGENET-CONNECTOR INITIALIZATION ******************************");
     }
 
     /**
