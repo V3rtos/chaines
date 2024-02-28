@@ -22,7 +22,12 @@ public class BridgenetConsole extends SimpleTerminalConsole {
 
     @Override
     protected boolean isRunning() {
-        return true; // TODO: 07.05.2023
+        return bootstrap.isRunning();
+    }
+
+    @Override
+    protected void shutdown() {
+        bootstrap.shutdown();
     }
 
     @Override
@@ -38,10 +43,5 @@ public class BridgenetConsole extends SimpleTerminalConsole {
         catch (CommandExecutionException exception) {
             log.warn("§6That command is not found: §e{}", exception.toString());
         }
-    }
-
-    @Override
-    protected void shutdown() {
-        bootstrap.shutdown();
     }
 }

@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,6 +31,12 @@ public class AppBootstrap {
     private final BootstrapHookContainer hooksContainer = new BootstrapHookContainer();
     @Getter
     private final BeansService beansService = new BeansService();
+
+    private final AtomicBoolean isRunning = new AtomicBoolean(false);
+
+    public synchronized boolean isRunning() {
+        return isRunning.get();
+    }
 
     private void processBootstrapHooks(@NotNull BootstrapHookPriority priority) {
         Collection<ApplicationBootstrapHook> hooksByPriority = hooksContainer.findOrderedHooks(priority);
@@ -59,6 +66,7 @@ public class AppBootstrap {
     }
 
     public void start(String[] args) {
+        isRunning.set(true);
         log.info("Running Bridgenet bootstrap process with args = {}", Arrays.toString(args));
 
         startBeansActivity();
@@ -73,6 +81,7 @@ public class AppBootstrap {
     }
 
     public void shutdown() {
+        isRunning.set(false);
         log.info("§4Shutting down Bridgenet services");
 
         processBootstrapHooks(BootstrapHookPriority.PRE_SHUTDOWN);
