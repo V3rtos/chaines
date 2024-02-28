@@ -16,6 +16,7 @@ import me.moonways.bridgenet.mtp.transfer.ByteCompression;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
@@ -34,14 +35,15 @@ public class MessageDecoder extends ByteToMessageDecoder {
                 return;
             }
 
-            int messageId = byteBuf.readIntLE();
-
+            int messageId = byteBuf.readInt();
             ExportedMessage message = decodeMessage(messageId, byteBuf);
+
             if (message != null) {
                 list.add(message);
             }
-        }
-        finally {
+        } catch (IndexOutOfBoundsException exception) {
+            caughtException(byteBuf, exception);
+        } finally {
             byteBuf.skipBytes(byteBuf.readableBytes());
         }
     }
@@ -78,5 +80,16 @@ public class MessageDecoder extends ByteToMessageDecoder {
             log.error(new MessageCodecException(exception));
             return null;
         }
+    }
+
+    private void caughtException(ByteBuf byteBuf, Exception exception) {
+        byte[] array = byteBuf.array();
+
+        String asString = new String(array);
+        String asArray = Arrays.toString(array);
+
+        log.error("§4Failed to read {} bytes from an incoming packet of {} bytes: §c{asArray={}, asString=\"{}\"}",
+                byteBuf.readableBytes(), array.length, asArray, asString,
+                new MessageCodecException(exception));
     }
 }

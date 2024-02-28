@@ -87,7 +87,7 @@ public final class ResourcesFileSystem {
     public File findAsFile(String resourceName) {
         Path path = findPath(resourceName);
         if (!Files.exists(path)) {
-            log.warn("§eCouldn't find resource {} in 'etc' directory", resourceName);
+            log.warn("§6Couldn't find resource {} in 'etc' directory", resourceName);
         }
         return path.toFile();
     }

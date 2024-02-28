@@ -23,14 +23,11 @@ public class ConnectorHandshakeTest {
     @Inject
     private ConsoleCommandSender consoleCommandSender;
 
-    @Before
-    public void setUp() {
-        subj.start();
-    }
-
     @Test
     public void test_handshakeSuccess() {
+        subj.start();
         assertNotNull(subj.getCurrentDeviceId());
+
         command();
     }
 

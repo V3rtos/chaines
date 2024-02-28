@@ -92,8 +92,8 @@ public final class MessageEncryption {
     public void generateKeys() {
         if (security == null || !security.isFilled()) {
 
-            log.warn("§4Paired keys cannot be matches!");
-            log.warn("§4Generating new security keys...");
+            log.warn("§6Paired keys cannot be matches!");
+            log.warn("§6Generating new security keys...");
 
             generateKeyPair();
 

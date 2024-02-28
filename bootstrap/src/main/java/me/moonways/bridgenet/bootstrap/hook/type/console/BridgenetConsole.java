@@ -36,7 +36,7 @@ public class BridgenetConsole extends SimpleTerminalConsole {
             commandExecutor.execute(consoleSender, commandLine);
         }
         catch (CommandExecutionException exception) {
-            log.warn("§4That command is not found: §c{}", exception.toString());
+            log.warn("§6That command is not found: §e{}", exception.toString());
         }
     }
 

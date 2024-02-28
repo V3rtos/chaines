@@ -122,7 +122,7 @@ public class DecoratedObjectProxy {
 
                 for (Class<?> conflictedAnnotation : conflictedAnnotations) {
                     if (proxiedMethod.hasAnnotation(conflictedAnnotation.asSubclass(Annotation.class))) {
-                        log.warn("§4Founded decorators conflict at {}: §c{} with {}", proxiedMethod,
+                        log.warn("§6Founded decorators conflict at {}: §e{} with {}", proxiedMethod,
                             "@" + annotation.getSimpleName(), "@" + conflictedAnnotation.getSimpleName());
 
                         return true;

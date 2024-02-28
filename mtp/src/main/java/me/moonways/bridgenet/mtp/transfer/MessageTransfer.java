@@ -52,7 +52,7 @@ public final class MessageTransfer {
         ByteTransfer declaredAnnotation = field.getDeclaredAnnotation(ByteTransfer.class);
 
         if (declaredAnnotation == null) {
-            log.warn("Message field '{}' is not transferable then to be ignored", field);
+            log.warn("§6Message field '{}' is not transferable then to be ignored", field);
             return null;
         }
 

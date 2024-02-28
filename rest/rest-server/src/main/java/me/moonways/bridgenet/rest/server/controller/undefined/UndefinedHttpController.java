@@ -43,7 +43,7 @@ public final class UndefinedHttpController implements HttpController {
         final RequestLine state = request.getRequestLine();
         final ProtocolVersion protocolVersion = state.getProtocolVersion();
 
-        log.warn("§4HttpServer (v{}) has received UNDEFINED request: (method='{}', uri='{}')",
+        log.warn("§6HttpServer (v{}) has received UNDEFINED request: (method='{}', uri='{}')",
                 String.format("%d.%d", protocolVersion.getMajor(), protocolVersion.getMinor()),
                 state.getMethod(), state.getUri());
     }

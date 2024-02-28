@@ -34,7 +34,7 @@ public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
             MessageTransfer messageTransfer = MessageTransfer.encode(message);
             messageTransfer.buf();
 
-            byteBuf.writeIntLE(wrapper.getId());
+            byteBuf.writeInt(wrapper.getId());
             ByteBuf buffer = messageTransfer.getByteBuf();
 
             if (wrapper.needsEncryption()) {

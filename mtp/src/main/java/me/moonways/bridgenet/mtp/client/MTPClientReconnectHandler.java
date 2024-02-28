@@ -35,7 +35,7 @@ public class MTPClientReconnectHandler extends ChannelInboundHandlerAdapter {
             clientHandler.onDisconnected(client.getChannel());
         }
 
-        log.warn("§4Bridgenet server channel has inactive, trying reconnect...");
+        log.warn("§6Bridgenet server channel has inactive, trying reconnect...");
         startReconnect();
     }
 

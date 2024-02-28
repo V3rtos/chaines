@@ -27,7 +27,7 @@ case $1 in
     "-j" | "jar")
         source .scripts/build_project.sh
         ;;
-    "-b" | "--build")
+    "-b" | "build")
         source .scripts/build_project.sh
         source .scripts/build_endpoints.sh "$2"
         source .scripts/config_endpoints.sh "$2"

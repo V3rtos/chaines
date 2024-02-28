@@ -78,7 +78,7 @@ public class EndpointLoader {
                     .resolve(servicesContentPath);
 
             if (!Files.exists(servicesContentPath) || !Files.isDirectory(servicesContentPath)) {
-                log.warn("§4Directory '{}' for services content was not found", servicesContentPathname);
+                log.warn("§6Directory '{}' for services content was not found", servicesContentPathname);
                 return Collections.emptyList();
             }
         }
@@ -93,7 +93,7 @@ public class EndpointLoader {
                             ServiceInfo serviceInfo = findServiceInfo(name);
 
                             if (serviceInfo == null) {
-                                log.warn("§4Directory '{}' not loaded as endpoint", name);
+                                log.warn("§6Directory '{}' not loaded as endpoint", name);
                                 return;
                             }
 
