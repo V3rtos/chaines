@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.velocity;
+package me.moonways.bridgenet.connector.velocity;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
