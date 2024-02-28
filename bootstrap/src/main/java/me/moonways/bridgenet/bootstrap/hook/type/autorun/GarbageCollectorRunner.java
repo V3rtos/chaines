@@ -14,7 +14,13 @@ public class GarbageCollectorRunner {
 
     @Runnable
     public void run() {
-        Runtime.getRuntime().gc();
-        log.debug("Memory was cleaned automatically");
+        Runtime runtime = Runtime.getRuntime();
+
+        long freeBefore = runtime.freeMemory();
+
+        runtime.gc();
+        long freeAfter = runtime.freeMemory();
+
+        log.debug("The memory used was automatically cleared by the Garbage Collector system [{} -> {}]", freeBefore, freeAfter);
     }
 }
