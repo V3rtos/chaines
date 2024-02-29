@@ -1,11 +1,13 @@
 stages:
   - build
+  - test
 cache:
   paths:
     - $CI_PROJECT_DIR/.m2/repository
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  TEST_ENGINE_MODULE: "test-engine";
 
 build:
   image: maven:3-jdk-8
@@ -19,3 +21,15 @@ build:
     expire_in: 5 days
     paths:
       - $CI_PROJECT_DIR/*
+
+unit_test:
+  image: maven:3-jdk-8
+  stage: test
+  interruptible: true
+  tags:
+    - $CI_RUNNER_TAG
+  dependencies:
+    - build
+  script:
+    cd $TEST_ENGINE_MODULE
+    mvn test

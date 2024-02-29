@@ -8,7 +8,7 @@ rm -rf "$ENDPOINTS_TARGET_PATH"
 mkdir "$ENDPOINTS_TARGET_PATH"
 
 cd "services/model"
-mvn clean install -Dmaven.test.skip || exit
+mvn clean install package -Dmaven.test.skip || exit
 cd ../../
 
 function compile() {
@@ -27,7 +27,7 @@ function install_endpoint() {
 
   mkdir "$target_path"
   cd "$endpoint_path" || exit
-  mvn clean install
+  mvn clean install package
   except_code
 }
 
