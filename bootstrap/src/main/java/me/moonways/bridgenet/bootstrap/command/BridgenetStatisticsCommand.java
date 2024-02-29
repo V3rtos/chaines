@@ -16,10 +16,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@Alias("metrics")
+@Alias("system")
+@Alias("bn")
 @Command("bridgenet")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
-public class BridgenetMetricCommand {
+public class BridgenetStatisticsCommand {
 
     private static final SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS");
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss.SSS");

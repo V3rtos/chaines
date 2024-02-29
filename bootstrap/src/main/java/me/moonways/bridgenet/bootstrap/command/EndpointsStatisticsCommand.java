@@ -16,7 +16,7 @@ import java.util.Map;
 @Alias("ep")
 @Command("endpoints")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
-public class EndpointsStatisticCommand {
+public class EndpointsStatisticsCommand {
 
     @Inject
     private RemoteServiceRegistry registry;

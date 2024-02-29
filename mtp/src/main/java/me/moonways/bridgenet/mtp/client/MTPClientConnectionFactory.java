@@ -1,21 +1,23 @@
 package me.moonways.bridgenet.mtp.client;
 
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFactory;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.mtp.*;
-import me.moonways.bridgenet.mtp.exception.ChannelException;
+import me.moonways.bridgenet.mtp.message.codec.MessageDecoder;
+import me.moonways.bridgenet.mtp.message.codec.MessageEncoder;
+import me.moonways.bridgenet.mtp.pipeline.NettyChannelHandler;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Autobind
@@ -93,7 +95,9 @@ public class MTPClientConnectionFactory {
     private MTPClient createClient(MTPClientChannelHandler clientChannelHandler) {
         ChannelFactory<? extends Channel> clientChannelFactory = NettyFactory.createClientChannelFactory();
 
-        NettyPipelineInitializer channelInitializer = NettyPipelineInitializer.create(driver, connectionFactory.getConfiguration());
+        NettyPipelineInitializer channelInitializer = NettyPipelineInitializer.create(driver, connectionFactory.getConfiguration())
+                .thenComplete(channel -> NettyFactory.injectPipeline(beansService, channel));
+
         EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(2);
 
         MTPClient client = MTPConnectionFactory.newClientBuilder(connectionFactory)

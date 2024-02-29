@@ -13,7 +13,9 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationContext;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationResult;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
+import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
+import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -77,7 +79,11 @@ public final class BeansService {
         bind(injector);
         bind(annotationsAwaits);
         bind(interceptor);
+
+        // other internal Bridgenet module dependencies.
+        bind(new XmlJaxbParser());
         bind(new ResourcesAssembly());
+        bind(new BridgenetMetricsLogger());
     }
 
     /**

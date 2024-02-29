@@ -51,7 +51,8 @@ public class BusServiceEndpoint extends AbstractEndpointDefinition implements Bu
         ChannelFactory<? extends ServerChannel> serverChannelFactory = NettyFactory.createServerChannelFactory();
 
         MTPConfiguration configuration = connectionFactory.getConfiguration();
-        NettyPipelineInitializer channelInitializer = NettyPipelineInitializer.create(driver, configuration);
+        NettyPipelineInitializer channelInitializer = NettyPipelineInitializer.create(driver, configuration)
+                .thenComplete(channel -> NettyFactory.injectPipeline(beansService, channel));
 
         EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(configuration.getSettings().getWorkers().getBossThreads());
         EventLoopGroup childWorker = NettyFactory.createEventLoopGroup(configuration.getSettings().getWorkers().getChildThreads());

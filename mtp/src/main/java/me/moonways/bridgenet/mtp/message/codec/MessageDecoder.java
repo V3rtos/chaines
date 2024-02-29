@@ -5,6 +5,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
+import me.moonways.bridgenet.metrics.MetricType;
 import me.moonways.bridgenet.mtp.config.MTPConfiguration;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
@@ -27,13 +30,19 @@ public class MessageDecoder extends ByteToMessageDecoder {
     private final MessageRegistry registry;
     private final MTPConfiguration configuration;
 
+    @Inject
+    private BridgenetMetricsLogger bridgenetMetricsLogger;
+
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
         try {
-            if (byteBuf.readableBytes() == 0) {
+            int readableBytes = byteBuf.readableBytes();
+            if (readableBytes == 0) {
                 log.error(new MessageNotFoundException("Get empty packet from decoder"));
                 return;
             }
+
+            bridgenetMetricsLogger.logNetworkTrafficBytesRead(MetricType.MTP_TRAFFIC, readableBytes);
 
             int messageId = byteBuf.readInt();
             ExportedMessage message = decodeMessage(messageId, byteBuf);
@@ -42,7 +51,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
                 list.add(message);
             }
         } catch (IndexOutOfBoundsException exception) {
-            caughtException(byteBuf, exception);
+            caughtBytesReadException(byteBuf, exception);
         } finally {
             byteBuf.skipBytes(byteBuf.readableBytes());
         }
@@ -82,7 +91,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
         }
     }
 
-    private void caughtException(ByteBuf byteBuf, Exception exception) {
+    private void caughtBytesReadException(ByteBuf byteBuf, Exception exception) {
         byte[] array = byteBuf.array();
 
         String asString = new String(array);
