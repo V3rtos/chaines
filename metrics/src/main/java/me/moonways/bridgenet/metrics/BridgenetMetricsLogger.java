@@ -14,6 +14,18 @@ public class BridgenetMetricsLogger {
         }
     }
 
+    public void logSystemMemoryFree() {
+        doPut(MetricType.MEMORY, "Free (MB)", Runtime.getRuntime().freeMemory() / 1024 / 1024);
+    }
+
+    public void logSystemMemoryTotal() {
+        doPut(MetricType.MEMORY, "Total (MB)", Runtime.getRuntime().totalMemory() / 1024 / 1024);
+    }
+
+    public void logSystemMemoryUsed() {
+        doPut(MetricType.MEMORY, "Used (MB)", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024);
+    }
+
     public void logNetworkTrafficBytesRead(MetricType metricType, long readableBytes) {
         doPut(metricType, "Reads", readableBytes);
     }

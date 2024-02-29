@@ -11,6 +11,7 @@ public enum MetricType {
     MTP_CONNECTIONS("MTP Network Connections", ChartType.LINE),
     JDBC_QUERIES("Java Database Connection Queries", ChartType.POLAR_AREA),
     HTTP_REST("HTTP Network Traffic", ChartType.SPARKLINE),
+    MEMORY("System Memory", ChartType.LINE),
     ;
 
     @Getter
