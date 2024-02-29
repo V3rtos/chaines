@@ -40,11 +40,6 @@ public abstract class BridgenetConnector {
 
     protected abstract DeviceDescription createDescription();
 
-    @PostConstruct
-    private void postBind() {
-        doConnect();
-    }
-
     /**
      * Исполнить процесс базового подключения к
      * серверу системы Bridgenet и инициализации всех
@@ -65,6 +60,8 @@ public abstract class BridgenetConnector {
         beansService.bind(this);
 
         log.info("****************************** END BRIDGENET-CONNECTOR INITIALIZATION ******************************");
+
+        doConnect();
     }
 
     /**

@@ -73,19 +73,18 @@ public class NettyPipelineInitializer extends ChannelInitializer<Channel> {
         initHandlers(channel.pipeline());
         initOptions(channel.config());
 
+        initAdditionalInitializers(channel);
+
         if (initChannelConsumer != null)
             initChannelConsumer.accept(channel);
-
-        initAdditionalInitializers(channel);
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     @NotNull
     public NettyPipelineInitializer thenComplete(@NotNull Consumer<Channel> initChannelConsumer) {
         if (this.initChannelConsumer == null)
             this.initChannelConsumer = initChannelConsumer;
         else
-            this.initChannelConsumer.andThen(initChannelConsumer);
+            this.initChannelConsumer = this.initChannelConsumer.andThen(initChannelConsumer);
         return this;
     }
 

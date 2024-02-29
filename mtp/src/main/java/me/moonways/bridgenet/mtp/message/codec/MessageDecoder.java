@@ -51,7 +51,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
                 list.add(message);
             }
         } catch (IndexOutOfBoundsException exception) {
-            caughtException(byteBuf, exception);
+            caughtBytesReadException(byteBuf, exception);
         } finally {
             byteBuf.skipBytes(byteBuf.readableBytes());
         }
@@ -91,7 +91,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
         }
     }
 
-    private void caughtException(ByteBuf byteBuf, Exception exception) {
+    private void caughtBytesReadException(ByteBuf byteBuf, Exception exception) {
         byte[] array = byteBuf.array();
 
         String asString = new String(array);

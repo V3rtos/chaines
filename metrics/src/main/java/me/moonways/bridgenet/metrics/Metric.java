@@ -13,7 +13,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class Metric {
 
-    private static final int MAX_VALUES_SIZE = 1024 * 10;
+    private static final int MAX_VALUES_SIZE = 1024;
 
     @EqualsAndHashCode.Include
     private final UUID id;
@@ -24,9 +24,9 @@ public class Metric {
 
     public Metric put(String label, long value) {
         values.add(new MetricValue(label, value, System.nanoTime()));
-        if (values.size() >= MAX_VALUES_SIZE) {
+
+        if (values.size() >= MAX_VALUES_SIZE)
             values.remove(0);
-        }
         return this;
     }
 

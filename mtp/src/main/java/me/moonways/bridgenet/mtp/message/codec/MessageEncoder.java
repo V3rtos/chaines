@@ -52,7 +52,7 @@ public class MessageEncoder extends MessageToByteEncoder<ExportedMessage> {
             byte[] array = ByteCodec.readBytesArray(buffer);
             ByteCompression.write(array, byteBuf);
 
-            bridgenetMetricsLogger.logNetworkTrafficBytesWrite(MetricType.MTP_TRAFFIC, array.length);
+            bridgenetMetricsLogger.logNetworkTrafficBytesWrite(MetricType.MTP_TRAFFIC, byteBuf.writableBytes());
         }
         catch (Exception exception) {
             log.error(new MessageCodecException(exception));

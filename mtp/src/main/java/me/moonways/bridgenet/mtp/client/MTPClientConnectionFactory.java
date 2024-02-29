@@ -95,10 +95,10 @@ public class MTPClientConnectionFactory {
     private MTPClient createClient(MTPClientChannelHandler clientChannelHandler) {
         ChannelFactory<? extends Channel> clientChannelFactory = NettyFactory.createClientChannelFactory();
 
-        NettyPipelineInitializer channelInitializer = NettyPipelineInitializer.create(driver, connectionFactory.getConfiguration());
-        EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(2);
+        NettyPipelineInitializer channelInitializer = NettyPipelineInitializer.create(driver, connectionFactory.getConfiguration())
+                .thenComplete(channel -> NettyFactory.injectPipeline(beansService, channel));
 
-        channelInitializer.thenComplete(this::injectPipeline);
+        EventLoopGroup parentWorker = NettyFactory.createEventLoopGroup(2);
 
         MTPClient client = MTPConnectionFactory.newClientBuilder(connectionFactory)
                 .setGroup(parentWorker)
@@ -171,17 +171,5 @@ public class MTPClientConnectionFactory {
         public void close() {
             channelRef.get().close();
         }
-    }
-
-    private void injectPipeline(Channel channel) {
-        ChannelPipeline pipeline = channel.pipeline();
-
-        MessageDecoder decoder = pipeline.get(MessageDecoder.class);
-        MessageEncoder encoder = pipeline.get(MessageEncoder.class);
-        NettyChannelHandler channelHandler = pipeline.get(NettyChannelHandler.class);
-
-        beansService.inject(decoder);
-        beansService.inject(encoder);
-        beansService.inject(channelHandler);
     }
 }
