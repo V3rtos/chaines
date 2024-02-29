@@ -6,6 +6,7 @@ import java.util.EnumMap;
 public class BridgenetMetricsLogger {
 
     private static final BridgenetMetricsProvider PROVIDER = new BridgenetMetricsProvider();
+
     private final EnumMap<MetricType, Metric> metricsByTypeMap = new EnumMap<>(MetricType.class);
     {
         for (MetricType metricType : MetricType.values()) {

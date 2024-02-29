@@ -7,18 +7,30 @@ import me.moonways.bridgenet.metrics.quickchart.QuickChartApi;
 import me.moonways.bridgenet.metrics.quickchart.dto.ChartData;
 import me.moonways.bridgenet.metrics.quickchart.dto.IllustrationRequest;
 import me.moonways.bridgenet.metrics.quickchart.dto.Options;
+import me.moonways.bridgenet.metrics.settings.MetricsSettings;
+import me.moonways.bridgenet.metrics.settings.MetricsSettingsParser;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Log4j2
 public final class BridgenetMetricsProvider {
 
-    private static final int DEFAULT_IMAGE_WIDTH = 1200;
-    private static final int DEFAULT_IMAGE_HEIGHT = 600;
     private static final String DEFAULT_IMAGE_BACKGROUND_COLOR = "transparent";
     private static final String DEFAULT_IMAGE_FORMAT = "png";
 
     private final QuickChartApi api = new QuickChartApi();
+
+    private final MetricsSettings settings; {
+        settings = new MetricsSettingsParser().readSettings();
+    }
 
     /**
      * Создать объект метрики, через которую в дальнейшем
@@ -60,7 +72,10 @@ public final class BridgenetMetricsProvider {
                                 .build())
                         .build());
 
-        return api.requestIllustrationURL(request);
+        String illustrationURL = api.requestIllustrationURL(request);
+        storeImage(metric, chartType, illustrationURL);
+
+        return illustrationURL;
     }
 
     /**
@@ -70,10 +85,52 @@ public final class BridgenetMetricsProvider {
     private IllustrationRequest wrapChartToRequestBody(ChartData chart) {
         return IllustrationRequest.builder()
                 .chart(chart)
+                .imageWidth(settings.getDimensions().getWidth())
+                .imageHeight(settings.getDimensions().getHeight())
                 .backgroundColor(DEFAULT_IMAGE_BACKGROUND_COLOR)
                 .imageFormat(DEFAULT_IMAGE_FORMAT)
-                .imageWidth(DEFAULT_IMAGE_WIDTH)
-                .imageHeight(DEFAULT_IMAGE_HEIGHT)
                 .build();
+    }
+
+    /**
+     * Воспроизвести сохранение сгенерированной иллюстрации метрики
+     * в директорию, с условием, что если в настройках метрики
+     * включена возможность сохранения их в файл.
+     *
+     * @param metric - метрика, от которой была сгенерирована иллюстрация.
+     * @param url - https ссылка на иллюстрацию.
+     */
+    private void storeImage(Metric metric, ChartType chartType, String url) {
+        try {
+            MetricsSettings.ImagesStore imagesStore = settings.getImagesStore();
+
+            if (imagesStore.isEnabled()) {
+                BufferedImage bufferedImage = ImageIO.read(new URL(url));
+
+                Path path = Paths.get(imagesStore.getFolderName());
+                if (!Files.exists(path)) {
+                    Files.createDirectories(path);
+                }
+
+                String imageFileName = getImageFileName(metric, chartType);
+                ImageIO.write(bufferedImage, DEFAULT_IMAGE_FORMAT, path.resolve(imageFileName).toFile());
+
+                log.info("The §7\"{}\" §rmetric illustration was successfully saved to the directory as §e{}", metric.getName(), imageFileName);
+            }
+        }
+        catch (IOException exception) {
+            log.error("§4An error occurred when trying to save an illustration of a metric", exception);
+        }
+    }
+
+    /**
+     * Сгенерировать и получить наименование файла, который будет
+     * содержать сохраненную иллюстрацию метрики.
+     *
+     * @param metric - метрика, от которой была сгенерирована иллюстрация.
+     */
+    private String getImageFileName(Metric metric, ChartType chartType) {
+        return String.format("%s_%s_%s.%s", metric.getName().replace(" ", "_"), chartType.name(),
+                ThreadLocalRandom.current().nextInt(), DEFAULT_IMAGE_FORMAT);
     }
 }
