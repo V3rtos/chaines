@@ -9,12 +9,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Данный маппер необходим для генерации корректных
+ * параметров относительно определенного типа графика
+ * и метрики, которые в дальнейшем пойдут в тело запроса.
+ */
 @RequiredArgsConstructor
-public class ChartTypeProvider {
+public class ChartDataMapper {
 
     private final ChartType chartType;
     private final Metric metric;
 
+    /**
+     * Сгенерировать и получить наименование типа графика,
+     * которое в дальнейшем будет передаваться в запрос QuickChart.
+     */
     public String getTypeName() {
         String lowerCase = chartType.name().toLowerCase();
         if (lowerCase.contains("_")) {
@@ -26,6 +35,10 @@ public class ChartTypeProvider {
         return lowerCase;
     }
 
+    /**
+     * Получить список данных, которые в дальнейшем будут
+     * передаваться в запрос QuickChart.
+     */
     public List<Dataset> getDatasets() {
         switch (chartType) {
             case POLAR_AREA:
@@ -38,6 +51,10 @@ public class ChartTypeProvider {
         }
     }
 
+    /**
+     * Сгенерировать список данных, образ которых пойдет
+     * на типы графиков, похожих на "пирог".
+     */
     private List<Dataset> getPieSimilarTypeDatasets() {
         return Collections.singletonList(
                 Dataset.builder()
@@ -48,6 +65,10 @@ public class ChartTypeProvider {
         );
     }
 
+    /**
+     * Сгенерировать стандартный список данных
+     * для запроса в QuickChart.
+     */
     private List<Dataset> getDefaultDatasets() {
         Map<String, Dataset> datasets = new HashMap<>();
 
@@ -71,6 +92,10 @@ public class ChartTypeProvider {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Получить список наименований столбцов, которые будут
+     * отображаться на иллюстрации и передаваться в запрос QuickChart.
+     */
     public List<String> getLabels() {
         Stream<String> stringStream = metric.getValues().stream()
                 .map(MetricValue::getLabel);

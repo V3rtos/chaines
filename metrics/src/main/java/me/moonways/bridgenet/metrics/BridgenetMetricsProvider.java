@@ -2,7 +2,7 @@ package me.moonways.bridgenet.metrics;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.metrics.chart.ChartType;
-import me.moonways.bridgenet.metrics.chart.ChartTypeProvider;
+import me.moonways.bridgenet.metrics.chart.ChartDataMapper;
 import me.moonways.bridgenet.metrics.quickchart.QuickChartApi;
 import me.moonways.bridgenet.metrics.quickchart.dto.ChartData;
 import me.moonways.bridgenet.metrics.quickchart.dto.IllustrationRequest;
@@ -56,13 +56,13 @@ public final class BridgenetMetricsProvider {
     public String provideMetricIllustration(ChartType chartType, Metric metric) {
         log.info("Requesting '{}' type of metrics illustration for §2{}", chartType, metric);
 
-        ChartTypeProvider chartTypeProvider = new ChartTypeProvider(chartType, metric);
+        ChartDataMapper chartDataMapper = new ChartDataMapper(chartType, metric);
         IllustrationRequest request = wrapChartToRequestBody(
                 ChartData.builder()
-                        .type(chartTypeProvider.getTypeName())
+                        .type(chartDataMapper.getTypeName())
                         .data(ChartData.Data.builder()
-                                .labels(chartTypeProvider.getLabels())
-                                .datasets(chartTypeProvider.getDatasets())
+                                .labels(chartDataMapper.getLabels())
+                                .datasets(chartDataMapper.getDatasets())
                                 .build())
                         .options(Options.builder()
                                 .title(Options.Title.builder()
