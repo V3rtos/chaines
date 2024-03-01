@@ -51,8 +51,8 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
     }
 
     private void initOptions(@NotNull ChannelConfig config) {
-        //config.setOption(ChannelOption.TCP_NODELAY, true);
-        //config.setOption(ChannelOption.IP_TOS, 0x02);
+        config.setOption(ChannelOption.TCP_NODELAY, true);
+        config.setOption(ChannelOption.IP_TOS, 0x02);
     }
 
     private void addToPipeline(ChannelPipeline pipeline, ChannelHandler channelHandler) {
