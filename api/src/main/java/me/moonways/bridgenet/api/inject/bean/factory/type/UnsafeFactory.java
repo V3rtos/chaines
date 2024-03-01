@@ -1,6 +1,7 @@
-package me.moonways.bridgenet.api.inject.bean.factory;
+package me.moonways.bridgenet.api.inject.bean.factory.type;
 
 import me.moonways.bridgenet.api.inject.bean.BeanException;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
