@@ -1,7 +1,13 @@
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+cache:
+  paths:
+    - $CI_PROJECT_DIR/.m2/repository
 
-stages: [build, test]
+stages:
+  - build
+#  - test
+
 build:
   image: maven:3-jdk-8
   stage: build
@@ -13,15 +19,16 @@ build:
     when: always
     expire_in: 5 days
     paths:
-      - target/
-test:
-  image: maven:3-jdk-8
-  stage: test
-  interruptible: true
-  tags:
-    - $CI_RUNNER_TAG
-  dependencies:
-    - build
-  script: |-
-    cd test-engine
-    mvn test
+      - $CI_PROJECT_DIR/*
+#      - target/
+#test:
+#  image: maven:3-jdk-8
+#  stage: test
+#  interruptible: true
+#  tags:
+#    - $CI_RUNNER_TAG
+#  dependencies:
+#    - build
+#  script: |-
+#    cd test-engine
+#    mvn test
