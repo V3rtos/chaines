@@ -1,11 +1,10 @@
 package me.moonways.bridgenet.mtp.message.encryption;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.mtp.config.CipherSecurity;
+import me.moonways.bridgenet.mtp.config.descriptor.NetworkCipherSecurityDescriptor;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 
 import javax.crypto.Cipher;
@@ -28,7 +27,7 @@ public final class MessageEncryption {
     private static final int KEY_SIZE = 2048;
 
 
-    private final CipherSecurity security;
+    private final NetworkCipherSecurityDescriptor security;
     private PrivateKey privateKey;
     private PublicKey publicKey;
 

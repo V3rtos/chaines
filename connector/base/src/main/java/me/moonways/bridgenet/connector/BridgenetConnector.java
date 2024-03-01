@@ -4,15 +4,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.connector.description.DeviceDescription;
 import me.moonways.bridgenet.model.bus.message.Handshake;
-import me.moonways.bridgenet.mtp.MTPDriver;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
-import me.moonways.bridgenet.mtp.client.MTPClientConnectionFactory;
+import me.moonways.bridgenet.mtp.BridgenetNetworkController;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
+import me.moonways.bridgenet.mtp.connection.client.NetworkClientConnectionFactory;
 
 import java.util.UUID;
 
@@ -21,13 +20,13 @@ import java.util.UUID;
 public abstract class BridgenetConnector {
 
     @Inject
-    private MTPClientConnectionFactory clientConnectionFactory;
+    private NetworkClientConnectionFactory clientConnectionFactory;
     @Inject
     private BeansStore beansStore;
     @Inject
     private BeansScanningService beansScanner;
     @Inject
-    private MTPDriver mtpDriver;
+    private BridgenetNetworkController networkDriver;
 
     @Getter
     private final ConnectorEngine engine = new ConnectorEngine();
@@ -80,7 +79,7 @@ public abstract class BridgenetConnector {
      * системы Bridgenet.
      */
     private void tryConnectToBridgenetServer() {
-        MTPMessageSender channel = engine.connectBridgenetServer(mtpDriver, clientConnectionFactory, channelHandler);
+        BridgenetNetworkChannel channel = engine.connectBridgenetServer(networkDriver, clientConnectionFactory, channelHandler);
         handleConnection(channel);
     }
 
@@ -90,7 +89,7 @@ public abstract class BridgenetConnector {
      *
      * @param channel - клиентский канал.
      */
-    protected void handleConnection(MTPMessageSender channel) {
+    protected void handleConnection(BridgenetNetworkChannel channel) {
         bridgenetServerSync.setChannel(channel);
         exportDeviceHandshake();
     }
@@ -114,7 +113,7 @@ public abstract class BridgenetConnector {
      *
      * @param channel - клиентский канал, которому удалось подключиться.
      */
-    public void onConnected(MTPMessageSender channel) {
+    public void onConnected(BridgenetNetworkChannel channel) {
         // override me.
     }
 
@@ -131,8 +130,8 @@ public abstract class BridgenetConnector {
     /**
      * Получить клиентский канал к единому серверу Bridgenet.
      */
-    public final MTPMessageSender getChannel() {
-        MTPMessageSender channel = channelHandler.getChannel();
+    public final BridgenetNetworkChannel getChannel() {
+        BridgenetNetworkChannel channel = channelHandler.getChannel();
         bridgenetServerSync.setChannel(channel);
 
         return channel;
@@ -151,7 +150,7 @@ public abstract class BridgenetConnector {
      * Bridgenet и деинициализировать сервисы.
      */
     public final void shutdownConnection() {
-        MTPMessageSender channel = getChannel();
+        BridgenetNetworkChannel channel = getChannel();
 
         if (channel != null) {
             channelHandler.onDisconnected(channel);
@@ -164,6 +163,6 @@ public abstract class BridgenetConnector {
         clientConnectionFactory = null;
         beansStore = null;
         beansScanner = null;
-        mtpDriver = null;
+        networkDriver = null;
     }
 }

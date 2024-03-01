@@ -2,7 +2,7 @@ package me.moonways.bridgenet.test.mtp;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.bus.message.Handshake;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import me.moonways.bridgenet.test.engine.util.TestMTPClientConnection;
 import org.junit.Test;
@@ -23,10 +23,10 @@ public class MtpServerHandshakeTest {
     private TestMTPClientConnection clientConnection;
 
     private Handshake.Result sendHandshakeMessage() {
-        MTPMessageSender channel = clientConnection.getChannel();
+        BridgenetNetworkChannel channel = clientConnection.getChannel();
 
         Handshake message = newHandshakeMessage("Test-1");
-        CompletableFuture<Handshake.Result> future = channel.sendMessageWithResponse(Handshake.Result.class, message);
+        CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class, message);
         try {
             return future.join();
         } catch (CompletionException exception) {

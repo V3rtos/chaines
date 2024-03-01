@@ -3,20 +3,20 @@ package me.moonways.bridgenet.connector;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
-import me.moonways.bridgenet.mtp.client.MTPClientChannelHandler;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
+import me.moonways.bridgenet.mtp.connection.client.BridgenetNetworkClientHandler;
 import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
 
 import java.util.concurrent.CompletableFuture;
 
 @Getter
 @RequiredArgsConstructor
-public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHandler {
+public class BaseBridgenetConnectorChannelHandler implements BridgenetNetworkClientHandler {
 
     private final BridgenetConnector connector;
 
-    private CompletableFuture<MTPMessageSender> future;
-    private MTPMessageSender channel;
+    private CompletableFuture<BridgenetNetworkChannel> future;
+    private BridgenetNetworkChannel channel;
 
     @Inject
     private RemoteServiceRegistry remoteServiceRegistry;
@@ -26,7 +26,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
         future = new CompletableFuture<>();
     }
 
-    public MTPMessageSender getChannel() {
+    public BridgenetNetworkChannel getChannel() {
         if (channel == null) {
             if (future != null) {
                 return future.join();
@@ -35,7 +35,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
         return channel;
     }
 
-    private void completeAndFlush(MTPMessageSender channel) {
+    private void completeAndFlush(BridgenetNetworkChannel channel) {
         if (this.future != null) {
             this.future.complete(channel);
             this.future = null;
@@ -44,7 +44,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
     }
 
     @Override
-    public void onConnected(MTPMessageSender channel) {
+    public void onConnected(BridgenetNetworkChannel channel) {
         completeAndFlush(channel);
 
         connector.getEngine().connectToEndpoints(remoteServiceRegistry);
@@ -52,7 +52,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
     }
 
     @Override
-    public void onDisconnected(MTPMessageSender channel) {
+    public void onDisconnected(BridgenetNetworkChannel channel) {
         connector.getBridgenetServerSync().exportDeviceDisconnect();
         connector.getEngine().disconnectToEndpoints(remoteServiceRegistry);
 
@@ -60,7 +60,7 @@ public class BaseBridgenetConnectorChannelHandler implements MTPClientChannelHan
     }
 
     @Override
-    public void onReconnect(MTPMessageSender channel) {
+    public void onReconnect(BridgenetNetworkChannel channel) {
         if (channel != null) {
             connector.handleConnection(channel);
             onConnected(channel);

@@ -4,8 +4,6 @@ import io.netty.buffer.ByteBuf;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.MessageTransferException;
 
-import java.nio.charset.StandardCharsets;
-
 public class TransferPrimitiveProvider implements TransferProvider {
 
     private void validateAsPrimitive(Class<?> cls) {

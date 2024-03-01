@@ -15,11 +15,10 @@ import me.moonways.bridgenet.model.players.PlayersServiceModel;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerFlag;
 import me.moonways.bridgenet.model.servers.ServerInfo;
-import me.moonways.bridgenet.model.servers.ServersServiceModel;
 import me.moonways.bridgenet.model.servers.event.ServerDisconnectEvent;
 import me.moonways.bridgenet.model.servers.event.ServerHandshakeEvent;
-import me.moonways.bridgenet.mtp.message.InputMessageContext;
-import me.moonways.bridgenet.mtp.message.persistence.IncomingMessageListener;
+import me.moonways.bridgenet.mtp.message.InboundMessageContext;
+import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
 
 import java.net.InetSocketAddress;
@@ -30,7 +29,7 @@ import java.util.UUID;
 
 @Log4j2
 @RequiredArgsConstructor
-@IncomingMessageListener
+@InboundMessageListener
 public class ServersInputMessagesListener {
 
     private final ServersContainer container;
@@ -55,7 +54,7 @@ public class ServersInputMessagesListener {
     }
 
     @SubscribeMessage
-    public void handleHandshake(InputMessageContext<Handshake> input) {
+    public void handleHandshake(InboundMessageContext<Handshake> input) {
         Handshake handshake = input.getMessage();
 
         if (handshake.getType() == Handshake.Type.SERVER) {
@@ -66,7 +65,7 @@ public class ServersInputMessagesListener {
     }
 
     @SubscribeMessage
-    public void handleRedirection(InputMessageContext<Redirect> input) {
+    public void handleRedirection(InboundMessageContext<Redirect> input) {
         Redirect redirect = input.getMessage();
 
         UUID playerUUID = redirect.getPlayerUUID();
@@ -84,9 +83,9 @@ public class ServersInputMessagesListener {
 
         if (!serverId.equals(currentserverId)) {
             playersOnServersConnectionService.insert(playerUUID, serverId);
-            input.answer(new Redirect.Success(playerUUID, serverId));
+            input.writeCallback(new Redirect.Success(playerUUID, serverId));
         } else {
-            input.answer(new Redirect.Failure(playerUUID, serverId));
+            input.writeCallback(new Redirect.Failure(playerUUID, serverId));
         }
     }
 
@@ -97,7 +96,7 @@ public class ServersInputMessagesListener {
         }
     }
 
-    private void registerServer(InputMessageContext<Handshake> input, ServerInfo serverInfo) {
+    private void registerServer(InboundMessageContext<Handshake> input, ServerInfo serverInfo) {
         UUID serverId = container.getExactServerKey(serverInfo.getName());
 
         if (serverId == null) {
@@ -108,11 +107,11 @@ public class ServersInputMessagesListener {
             callServerHandshakeEvent(input.getMessage(), server);
 
             log.info("Server §2{} §rwas registered now by key: §2{}", serverInfo.getName(), serverId);
-            input.answer(new Handshake.Success(serverId));
+            input.writeCallback(new Handshake.Success(serverId));
 
         } else {
             log.info("§4Server {} has already registered by key: {}", serverInfo.getName(), serverId);
-            input.answer(new Handshake.Failure(serverId));
+            input.writeCallback(new Handshake.Failure(serverId));
         }
     }
 
@@ -121,7 +120,7 @@ public class ServersInputMessagesListener {
         server.getChannel().setProperty(EntityServer.CHANNEL_PROPERTY, server);
     }
 
-    private ConnectedServerStub createServer(InputMessageContext<Handshake> input, ServerInfo serverInfo) {
+    private ConnectedServerStub createServer(InboundMessageContext<Handshake> input, ServerInfo serverInfo) {
         return ConnectedServerStub.builder()
                 .serverInfo(serverInfo)
                 .channel(input.getChannel())

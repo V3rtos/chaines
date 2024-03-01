@@ -9,7 +9,7 @@ import me.moonways.bridgenet.model.players.offline.OfflineEntityPlayer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,8 +37,8 @@ public class ConnectedEntityPlayer extends OfflineEntityPlayer implements Entity
     @Override
     public void sendMessage(@Nullable String message) {
         try {
-            MTPMessageSender channel = spigotServer.getChannel();
-            channel.sendMessage(
+            BridgenetNetworkChannel channel = spigotServer.getChannel();
+            channel.send(
                     new SendMessage(getUniqueId(), message, SendMessage.ChatType.CHAT));
         }
         catch (RemoteException exception) {
@@ -72,8 +72,8 @@ public class ConnectedEntityPlayer extends OfflineEntityPlayer implements Entity
     @Override
     public void sendTitle(@NotNull Title title) {
         try {
-            MTPMessageSender channel = spigotServer.getChannel();
-            channel.sendMessage(
+            BridgenetNetworkChannel channel = spigotServer.getChannel();
+            channel.send(
                     new SendTitle(getUniqueId(), title.getTitle(), title.getSubtitle(),
                             title.getFadeIn(), title.getStay(), title.getFadeOut()));
         }

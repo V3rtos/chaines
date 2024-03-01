@@ -10,7 +10,7 @@ import me.moonways.bridgenet.model.games.GameServer;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerInfo;
 import me.moonways.bridgenet.model.servers.event.ServerDisconnectEvent;
-import me.moonways.bridgenet.mtp.MTPChannel;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.endpoint.games.GamesContainer;
 
 import java.rmi.RemoteException;
@@ -21,7 +21,7 @@ public class GamesServersDownstreamListener {
     private final GamesContainer container;
 
     @Inject
-    private MTPChannel channel;
+    private BridgenetNetworkChannel channel;
 
     @EventHandle
     public void handle(ServerDisconnectEvent event) throws RemoteException {
@@ -34,7 +34,7 @@ public class GamesServersDownstreamListener {
                 if (serverInfo.equals(server.getServerInfo())) {
 
                     for (ActiveGame activeGame : gameServer.getActiveGames()) {
-                        channel.sendInsideMessage(new DeleteGame(game.getUniqueId(), activeGame.getUniqueId()));
+                        channel.pull(new DeleteGame(game.getUniqueId(), activeGame.getUniqueId()));
                     }
                 }
             }

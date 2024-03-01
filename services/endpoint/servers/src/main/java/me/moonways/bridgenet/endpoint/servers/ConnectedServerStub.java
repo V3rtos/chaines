@@ -12,7 +12,7 @@ import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
 import me.moonways.bridgenet.model.players.connection.PlayerConnection;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerInfo;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
@@ -31,7 +31,7 @@ public class ConnectedServerStub implements EntityServer {
     private UUID uniqueId;
 
     private final ServerInfo serverInfo;
-    private final MTPMessageSender channel;
+    private final BridgenetNetworkChannel channel;
 
     @Inject
     private PlayersServiceModel playersServiceModel;
@@ -54,7 +54,7 @@ public class ConnectedServerStub implements EntityServer {
         Redirect message = new Redirect(player.getUniqueId(), uniqueId);
 
         CompletableFuture<Redirect.Result> resultFuture
-                = channel.sendMessageWithResponse(Redirect.Result.class, message);
+                = channel.sendAwait(Redirect.Result.class, message);
 
         return resultFuture.thenApply(result -> result instanceof Redirect.Success);
     }

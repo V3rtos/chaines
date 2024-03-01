@@ -12,7 +12,7 @@ import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnection
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerFlag;
 import me.moonways.bridgenet.model.servers.ServersServiceModel;
-import me.moonways.bridgenet.mtp.MTPDriver;
+import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +28,7 @@ public class ServersServiceEndpoint extends AbstractEndpointDefinition implement
     private final ServersContainer serversContainer = new ServersContainer();
 
     @Inject
-    private MTPDriver mtpDriver;
+    private BridgenetNetworkController networkDriver;
     @Inject
     private BeansService beansService;
     @Inject
@@ -57,7 +57,7 @@ public class ServersServiceEndpoint extends AbstractEndpointDefinition implement
         eventService.registerHandler(downstreamListener);
 
         // protocol.
-        mtpDriver.bindHandler(inputMessagesListener);
+        networkDriver.register(inputMessagesListener);
     }
 
     private void registerCommands() {

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.moonways.bridgenet.connector.description.*;
 import me.moonways.bridgenet.model.bus.message.*;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 
 import java.util.List;
 import java.util.Properties;
@@ -16,7 +16,7 @@ public final class BridgenetServerSync {
 
     @Getter
     @Setter(AccessLevel.PACKAGE)
-    private MTPMessageSender channel;
+    private BridgenetNetworkChannel channel;
     @Getter
     private UUID currentDeviceId;
 
@@ -56,7 +56,7 @@ public final class BridgenetServerSync {
      * @param description - описание подключаемого устройства.
      */
     public Handshake.Result exportDeviceHandshake(DeviceDescription description) {
-        CompletableFuture<Handshake.Result> future = channel.sendMessageWithResponse(Handshake.Result.class,
+        CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class,
                 new Handshake(Handshake.Type.SERVER,
                         prepareDeviceHandshakeProperties(description)));
 
@@ -73,7 +73,7 @@ public final class BridgenetServerSync {
      * @param description - описание подключаемой игры.
      */
     public CreateGame.Result exportGameCreate(GameDescription description) {
-        CompletableFuture<CreateGame.Result> future = channel.sendMessageWithResponse(CreateGame.Result.class,
+        CompletableFuture<CreateGame.Result> future = channel.sendAwait(CreateGame.Result.class,
                 new CreateGame(
                         description.getName(),
                         description.getMap(),
@@ -88,7 +88,7 @@ public final class BridgenetServerSync {
      */
     public void exportGameUpdate(GameStateDescription description) {
         ActiveGameDescription activeGame = description.getActiveGame();
-        channel.sendMessage(new UpdateGame(activeGame.getGameId(), activeGame.getActiveId(),
+        channel.send(new UpdateGame(activeGame.getGameId(), activeGame.getActiveId(),
                 description.getStatus(),
                 description.getSpectators(),
                 description.getPlayers()));
@@ -105,7 +105,7 @@ public final class BridgenetServerSync {
      * @return - возвращает TRUE если команда была успешно исполнена.
      */
     public boolean exportCommandSend(UserDescription description, String label) {
-        CompletableFuture<SendCommand.Result> future = channel.sendMessageWithResponse(SendCommand.Result.class,
+        CompletableFuture<SendCommand.Result> future = channel.sendAwait(SendCommand.Result.class,
                 new SendCommand(description.getUniqueId(), label));
 
         SendCommand.Result commandSendResult = future.join();
@@ -119,7 +119,7 @@ public final class BridgenetServerSync {
      * @param description - описание подключенной и активной игры.
      */
     public void exportGameDelete(ActiveGameDescription description) {
-        channel.sendMessage(new DeleteGame(description.getGameId(), description.getActiveId()));
+        channel.send(new DeleteGame(description.getGameId(), description.getActiveId()));
     }
 
     /**
@@ -127,7 +127,7 @@ public final class BridgenetServerSync {
      */
     public void exportDeviceDisconnect() {
         if (currentDeviceId != null) {
-            channel.sendMessage(new Disconnect(currentDeviceId, Disconnect.Type.SERVER));
+            channel.send(new Disconnect(currentDeviceId, Disconnect.Type.SERVER));
         }
     }
 
@@ -136,7 +136,7 @@ public final class BridgenetServerSync {
      * @param description - описание подключаемого пользователя.
      */
     public void exportUserDisconnect(UserDescription description) {
-        channel.sendMessage(new Disconnect(description.getUniqueId(), Disconnect.Type.PLAYER));
+        channel.send(new Disconnect(description.getUniqueId(), Disconnect.Type.PLAYER));
     }
 
     /**
@@ -150,7 +150,7 @@ public final class BridgenetServerSync {
      * @return - возвращает TRUE если вернувшийся идентификатор совпадает с пользовательским.
      */
     public boolean exportUserHandshake(UserDescription description) {
-        CompletableFuture<Handshake.Result> future = channel.sendMessageWithResponse(Handshake.Result.class,
+        CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class,
                 new Handshake(Handshake.Type.PLAYER,
                         prepareUserHandshakeProperties(description)));
 
@@ -169,7 +169,7 @@ public final class BridgenetServerSync {
      * @param message - текстовое сообщение
      */
     public void exportUserMessageSend(SendMessage.ChatType chatType, UUID playerId, String message) {
-        channel.sendMessage(new SendMessage(playerId, message, chatType));
+        channel.send(new SendMessage(playerId, message, chatType));
     }
 
     /**
@@ -182,7 +182,7 @@ public final class BridgenetServerSync {
      * @return - возвращает TRUE в случае удачной попытки переподключения.
      */
     public boolean exportUserRedirectWithResult(UUID playerId, UUID serverId) {
-        CompletableFuture<Redirect.Result> future = channel.sendMessageWithResponse(Redirect.Result.class,
+        CompletableFuture<Redirect.Result> future = channel.sendAwait(Redirect.Result.class,
                 new Redirect(playerId, serverId));
 
         Redirect.Result result = future.join();
@@ -197,7 +197,7 @@ public final class BridgenetServerSync {
      * @param serverId - идентификатор устройства, на который переподключать.
      */
     public void exportUserRedirect(UUID playerId, UUID serverId) {
-        channel.sendMessage(new Redirect(playerId, serverId));
+        channel.send(new Redirect(playerId, serverId));
     }
 
     /**
@@ -235,7 +235,7 @@ public final class BridgenetServerSync {
      * @param description - описание дополнительных параметров сообщения.
      */
     public void exportUserTitleSend(UUID playerId, TitleDescription description) {
-        channel.sendMessage(new SendTitle(playerId,
+        channel.send(new SendTitle(playerId,
                 description.getTitle(),
                 description.getSubtitle(),
                 description.getFadeIn(),
@@ -249,7 +249,7 @@ public final class BridgenetServerSync {
      */
     public List<String> lookupServerCommandsList() {
         CompletableFuture<GetCommands.Result> future
-                = channel.sendMessageWithResponse(GetCommands.Result.class, new GetCommands());
+                = channel.sendAwait(GetCommands.Result.class, new GetCommands());
 
         GetCommands.Result result = future.join();
         return result.getList();

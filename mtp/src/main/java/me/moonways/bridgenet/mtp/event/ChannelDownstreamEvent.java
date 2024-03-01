@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.api.event.Event;
-import me.moonways.bridgenet.mtp.MTPChannel;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 
 @Getter
 @ToString
@@ -13,5 +13,5 @@ import me.moonways.bridgenet.mtp.MTPChannel;
 public class ChannelDownstreamEvent implements Event {
 
     private final ChannelHandlerContext context;
-    private final MTPChannel channel;
+    private final BridgenetNetworkChannel channel;
 }
