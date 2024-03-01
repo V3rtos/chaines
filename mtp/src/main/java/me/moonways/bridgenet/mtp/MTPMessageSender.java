@@ -36,6 +36,12 @@ public interface MTPMessageSender extends Serializable {
     void sendMessage(@NotNull Object message);
 
     /**
+     * Пробросить сообщение внутри сети.
+     * @param message - отправляемое сообщение.
+     */
+    void sendInsideMessage(@NotNull Object message);
+
+    /**
      * Отправить сообщение на подключенный канал
      * с ожиданием ответа.
      *

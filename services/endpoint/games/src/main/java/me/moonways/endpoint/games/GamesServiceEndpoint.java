@@ -1,5 +1,6 @@
 package me.moonways.endpoint.games;
 
+import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.model.games.Game;
@@ -9,6 +10,7 @@ import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.mtp.MTPDriver;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import me.moonways.endpoint.games.handler.GamesInputMessageListener;
+import me.moonways.endpoint.games.handler.GamesServersDownstreamListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;
@@ -18,10 +20,14 @@ import java.util.UUID;
 
 public final class GamesServiceEndpoint extends AbstractEndpointDefinition implements GamesServiceModel {
 
+    private static final long serialVersionUID = -6262114750447856510L;
+
     private final GamesContainer container = new GamesContainer();
 
     @Inject
     private MTPDriver mtpDriver;
+    @Inject
+    private EventService eventService;
 
     public GamesServiceEndpoint() throws RemoteException {
         super();
@@ -29,6 +35,7 @@ public final class GamesServiceEndpoint extends AbstractEndpointDefinition imple
 
     @PostConstruct
     public void init() {
+        eventService.registerHandler(new GamesServersDownstreamListener(container));
         mtpDriver.bindHandler(new GamesInputMessageListener(container));
     }
 

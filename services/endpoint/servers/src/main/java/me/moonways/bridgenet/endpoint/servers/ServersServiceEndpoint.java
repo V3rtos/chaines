@@ -1,11 +1,12 @@
 package me.moonways.bridgenet.endpoint.servers;
 
 import me.moonways.bridgenet.api.command.CommandRegistry;
+import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.endpoint.servers.command.ServersInfoCommand;
+import me.moonways.bridgenet.endpoint.servers.handler.ServersDownstreamListener;
 import me.moonways.bridgenet.endpoint.servers.handler.ServersInputMessagesListener;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
 import me.moonways.bridgenet.model.servers.EntityServer;
@@ -31,6 +32,8 @@ public class ServersServiceEndpoint extends AbstractEndpointDefinition implement
     @Inject
     private BeansService beansService;
     @Inject
+    private EventService eventService;
+    @Inject
     private CommandRegistry commandRegistry;
 
     public ServersServiceEndpoint() throws RemoteException {
@@ -42,8 +45,22 @@ public class ServersServiceEndpoint extends AbstractEndpointDefinition implement
         beansService.bind(new PlayersOnServersConnectionService());
         beansService.inject(serversContainer);
 
-        mtpDriver.bindHandler(new ServersInputMessagesListener(serversContainer));
+        registerListeners();
+        registerCommands();
+    }
 
+    private void registerListeners() {
+        ServersDownstreamListener downstreamListener = new ServersDownstreamListener(serversContainer);
+        ServersInputMessagesListener inputMessagesListener = new ServersInputMessagesListener(serversContainer);
+
+        // events.
+        eventService.registerHandler(downstreamListener);
+
+        // protocol.
+        mtpDriver.bindHandler(inputMessagesListener);
+    }
+
+    private void registerCommands() {
         commandRegistry.registerCommand(new ServersInfoCommand());
     }
 

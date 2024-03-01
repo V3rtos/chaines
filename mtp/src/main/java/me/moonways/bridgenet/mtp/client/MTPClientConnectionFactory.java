@@ -2,16 +2,12 @@ package me.moonways.bridgenet.mtp.client;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFactory;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.mtp.*;
-import me.moonways.bridgenet.mtp.message.codec.MessageDecoder;
-import me.moonways.bridgenet.mtp.message.codec.MessageEncoder;
-import me.moonways.bridgenet.mtp.pipeline.NettyChannelHandler;
 import me.moonways.bridgenet.mtp.pipeline.NettyPipelineInitializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -155,6 +151,11 @@ public class MTPClientConnectionFactory {
         @Override
         public void sendMessage(@NotNull Object message) {
             channelRef.get().sendMessage(message);
+        }
+
+        @Override
+        public void sendInsideMessage(@NotNull Object message) {
+            channelRef.get().sendInsideMessage(message);
         }
 
         @Override

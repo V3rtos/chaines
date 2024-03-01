@@ -11,6 +11,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
+import me.moonways.bridgenet.mtp.message.InputMessageContext;
 import me.moonways.bridgenet.mtp.message.MessageRegistry;
 import me.moonways.bridgenet.mtp.message.response.ResponsibleMessageService;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +43,8 @@ public class MTPChannel implements MTPMessageSender {
     private MessageRegistry messageRegistry;
     @Inject
     private BeansService beansService;
+    @Inject
+    private MTPDriver driver;
 
     @PostConstruct
     public void initAttributes() {
@@ -60,6 +63,11 @@ public class MTPChannel implements MTPMessageSender {
 
         log.info("§9[{}]: §r{}", String.format(getMessageSendLogPrefix(), handle.remoteAddress()), message);
         handle.writeAndFlush(exported);
+    }
+
+    @Override
+    public void sendInsideMessage(@NotNull Object message) {
+        driver.handle(new InputMessageContext<>(message, this, System.currentTimeMillis()));
     }
 
     @Synchronized

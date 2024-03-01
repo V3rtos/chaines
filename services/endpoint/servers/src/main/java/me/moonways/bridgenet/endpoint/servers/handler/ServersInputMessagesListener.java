@@ -2,6 +2,7 @@ package me.moonways.bridgenet.endpoint.servers.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.endpoint.servers.ConnectedServerStub;
@@ -15,6 +16,8 @@ import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerFlag;
 import me.moonways.bridgenet.model.servers.ServerInfo;
 import me.moonways.bridgenet.model.servers.ServersServiceModel;
+import me.moonways.bridgenet.model.servers.event.ServerDisconnectEvent;
+import me.moonways.bridgenet.model.servers.event.ServerHandshakeEvent;
 import me.moonways.bridgenet.mtp.message.InputMessageContext;
 import me.moonways.bridgenet.mtp.message.persistence.IncomingMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
@@ -34,12 +37,22 @@ public class ServersInputMessagesListener {
 
     @Inject
     private BeansService beansService;
-
+    @Inject
+    private EventService eventService;
     @Inject
     private PlayersOnServersConnectionService playersOnServersConnectionService;
-
     @Inject
     private PlayersServiceModel playersServiceModel;
+
+    private void callServerDisconnectEvent(EntityServer entityServer) {
+        ServerDisconnectEvent event = new ServerDisconnectEvent(ServerDisconnectEvent.DownstreamType.DISCONNECT_MESSAGE, entityServer);
+        eventService.fireEvent(event);
+    }
+
+    private void callServerHandshakeEvent(Handshake handshake, EntityServer entityServer) {
+        ServerHandshakeEvent event = new ServerHandshakeEvent(handshake, entityServer);
+        eventService.fireEvent(event);
+    }
 
     @SubscribeMessage
     public void handleHandshake(InputMessageContext<Handshake> input) {
@@ -57,53 +70,54 @@ public class ServersInputMessagesListener {
         Redirect redirect = input.getMessage();
 
         UUID playerUUID = redirect.getPlayerUUID();
-        UUID serverKey = redirect.getServerKey();
+        UUID serverId = redirect.getServerKey();
 
-        ConnectedServerStub server = container.getConnectedServerExact(serverKey);
+        ConnectedServerStub server = container.getConnectedServerExact(serverId);
 
         if (server == null) {
-            log.info("§4Server by key '{}' is not connected", serverKey);
+            log.info("§4Server by key '{}' is not connected", serverId);
             return;
         }
 
-        UUID currentServerKey = playersOnServersConnectionService.getPlayerCurrentServerKey(playerUUID)
+        UUID currentserverId = playersOnServersConnectionService.getPlayerCurrentServerKey(playerUUID)
                 .orElse(null);
 
-        if (!serverKey.equals(currentServerKey)) {
-            playersOnServersConnectionService.insert(playerUUID, serverKey);
-            input.answer(new Redirect.Success(playerUUID, serverKey));
+        if (!serverId.equals(currentserverId)) {
+            playersOnServersConnectionService.insert(playerUUID, serverId);
+            input.answer(new Redirect.Success(playerUUID, serverId));
         } else {
-            input.answer(new Redirect.Failure(playerUUID, serverKey));
+            input.answer(new Redirect.Failure(playerUUID, serverId));
         }
     }
 
     @SubscribeMessage
     public void handle(Disconnect disconnect) {
         if (disconnect.getType() == Disconnect.Type.SERVER) {
-            container.unregisterServer(disconnect.getUuid());
+            doServerDisconnect(disconnect);
         }
     }
 
     private void registerServer(InputMessageContext<Handshake> input, ServerInfo serverInfo) {
-        UUID serverKey = container.getExactServerKey(serverInfo.getName());
+        UUID serverId = container.getExactServerKey(serverInfo.getName());
 
-        if (serverKey == null) {
+        if (serverId == null) {
             ConnectedServerStub server = createServer(input, serverInfo);
-            serverKey = container.registerServer(server);
+            serverId = container.registerServer(server);
 
-            doSuccessRegister(serverKey, server);
+            doSuccessRegister(serverId, server);
+            callServerHandshakeEvent(input.getMessage(), server);
 
-            log.info("Server §2{} §rwas registered now by key: §2{}", serverInfo.getName(), serverKey);
-            input.answer(new Handshake.Success(serverKey));
+            log.info("Server §2{} §rwas registered now by key: §2{}", serverInfo.getName(), serverId);
+            input.answer(new Handshake.Success(serverId));
 
         } else {
-            log.info("§4Server {} has already registered by key: {}", serverInfo.getName(), serverKey);
-            input.answer(new Handshake.Failure(serverKey));
+            log.info("§4Server {} has already registered by key: {}", serverInfo.getName(), serverId);
+            input.answer(new Handshake.Failure(serverId));
         }
     }
 
-    private void doSuccessRegister(UUID serverKey, ConnectedServerStub server) {
-        server.setUniqueId(serverKey);
+    private void doSuccessRegister(UUID serverId, ConnectedServerStub server) {
+        server.setUniqueId(serverId);
         server.getChannel().setProperty(EntityServer.CHANNEL_PROPERTY, server);
     }
 
@@ -137,5 +151,15 @@ public class ServersInputMessagesListener {
                 .name(properties.getProperty("server.name"))
                 .flags(getServerFlags(properties))
                 .build();
+    }
+    
+    private void doServerDisconnect(Disconnect disconnect) {
+        UUID serverId = disconnect.getUuid();
+        ConnectedServerStub server = container.getConnectedServerExact(serverId);
+
+        if (server != null) {
+            callServerDisconnectEvent(server);
+            container.unregisterServer(serverId);
+        }
     }
 }

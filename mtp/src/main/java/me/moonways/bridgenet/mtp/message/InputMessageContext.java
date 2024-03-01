@@ -13,6 +13,8 @@ import java.io.Serializable;
 @RequiredArgsConstructor
 public class InputMessageContext<V> implements Serializable {
 
+    private static final long serialVersionUID = 1048504507490399550L;
+
     private final V message;
 
     private final MTPMessageSender channel;

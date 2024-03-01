@@ -73,8 +73,6 @@ public abstract class BridgenetConnector {
     private void doConnect() {
         tryConnectToBridgenetServer();
         beansStore.store(beansScanner.createBean(BridgenetConnector.class, this));
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> channelHandler.onDisconnected(getChannel())));
     }
 
     /**
