@@ -46,6 +46,7 @@ public class GarbageCollectorRunner {
     private ChatColor getModifierColor(FreeMemoryPair pair) {
         long after = pair.getAfter();
         long before = pair.getBefore();
+
         return before > after ? ChatColor.GREEN : (before == after ? ChatColor.YELLOW : ChatColor.RED);
     }
 
