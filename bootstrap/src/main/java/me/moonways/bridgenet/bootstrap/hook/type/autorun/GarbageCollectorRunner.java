@@ -28,8 +28,8 @@ public class GarbageCollectorRunner {
     public void run() {
         Pair<Long, Long> freeMemoryPair = clearMemory();
 
-        log.debug("The memory used was automatically cleared by the Garbage Collector system: {}{}",
-                getModifierColor(freeMemoryPair), freeMemoryPair);
+        //log.debug("The memory used was automatically cleared by the Garbage Collector system: {}{}",
+        //        getModifierColor(freeMemoryPair), freeMemoryPair);
 
         bridgenetMetricsLogger.logSystemMemoryFree();
         bridgenetMetricsLogger.logSystemMemoryTotal();
