@@ -1,13 +1,16 @@
 package me.moonways.bridgenet.test.services;
 
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.model.auth.Account;
 import me.moonways.bridgenet.model.auth.AuthServiceModel;
+import me.moonways.bridgenet.model.auth.AuthenticationSession;
 import me.moonways.bridgenet.model.auth.AuthorizationResult;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.rmi.RemoteException;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -31,6 +34,22 @@ public class AuthServiceEndpointTest {
         assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
         assertEquals(resultSuccess, AuthorizationResult.SUCCESS);
         assertEquals(resultAlreadyRegistered, AuthorizationResult.FAILURE__ALREADY_REGISTERED);
+    }
+
+    @Test
+    public void test_accountSession() throws RemoteException {
+        Optional<Account> accountById = serviceModel.findAccountById(PLAYER_ID);
+        assertTrue(accountById.isPresent());
+
+        Account account = accountById.get();
+
+        AuthenticationSession session = account.getSession();
+
+        assertNotNull(session.getLastAuthenticationDate());
+        assertNotNull(session.getLastAuthenticationIp());
+        assertFalse(session.isExpired());
+        assertTrue(session.isActive());
+        assertFalse(session.isInactive());
     }
 
     @Test
