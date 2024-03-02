@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.games;
+package me.moonways.bridgenet.test.services;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.bus.message.CreateGame;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @RunWith(BridgenetJUnitTestRunner.class)
-public class CreateGameTest {
+public class GamesServiceEndpointTest {
 
     private static final String DEF_GAME_NAME = "Эмоциональные качели";
     private static final String DEF_GAME_MAP = "Детская площадка с программистом";
