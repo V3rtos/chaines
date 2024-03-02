@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>auth</module>
         <module>bus</module>
         <module>friends</module>
         <module>games</module>

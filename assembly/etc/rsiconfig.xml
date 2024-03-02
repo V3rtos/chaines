@@ -19,6 +19,14 @@
     <services>
         <service>
             <!-- RMI Protocol service bind port -->
+            <bindPort>7000</bindPort>
+            <!-- Service direction name -->
+            <name>auth</name>
+            <!-- Target service class type -->
+            <modelPath>me.moonways.bridgenet.model.auth.AuthServiceModel</modelPath>
+        </service>
+        <service>
+            <!-- RMI Protocol service bind port -->
             <bindPort>7001</bindPort>
             <!-- Service direction name -->
             <name>gui</name>
