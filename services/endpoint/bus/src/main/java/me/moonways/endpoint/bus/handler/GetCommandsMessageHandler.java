@@ -20,6 +20,6 @@ public class GetCommandsMessageHandler {
         GetCommands.Result commandsGetResult = new GetCommands.Result(
                 Arrays.asList(registry.getRegisteredCommandsArray()));
 
-        context.writeCallback(commandsGetResult);
+        context.callback(commandsGetResult);
     }
 }

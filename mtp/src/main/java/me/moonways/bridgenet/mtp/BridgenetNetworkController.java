@@ -91,7 +91,7 @@ public class BridgenetNetworkController implements Serializable {
 
     @KeepTime
     @Synchronized
-    public void handle(@NotNull InboundMessageContext<?> context) {
+    public void pull(@NotNull InboundMessageContext<?> context) {
         handlerList.handle(context);
 
         Object message = context.getMessage();

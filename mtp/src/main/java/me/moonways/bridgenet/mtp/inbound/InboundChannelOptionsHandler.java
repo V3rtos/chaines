@@ -25,7 +25,7 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
     @Setter
     private ChannelDirection channelDirection;
 
-    private final List<ChannelHandler> childrenHandlers = new ArrayList<>();
+    private final List<ChannelInboundHandler> childrenHandlers = new ArrayList<>();
     private Consumer<Channel> initChannelConsumer;
 
     @Inject
@@ -45,7 +45,7 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
         addToPipeline(pipeline, new NetworkMessageEncoder(configuration));
     }
 
-    public void addChannelHandler(@NotNull ChannelHandler channelHandler) {
+    public void addChannelHandler(@NotNull ChannelInboundHandler channelHandler) {
         beansService.inject(channelHandler);
         childrenHandlers.add(channelHandler);
     }

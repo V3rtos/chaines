@@ -14,7 +14,6 @@ import me.moonways.bridgenet.mtp.message.encryption.EncryptedMessage;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 public class WrappedNetworkMessage {
-
     private static final BeanFactory FACTORY = new UnsafeFactory();
 
     @ToString.Include
@@ -42,7 +41,7 @@ public class WrappedNetworkMessage {
         return messageType.equals(messageClass);
     }
 
-    public synchronized Object allocate() {
+    public synchronized Object createObject() {
         return FACTORY.create(messageType);
     }
 }

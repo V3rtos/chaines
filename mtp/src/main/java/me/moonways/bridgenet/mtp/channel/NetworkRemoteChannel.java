@@ -74,13 +74,15 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
 
     @Override
     public void pull(@NotNull InboundMessageContext<?> context) {
-        networkController.handle(context);
+        log.info("§9[PULL]: §r{}", context.getMessage());
+        networkController.pull(context);
     }
 
     @Synchronized
     @Override
     public void close() {
-        handle.closeFuture();
+        handle.flush();
+        handle.close();
     }
 
     @Synchronized

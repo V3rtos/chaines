@@ -22,6 +22,7 @@ import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
 
 import java.net.InetSocketAddress;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -78,19 +79,19 @@ public class ServersInputMessagesListener {
             return;
         }
 
-        UUID currentserverId = playersOnServersConnectionService.getPlayerCurrentServerKey(playerUUID)
+        UUID currentServerId = playersOnServersConnectionService.getPlayerCurrentServerKey(playerUUID)
                 .orElse(null);
 
-        if (!serverId.equals(currentserverId)) {
+        if (!serverId.equals(currentServerId)) {
             playersOnServersConnectionService.insert(playerUUID, serverId);
-            input.writeCallback(new Redirect.Success(playerUUID, serverId));
+            input.callback(new Redirect.Success(playerUUID, serverId));
         } else {
-            input.writeCallback(new Redirect.Failure(playerUUID, serverId));
+            input.callback(new Redirect.Failure(playerUUID, serverId));
         }
     }
 
     @SubscribeMessage
-    public void handle(Disconnect disconnect) {
+    public void handle(Disconnect disconnect) throws RemoteException {
         if (disconnect.getType() == Disconnect.Type.SERVER) {
             doServerDisconnect(disconnect);
         }
@@ -107,11 +108,11 @@ public class ServersInputMessagesListener {
             callServerHandshakeEvent(input.getMessage(), server);
 
             log.info("Server §2{} §rwas registered now by key: §2{}", serverInfo.getName(), serverId);
-            input.writeCallback(new Handshake.Success(serverId));
+            input.callback(new Handshake.Success(serverId));
 
         } else {
             log.info("§4Server {} has already registered by key: {}", serverInfo.getName(), serverId);
-            input.writeCallback(new Handshake.Failure(serverId));
+            input.callback(new Handshake.Failure(serverId));
         }
     }
 
@@ -152,11 +153,13 @@ public class ServersInputMessagesListener {
                 .build();
     }
     
-    private void doServerDisconnect(Disconnect disconnect) {
+    private void doServerDisconnect(Disconnect disconnect) throws RemoteException {
         UUID serverId = disconnect.getUuid();
         ConnectedServerStub server = container.getConnectedServerExact(serverId);
 
         if (server != null) {
+            log.info("Server §c\"{}\" ({}) §rhas disconnected", server.getName(), server.getUniqueId());
+
             callServerDisconnectEvent(server);
             container.unregisterServer(serverId);
         }

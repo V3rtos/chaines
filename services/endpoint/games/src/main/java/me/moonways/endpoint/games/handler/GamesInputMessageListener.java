@@ -37,7 +37,7 @@ public class GamesInputMessageListener {
 
         log.info("Game §2{} §rhas registered new arena by id: §2{}", parent.getName(), activeId);
 
-        context.writeCallback(new CreateGame.Result(parent.getUniqueId(), activeId));
+        context.callback(new CreateGame.Result(parent.getUniqueId(), activeId));
     }
 
     @SubscribeMessage

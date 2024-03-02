@@ -67,7 +67,7 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
 
         MessageTransfer messageTransfer = createTransfer(byteBuf, wrapper);
 
-        Object message = wrapper.allocate();
+        Object message = wrapper.createObject();
         messageTransfer.unbuf(message);
 
         return new ExportedMessage(wrapper, message);

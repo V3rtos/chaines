@@ -107,6 +107,7 @@ public abstract class AbstractNetworkConnection implements BridgenetNetworkConne
     private void tryClientReconnectOnFailure(Channel nettyChannel, CompletableFuture<BridgenetNetworkChannel> future) {
         NetworkClientReconnectionHandler reconnectionHandler = (NetworkClientReconnectionHandler)
                 nettyChannel.attr(AttributeKey.valueOf(NetworkClientReconnectionHandler.CHANNEL_ATTRIBUTE_NAME)).get();
+
         BridgenetNetworkChannel reconnectedChannel = reconnectionHandler.transitFuture().join();
 
         if (reconnectedChannel != null) {

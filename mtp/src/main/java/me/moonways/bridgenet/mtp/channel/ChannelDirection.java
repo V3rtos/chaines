@@ -9,8 +9,8 @@ import java.lang.annotation.Annotation;
 @RequiredArgsConstructor
 public enum ChannelDirection {
 
-    TO_CLIENT(ClientMessage.class),
-    TO_SERVER(ServerMessage.class),
+    TO_CLIENT(ServerMessage.class),
+    TO_SERVER(ClientMessage.class),
     ;
 
     private final Class<? extends Annotation> marker;

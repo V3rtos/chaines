@@ -20,7 +20,7 @@ public class InboundMessageContext<V> implements Serializable {
     private final BridgenetNetworkChannel channel;
     private final Long timestamp;
 
-    public void writeCallback(@NotNull Object message) {
+    public void callback(@NotNull Object message) {
         channel.send(message);
     }
 }

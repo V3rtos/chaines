@@ -56,7 +56,12 @@ public class ServersInfoCommand {
     @ProducerExecutor("list")
     @ProducerDescription("Get a total servers list")
     public void list(CommandSession session) throws RemoteException {
-        for (EntityServer server : servers.getTotalServers()) {
+        List<EntityServer> totalServers = servers.getTotalServers();
+        if (totalServers.isEmpty()) {
+            session.getSender().sendMessage("Servers not found");
+            return;
+        }
+        for (EntityServer server : totalServers) {
             sendServerInfo(server, session.getSender());
         }
     }

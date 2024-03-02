@@ -115,7 +115,6 @@ public class NetworkClientConnectionFactory {
             NetworkClientReconnectionHandler reconnectionHandler = networkConnectionFactory.newClientReconnectionHandler(client, networkClientHandler);
 
             inboundChannelOptionsHandler.addChannelHandler(reconnectionHandler);
-
             inboundChannelOptionsHandler.thenComplete(channel ->
                     channel.attr(AttributeKey.valueOf(NetworkClientReconnectionHandler.CHANNEL_ATTRIBUTE_NAME)).set(reconnectionHandler));
         }
