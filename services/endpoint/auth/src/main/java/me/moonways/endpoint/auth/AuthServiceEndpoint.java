@@ -50,6 +50,11 @@ public class AuthServiceEndpoint extends AbstractEndpointDefinition implements A
     }
 
     @Override
+    public AuthorizationResult tryPasswordChange(UUID playerId, String actualPassword, String newPassword) throws RemoteException {
+        return AuthorizationResult.FAILURE; //todo
+    }
+
+    @Override
     public AuthorizationResult tryLogOut(UUID playerId) throws RemoteException {
         return AuthorizationResult.FAILURE; //todo
     }
