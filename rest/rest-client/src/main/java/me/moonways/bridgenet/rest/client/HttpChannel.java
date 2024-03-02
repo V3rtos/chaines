@@ -4,26 +4,27 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
-import me.moonways.rest.api.HttpHost;
-import me.moonways.rest.api.exchange.entity.EntityWriter;
-import me.moonways.rest.api.exchange.entity.ExchangeableEntity;
-import me.moonways.rest.api.exception.RestClientException;
-import me.moonways.rest.api.exception.RestEntityException;
-import me.moonways.rest.api.exchange.message.RestMessageType;
-import me.moonways.rest.api.exchange.response.RestResponse;
-import me.moonways.rest.api.exchange.response.RestResponseBuilder;
+import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.rest.api.HttpHost;
+import me.moonways.bridgenet.rest.api.exchange.entity.EntityWriter;
+import me.moonways.bridgenet.rest.api.exchange.entity.ExchangeableEntity;
+import me.moonways.bridgenet.rest.api.exception.RestClientException;
+import me.moonways.bridgenet.rest.api.exception.RestEntityException;
+import me.moonways.bridgenet.rest.api.exchange.message.RestMessageType;
+import me.moonways.bridgenet.rest.api.exchange.response.RestResponse;
+import me.moonways.bridgenet.rest.api.exchange.response.RestResponseBuilder;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.cert.Certificate;
 import java.util.Properties;
 
+@Log4j2
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class HttpChannel {
 
@@ -41,12 +42,12 @@ public class HttpChannel {
             initOptions(activeConnection);
         }
         catch (IOException exception) {
-            throw new RestClientException(exception);
+            log.error(new RestClientException(exception));
         }
     }
 
     private HttpURLConnection openConnection(URL url, boolean useSSL) {
-        HttpsURLConnection https;
+        HttpsURLConnection https = null;
         try {
             URLConnection urlConnection = url.openConnection();
             if (useSSL) {
@@ -55,7 +56,7 @@ public class HttpChannel {
             else return (HttpURLConnection) urlConnection;
         }
         catch (IOException exception) {
-            throw new RestClientException(exception);
+            log.error(new RestClientException(exception));
         }
 
         //initSSLCertificates(https);
@@ -72,8 +73,8 @@ public class HttpChannel {
             Certificate[] serverCertificates = https.getServerCertificates();
             // todo
         }
-        catch (SSLPeerUnverifiedException e) {
-            throw new RestClientException(e);
+        catch (SSLPeerUnverifiedException exception) {
+            log.error(new RestClientException(exception));
         }
     }
 
@@ -87,23 +88,23 @@ public class HttpChannel {
             activeConnection.setRequestMethod(messageType.name());
         }
         catch (IOException exception) {
-            throw new RestEntityException(exception);
+            log.error(new RestEntityException(exception));
         }
     }
 
     public void writeEntity(ExchangeableEntity entity) {
-        EntityWriter entityWriter = new EntityWriter();
-        entity.write(entityWriter);
-
-        byte[] byteArray = entityWriter.toByteArray();
-        // todo - 25.07.2023 - encryption by SSL
-
         try {
+            EntityWriter entityWriter = new EntityWriter();
+            entity.write(entityWriter);
+
+            byte[] byteArray = entityWriter.toByteArray();
+            // todo - 25.07.2023 - encryption by SSL
+
             OutputStream outputStream = activeConnection.getOutputStream();
             outputStream.write(byteArray);
         }
-        catch (IOException exception) {
-            throw new RestEntityException(exception);
+        catch (Exception exception) {
+            log.error(new RestEntityException(exception));
         }
     }
 
@@ -113,7 +114,7 @@ public class HttpChannel {
             activeConnection.getOutputStream().flush();
         }
         catch (IOException exception) {
-            throw new RestEntityException(exception);
+            log.error(new RestEntityException(exception));
         }
     }
 
@@ -135,7 +136,8 @@ public class HttpChannel {
                     .build();
         }
         catch (IOException exception) {
-            throw new RestClientException(exception);
+            log.error(new RestClientException(exception));
+            return null;
         }
     }
 

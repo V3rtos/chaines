@@ -4,7 +4,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public interface FriendsList extends Remote {
 
@@ -20,7 +19,7 @@ public interface FriendsList extends Remote {
 
     boolean hasFriend(String name) throws RemoteException;
 
-    Set<UUID> getFriendsUUIDs() throws RemoteException;
+    Set<UUID> getFriendsIDs() throws RemoteException;
 
     Set<String> getFriendsNames() throws RemoteException;
 }

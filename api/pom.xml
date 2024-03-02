@@ -20,6 +20,23 @@
 
     <dependencies>
         <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>assembly</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>metrics</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>jdbc-provider</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!-- Bytecode manipulations utility dependency -->
+        <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
             <version>3.28.0-GA</version>

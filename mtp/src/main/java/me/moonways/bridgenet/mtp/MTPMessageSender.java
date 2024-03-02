@@ -19,23 +19,7 @@ public interface MTPMessageSender extends Serializable {
      * Получить кешированное значение аттрибута.
      * @param key - ключ аттрибута.
      */
-    Optional<Object> getProperty(@NotNull String key);
-
-    /**
-     * Получить кешированное значение аттрибута
-     * в виде строки.
-     *
-     * @param key - ключ аттрибута.
-     */
-    Optional<String> getPropertyString(@NotNull String key);
-
-    /**
-     * Получить кешированное значение аттрибута
-     * в виде целочисленного числа.
-     *
-     * @param key - ключ аттрибута.
-     */
-    Optional<Integer> getPropertyInt(@NotNull String key);
+    <T> Optional<T> getProperty(@NotNull String key);
 
     /**
      * Установить значение аттрибута.
@@ -50,6 +34,12 @@ public interface MTPMessageSender extends Serializable {
      * @param message - отправляемое сообщение.
      */
     void sendMessage(@NotNull Object message);
+
+    /**
+     * Пробросить сообщение внутри сети.
+     * @param message - отправляемое сообщение.
+     */
+    void sendInsideMessage(@NotNull Object message);
 
     /**
      * Отправить сообщение на подключенный канал
@@ -69,4 +59,9 @@ public interface MTPMessageSender extends Serializable {
      * @param message - отправляемое сообщение.
      */
     <R> CompletableFuture<R> sendMessageWithResponse(int timeout, @NotNull Class<R> responseType, @NotNull Object message);
+
+    /**
+     * Закрыть соединение с сервером.
+     */
+    void close();
 }

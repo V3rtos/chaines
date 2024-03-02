@@ -2,7 +2,6 @@ package me.moonways.bridgenet.rsi.endpoint;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.rsi.module.ServiceModulesContainer;
 import me.moonways.bridgenet.rsi.module.access.AccessRemoteModule;
@@ -16,7 +15,10 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -30,16 +32,11 @@ public class EndpointRunner {
     @Inject
     private RemoteServiceRegistry remoteServiceRegistry;
 
-    @Inject
-    private DependencyInjection injector;
-
     public void start(Endpoint endpoint) {
         String name = endpoint.getServiceInfo().getName();
 
-        boolean integrationStatus = validate(endpoint);
-
-        if (!integrationStatus) {
-            log.warn("§4Endpoint '{}' integration aborted: §cfailed", name);
+        if (!validate(endpoint)) {
+            log.warn("§6Endpoint '{}' integration aborted: §eFailed validation", name);
             return;
         }
 

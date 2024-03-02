@@ -3,6 +3,7 @@ PREF="BridgeNet ::"
 
 BUILD_DIR=.build
 SCRIPTS_DIR=.scripts
+ENDPOINTS_MODULE_PATH=services/endpoint
 
 APP=$(basename $0)
 

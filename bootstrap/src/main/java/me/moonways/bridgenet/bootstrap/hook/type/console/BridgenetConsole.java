@@ -15,16 +15,19 @@ public class BridgenetConsole extends SimpleTerminalConsole {
 
     @Inject
     private ConsoleCommandSender consoleSender;
-
     @Inject
     private CommandExecutor commandExecutor;
-
     @Inject
     private AppBootstrap bootstrap;
 
     @Override
     protected boolean isRunning() {
-        return true; // TODO: 07.05.2023
+        return bootstrap.isRunning();
+    }
+
+    @Override
+    protected void shutdown() {
+        bootstrap.shutdown();
     }
 
     @Override
@@ -38,12 +41,7 @@ public class BridgenetConsole extends SimpleTerminalConsole {
             commandExecutor.execute(consoleSender, commandLine);
         }
         catch (CommandExecutionException exception) {
-            log.warn("§4That command is not found: §c{}", exception.toString());
+            log.warn("§6That command is not found: §e{}", exception.toString());
         }
-    }
-
-    @Override
-    protected void shutdown() {
-        bootstrap.shutdown();
     }
 }

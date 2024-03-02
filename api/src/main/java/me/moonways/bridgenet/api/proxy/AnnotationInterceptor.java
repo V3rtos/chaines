@@ -1,6 +1,8 @@
 package me.moonways.bridgenet.api.proxy;
 
 import me.moonways.bridgenet.api.inject.Autobind;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.proxy.proxy.ProxyManager;
 
 import java.lang.reflect.Method;
@@ -9,11 +11,16 @@ import java.util.Arrays;
 @Autobind
 public final class AnnotationInterceptor {
 
+    @Inject
+    private BeansService beansService;
+
     public InterceptController createController(ClassLoader classLoader, Class<?> cls, Object interceptor) {
+        beansService.inject(interceptor);
         return new InterceptController(classLoader, cls, null, interceptor);
     }
 
     public InterceptController createController(ClassLoader classLoader, Object source, Object interceptor) {
+        beansService.inject(interceptor);
         return new InterceptController(classLoader, source.getClass(), source, interceptor);
     }
 

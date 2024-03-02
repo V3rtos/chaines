@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.model.bus.message;
 
 import lombok.*;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
@@ -11,9 +12,9 @@ import java.util.UUID;
 @Getter
 @ToString
 @ServerMessage
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor(onConstructor_ = @Inject)
 public class CreateGame {
 
     @ByteTransfer
@@ -32,7 +33,7 @@ public class CreateGame {
     @ToString
     @ClientMessage
     @AllArgsConstructor
-    @NoArgsConstructor
+    @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Result {
 
         @ByteTransfer(provider = TransferUuidProvider.class)

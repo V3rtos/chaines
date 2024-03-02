@@ -6,6 +6,7 @@ target/
 ### BridgeNet ###
 *.build
 logs/
+metrics_images
 
 ### IntelliJ IDEA ###
 *.idea

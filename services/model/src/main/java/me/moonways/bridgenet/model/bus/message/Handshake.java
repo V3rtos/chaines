@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
@@ -18,12 +19,9 @@ import java.util.UUID;
 @ToString
 @ServerMessage
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(onConstructor_ = @Inject)
 public class Handshake {
     public enum Type { SERVER, PLAYER }
-
-    @ByteTransfer
-    private String name;
 
     @ByteTransfer(provider = TransferEnumProvider.class)
     private Type type;
@@ -31,13 +29,27 @@ public class Handshake {
     @ByteTransfer(provider = TransferPropertiesProvider.class)
     private Properties properties;
 
-    public interface Result { }
+    public interface Result {
+        UUID getKey();
+
+        default void onSuccess(Runnable runnable) {
+            if (this instanceof Success) {
+                runnable.run();
+            }
+        }
+
+        default void onFailure(Runnable runnable) {
+            if (this instanceof Failure) {
+                runnable.run();
+            }
+        }
+    }
 
     @Getter
     @ToString
     @ClientMessage
     @AllArgsConstructor
-    @NoArgsConstructor
+    @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Success implements Result {
 
         @ByteTransfer(provider = TransferUuidProvider.class)
@@ -48,7 +60,7 @@ public class Handshake {
     @ToString
     @ClientMessage
     @AllArgsConstructor
-    @NoArgsConstructor
+    @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Failure implements Result {
 
         @ByteTransfer(provider = TransferUuidProvider.class)

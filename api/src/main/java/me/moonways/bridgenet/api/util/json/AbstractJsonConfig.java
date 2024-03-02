@@ -1,54 +1,30 @@
 package me.moonways.bridgenet.api.util.json;
 
 import com.google.gson.Gson;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
 
 @Log4j2
 @RequiredArgsConstructor
-public abstract class AbstractJsonConfig<Source> {
+public abstract class AbstractJsonConfig<O> {
 
-  private final Class<Source> sourceType;
-  private final String filename;
+    private static final ResourcesAssembly RESOURCES_ASSEMBLY = new ResourcesAssembly();
+    private static final Gson GSON = new Gson();
 
-  @Inject
-  private Gson gson;
+    private final Class<O> sourceType;
+    private final String filename;
 
-  protected abstract void onReloaded(Source source);
+    @Synchronized
+    public void reload() {
+        String configurationContent = RESOURCES_ASSEMBLY.readResourceFullContent(filename);
 
-  @Synchronized
-  public void reload() {
-    String configurationContent = readContent();
+        O object = GSON.fromJson(configurationContent, sourceType);
+        doReload(object);
 
-    Source source = gson.fromJson(configurationContent, sourceType);
-    onReloaded(source);
-
-    log.info("Json configuration parsed from {}", filename);
-  }
-
-  @SuppressWarnings({"DataFlowIssue", "resource", "ResultOfMethodCallIgnored"})
-  @SneakyThrows
-  private String readContent() {
-    Path path = Paths.get(filename);
-
-    if (!Files.exists(path)) {
-
-      InputStream inputStream = getClass().getResourceAsStream("/" + filename);
-      byte[] arr = new byte[inputStream.available()];
-
-      inputStream.read(arr);
-
-      return new String(arr);
+        log.info("Json configuration parsed from {}", filename);
     }
 
-    byte[] bytes = Files.readAllBytes(path);
-    return new String(bytes);
-  }
+    protected abstract void doReload(O object);
 }

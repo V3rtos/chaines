@@ -4,6 +4,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.util.thread.Threads;
@@ -16,6 +17,8 @@ import java.util.concurrent.CompletableFuture;
 public class MTPClient implements MTPConnection {
 
     private final Bootstrap bootstrap;
+
+    @Getter
     private MTPChannel channel;
 
     private void handleChannelFuture(ChannelFuture channelFuture, CompletableFuture<MTPChannel> completableFuture) {
@@ -30,8 +33,7 @@ public class MTPClient implements MTPConnection {
             if (completableFuture != null) {
                 completableFuture.complete(this.channel);
             }
-        }
-        else {
+        } else {
             Throwable cause = channelFuture.cause();
             log.error("§4Client connection proceed with exception: §c{}", cause.toString());
 
@@ -41,6 +43,8 @@ public class MTPClient implements MTPConnection {
             else {
                 log.error("Internal asynchronous connect error", cause);
             }
+
+            channelFuture.channel().pipeline().fireChannelInactive();
         }
     }
 

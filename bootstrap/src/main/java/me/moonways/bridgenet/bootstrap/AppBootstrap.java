@@ -2,16 +2,27 @@ package me.moonways.bridgenet.bootstrap;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 import me.moonways.bridgenet.api.util.thread.Threads;
+import me.moonways.bridgenet.assembly.util.FilesZipCompressionUtils;
 import me.moonways.bridgenet.bootstrap.hook.ApplicationBootstrapHook;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookContainer;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookPriority;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Properties;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Log4j2
 public class AppBootstrap {
@@ -19,7 +30,13 @@ public class AppBootstrap {
     @Getter
     private final BootstrapHookContainer hooksContainer = new BootstrapHookContainer();
     @Getter
-    private DependencyInjection injector;
+    private final BeansService beansService = new BeansService();
+
+    private final AtomicBoolean isRunning = new AtomicBoolean(false);
+
+    public synchronized boolean isRunning() {
+        return isRunning.get();
+    }
 
     private void processBootstrapHooks(@NotNull BootstrapHookPriority priority) {
         Collection<ApplicationBootstrapHook> hooksByPriority = hooksContainer.findOrderedHooks(priority);
@@ -31,30 +48,28 @@ public class AppBootstrap {
         hooksByPriority.forEach(hook -> {
 
             String namespace = hooksContainer.findHookName(hook.getClass());
-
-            hook.onBefore();
             hook.apply(this, namespace);
         });
 
         log.info("AppBootstrap.processBootstrapHooks() => end;");
     }
 
-    private void initDependencyInjection() {
-        log.info("Running DependencyInjection initialization processes");
+    private void startBeansActivity() {
+        log.info("Starting beans service processing");
 
-        injector = new DependencyInjection();
+        beansService.bind(System.getProperties());
 
-        injector.searchByProject();
-        injector.injectFields(hooksContainer);
+        beansService.start(BeansService.generateDefaultProperties());
 
-        injector.bind(new Properties());
-        injector.bind(this);
+        beansService.bind(this);
+        beansService.inject(hooksContainer);
     }
 
     public void start(String[] args) {
+        isRunning.set(true);
         log.info("Running Bridgenet bootstrap process with args = {}", Arrays.toString(args));
 
-        initDependencyInjection();
+        startBeansActivity();
         hooksContainer.bindHooks();
 
         processBootstrapHooks(BootstrapHookPriority.RUNNER);
@@ -66,6 +81,7 @@ public class AppBootstrap {
     }
 
     public void shutdown() {
+        isRunning.set(false);
         log.info("§4Shutting down Bridgenet services");
 
         processBootstrapHooks(BootstrapHookPriority.PRE_SHUTDOWN);

@@ -10,7 +10,9 @@ import me.moonways.bridgenet.mtp.message.codec.MessageDecoder;
 import me.moonways.bridgenet.mtp.message.codec.MessageEncoder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -27,22 +29,23 @@ public class NettyPipelineInitializer extends ChannelInitializer<Channel> {
     private final MTPDriver driver;
     private final MTPConfiguration configuration;
 
-    private Channel channel;
     private Consumer<Channel> initChannelConsumer;
 
     private final Set<ChannelInitializer<? extends Channel>> additionalChannelInitializers = new HashSet<>();
+    private final List<ChannelHandler> channelHandlerList = new ArrayList<>();
 
     private void initHandlers(@NotNull ChannelPipeline pipeline) {
-        pipeline.addLast(new NettyChannelHandler(driver));
+        NettyChannelHandler handler = new NettyChannelHandler(channelHandlerList, driver);
+        pipeline.addLast(handler);
     }
 
     private void initCodec(@NotNull ChannelPipeline pipeline) {
-        pipeline.addLast(new MessageDecoder(driver.getMessages(), configuration));
+        pipeline.addLast(new MessageDecoder(driver.getMessageRegistry(), configuration));
         pipeline.addLast(new MessageEncoder(configuration));
     }
 
     public void addChannelHandler(@NotNull ChannelHandler channelHandler) {
-        channel.pipeline().addLast(channelHandler);
+        channelHandlerList.add(channelHandler);
     }
 
     private void initOptions(@NotNull ChannelConfig config) {
@@ -64,27 +67,24 @@ public class NettyPipelineInitializer extends ChannelInitializer<Channel> {
     @Override
     protected void initChannel(Channel channel) {
         log.info("Running channel {} initialization", channel);
-        this.channel = channel;
-
         configuration.getEncryption().generateKeys();
 
         initCodec(channel.pipeline());
         initHandlers(channel.pipeline());
         initOptions(channel.config());
 
+        initAdditionalInitializers(channel);
+
         if (initChannelConsumer != null)
             initChannelConsumer.accept(channel);
-
-        initAdditionalInitializers(channel);
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     @NotNull
     public NettyPipelineInitializer thenComplete(@NotNull Consumer<Channel> initChannelConsumer) {
         if (this.initChannelConsumer == null)
             this.initChannelConsumer = initChannelConsumer;
         else
-            this.initChannelConsumer.andThen(initChannelConsumer);
+            this.initChannelConsumer = this.initChannelConsumer.andThen(initChannelConsumer);
         return this;
     }
 

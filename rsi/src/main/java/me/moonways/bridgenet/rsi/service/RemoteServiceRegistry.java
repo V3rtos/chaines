@@ -3,19 +3,22 @@ package me.moonways.bridgenet.rsi.service;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
 import me.moonways.bridgenet.rsi.endpoint.EndpointController;
 import me.moonways.bridgenet.rsi.module.*;
 import me.moonways.bridgenet.rsi.xml.XMLServiceModuleDescriptor;
 import me.moonways.bridgenet.rsi.xml.XMLServicesConfigDescriptor;
 import me.moonways.bridgenet.rsi.xml.XmlServiceInfoDescriptor;
-import me.moonways.bridgenet.api.inject.DependencyInjection;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.Inject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.rmi.RMISecurityManager;
 import java.util.*;
 import java.util.function.Function;
 
@@ -24,6 +27,7 @@ import java.util.function.Function;
 @Autobind
 public final class RemoteServiceRegistry {
 
+    @Getter
     private XMLServicesConfigDescriptor xmlConfiguration;
 
     private final Map<String, ServiceInfo> servicesInfos = Collections.synchronizedMap(new HashMap<>());
@@ -34,20 +38,31 @@ public final class RemoteServiceRegistry {
     private final Map<ServiceInfo, ServiceModulesContainer> modulesContainerMap = Collections.synchronizedMap(new HashMap<>());
 
     @Inject
-    private DependencyInjection injector;
-
+    private BeansService beansService;
     @Inject
     private XmlJaxbParser jaxbParser;
+    @Inject
+    private ResourcesAssembly assembly;
 
     private final EndpointController endpointController = new EndpointController();
 
     @PostConstruct
     void init() {
-        injector.injectFields(endpointController);
+        injectSecurityPolicy();
+        beansService.inject(endpointController);
+    }
+
+    @SuppressWarnings("deprecation")
+    private void injectSecurityPolicy() {
+        String policyFilepath = assembly.readResourcePath(ResourcesTypes.RMI_POLICY);
+
+        System.setProperty("java.security.policy", policyFilepath);
+        System.setSecurityManager(new RMISecurityManager());
     }
 
     public void initializeXmlConfiguration() {
-        xmlConfiguration = jaxbParser.parseCopiedResource(getClass().getClassLoader(), "rsiconfig.xml", XMLServicesConfigDescriptor.class);
+        xmlConfiguration = jaxbParser.parseToDescriptorByType(ResourcesTypes.RSI_CONFIG_XML,
+                XMLServicesConfigDescriptor.class);
 
         log.info("Parsed RMI XML-Configuration content: {}", xmlConfiguration);
 
@@ -80,7 +95,9 @@ public final class RemoteServiceRegistry {
 
             modulesContainerMap.put(serviceInfo, serviceModulesContainer);
         }
+    }
 
+    public void bindEndpoints() {
         endpointController.bindEndpoints();
     }
 
@@ -117,18 +134,18 @@ public final class RemoteServiceRegistry {
 
     private ServiceInfo createServiceInfo(XmlServiceInfoDescriptor wrapper) {
         String name = wrapper.getName();
-        Class<?> modelClass;
+        Class<?> modelClass = null;
 
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             modelClass = classLoader.loadClass(wrapper.getModelPath());
         }
         catch (ClassNotFoundException exception) {
-            throw new ServiceException(exception);
+            log.error(new ServiceException(exception));
         }
 
         if (!RemoteService.class.isAssignableFrom(modelClass) || !modelClass.isInterface()) {
-            throw new ServiceException("model of service " + name + " is not valid");
+            log.error(new ServiceException("model of service " + name + " is not valid"));
         }
 
         int port = Integer.parseInt(wrapper.getBindPort());
@@ -145,28 +162,28 @@ public final class RemoteServiceRegistry {
     }
 
     private void registerService(ServiceInfo serviceInfo, RemoteService remoteService) {
-        injector.injectFields(remoteService);
+        beansService.inject(remoteService);
 
         log.info("Service {} was registered", serviceInfo.getName());
         servicesImplements.put(serviceInfo, remoteService);
     }
 
     private ModuleID getModuleID(Class<? extends RemoteModule> cls) {
-        ModuleID moduleID;
+        ModuleID moduleID = null;
         try {
             RemoteModule<?> module = cls.newInstance();
             moduleID = module.getId();
         }
         catch (InstantiationException | IllegalAccessException exception) {
-            throw new ServiceException(exception);
+            log.error(new ServiceException(exception));
         };
 
         return moduleID;
     }
 
     private ModuleFactory createModuleFactory(XMLServiceModuleDescriptor wrapper) {
-        Class<?> targetClass;
-        Class<?> configClass;
+        Class<?> targetClass = null;
+        Class<?> configClass = null;
 
         try {
             ClassLoader classLoader = getClass().getClassLoader();
@@ -175,28 +192,30 @@ public final class RemoteServiceRegistry {
             configClass = classLoader.loadClass(wrapper.getConfigClass());
         }
         catch (ClassNotFoundException exception) {
-            throw new ServiceException(exception);
+            log.error(new ServiceException(exception));
         }
 
         final Class<? extends RemoteModule> checkedModuleClass = targetClass.asSubclass(RemoteModule.class);
         final ModuleID moduleID = getModuleID(checkedModuleClass);
 
+        Class<?> finalConfigClass = configClass;
         Function<ServiceInfo, RemoteModule<?>> factoryFunc = (serviceInfo) -> {
             try {
                 RemoteModule<?> module = checkedModuleClass.newInstance();
-                injector.injectFields(module);
+                beansService.inject(module);
 
                 Method bindMethod = Arrays.stream(checkedModuleClass.getMethods())
                         .filter(method -> method.getName().equals("bind"))
                         .findFirst()
                         .orElse(null);
 
-                bindMethod.invoke(module, xmlConfiguration, serviceInfo, configClass);
+                bindMethod.invoke(module, xmlConfiguration, serviceInfo, finalConfigClass);
 
                 return (RemoteModule<?>) module;
             }
             catch (InvocationTargetException | InstantiationException | IllegalAccessException exception) {
-                throw new ServiceException(exception);
+                log.error(new ServiceException(exception));
+                return null;
             }
         };
 

@@ -1,9 +1,14 @@
 package me.moonways.bridgenet.endpoint.servers;
 
-import me.moonways.bridgenet.api.inject.DependencyInjection;
+import me.moonways.bridgenet.api.command.CommandRegistry;
+import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.endpoint.servers.command.ServersInfoCommand;
+import me.moonways.bridgenet.endpoint.servers.handler.ServersDownstreamListener;
 import me.moonways.bridgenet.endpoint.servers.handler.ServersInputMessagesListener;
+import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerFlag;
 import me.moonways.bridgenet.model.servers.ServersServiceModel;
@@ -19,21 +24,49 @@ import java.util.stream.Collectors;
 
 public class ServersServiceEndpoint extends AbstractEndpointDefinition implements ServersServiceModel {
 
+    private static final long serialVersionUID = -1037167251538756291L;
     private final ServersContainer serversContainer = new ServersContainer();
 
     @Inject
     private MTPDriver mtpDriver;
     @Inject
-    private DependencyInjection injector;
+    private BeansService beansService;
+    @Inject
+    private EventService eventService;
+    @Inject
+    private CommandRegistry commandRegistry;
 
     public ServersServiceEndpoint() throws RemoteException {
         super();
     }
 
     @PostConstruct
-    public void bindListeners() {
-        injector.injectFields(serversContainer);
-        mtpDriver.bindHandler(new ServersInputMessagesListener(serversContainer, this));
+    public void registerAll() {
+        beansService.bind(new PlayersOnServersConnectionService());
+        beansService.inject(serversContainer);
+
+        registerListeners();
+        registerCommands();
+    }
+
+    private void registerListeners() {
+        ServersDownstreamListener downstreamListener = new ServersDownstreamListener(serversContainer);
+        ServersInputMessagesListener inputMessagesListener = new ServersInputMessagesListener(serversContainer);
+
+        // events.
+        eventService.registerHandler(downstreamListener);
+
+        // protocol.
+        mtpDriver.bindHandler(inputMessagesListener);
+    }
+
+    private void registerCommands() {
+        commandRegistry.registerCommand(new ServersInfoCommand());
+    }
+
+    @Override
+    public List<EntityServer> getTotalServers() throws RemoteException {
+        return serversContainer.getConnectedServers().collect(Collectors.toList());
     }
 
     @Override

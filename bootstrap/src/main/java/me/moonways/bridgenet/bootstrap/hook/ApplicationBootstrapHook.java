@@ -9,10 +9,6 @@ import org.jetbrains.annotations.NotNull;
 @RequiredArgsConstructor
 public abstract class ApplicationBootstrapHook {
 
-    public void onBefore() {
-        // override me.
-    }
-
     protected abstract void process(@NotNull AppBootstrap bootstrap) throws Exception;
 
     public final void apply(@NotNull AppBootstrap bootstrap,
@@ -27,9 +23,8 @@ public abstract class ApplicationBootstrapHook {
     private void executeUnchecked(AppBootstrap bootstrap, String namespace) {
         try {
             process(bootstrap);
-        }
-        catch (Exception exception) {
-            log.error("§4Bootstrap hook '{}' execution aborted:", namespace, exception);
+        } catch (Exception exception) {
+            log.error("§4Aborted bootstrap hook execution '{}' caused by {}", namespace, exception.toString(), exception);
         }
     }
 }

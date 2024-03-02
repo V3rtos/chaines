@@ -19,12 +19,12 @@ public class FriendsListStub extends AbstractEndpointDefinition implements Frien
     private final UUID playerUUID;
 
     private final PlayersServiceModel playersModel;
-    private final FriendsRepository repository;
+    private final FriendsDbRepository repository;
 
     @ToString.Include
     private final Set<UUID> uuids;
 
-    public FriendsListStub(UUID playerUUID, PlayersServiceModel playersModel, FriendsRepository repository, Set<UUID> uuids) throws RemoteException {
+    public FriendsListStub(UUID playerUUID, PlayersServiceModel playersModel, FriendsDbRepository repository, Set<UUID> uuids) throws RemoteException {
         super();
 
         this.playerUUID = playerUUID;
@@ -37,7 +37,10 @@ public class FriendsListStub extends AbstractEndpointDefinition implements Frien
     public boolean addFriend(UUID uuid) {
         boolean add = uuids.add(uuid);
         if (add) {
-            repository.addFriend(playerUUID, uuid);
+            repository.addFriend(FriendPair.builder()
+                    .playerID(playerUUID)
+                    .friendID(uuid)
+                    .build());
         }
         return add;
     }
@@ -51,7 +54,10 @@ public class FriendsListStub extends AbstractEndpointDefinition implements Frien
     public boolean removeFriend(UUID uuid) {
         boolean add = uuids.remove(uuid);
         if (add) {
-            repository.removeFriend(playerUUID, uuid);
+            repository.removeFriend(FriendPair.builder()
+                    .playerID(playerUUID)
+                    .friendID(uuid)
+                    .build());
         }
         return add;
     }
@@ -72,7 +78,7 @@ public class FriendsListStub extends AbstractEndpointDefinition implements Frien
     }
 
     @Override
-    public Set<UUID> getFriendsUUIDs() {
+    public Set<UUID> getFriendsIDs() {
         return uuids;
     }
 

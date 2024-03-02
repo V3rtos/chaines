@@ -3,32 +3,34 @@
 source .scripts/utils.sh
 
 exec_help() {
-  echo "$PREF Usage: ./$APP <subcommand> <flags>"
-  echo "$PREF Available subcommands list:"
-  echo " > -ep, --endpoints             Build endpoints modules to build."
-  echo " > -epc, --endpointsconfig      Configure endpoints modules before build."
-  echo " > -b, --build                  Build only maintained project modules."
-  echo " > -fb, --fullbuild              Run full build of all modules with endpoints."
+  echo ">> Executable subcommands list:"
+  echo " > -h, --help, help             |  Print this commands information block."
+  echo " > -e, endpoints                |  Build endpoints modules to build. [You can write name of endpoint as 0 parameter]"
+  echo " > -a, assemblyEndpoints        |  Configure services modules before build. [You can write name of endpoint as 0 parameter]"
+  echo " > -j, jar                      |  Build only maintained project modules."
+  echo " > -b, build                    |  Run full build of all modules with endpoints."
+  echo ""
+  echo ">> Commands usage examples: './$APP <subcommand> <parameters>' or 'sh $APP <subcommand> <parameters>'"
 }
 
 case $1 in
-    "" | "-h" | "--help")
+    "" | "-h" | "--help" | "help")
         exec_help
         ;;
-    "-epc" | "--endpointsconfig")
-        source .scripts/config_endpoints.sh
+    "-a" | "assemblyEndpoints")
+        source .scripts/config_endpoints.sh "$2"
         ;;
-    "-ep" | "--endpoints")
-        source .scripts/build_endpoints.sh
-        source .scripts/config_endpoints.sh
+    "-e" | "endpoints")
+        source .scripts/build_endpoints.sh "$2"
+        source .scripts/config_endpoints.sh "$2"
         ;;
-    "-b" | "--build")
+    "-j" | "jar")
         source .scripts/build_project.sh
         ;;
-    "-fb" | "--fullbuild")
+    "-b" | "build")
         source .scripts/build_project.sh
-        source .scripts/build_endpoints.sh
-        source .scripts/config_endpoints.sh
+        source .scripts/build_endpoints.sh "$2"
+        source .scripts/config_endpoints.sh "$2"
         ;;
     *)
         echo "$PREF Unknown command: $1"

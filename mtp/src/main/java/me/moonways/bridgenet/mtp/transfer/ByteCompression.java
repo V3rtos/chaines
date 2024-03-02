@@ -1,6 +1,8 @@
 package me.moonways.bridgenet.mtp.transfer;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 
@@ -62,15 +64,13 @@ public class ByteCompression {
         byteBuf.writeBytes(hasCompression ? compressedBytes : array);
     }
 
-    public byte[] read(ByteBuf byteBuf) throws IOException, DataFormatException {
+    public ByteBuf read(ByteBuf byteBuf) throws IOException, DataFormatException {
         byte state = byteBuf.readByte();
         byte[] array = new byte[byteBuf.readableBytes()];
 
         byteBuf.readBytes(array);
+        ByteBuf buffer = Unpooled.buffer();
 
-        if (state == HAS_COMPRESSION_STATE)
-            return decompress(array);
-
-        return array;
+        return state == HAS_COMPRESSION_STATE ? buffer.writeBytes(decompress(array)) : buffer.writeBytes(array);
     }
 }

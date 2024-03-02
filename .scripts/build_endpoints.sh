@@ -1,12 +1,14 @@
 #!/bin/bash
-ENDPOINTS_MODULE_PATH=services/endpoint
 ENDPOINTS_TARGET_PATH=$BUILD_DIR/services
+ENDPOINT_TARGET=$1
+
+echo "ENDPOINT_TARGET = $ENDPOINT_TARGET"
 
 rm -rf "$ENDPOINTS_TARGET_PATH"
 mkdir "$ENDPOINTS_TARGET_PATH"
 
 cd "services/model"
-mvn clean install -Dmaven.test.skip || exit
+mvn clean install package -Dmaven.test.skip || exit
 cd ../../
 
 function compile() {
@@ -25,7 +27,7 @@ function install_endpoint() {
 
   mkdir "$target_path"
   cd "$endpoint_path" || exit
-  mvn clean install
+  mvn clean install package
   except_code
 }
 
@@ -40,18 +42,30 @@ function copy_compiled_endpoint() {
   except_code
 }
 
-# shellcheck disable=SC2231
-for endpoint in $ENDPOINTS_MODULE_PATH/*
-do
-  tmp=$(echo "$endpoint" | cut -d'/' -f 3)
+function build_all() {
+  # shellcheck disable=SC2231
+  for endpoint in $ENDPOINTS_MODULE_PATH/*
+  do
+    build $endpoint
+  done
+}
+
+function build() {
+  tmp=$(echo "$1" | cut -d'/' -f 3)
   if [ "$tmp" != "target" ]; then
 
-    echo "$PREF Found endpoint $tmp"
+    echo "$PREF Found endpoint '$tmp' from $1"
     echo "$PREF Begin installing and compile..."
 
-    if [ -d "$endpoint" ]; then
+    if [ -d "$1" ]; then
       compile "$tmp"
       except_code
     fi
   fi
-done
+}
+
+if [[ -z $ENDPOINT_TARGET ]]; then
+    build_all
+else
+    build "$ENDPOINTS_MODULE_PATH/$ENDPOINT_TARGET"
+fi
