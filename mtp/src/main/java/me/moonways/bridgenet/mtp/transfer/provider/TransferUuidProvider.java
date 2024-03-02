@@ -1,11 +1,7 @@
 package me.moonways.bridgenet.mtp.transfer.provider;
 
 import io.netty.buffer.ByteBuf;
-import me.moonways.bridgenet.mtp.transfer.ByteCodec;
-import me.moonways.bridgenet.mtp.transfer.MessageBytes;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class TransferUuidProvider implements TransferProvider {

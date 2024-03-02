@@ -5,7 +5,7 @@ import me.moonways.bridgenet.connector.BridgenetConnector;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
 import me.moonways.bridgenet.connector.description.DeviceDescription;
 import me.moonways.bridgenet.model.bus.message.Handshake;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class TestConnector extends BridgenetConnector {
     }
 
     @Override
-    public void onConnected(MTPMessageSender channel) {
+    public void onConnected(BridgenetNetworkChannel channel) {
         log.info("§d§nSUCCESSFUL CONNECTED TO BRIDGENET SERVER!");
     }
 

@@ -3,8 +3,8 @@ package me.moonways.bridgenet.test.engine.util;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.mtp.client.MTPClientConnectionFactory;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
+import me.moonways.bridgenet.mtp.connection.client.NetworkClientConnectionFactory;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 
 @Autobind
 public class TestMTPClientConnection {
@@ -12,16 +12,16 @@ public class TestMTPClientConnection {
     @Inject
     private BeansService beansService;
 
-    private MTPMessageSender channel;
-    private MTPClientConnectionFactory clientConnectionFactory;
+    private BridgenetNetworkChannel channel;
+    private NetworkClientConnectionFactory clientConnectionFactory;
 
-    public MTPMessageSender getChannel() {
+    public BridgenetNetworkChannel getChannel() {
         if (clientConnectionFactory == null) {
-            clientConnectionFactory = new MTPClientConnectionFactory();
+            clientConnectionFactory = new NetworkClientConnectionFactory();
             beansService.inject(clientConnectionFactory);
         }
         if (channel == null) {
-            channel = clientConnectionFactory.newClient();
+            channel = clientConnectionFactory.newRemoteClient();
         }
         return channel;
     }

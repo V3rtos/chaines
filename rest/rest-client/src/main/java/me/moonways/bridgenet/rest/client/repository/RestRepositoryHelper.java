@@ -3,7 +3,7 @@ package me.moonways.bridgenet.rest.client.repository;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
-import me.moonways.bridgenet.api.inject.bean.factory.UnsafeFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.type.UnsafeFactory;
 import me.moonways.bridgenet.api.proxy.ProxiedMethod;
 import me.moonways.bridgenet.rest.client.repository.persistence.RestCertificatesSecurity;
 import me.moonways.bridgenet.rest.client.repository.persistence.RestClient;

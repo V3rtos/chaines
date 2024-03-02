@@ -9,11 +9,10 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.jdbc.provider.BridgenetJdbcProvider;
-import me.moonways.bridgenet.mtp.MTPConnectionFactory;
-import me.moonways.bridgenet.mtp.MTPDriver;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
-import me.moonways.bridgenet.mtp.client.MTPClientChannelHandler;
-import me.moonways.bridgenet.mtp.client.MTPClientConnectionFactory;
+import me.moonways.bridgenet.mtp.BridgenetNetworkController;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
+import me.moonways.bridgenet.mtp.connection.client.BridgenetNetworkClientHandler;
+import me.moonways.bridgenet.mtp.connection.client.NetworkClientConnectionFactory;
 import me.moonways.bridgenet.rsi.module.access.AccessConfig;
 import me.moonways.bridgenet.rsi.module.access.AccessRemoteModule;
 import me.moonways.bridgenet.rsi.service.RemoteService;
@@ -47,7 +46,6 @@ public final class ConnectorEngine {
     public BeansService bindAll() {
         beansService = new BeansService();
 
-        beansService.bind(MTPConnectionFactory.createConnectionFactory());
         beansService.start(BeansService.generateDefaultProperties());
 
         beansService.bind(new Properties());
@@ -142,11 +140,11 @@ public final class ConnectorEngine {
         log.info("§4Disconnected from rmi service - " + descriptor);
     }
 
-    public MTPMessageSender connectBridgenetServer(MTPDriver mtpDriver, MTPClientConnectionFactory connectionFactory,
-                                                   MTPClientChannelHandler channelHandler) {
-        mtpDriver.bindMessages();
-        mtpDriver.bindHandlers();
+    public BridgenetNetworkChannel connectBridgenetServer(BridgenetNetworkController networkDriver, NetworkClientConnectionFactory connectionFactory,
+                                                          BridgenetNetworkClientHandler channelHandler) {
+        networkDriver.bindMessages();
+        networkDriver.bindMessageListeners();
 
-        return connectionFactory.newUncastedClient(channelHandler);
+        return connectionFactory.newReferenceClient(channelHandler);
     }
 }

@@ -6,7 +6,7 @@ import me.moonways.bridgenet.model.bus.message.DeleteGame;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.model.bus.message.UpdateGame;
 import me.moonways.bridgenet.model.games.*;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import me.moonways.bridgenet.test.engine.util.TestMTPClientConnection;
 import org.junit.Test;
@@ -44,10 +44,10 @@ public class CreateGameTest {
     }
 
     private Handshake.Result sendHandshakeMessage() {
-        MTPMessageSender channel = clientConnection.getChannel();
+        BridgenetNetworkChannel channel = clientConnection.getChannel();
 
         Handshake message = newHandshakeMessage("Test-1");
-        CompletableFuture<Handshake.Result> future = channel.sendMessageWithResponse(Handshake.Result.class, message);
+        CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class, message);
         try {
             return future.join();
         } catch (CompletionException exception) {
@@ -57,10 +57,10 @@ public class CreateGameTest {
 
     @Test
     public void test_createGameSuccess() throws RemoteException {
-        MTPMessageSender channel = clientConnection.getChannel();
+        BridgenetNetworkChannel channel = clientConnection.getChannel();
         sendHandshakeMessage();
 
-        CompletableFuture<CreateGame.Result> future = channel.sendMessageWithResponse(CreateGame.Result.class,
+        CompletableFuture<CreateGame.Result> future = channel.sendAwait(CreateGame.Result.class,
                 new CreateGame(DEF_GAME_NAME, DEF_GAME_MAP, 2, 1));
 
         subj = future.join();
@@ -70,8 +70,8 @@ public class CreateGameTest {
 
     @Test
     public void test_updateGameState() throws RemoteException, InterruptedException {
-        MTPMessageSender channel = clientConnection.getChannel();
-        channel.sendMessage(
+        BridgenetNetworkChannel channel = clientConnection.getChannel();
+        channel.send(
                 new UpdateGame(subj.getGameId(), subj.getActiveId(),
                         GameStatus.PROCESSING, 0, 0));
 
@@ -82,8 +82,8 @@ public class CreateGameTest {
 
     @Test
     public void test_successGameDelete() throws RemoteException, InterruptedException {
-        MTPMessageSender channel = clientConnection.getChannel();
-        channel.sendMessage(
+        BridgenetNetworkChannel channel = clientConnection.getChannel();
+        channel.send(
                 new DeleteGame(subj.getGameId(), subj.getActiveId()));
 
         sleep(100);

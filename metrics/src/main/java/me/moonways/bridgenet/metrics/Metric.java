@@ -13,7 +13,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class Metric {
 
-    private static final int MAX_VALUES_SIZE = 1024;
+    private static final int MAX_VALUES_SIZE = 290;
 
     @EqualsAndHashCode.Include
     private final UUID id;

@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.mtp.transfer;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;

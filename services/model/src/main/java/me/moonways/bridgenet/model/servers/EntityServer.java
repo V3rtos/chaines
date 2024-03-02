@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.model.servers;
 
 import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
@@ -35,7 +35,7 @@ public interface EntityServer extends Remote {
      * Получить канал сервера по протоколу MTP
      * для отправки и обработки сообщений.
      */
-    MTPMessageSender getChannel() throws RemoteException;
+    BridgenetNetworkChannel getChannel() throws RemoteException;
 
     /**
      * Получение адреса сервера, который он сам для
