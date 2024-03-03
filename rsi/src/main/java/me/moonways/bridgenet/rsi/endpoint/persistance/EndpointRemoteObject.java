@@ -4,6 +4,7 @@ import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 
 import java.lang.reflect.Field;
 import java.rmi.RemoteException;
@@ -16,6 +17,8 @@ public abstract class EndpointRemoteObject extends UnicastRemoteObject {
 
     @Inject
     private BeansService beansService;
+    @Inject
+    private BeansStore beansStore;
 
     public EndpointRemoteObject() throws RemoteException {
         super();
@@ -44,12 +47,18 @@ public abstract class EndpointRemoteObject extends UnicastRemoteObject {
      */
     private void injectInternal() {
         for (Field declaredField : getClass().getDeclaredFields()) {
+            if (declaredField.isAnnotationPresent(Inject.class)) {
+                continue;
+            }
             declaredField.setAccessible(true);
             try {
                 Object value = declaredField.get(this);
 
                 if (value != null) {
                     Class<?> type = value.getClass();
+                    if (beansStore.isStored(type)) {
+                        continue;
+                    }
                     if (type.getPackage().getName().startsWith("me.moonways")) {
                         if (type.isAssignableFrom(Autobind.class)) {
                             beansService.bind(value);
