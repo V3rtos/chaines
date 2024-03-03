@@ -18,8 +18,10 @@ import static org.junit.Assert.*;
 @RunWith(BridgenetJUnitTestRunner.class)
 public class AuthServiceEndpointTest {
 
+    private static final String ACTUAL_PASSWORD = "123qweasdzxc";
+    private static final String NEW_PASSWORD = "cxzdsaewq321";
+
     private static final UUID PLAYER_ID = UUID.randomUUID();
-    private static final String PLAYER_PASSWORD = "123qweasdzxc";
 
     @Inject
     private AuthServiceModel serviceModel;
@@ -28,8 +30,8 @@ public class AuthServiceEndpointTest {
     public void test_accountRegistration() throws RemoteException {
         assertFalse(serviceModel.findAccountById(PLAYER_ID).isPresent());
 
-        AuthorizationResult resultSuccess = serviceModel.tryRegistration(PLAYER_ID, PLAYER_PASSWORD);
-        AuthorizationResult resultAlreadyRegistered = serviceModel.tryRegistration(PLAYER_ID, PLAYER_PASSWORD);
+        AuthorizationResult resultSuccess = serviceModel.tryRegistration(PLAYER_ID, ACTUAL_PASSWORD);
+        AuthorizationResult resultAlreadyRegistered = serviceModel.tryRegistration(PLAYER_ID, ACTUAL_PASSWORD);
 
         assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
         assertEquals(resultSuccess, AuthorizationResult.SUCCESS);
@@ -67,8 +69,8 @@ public class AuthServiceEndpointTest {
     public void test_accountLogging() throws RemoteException {
         assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
 
-        AuthorizationResult resultSuccess = serviceModel.tryLogin(PLAYER_ID, PLAYER_PASSWORD);
-        AuthorizationResult resultAlreadyLogged = serviceModel.tryLogin(PLAYER_ID, PLAYER_PASSWORD);
+        AuthorizationResult resultSuccess = serviceModel.tryLogin(PLAYER_ID, ACTUAL_PASSWORD);
+        AuthorizationResult resultAlreadyLogged = serviceModel.tryLogin(PLAYER_ID, ACTUAL_PASSWORD);
 
         assertEquals(resultSuccess, AuthorizationResult.SUCCESS);
         assertEquals(resultAlreadyLogged, AuthorizationResult.FAILURE__ALREADY_LOGGED);
@@ -76,13 +78,11 @@ public class AuthServiceEndpointTest {
 
     @Test
     public void test_accountPasswordChange() throws RemoteException {
-        final String newPassword = "cxzdsaewq321";
-
         assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
 
-        AuthorizationResult resultUncorrectedPassword = serviceModel.tryPasswordChange(PLAYER_ID, newPassword, PLAYER_PASSWORD);
-        AuthorizationResult resultSimilarPreviousPassword = serviceModel.tryPasswordChange(PLAYER_ID, PLAYER_PASSWORD, PLAYER_PASSWORD);
-        AuthorizationResult resultSuccess = serviceModel.tryPasswordChange(PLAYER_ID, PLAYER_PASSWORD, newPassword);
+        AuthorizationResult resultUncorrectedPassword = serviceModel.tryPasswordChange(PLAYER_ID, NEW_PASSWORD, ACTUAL_PASSWORD);
+        AuthorizationResult resultSimilarPreviousPassword = serviceModel.tryPasswordChange(PLAYER_ID, ACTUAL_PASSWORD, ACTUAL_PASSWORD);
+        AuthorizationResult resultSuccess = serviceModel.tryPasswordChange(PLAYER_ID, ACTUAL_PASSWORD, NEW_PASSWORD);
 
         assertEquals(resultUncorrectedPassword, AuthorizationResult.FAILURE__UNCORRECTED_PASSWORD);
         assertEquals(resultSimilarPreviousPassword, AuthorizationResult.FAILURE__SIMILAR_PREVIOUS_PASSWORDS);
