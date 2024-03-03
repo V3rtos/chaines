@@ -6,12 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
-import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
 
 import java.util.List;
 
-@ServerMessage
+@ClientMessage
 @NoArgsConstructor(onConstructor_ = @Inject)
 public class GetCommands {
 

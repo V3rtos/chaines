@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @ToString
-@ServerMessage
+@ClientMessage
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(onConstructor_ = @Inject)
@@ -31,7 +31,7 @@ public class CreateGame {
 
     @Getter
     @ToString
-    @ClientMessage
+    @ServerMessage
     @AllArgsConstructor
     @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Result {
