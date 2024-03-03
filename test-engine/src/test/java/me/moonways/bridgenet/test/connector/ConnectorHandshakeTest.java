@@ -7,6 +7,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.test.connector.subj.TestConnector;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +25,7 @@ public class ConnectorHandshakeTest {
     private ConsoleCommandSender consoleCommandSender;
 
     @Test
+    @Order(0)
     public void test_handshakeSuccess() {
         subj.start();
         assertNotNull(subj.getCurrentDeviceId());
@@ -32,6 +34,7 @@ public class ConnectorHandshakeTest {
     }
 
     @Test
+    @Order(1)
     public void test_handshakeFailed() {
         Handshake.Result result = subj.retryHandshakeExchanging();
         assertTrue(result instanceof Handshake.Failure);

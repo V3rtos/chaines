@@ -8,6 +8,7 @@ import me.moonways.bridgenet.model.bus.message.UpdateGame;
 import me.moonways.bridgenet.model.games.*;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import me.moonways.bridgenet.test.engine.util.TestMTPClientConnection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,6 +57,7 @@ public class GamesServiceEndpointTest {
     }
 
     @Test
+    @Order(0)
     public void test_createGameSuccess() throws RemoteException {
         BridgenetNetworkChannel channel = clientConnection.getChannel();
         sendHandshakeMessage();
@@ -69,6 +71,7 @@ public class GamesServiceEndpointTest {
     }
 
     @Test
+    @Order(1)
     public void test_updateGameState() throws RemoteException, InterruptedException {
         BridgenetNetworkChannel channel = clientConnection.getChannel();
         channel.send(
@@ -81,6 +84,7 @@ public class GamesServiceEndpointTest {
     }
 
     @Test
+    @Order(2)
     public void test_successGameDelete() throws RemoteException, InterruptedException {
         BridgenetNetworkChannel channel = clientConnection.getChannel();
         channel.send(

@@ -9,6 +9,7 @@ import me.moonways.bridgenet.model.players.PlayersServiceModel;
 import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
 import me.moonways.bridgenet.model.players.connection.PlayerConnection;
 import me.moonways.bridgenet.model.players.leveling.PlayerLeveling;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,7 @@ public class PlayersServiceEndpointTest {
     private PlayersServiceModel serviceModel;
 
     @Test
+    @Order(0)
     public void test_successPlayerAdd() throws RemoteException {
         PlayerConnection playerConnection = serviceModel.getPlayerConnection();
         playerConnection.addConnectedPlayer(
@@ -37,6 +39,7 @@ public class PlayersServiceEndpointTest {
     }
 
     @Test
+    @Order(1)
     public void test_successPlayerLeveling() throws RemoteException {
         PlayerLeveling playerLeveling = serviceModel.getPlayerLeveling();
 

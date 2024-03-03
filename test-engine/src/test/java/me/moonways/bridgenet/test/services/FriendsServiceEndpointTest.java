@@ -4,6 +4,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import me.moonways.bridgenet.model.friends.FriendsList;
 import me.moonways.bridgenet.model.friends.FriendsServiceModel;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,6 +20,7 @@ public class FriendsServiceEndpointTest {
     private FriendsServiceModel friendsServiceModel;
 
     @Test
+    @Order(0)
     public void test_friendAdd() throws RemoteException {
         UUID friendID = UUID.randomUUID();
         UUID playerID = UUID.randomUUID();

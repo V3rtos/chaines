@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.jdbc.core;
+package me.moonways.bridgenet.test.jdbc.sql.subj;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.jdbc.core.observer.DatabaseObserver;

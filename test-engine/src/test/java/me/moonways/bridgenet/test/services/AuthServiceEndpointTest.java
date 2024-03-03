@@ -6,6 +6,7 @@ import me.moonways.bridgenet.model.auth.AuthServiceModel;
 import me.moonways.bridgenet.model.auth.AuthenticationSession;
 import me.moonways.bridgenet.model.auth.AuthorizationResult;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,6 +28,7 @@ public class AuthServiceEndpointTest {
     private AuthServiceModel serviceModel;
 
     @Test
+    @Order(0)
     public void test_accountRegistration() throws RemoteException {
         assertFalse(serviceModel.findAccountById(PLAYER_ID).isPresent());
 
@@ -39,6 +41,7 @@ public class AuthServiceEndpointTest {
     }
 
     @Test
+    @Order(1)
     public void test_accountSession() throws RemoteException {
         Optional<Account> accountById = serviceModel.findAccountById(PLAYER_ID);
         assertTrue(accountById.isPresent());
@@ -55,6 +58,7 @@ public class AuthServiceEndpointTest {
     }
 
     @Test
+    @Order(2)
     public void test_accountLogout() throws RemoteException {
         assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
 
@@ -66,6 +70,7 @@ public class AuthServiceEndpointTest {
     }
 
     @Test
+    @Order(3)
     public void test_accountLogging() throws RemoteException {
         assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
 
@@ -77,6 +82,7 @@ public class AuthServiceEndpointTest {
     }
 
     @Test
+    @Order(4)
     public void test_accountPasswordChange() throws RemoteException {
         assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
 
@@ -90,6 +96,7 @@ public class AuthServiceEndpointTest {
     }
 
     @Test
+    @Order(5)
     public void test_accountDelete() throws RemoteException {
         assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
 

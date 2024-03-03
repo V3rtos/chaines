@@ -5,6 +5,7 @@ import me.moonways.bridgenet.api.command.CommandExecutor;
 import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,6 +20,7 @@ public class CommandExecutionTest {
     private ConsoleCommandSender consoleCommandSender;
 
     @Test
+    @Order(0)
     public void test_executeMentor() {
         try {
             commandExecutor.execute(consoleCommandSender, "test");
@@ -28,6 +30,7 @@ public class CommandExecutionTest {
     }
 
     @Test
+    @Order(1)
     public void test_executeProducerWithoutArguments() {
         try {
             commandExecutor.execute(consoleCommandSender, "test info");
