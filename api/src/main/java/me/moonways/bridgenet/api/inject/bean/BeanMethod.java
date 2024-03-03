@@ -69,4 +69,26 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
             throw new BeanException(exception);
         }
     }
+
+    public <T> T invokeAndGet(Object... args) {
+        if (hasConflicts()) {
+            throw new BeanException("Init function " + this + " has conflicts");
+        }
+
+        Method method = getRoot();
+        Bean bean = getBean();
+
+        method.setAccessible(true);
+
+        try {
+            return (T) method.invoke(bean.getRoot(), args);
+
+            if (isBefore() || isAfter()) {
+                log.info("Invoked bean construct-function of §2" + method);
+            }
+
+        } catch (IllegalAccessException | InvocationTargetException exception) {
+            throw new BeanException(exception);
+        }
+    }
 }
