@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
-import me.moonways.bridgenet.api.inject.bean.factory.UnsafeFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.type.UnsafeFactory;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
 import me.moonways.bridgenet.api.inject.decorator.persistence.Async;

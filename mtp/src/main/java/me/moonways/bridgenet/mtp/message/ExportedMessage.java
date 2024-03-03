@@ -11,6 +11,6 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public class ExportedMessage {
 
-    private final MessageWrapper wrapper;
+    private final WrappedNetworkMessage wrapper;
     private final Object message;
 }

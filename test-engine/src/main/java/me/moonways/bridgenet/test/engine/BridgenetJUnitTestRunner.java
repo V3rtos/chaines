@@ -2,7 +2,7 @@ package me.moonways.bridgenet.test.engine;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
-import me.moonways.bridgenet.api.inject.bean.factory.ConstructorFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.type.ConstructorFactory;
 import me.moonways.bridgenet.test.engine.unit.TestRunnableStep;
 import me.moonways.bridgenet.test.engine.unit.TestUnit;
 import me.moonways.bridgenet.test.engine.unit.step.TestCreateStep;
@@ -13,7 +13,6 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 

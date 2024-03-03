@@ -9,6 +9,7 @@ import me.moonways.bridgenet.api.util.autorun.persistence.AutoRunner;
 import me.moonways.bridgenet.api.util.autorun.persistence.Runnable;
 import me.moonways.bridgenet.api.util.autorun.persistence.RunningPeriod;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
+import me.moonways.bridgenet.api.util.pair.Pair;
 import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
 
 import java.util.concurrent.TimeUnit;
@@ -18,42 +19,39 @@ import java.util.concurrent.TimeUnit;
 @RunningPeriod(period = 1, unit = TimeUnit.MINUTES)
 public class GarbageCollectorRunner {
 
+    private long freeBefore = Runtime.getRuntime().freeMemory();
+
     @Inject
     private BridgenetMetricsLogger bridgenetMetricsLogger;
 
     @Runnable
     public void run() {
-        FreeMemoryPair freeMemoryPair = clearMemory();
+        Pair<Long, Long> freeMemoryPair = clearMemory();
 
-        log.debug("The memory used was automatically cleared by the Garbage Collector system {}{}",
-                getModifierColor(freeMemoryPair), freeMemoryPair);
+        //log.debug("The memory used was automatically cleared by the Garbage Collector system: {}{}",
+        //        getModifierColor(freeMemoryPair), freeMemoryPair);
 
         bridgenetMetricsLogger.logSystemMemoryFree();
         bridgenetMetricsLogger.logSystemMemoryTotal();
         bridgenetMetricsLogger.logSystemMemoryUsed();
     }
 
-    private FreeMemoryPair clearMemory() {
+    private Pair<Long, Long> clearMemory() {
         Runtime runtime = Runtime.getRuntime();
-
-        long freeBefore = runtime.freeMemory();
-
         runtime.gc();
+
         long freeAfter = runtime.freeMemory();
-        return new FreeMemoryPair(freeBefore, freeAfter);
+
+        Pair<Long, Long> pair = Pair.immutable(freeBefore, freeAfter);
+        freeBefore = freeAfter;
+
+        return pair;
     }
 
-    private ChatColor getModifierColor(FreeMemoryPair pair) {
-        long after = pair.getAfter();
-        long before = pair.getBefore();
+    private ChatColor getModifierColor(Pair<Long, Long> pair) {
+        long after = pair.first();
+        long before = pair.second();
+
         return before > after ? ChatColor.GREEN : (before == after ? ChatColor.YELLOW : ChatColor.RED);
-    }
-
-    @Getter
-    @ToString
-    @RequiredArgsConstructor
-    private static class FreeMemoryPair {
-        private final long before;
-        private final long after;
     }
 }

@@ -7,8 +7,8 @@ import me.moonways.bridgenet.model.bus.message.DeleteGame;
 import me.moonways.bridgenet.model.bus.message.UpdateGame;
 import me.moonways.bridgenet.model.games.*;
 import me.moonways.bridgenet.model.servers.EntityServer;
-import me.moonways.bridgenet.mtp.message.InputMessageContext;
-import me.moonways.bridgenet.mtp.message.persistence.IncomingMessageListener;
+import me.moonways.bridgenet.mtp.message.InboundMessageContext;
+import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
 import me.moonways.endpoint.games.GamesContainer;
 import me.moonways.endpoint.games.GamesEndpointException;
@@ -22,14 +22,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Log4j2
-@IncomingMessageListener
+@InboundMessageListener
 @RequiredArgsConstructor
 public class GamesInputMessageListener {
 
     private final GamesContainer container;
 
     @SubscribeMessage
-    public void handle(InputMessageContext<CreateGame> context) throws RemoteException {
+    public void handle(InboundMessageContext<CreateGame> context) throws RemoteException {
         ActiveGame activeGame = addActiveGame(context);
 
         UUID activeId = activeGame.getUniqueId();
@@ -37,7 +37,7 @@ public class GamesInputMessageListener {
 
         log.info("Game §2{} §rhas registered new arena by id: §2{}", parent.getName(), activeId);
 
-        context.answer(new CreateGame.Result(parent.getUniqueId(), activeId));
+        context.callback(new CreateGame.Result(parent.getUniqueId(), activeId));
     }
 
     @SubscribeMessage
@@ -102,7 +102,7 @@ public class GamesInputMessageListener {
                 .build();
     }
 
-    private GameServerStub toGameServerStub(InputMessageContext<CreateGame> context) throws RemoteException {
+    private GameServerStub toGameServerStub(InboundMessageContext<CreateGame> context) throws RemoteException {
         Optional<EntityServer> entityServerOptional = context.getChannel().getProperty(EntityServer.CHANNEL_PROPERTY);
 
         if (!entityServerOptional.isPresent()) {
@@ -122,7 +122,7 @@ public class GamesInputMessageListener {
         return game;
     }
 
-    private ActiveGame addActiveGame(InputMessageContext<CreateGame> context) throws RemoteException {
+    private ActiveGame addActiveGame(InboundMessageContext<CreateGame> context) throws RemoteException {
         GameStub gameStub = getGameStub(context.getMessage());
         GameServerStub gameServerStub = toGameServerStub(context);
 

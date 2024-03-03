@@ -14,7 +14,6 @@
         <module>rest-api</module>
         <module>rest-client</module>
         <module>rest-server</module>
-        <module>public-api</module>
     </modules>
 
     <properties>

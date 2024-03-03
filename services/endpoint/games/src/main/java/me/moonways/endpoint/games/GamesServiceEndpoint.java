@@ -7,7 +7,7 @@ import me.moonways.bridgenet.model.games.Game;
 import me.moonways.bridgenet.model.games.GameServer;
 import me.moonways.bridgenet.model.games.GamesServiceModel;
 import me.moonways.bridgenet.model.servers.EntityServer;
-import me.moonways.bridgenet.mtp.MTPDriver;
+import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
 import me.moonways.endpoint.games.handler.GamesInputMessageListener;
 import me.moonways.endpoint.games.handler.GamesServersDownstreamListener;
@@ -25,7 +25,7 @@ public final class GamesServiceEndpoint extends AbstractEndpointDefinition imple
     private final GamesContainer container = new GamesContainer();
 
     @Inject
-    private MTPDriver mtpDriver;
+    private BridgenetNetworkController networkDriver;
     @Inject
     private EventService eventService;
 
@@ -36,7 +36,7 @@ public final class GamesServiceEndpoint extends AbstractEndpointDefinition imple
     @PostConstruct
     public void init() {
         eventService.registerHandler(new GamesServersDownstreamListener(container));
-        mtpDriver.bindHandler(new GamesInputMessageListener(container));
+        networkDriver.register(new GamesInputMessageListener(container));
     }
 
     @Override
