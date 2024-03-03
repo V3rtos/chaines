@@ -11,6 +11,8 @@ import java.util.UUID;
 @Autobind
 public final class ConsoleCommandSender implements EntityCommandSender {
 
+    public static ConsoleCommandSender INSTANE = new ConsoleCommandSender();
+
     @Override
     public void sendMessage(String message) {
         log.info(message);

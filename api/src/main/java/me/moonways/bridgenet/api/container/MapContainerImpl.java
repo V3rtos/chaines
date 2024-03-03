@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.api.container;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MapContainerImpl<K, V> implements MapContainer<K, V> {
 
@@ -30,5 +29,9 @@ public class MapContainerImpl<K, V> implements MapContainer<K, V> {
     @Override
     public boolean contains(K key) {
         return parent.containsKey(key);
+    }
+
+    public Collection<V> values() {
+        return parent.values();
     }
 }

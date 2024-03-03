@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.modern_x2_command.label;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.modern_command.args.ArgumentException;
+import me.moonways.bridgenet.api.modern_x2_command.exception.CommandException;
 import me.moonways.bridgenet.api.util.ExceptionallyFunction;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +61,7 @@ public class CommandLabelContext {
             try {
                 return Optional.ofNullable(mapper.apply(lookup(position).orElse(null)));
             } catch (Throwable exception) {
-                throw new ArgumentException(exception);
+                throw new CommandException(exception);
             }
         }
 

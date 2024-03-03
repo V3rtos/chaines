@@ -1,28 +1,43 @@
 package me.moonways.bridgenet.api.modern_x2_command;
 
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.modern_x2_command.install.registry.CommandRegistry;
+import me.moonways.bridgenet.api.modern_x2_command.label.CommandLabelContext;
+import me.moonways.bridgenet.api.modern_x2_command.registration.CommandRegistry;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@Autobind
 public class CommandSearchStrategy {
 
     @Inject
     private CommandRegistry registry;
 
-    public Optional<Command> search(String label) {
-        String[] arr = label.split(" ");
+    public Optional<Command> search(CommandLabelContext labelContext) {
+        ListIterator<String> iterator = labelContext.getArguments()
+                .stream()
+                .collect(Collectors.toList())
+                .listIterator();
 
-        String commandName = null;
+        StringBuilder combinedWords = new StringBuilder();
 
-        for (String str : arr) {
-            if (!contains(str)) break;
+        while (iterator.hasNext()) {
+            String nextWord = iterator.next();
 
-            commandName = str;
-            break;
+            combinedWords.append(nextWord).append(iterator.hasNext() ? " " : "");
+
+            if (!contains(nextWord)) {
+                String completedCombinedWords = combinedWords.toString();
+
+                if (contains(completedCombinedWords)) {
+                    return Optional.of(registry.get(completedCombinedWords));
+                }
+            } else {
+                return Optional.of(registry.get(nextWord));
+            }
         }
-
-        return Optional.of(registry.get(commandName));
+        return Optional.ofNullable(registry.get(labelContext.getCommandName()));
     }
 
     private boolean contains(String name) {

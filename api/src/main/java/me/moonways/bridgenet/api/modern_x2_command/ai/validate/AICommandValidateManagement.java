@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.api.modern_x2_command.ai.validate;
 
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.modern_x2_command.Command;
 import me.moonways.bridgenet.api.modern_x2_command.ExecutionContext;
@@ -9,6 +10,7 @@ import me.moonways.bridgenet.api.modern_x2_command.ai.AINativeExecutionContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Autobind
 public class AICommandValidateManagement {
 
     @Inject
