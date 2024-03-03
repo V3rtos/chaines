@@ -1,7 +1,8 @@
 package me.moonways.endpoint.friend;
 
 import lombok.ToString;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.model.friends.FriendsList;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
 
@@ -11,24 +12,23 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @ToString(onlyExplicitlyIncluded = true)
-public class FriendsListStub extends AbstractEndpointDefinition implements FriendsList {
+public class FriendsListStub extends EndpointRemoteObject implements FriendsList {
 
     private static final long serialVersionUID = 8227026529064476222L;
 
     @ToString.Include
     private final UUID playerUUID;
-
-    private final PlayersServiceModel playersModel;
-    private final FriendsDbRepository repository;
-
     @ToString.Include
     private final Set<UUID> uuids;
 
-    public FriendsListStub(UUID playerUUID, PlayersServiceModel playersModel, FriendsDbRepository repository, Set<UUID> uuids) throws RemoteException {
-        super();
+    private final FriendsDbRepository repository;
 
+    @Inject
+    private PlayersServiceModel playersModel;
+
+    public FriendsListStub(UUID playerUUID, FriendsDbRepository repository, Set<UUID> uuids) throws RemoteException {
+        super();
         this.playerUUID = playerUUID;
-        this.playersModel = playersModel;
         this.repository = repository;
         this.uuids = uuids;
     }
@@ -83,7 +83,7 @@ public class FriendsListStub extends AbstractEndpointDefinition implements Frien
     }
 
     @Override
-    public Set<String> getFriendsNames() throws RemoteException {
+    public Set<String> getFriendsNames() {
         return uuids.stream().map(uuid -> {
                     try {
                         return playersModel.findPlayerName(uuid);

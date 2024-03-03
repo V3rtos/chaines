@@ -3,7 +3,7 @@ package me.moonways.endpoint.parties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.model.parties.Party;
 import me.moonways.bridgenet.model.parties.PartyMembersContainer;
 import me.moonways.bridgenet.model.parties.PartyOwner;
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class PartyStub extends AbstractEndpointDefinition implements Party {
+public class PartyStub extends EndpointRemoteObject implements Party {
 
     private static final long serialVersionUID = 3205875496897748444L;
 

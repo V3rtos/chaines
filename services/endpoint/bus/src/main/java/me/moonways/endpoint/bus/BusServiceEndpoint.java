@@ -14,13 +14,14 @@ import me.moonways.bridgenet.mtp.config.NetworkJsonConfiguration;
 import me.moonways.bridgenet.mtp.connection.BridgenetNetworkConnectionFactory;
 import me.moonways.bridgenet.mtp.connection.NetworkBootstrapFactory;
 import me.moonways.bridgenet.mtp.inbound.InboundChannelOptionsHandler;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.bus.handler.GetCommandsMessageHandler;
 
 import java.rmi.RemoteException;
 import java.util.concurrent.TimeUnit;
 
-public class BusServiceEndpoint extends AbstractEndpointDefinition implements BusServiceModel {
+public class BusServiceEndpoint extends EndpointRemoteObject implements BusServiceModel {
 
     private static final long serialVersionUID = 3915937249408474506L;
 
@@ -37,20 +38,17 @@ public class BusServiceEndpoint extends AbstractEndpointDefinition implements Bu
         super();
     }
 
-    @PostConstruct
-    public void bindMTPServer() {
+    @Override
+    protected void construct(EndpointRemoteContext context) {
         scheduler.schedule(ScheduledTime.of(5, TimeUnit.SECONDS))
-                        .follow(task -> {
-                            networkController.bindMessages();
-                            networkController.bindMessageListeners();
+                .follow(task -> {
+                    networkController.bindMessages();
+                    networkController.bindMessageListeners();
 
-                            bindServer();
-                            registerIncomingMessagesListeners();
-                        });
-    }
+                    bindServer();
 
-    private void registerIncomingMessagesListeners() {
-        networkController.register(new GetCommandsMessageHandler());
+                    context.registerMessageListener(new GetCommandsMessageHandler());
+                });
     }
 
     private void bindServer() {

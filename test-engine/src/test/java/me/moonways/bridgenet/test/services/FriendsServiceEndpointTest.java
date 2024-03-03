@@ -16,18 +16,27 @@ import static org.junit.Assert.assertEquals;
 @RunWith(BridgenetJUnitTestRunner.class)
 public class FriendsServiceEndpointTest {
 
+    private static final UUID PLAYER_ID = UUID.randomUUID();
+    private static final UUID FRIEND_ID = UUID.randomUUID();
+
     @Inject
     private FriendsServiceModel friendsServiceModel;
 
     @Test
     @Order(0)
     public void test_friendAdd() throws RemoteException {
-        UUID friendID = UUID.randomUUID();
-        UUID playerID = UUID.randomUUID();
-
-        FriendsList friendsList = friendsServiceModel.getFriends(playerID);
-        friendsList.addFriend(friendID);
+        FriendsList friendsList = friendsServiceModel.getFriends(PLAYER_ID);
+        friendsList.addFriend(FRIEND_ID);
 
         assertEquals(1, friendsList.getFriendsIDs().size());
+    }
+
+    @Test
+    @Order(1)
+    public void test_friendRemove() throws RemoteException {
+        FriendsList friendsList = friendsServiceModel.getFriends(PLAYER_ID);
+        friendsList.removeFriend(FRIEND_ID);
+
+        assertEquals(0, friendsList.getFriendsIDs().size());
     }
 }

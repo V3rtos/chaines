@@ -1,25 +1,22 @@
 package me.moonways.endpoint.auth;
 
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
 import me.moonways.bridgenet.model.auth.Account;
 import me.moonways.bridgenet.model.auth.AuthServiceModel;
 import me.moonways.bridgenet.model.auth.AuthorizationResult;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 
 import java.rmi.RemoteException;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AuthServiceEndpoint extends AbstractEndpointDefinition implements AuthServiceModel {
+public class AuthServiceEndpoint extends EndpointRemoteObject implements AuthServiceModel {
 
     private static final long serialVersionUID = -1339569131139297348L;
 
-    @Inject
-    private BeansService beansService;
     @Inject
     private DatabaseConnection databaseConnection;
     @Inject
@@ -29,9 +26,9 @@ public class AuthServiceEndpoint extends AbstractEndpointDefinition implements A
         super();
     }
 
-    @PostConstruct
-    private void init() {
-        //todo
+    @Override
+    protected void construct(EndpointRemoteContext context) {
+        // todo
     }
 
     @Override

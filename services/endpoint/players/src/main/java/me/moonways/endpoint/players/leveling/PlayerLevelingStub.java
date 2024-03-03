@@ -1,11 +1,11 @@
 package me.moonways.endpoint.players.leveling;
 
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.model.players.leveling.PlayerLeveling;
 
 import java.rmi.RemoteException;
 
-public class PlayerLevelingStub extends AbstractEndpointDefinition implements PlayerLeveling {
+public class PlayerLevelingStub extends EndpointRemoteObject implements PlayerLeveling {
 
     private static final long serialVersionUID = 3304541429104254807L;
 
