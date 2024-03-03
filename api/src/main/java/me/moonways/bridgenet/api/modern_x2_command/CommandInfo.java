@@ -1,6 +1,8 @@
 package me.moonways.bridgenet.api.modern_x2_command;
 
 import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -10,9 +12,15 @@ public class CommandInfo {
     private final String uid;
 
     @Getter
+    @Setter
     private String accessKey;
 
-    public CommandInfo(String commandName) {
+    @Setter
+    private String[] helpDescription;
+
+    public CommandInfo(String commandName, @Nullable String accessKey) {
         this.uid = UUID.fromString(commandName).toString();
+
+        this.accessKey = accessKey;
     }
 }

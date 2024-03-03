@@ -12,7 +12,7 @@ public class AINativeExecutionContext extends ExecutionContext {
     private Command command;
 
     public AINativeExecutionContext(EntityCommandSender entity, CommandLabelContext label, Command command) {
-        super(entity, label, command.getInfo());
+        super(entity, label);
     }
 
     public static AINativeExecutionContext create(EntityCommandSender entity, CommandLabelContext labelContext, Command command) {

@@ -2,6 +2,8 @@ package me.moonways.bridgenet.api.modern_x2_command;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.api.inject.bean.Bean;
+import me.moonways.bridgenet.api.inject.bean.BeanMethod;
 
 import java.lang.reflect.Method;
 
@@ -9,9 +11,9 @@ import java.lang.reflect.Method;
 public class Command {
 
     @Getter
-    private final Object parent;
+    private final Bean bean;
     @Getter
-    private final Method handle;
+    private final BeanMethod beanMethod;
 
     @Getter
     private final CommandInfo info;

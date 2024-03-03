@@ -12,9 +12,7 @@ public class ExecutionContext {
     private final EntityCommandSender entity;
     private final CommandLabelContext label;
 
-    private final CommandInfo commandInfo;
-
-    public static ExecutionContext create(EntityCommandSender entity, CommandLabelContext label, CommandInfo commandInfo) {
-        return new ExecutionContext(entity, label, commandInfo);
+    public static ExecutionContext create(EntityCommandSender entity, CommandLabelContext label) {
+        return new ExecutionContext(entity, label);
     }
 }
