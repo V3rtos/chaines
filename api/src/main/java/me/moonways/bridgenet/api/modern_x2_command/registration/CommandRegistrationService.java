@@ -5,10 +5,13 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanMethod;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
-import me.moonways.bridgenet.api.modern_x2_command.*;
-import me.moonways.bridgenet.api.modern_x2_command.annotation.AnnotationCommandService;
-import me.moonways.bridgenet.api.modern_x2_command.annotation.AnnotationNativeCommandContext;
+import me.moonways.bridgenet.api.modern_x2_command.annotation.*;
+import me.moonways.bridgenet.api.modern_x2_command.CommandAccessKey;
+import me.moonways.bridgenet.api.modern_x2_command.GeneralCommand;
+import me.moonways.bridgenet.api.modern_x2_command.SubCommand;
 import me.moonways.bridgenet.api.modern_x2_command.exception.CommandException;
+import me.moonways.bridgenet.api.modern_x2_command.obj.Command;
+import me.moonways.bridgenet.api.modern_x2_command.obj.CommandInfo;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;

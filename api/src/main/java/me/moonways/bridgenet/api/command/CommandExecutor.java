@@ -9,7 +9,7 @@ import me.moonways.bridgenet.api.command.children.definition.CommandMentorChild;
 import me.moonways.bridgenet.api.command.children.definition.CommandProducerChild;
 import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
 import me.moonways.bridgenet.api.command.option.CommandParameterMatcher;
-import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;

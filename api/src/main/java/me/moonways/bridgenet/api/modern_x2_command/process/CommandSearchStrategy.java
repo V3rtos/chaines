@@ -1,8 +1,9 @@
-package me.moonways.bridgenet.api.modern_x2_command;
+package me.moonways.bridgenet.api.modern_x2_command.process;
 
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.modern_x2_command.label.CommandLabelContext;
+import me.moonways.bridgenet.api.modern_x2_command.obj.Command;
+import me.moonways.bridgenet.api.modern_x2_command.obj.label.CommandLabelContext;
 import me.moonways.bridgenet.api.modern_x2_command.registration.CommandRegistry;
 
 import java.util.*;

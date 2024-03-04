@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.modern_x2_command.annotation;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.modern_x2_command.CommandInfo;
+import me.moonways.bridgenet.api.modern_x2_command.obj.CommandInfo;
 
 import java.lang.reflect.AnnotatedElement;
 

@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_x2_command.result;
+package me.moonways.bridgenet.api.modern_x2_command.process.result;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

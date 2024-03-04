@@ -2,8 +2,8 @@ package me.moonways.bridgenet.api.modern_x2_command.annotation.validate;
 
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.modern_x2_command.Command;
-import me.moonways.bridgenet.api.modern_x2_command.ExecutionContext;
+import me.moonways.bridgenet.api.modern_x2_command.obj.Command;
+import me.moonways.bridgenet.api.modern_x2_command.obj.ExecutionContext;
 import me.moonways.bridgenet.api.modern_x2_command.annotation.AnnotationCommandService;
 import me.moonways.bridgenet.api.modern_x2_command.annotation.AnnotationNativeExecutionContext;
 
@@ -23,7 +23,7 @@ public class AnnotationCommandValidateManagement {
     }
 
     private List<AnnotationCommandValidateResult> getFailedResults(ExecutionContext context, Command command) {
-        return commandService.validateAll(AnnotationNativeExecutionContext.create(context.getEntity(), context.getLabel(), command))
+        return commandService.validateAll(AnnotationNativeExecutionContext.create(context.getSender(), context.getLabel(), command))
                 .stream()
                 .filter(AnnotationCommandValidateResult::isOk)
                 .collect(Collectors.toList());

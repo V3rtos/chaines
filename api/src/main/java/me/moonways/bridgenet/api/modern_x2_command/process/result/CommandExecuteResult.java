@@ -1,8 +1,8 @@
-package me.moonways.bridgenet.api.modern_x2_command.result;
+package me.moonways.bridgenet.api.modern_x2_command.process.result;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
 
 import java.util.function.Consumer;
 
@@ -19,10 +19,6 @@ public final class CommandExecuteResult {
 
     public boolean isFail() {
         return type.equals(Type.FAIL);
-    }
-
-    public void test() {
-
     }
 
     public boolean isEmpty() {
@@ -70,7 +66,7 @@ public final class CommandExecuteResult {
     }
 
     public static CommandExecuteResult empty() {
-        return new CommandExecuteResult(Type.EMPTY, "void method");
+        return new CommandExecuteResult(Type.EMPTY, "void type");
     }
 
     public enum Type {

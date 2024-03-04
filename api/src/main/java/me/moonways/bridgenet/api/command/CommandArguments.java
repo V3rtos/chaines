@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.api.command;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.modern_command.CommandException;
 import me.moonways.bridgenet.api.util.ExceptionallyFunction;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +38,7 @@ public final class CommandArguments implements Iterable<String> {
         try {
             return Optional.ofNullable(mapper.apply(lookup(position).orElse(null)));
         } catch (Throwable exception) {
-            throw new CommandException(exception);
+            return null;
         }
     }
 

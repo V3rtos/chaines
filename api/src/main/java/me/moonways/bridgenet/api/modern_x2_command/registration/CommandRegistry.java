@@ -2,9 +2,7 @@ package me.moonways.bridgenet.api.modern_x2_command.registration;
 
 import me.moonways.bridgenet.api.container.MapContainerImpl;
 import me.moonways.bridgenet.api.inject.Autobind;
-import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
-import me.moonways.bridgenet.api.modern_x2_command.Command;
+import me.moonways.bridgenet.api.modern_x2_command.obj.Command;
 
 @Autobind
 public class CommandRegistry extends MapContainerImpl<String, Command> {

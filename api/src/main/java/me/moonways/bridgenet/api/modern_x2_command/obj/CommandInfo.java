@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_x2_command;
+package me.moonways.bridgenet.api.modern_x2_command.obj;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_x2_command.service;
+package me.moonways.bridgenet.api.modern_x2_command.process.service;
 
 import me.moonways.bridgenet.api.event.Event;
 import me.moonways.bridgenet.api.event.EventService;
@@ -12,16 +12,20 @@ import me.moonways.bridgenet.api.inject.decorator.persistence.Async;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.modern_x2_command.*;
+import me.moonways.bridgenet.api.modern_x2_command.InjectCommand;
 import me.moonways.bridgenet.api.modern_x2_command.annotation.validate.AnnotationCommandValidateManagement;
 import me.moonways.bridgenet.api.modern_x2_command.annotation.validate.AnnotationCommandValidateResult;
-import me.moonways.bridgenet.api.modern_x2_command.entity.ConsoleCommandSender;
-import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.obj.ExecutionContext;
+import me.moonways.bridgenet.api.modern_x2_command.obj.entity.ConsoleCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.modern_x2_command.event.CommandPostProcessEvent;
 import me.moonways.bridgenet.api.modern_x2_command.event.CommandPreProcessEvent;
-import me.moonways.bridgenet.api.modern_x2_command.label.CommandLabelContext;
+import me.moonways.bridgenet.api.modern_x2_command.obj.label.CommandLabelContext;
+import me.moonways.bridgenet.api.modern_x2_command.obj.Command;
+import me.moonways.bridgenet.api.modern_x2_command.obj.CommandInfo;
+import me.moonways.bridgenet.api.modern_x2_command.process.CommandSearchStrategy;
 import me.moonways.bridgenet.api.modern_x2_command.registration.CommandRegistrationService;
-import me.moonways.bridgenet.api.modern_x2_command.result.CommandExecuteResult;
+import me.moonways.bridgenet.api.modern_x2_command.process.result.CommandExecuteResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -77,16 +81,16 @@ public class CommandService {
     private synchronized void postComposeDispatch(EntityCommandSender entity, Command command, CommandLabelContext labelContext) {
         ExecutionContext executionContext = ExecutionContext.create(entity, labelContext);
 
-        if (!validatePreExecuteAnnotation(executionContext, command)) {
-            return;
-        }
-
-        if (!validatePreExecuteEvent(executionContext, command.getInfo())) {
+        if (validatePreDispatch(command, executionContext)) {
             return;
         }
 
         CommandExecuteResult postResult = getResultPostExecute(executionContext, command);
         invokeEvent(new CommandPostProcessEvent(executionContext, postResult));
+    }
+
+    private synchronized boolean validatePreDispatch(Command command, ExecutionContext executionContext) {
+        return validatePreExecuteEvent(executionContext, command.getInfo()) && validatePreExecuteAnnotation(executionContext, command);
     }
 
     private boolean validatePreExecuteEvent(ExecutionContext executionContext, CommandInfo commandInfo) {
@@ -130,12 +134,10 @@ public class CommandService {
     private synchronized CommandExecuteResult invoke(ExecutionContext executionContext, Command command) {
         BeanMethod beanMethod = command.getBeanMethod();
 
-        Object returnedObj = beanMethod.invoke(executionContext);
-
-        if (returnedObj.getClass().isAssignableFrom(void.class)) {
+        if (beanMethod.getRoot().getReturnType().isAssignableFrom(void.class)) {
             return CommandExecuteResult.empty();
         }
 
-        return (CommandExecuteResult) returnedObj;
+        return beanMethod.invoke(executionContext);
     }
 }

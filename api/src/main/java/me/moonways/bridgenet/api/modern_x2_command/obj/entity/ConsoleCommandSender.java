@@ -1,8 +1,7 @@
-package me.moonways.bridgenet.api.modern_x2_command.entity;
+package me.moonways.bridgenet.api.modern_x2_command.obj.entity;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;

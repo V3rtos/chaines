@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.command;
 
 import me.moonways.bridgenet.api.command.children.CommandChild;
 import me.moonways.bridgenet.api.command.option.CommandParameterMatcher;
-import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
 
 import java.util.Arrays;

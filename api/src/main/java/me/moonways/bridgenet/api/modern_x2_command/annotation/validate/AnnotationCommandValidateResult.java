@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.modern_x2_command.annotation.validate;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
 
 @Getter
 @RequiredArgsConstructor
@@ -20,10 +20,9 @@ public class AnnotationCommandValidateResult {
     }
 
     public static AnnotationCommandValidateResult fail(EntityCommandSender sender, String message) {
-        Type fail = Type.FAIL;
-        fail.handle(sender, message);
+        sender.sendMessage(message);
 
-        return new AnnotationCommandValidateResult(fail, message);
+        return new AnnotationCommandValidateResult(Type.FAIL, message);
     }
 
     public static AnnotationCommandValidateResult fail() {
@@ -32,21 +31,7 @@ public class AnnotationCommandValidateResult {
 
     public enum Type {
 
-        OK {
-            @Override
-            public void handle(EntityCommandSender sender, String message) {
-                if (!message.isEmpty())
-                    sender.sendMessage(message);
-            }
-        },
-        FAIL {
-            @Override
-            public void handle(EntityCommandSender sender, String message) {
-                if (!message.isEmpty())
-                    sender.sendMessage(message);
-            }
-        };
-
-        public abstract void handle(EntityCommandSender sender, String message);
+        OK,
+        FAIL
     }
 }

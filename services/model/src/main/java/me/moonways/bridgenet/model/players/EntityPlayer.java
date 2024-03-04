@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.model.players;
 
-import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

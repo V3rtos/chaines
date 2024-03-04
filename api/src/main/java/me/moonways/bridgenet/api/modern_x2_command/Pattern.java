@@ -1,5 +1,7 @@
 package me.moonways.bridgenet.api.modern_x2_command;
 
+import me.moonways.bridgenet.api.modern_x2_command.obj.pattern.PatternFormat;
+
 import java.lang.annotation.*;
 
 @Repeatable(Patterns.class)
@@ -7,9 +9,9 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 public @interface Pattern {
 
-    int position();
+    PatternFormat enumFormat() default PatternFormat.EMPTY;
 
-    String value();
+    String stringFormat() default "";
 
-    String exception() default "Invalid pattern";
+    String[] exceptionsMsg() default "Invalid pattern";
 }

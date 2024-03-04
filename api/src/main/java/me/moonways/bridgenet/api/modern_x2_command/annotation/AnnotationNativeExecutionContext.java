@@ -1,10 +1,10 @@
 package me.moonways.bridgenet.api.modern_x2_command.annotation;
 
 import lombok.Getter;
-import me.moonways.bridgenet.api.modern_x2_command.Command;
-import me.moonways.bridgenet.api.modern_x2_command.ExecutionContext;
-import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
-import me.moonways.bridgenet.api.modern_x2_command.label.CommandLabelContext;
+import me.moonways.bridgenet.api.modern_x2_command.obj.Command;
+import me.moonways.bridgenet.api.modern_x2_command.obj.ExecutionContext;
+import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.obj.label.CommandLabelContext;
 
 @Getter
 public class AnnotationNativeExecutionContext extends ExecutionContext {

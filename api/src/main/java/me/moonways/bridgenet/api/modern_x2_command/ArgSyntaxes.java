@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface Patterns {
+public @interface ArgSyntaxes {
 
-    Pattern[] value();
+    ArgSyntax[] value();
 }
