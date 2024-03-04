@@ -21,6 +21,10 @@ public final class CommandExecuteResult {
         return type.equals(Type.FAIL);
     }
 
+    public void test() {
+
+    }
+
     public boolean isEmpty() {
         return type.equals(Type.EMPTY);
     }
