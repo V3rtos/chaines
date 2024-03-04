@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_x2_command.ai.validate;
+package me.moonways.bridgenet.api.modern_x2_command.annotation.validate;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
 
 @Getter
 @RequiredArgsConstructor
-public class AICommandValidateResult {
+public class AnnotationCommandValidateResult {
 
     private final Type type;
     private final String message;
@@ -15,19 +15,19 @@ public class AICommandValidateResult {
         return type.equals(Type.OK);
     }
 
-    public static AICommandValidateResult ok() {
-        return new AICommandValidateResult(Type.OK, null);
+    public static AnnotationCommandValidateResult ok() {
+        return new AnnotationCommandValidateResult(Type.OK, null);
     }
 
-    public static AICommandValidateResult fail(EntityCommandSender sender, String message) {
+    public static AnnotationCommandValidateResult fail(EntityCommandSender sender, String message) {
         Type fail = Type.FAIL;
         fail.handle(sender, message);
 
-        return new AICommandValidateResult(fail, message);
+        return new AnnotationCommandValidateResult(fail, message);
     }
 
-    public static AICommandValidateResult fail() {
-        return new AICommandValidateResult(Type.FAIL, null);
+    public static AnnotationCommandValidateResult fail() {
+        return new AnnotationCommandValidateResult(Type.FAIL, null);
     }
 
     public enum Type {

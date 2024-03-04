@@ -1,0 +1,141 @@
+package me.moonways.bridgenet.api.modern_x2_command.service;
+
+import me.moonways.bridgenet.api.event.Event;
+import me.moonways.bridgenet.api.event.EventService;
+import me.moonways.bridgenet.api.inject.Autobind;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.PostConstruct;
+import me.moonways.bridgenet.api.inject.bean.Bean;
+import me.moonways.bridgenet.api.inject.bean.BeanMethod;
+import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
+import me.moonways.bridgenet.api.inject.decorator.persistence.Async;
+import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.modern_x2_command.*;
+import me.moonways.bridgenet.api.modern_x2_command.annotation.validate.AnnotationCommandValidateManagement;
+import me.moonways.bridgenet.api.modern_x2_command.annotation.validate.AnnotationCommandValidateResult;
+import me.moonways.bridgenet.api.modern_x2_command.entity.ConsoleCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.event.CommandPostProcessEvent;
+import me.moonways.bridgenet.api.modern_x2_command.event.CommandPreProcessEvent;
+import me.moonways.bridgenet.api.modern_x2_command.label.CommandLabelContext;
+import me.moonways.bridgenet.api.modern_x2_command.registration.CommandRegistrationService;
+import me.moonways.bridgenet.api.modern_x2_command.result.CommandExecuteResult;
+
+import java.util.List;
+import java.util.Optional;
+
+@WaitTypeAnnotationProcessor(InjectCommand.class)
+@Autobind
+@EnableDecorators
+public class CommandService {
+
+    @Inject
+    private EventService eventService;
+
+    @Inject
+    private CommandSearchStrategy searchStrategy;
+    @Inject
+    private AnnotationCommandValidateManagement validateManagement;
+
+    @Inject
+    private CommandRegistrationService registrationService;
+
+    @GetTypeAnnotationProcessor
+    private TypeAnnotationProcessorResult<Object> commandsResult;
+
+    @PostConstruct
+    private void registerAll() {
+        List<Bean> beansList = commandsResult.toBeansList();
+        beansList.forEach(bean -> registrationService.register(bean));
+    }
+
+    public void register(Class<?> cls, Object parent) {
+        registrationService.register(cls, parent);
+    }
+
+    public void register(Bean bean) {
+        registrationService.register(bean);
+    }
+
+    public synchronized boolean dispatch(EntityCommandSender sender, String label) {
+        CommandLabelContext labelContext = CommandLabelContext.create(label);
+
+        Optional<Command> searchedCommand = searchStrategy.search(labelContext);
+
+        boolean found = searchedCommand.isPresent();
+
+        if (found) {
+            Command command = searchedCommand.get();
+            postComposeDispatch(sender, command, labelContext);
+        }
+
+        return found;
+    }
+
+    private synchronized void postComposeDispatch(EntityCommandSender entity, Command command, CommandLabelContext labelContext) {
+        ExecutionContext executionContext = ExecutionContext.create(entity, labelContext);
+
+        if (!validatePreExecuteAnnotation(executionContext, command)) {
+            return;
+        }
+
+        if (!validatePreExecuteEvent(executionContext, command.getInfo())) {
+            return;
+        }
+
+        CommandExecuteResult postResult = getResultPostExecute(executionContext, command);
+        invokeEvent(new CommandPostProcessEvent(executionContext, postResult));
+    }
+
+    private boolean validatePreExecuteEvent(ExecutionContext executionContext, CommandInfo commandInfo) {
+        CommandPreProcessEvent executeEvent = invokeEvent(new CommandPreProcessEvent(executionContext, commandInfo));
+        return !executeEvent.isCancelled();
+    }
+
+    private boolean validatePreExecuteAnnotation(ExecutionContext executionContext, Command command) {
+        AnnotationCommandValidateResult result = validateManagement.validate(executionContext, command);
+        return result.isOk();
+    }
+
+    private CommandExecuteResult getResultPostExecute(ExecutionContext executionContext, Command command) {
+        return invoke(executionContext, command);
+    }
+
+    @Async
+    public void handleAsync(EntityCommandSender entity, String label) {
+        this.dispatch(entity, label);
+    }
+
+    public void dispatchConsole(String label) {
+        this.dispatch(ConsoleCommandSender.INSTANE, label);
+    }
+
+    public void unregisterAll() {
+        registrationService.unregisterAll();
+    }
+
+    public void unregister(Class<?> cls) {
+        registrationService.unregister(cls);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Event> T invokeEvent(Event event) {
+        return (T) eventService.fireEvent(event)
+                .getFollower()
+                .getCompleted();
+    }
+
+    private synchronized CommandExecuteResult invoke(ExecutionContext executionContext, Command command) {
+        BeanMethod beanMethod = command.getBeanMethod();
+
+        Object returnedObj = beanMethod.invoke(executionContext);
+
+        if (returnedObj.getClass().isAssignableFrom(void.class)) {
+            return CommandExecuteResult.empty();
+        }
+
+        return (CommandExecuteResult) returnedObj;
+    }
+}

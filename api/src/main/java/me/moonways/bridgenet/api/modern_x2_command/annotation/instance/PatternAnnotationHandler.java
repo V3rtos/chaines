@@ -1,32 +1,32 @@
-package me.moonways.bridgenet.api.modern_x2_command.ai.instance;
+package me.moonways.bridgenet.api.modern_x2_command.annotation.instance;
 
 
 import me.moonways.bridgenet.api.modern_x2_command.Pattern;
 import me.moonways.bridgenet.api.modern_x2_command.Patterns;
-import me.moonways.bridgenet.api.modern_x2_command.ai.AICommandContext;
-import me.moonways.bridgenet.api.modern_x2_command.ai.AICommandHandler;
-import me.moonways.bridgenet.api.modern_x2_command.ai.validate.AICommandValidateRequest;
-import me.moonways.bridgenet.api.modern_x2_command.ai.validate.AICommandValidateResult;
+import me.moonways.bridgenet.api.modern_x2_command.annotation.AnnotationCommandContext;
+import me.moonways.bridgenet.api.modern_x2_command.annotation.AnnotationCommandHandler;
+import me.moonways.bridgenet.api.modern_x2_command.annotation.validate.AnnotationCommandValidateRequest;
+import me.moonways.bridgenet.api.modern_x2_command.annotation.validate.AnnotationCommandValidateResult;
 import me.moonways.bridgenet.api.modern_x2_command.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.modern_x2_command.label.CommandLabelContext;
 
-public class PatternAnnotationHandler extends AICommandHandler<Patterns> {
+public class PatternAnnotationHandler extends AnnotationCommandHandler<Patterns> {
 
     @Override
-    public void prepare(AICommandContext<Patterns> context) {
+    public void prepare(AnnotationCommandContext<Patterns> context) {
     }
 
     @Override
-    public AICommandValidateResult validate(AICommandValidateRequest<Patterns> request) {
+    public AnnotationCommandValidateResult validate(AnnotationCommandValidateRequest<Patterns> request) {
         EntityCommandSender entity = request.getExecutionContext().getEntity();
 
         for (Pattern pattern : request.getCommandContext().getAnnotation().value()) {
             if (matches(request.getExecutionContext().getLabel(), pattern)) {
-                return AICommandValidateResult.fail(entity, pattern.exception());
+                return AnnotationCommandValidateResult.fail(entity, pattern.exception());
             }
         }
 
-        return AICommandValidateResult.ok();
+        return AnnotationCommandValidateResult.ok();
     }
 
     private boolean matches(CommandLabelContext labelContext, Pattern pattern) {

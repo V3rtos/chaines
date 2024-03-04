@@ -6,8 +6,8 @@ import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanMethod;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.modern_x2_command.*;
-import me.moonways.bridgenet.api.modern_x2_command.ai.AICommandService;
-import me.moonways.bridgenet.api.modern_x2_command.ai.AINativeCommandContext;
+import me.moonways.bridgenet.api.modern_x2_command.annotation.AnnotationCommandService;
+import me.moonways.bridgenet.api.modern_x2_command.annotation.AnnotationNativeCommandContext;
 import me.moonways.bridgenet.api.modern_x2_command.exception.CommandException;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +28,7 @@ public class CommandRegistrationService {
     private BeansScanningService scanningService;
 
     @Inject
-    private AICommandService aiCommandService;
+    private AnnotationCommandService annotationCommandService;
 
     public void register(Bean bean) {
         registerGeneral(bean);
@@ -59,7 +59,7 @@ public class CommandRegistrationService {
 
     public void unregisterAll() {
         registry.removeAll();
-        aiCommandService.removeAll();
+        annotationCommandService.removeAll();
     }
 
     public void unregister(Class<?> cls) {
@@ -69,7 +69,7 @@ public class CommandRegistrationService {
     private void prepare(Command command) {
         Method root = command.getBeanMethod().getRoot();
 
-        aiCommandService.prepare(AINativeCommandContext.create(root, command.getInfo()));
+        annotationCommandService.prepare(AnnotationNativeCommandContext.create(root, command.getInfo()));
     }
 
     private Command createCommand(Bean bean, BeanMethod beanMethod, String commandName, @Nullable String accessKey) {

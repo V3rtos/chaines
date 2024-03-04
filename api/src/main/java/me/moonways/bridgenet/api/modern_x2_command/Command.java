@@ -7,14 +7,12 @@ import me.moonways.bridgenet.api.inject.bean.BeanMethod;
 
 import java.lang.reflect.Method;
 
+@Getter
 @RequiredArgsConstructor
 public class Command {
 
-    @Getter
     private final Bean bean;
-    @Getter
     private final BeanMethod beanMethod;
 
-    @Getter
     private final CommandInfo info;
 }

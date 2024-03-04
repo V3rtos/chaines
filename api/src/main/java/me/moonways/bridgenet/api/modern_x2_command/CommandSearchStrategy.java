@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Autobind
-public class CommandSearchStrategy {
+public final class CommandSearchStrategy {
 
     @Inject
     private CommandRegistry registry;
