@@ -4,6 +4,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import me.moonways.bridgenet.test.engine.util.TestMTPClientConnection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +45,7 @@ public class MtpServerHandshakeTest {
     }
 
     @Test
+    @Order(0)
     public void test_handshakeSuccess() throws Exception {
         Handshake.Result result = sendHandshakeMessage();
         assertTrue(result instanceof Handshake.Success);
@@ -52,6 +54,7 @@ public class MtpServerHandshakeTest {
     }
 
     @Test
+    @Order(1)
     public void test_handshakeFailure() {
         Handshake.Result result = sendHandshakeMessage(); // repeat for failure, because uuid has already registered
         assertTrue(result instanceof Handshake.Failure);

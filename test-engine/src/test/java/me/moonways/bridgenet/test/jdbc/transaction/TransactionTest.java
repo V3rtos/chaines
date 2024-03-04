@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import java.util.Arrays;
 
 @RunWith(BridgenetJUnitTestRunner.class)
-public class PlayerMonoTransactionTest {
+public class TransactionTest {
 
     @Inject
     private DatabaseProvider provider;

@@ -1,15 +1,16 @@
-package me.moonways.bridgenet.test.jdbc.core;
+package me.moonways.bridgenet.test.jdbc.sql;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
+import me.moonways.bridgenet.test.jdbc.sql.subj.DatabaseConnectionEventTestObserver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @Log4j2
 @RunWith(BridgenetJUnitTestRunner.class)
-public class PlayersContainerNativeManipulationsTest {
+public class NativeSqlQueryTest {
 
     @Inject
     private DatabaseConnection connection;

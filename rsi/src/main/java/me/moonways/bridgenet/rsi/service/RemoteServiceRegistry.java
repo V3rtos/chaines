@@ -106,12 +106,12 @@ public final class RemoteServiceRegistry {
         log.info("Running modules registration process...");
 
         for (XMLServiceModuleDescriptor xmlService : xmlModulesList) {
-
             String name = xmlService.getName().toUpperCase();
+
             String configClass = xmlService.getConfigClass();
             String targetClass = xmlService.getTargetClass();
 
-            log.info("Register module: §f{} §r(targetClass={}, configClass={})", name, targetClass, configClass);
+            log.info("Registering module description: §f{} §r(targetClass={}, configClass={})", name, targetClass, configClass);
             registerModule(xmlService);
         }
     }
@@ -126,7 +126,7 @@ public final class RemoteServiceRegistry {
             String bindPort = xmlService.getBindPort();
             String modelPath = xmlService.getModelPath();
 
-            log.info("Register service: §f{} §r(port={}, class={})", name, bindPort, modelPath);
+            log.info("Registering service description: §f{} §r(port={}, class={})", name, bindPort, modelPath);
 
             servicesInfos.put(name.toLowerCase(), createServiceInfo(xmlService));
         }

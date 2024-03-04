@@ -11,6 +11,7 @@ import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferPropertiesProvider;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,6 +37,7 @@ public class MtpTransferPropertiesTest {
     }
 
     @Test
+    @Order(0)
     public void test_toBytes() {
         MessageTransfer messageTransfer = MessageTransfer.encode(new TestPropertiesMessage(properties));
         messageTransfer.buf();
@@ -46,6 +48,7 @@ public class MtpTransferPropertiesTest {
     }
 
     @Test
+    @Order(1)
     public void test_fromBytes() {
         ByteBuf byteBuf = Unpooled.buffer();
         byteBuf.writeBytes(EXPECTED_BYTES);

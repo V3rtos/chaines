@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.jdbc.transaction;
+package me.moonways.bridgenet.test.jdbc.transaction.main;
 
 import lombok.var;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;

@@ -1,6 +1,6 @@
 package me.moonways.endpoint.reports;
 
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.model.reports.ReportsServiceModel;
 import me.moonways.bridgenet.model.reports.Report;
 import me.moonways.bridgenet.model.reports.ReportReason;
@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class ReportsServiceEndpoint extends AbstractEndpointDefinition implements ReportsServiceModel {
+public final class ReportsServiceEndpoint extends EndpointRemoteObject implements ReportsServiceModel {
 
     private static final long serialVersionUID = 8862521493276490323L;
 

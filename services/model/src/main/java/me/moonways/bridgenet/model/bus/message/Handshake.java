@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Getter
 @ToString
-@ServerMessage
+@ClientMessage
 @AllArgsConstructor
 @NoArgsConstructor(onConstructor_ = @Inject)
 public class Handshake {
@@ -47,7 +47,7 @@ public class Handshake {
 
     @Getter
     @ToString
-    @ClientMessage
+    @ServerMessage
     @AllArgsConstructor
     @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Success implements Result {
@@ -58,7 +58,7 @@ public class Handshake {
 
     @Getter
     @ToString
-    @ClientMessage
+    @ServerMessage
     @AllArgsConstructor
     @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Failure implements Result {

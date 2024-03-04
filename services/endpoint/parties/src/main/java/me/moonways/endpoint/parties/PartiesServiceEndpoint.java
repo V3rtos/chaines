@@ -2,7 +2,7 @@ package me.moonways.endpoint.parties;
 
 import lombok.Getter;
 import me.moonways.bridgenet.model.parties.*;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class PartiesServiceEndpoint extends AbstractEndpointDefinition implements PartiesServiceModel {
+public final class PartiesServiceEndpoint extends EndpointRemoteObject implements PartiesServiceModel {
 
     private static final long serialVersionUID = 4320252037235387938L;
 

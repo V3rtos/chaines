@@ -13,6 +13,8 @@ public enum AuthorizationResult {
     FAILURE__ALREADY_LOGGED,
     // Login / Change Password
     FAILURE__UNCORRECTED_PASSWORD,
+    // Change Password
+    FAILURE__SIMILAR_PREVIOUS_PASSWORDS,
 
     // Log Out
     FAILURE__NOT_LOGGED,

@@ -29,7 +29,7 @@ public class NetworkMessageEncoder extends MessageToByteEncoder<ExportedMessage>
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, ExportedMessage exportedMessage, ByteBuf byteBuf) {
         if (exportedMessage == null || exportedMessage.getMessage() == null || exportedMessage.getWrapper() == null) {
-            log.error(new MessageCodecException("can not encode " + exportedMessage + " null"));
+            log.error("", new MessageCodecException("Not encoded " + exportedMessage));
             return;
         }
 

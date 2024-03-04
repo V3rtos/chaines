@@ -9,14 +9,12 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
 import me.moonways.bridgenet.api.inject.decorator.persistence.Async;
 import me.moonways.bridgenet.api.inject.decorator.persistence.KeepTime;
-import me.moonways.bridgenet.api.inject.decorator.persistence.RequiredNotNull;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;
 import me.moonways.bridgenet.mtp.message.NetworkMessageHandlerList;
 import me.moonways.bridgenet.mtp.message.NetworkMessagesService;
-import me.moonways.bridgenet.mtp.message.WrappedNetworkMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.message.response.ResponsibleMessageService;
@@ -66,16 +64,6 @@ public class BridgenetNetworkController implements Serializable {
     @KeepTime
     public void bindMessagesWithDirectionReverse() {
         networkMessagesService.bindMessages(true);
-    }
-
-    @RequiredNotNull(message = "message wrapper")
-    public WrappedNetworkMessage lookupWrapperByID(int id) {
-        return networkMessagesService.lookupWrapperByID(id);
-    }
-
-    @RequiredNotNull(message = "message wrapper")
-    public WrappedNetworkMessage lookupWrapperByClass(@NotNull Class<?> messageClass) {
-        return networkMessagesService.lookupWrapperByClass(messageClass);
     }
 
     @Async

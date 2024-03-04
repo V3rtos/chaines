@@ -1,6 +1,6 @@
 package me.moonways.endpoint.players.connection;
 
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
 import me.moonways.bridgenet.model.players.connection.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayerConnectionStub extends AbstractEndpointDefinition implements PlayerConnection {
+public class PlayerConnectionStub extends EndpointRemoteObject implements PlayerConnection {
 
     private static final long serialVersionUID = 2714012461490003142L;
 

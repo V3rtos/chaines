@@ -1,6 +1,6 @@
 package me.moonways.endpoint.gui.item;
 
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.model.gui.item.Item;
 import me.moonways.bridgenet.model.gui.item.ItemFactory;
 import me.moonways.bridgenet.model.gui.item.Material;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;
 
-public class ItemFactoryStub extends AbstractEndpointDefinition implements ItemFactory {
+public class ItemFactoryStub extends EndpointRemoteObject implements ItemFactory {
 
     private static final long serialVersionUID = -4095210156006084798L;
 

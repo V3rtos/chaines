@@ -10,6 +10,7 @@ import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import me.moonways.bridgenet.test.engine.jdbc.entity.Status;
 import me.moonways.bridgenet.test.engine.jdbc.entity.User;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,11 +45,11 @@ public class UserDaoTest {
     public void setUp() {
         this.statusDao = provider.createDao(Status.class, connection);
         this.userDao = provider.createDao(User.class, connection);
-
-        doInsertUsers();
     }
 
-    public void doInsertUsers() {
+    @Test
+    @Order(0)
+    public void test_insertUsers() {
         List<Long> insertedUsersIdList = userDao.insertMany(USER_1, USER_2, USER_3);
         log.debug(insertedUsersIdList);
 
@@ -59,6 +60,7 @@ public class UserDaoTest {
     }
 
     @Test
+    @Order(1)
     public void test_findStatusesAll() {
         List<Status> statusList = statusDao.findAll();
         log.debug(statusList);
@@ -71,6 +73,7 @@ public class UserDaoTest {
     }
 
     @Test
+    @Order(2)
     public void test_findUsersAll() {
         List<User> usersList = userDao.findAll();
         log.debug(usersList);
@@ -83,6 +86,7 @@ public class UserDaoTest {
     }
 
     @Test
+    @Order(3)
     public void test_findUserById() {
         long expectedUserId = 2;
 
@@ -96,6 +100,7 @@ public class UserDaoTest {
     }
 
     @Test
+    @Order(4)
     public void test_findUserByFirstName() {
         String expectedUserFirstName = USER_2.getFirstName();
 

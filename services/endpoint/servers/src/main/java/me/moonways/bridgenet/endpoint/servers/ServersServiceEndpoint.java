@@ -1,19 +1,13 @@
 package me.moonways.bridgenet.endpoint.servers;
 
-import me.moonways.bridgenet.api.command.CommandRegistry;
-import me.moonways.bridgenet.api.event.EventService;
-import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.endpoint.servers.command.ServersInfoCommand;
 import me.moonways.bridgenet.endpoint.servers.handler.ServersDownstreamListener;
 import me.moonways.bridgenet.endpoint.servers.handler.ServersInputMessagesListener;
-import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerFlag;
 import me.moonways.bridgenet.model.servers.ServersServiceModel;
-import me.moonways.bridgenet.mtp.BridgenetNetworkController;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;
@@ -22,46 +16,20 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class ServersServiceEndpoint extends AbstractEndpointDefinition implements ServersServiceModel {
+public class ServersServiceEndpoint extends EndpointRemoteObject implements ServersServiceModel {
 
     private static final long serialVersionUID = -1037167251538756291L;
     private final ServersContainer serversContainer = new ServersContainer();
-
-    @Inject
-    private BridgenetNetworkController networkDriver;
-    @Inject
-    private BeansService beansService;
-    @Inject
-    private EventService eventService;
-    @Inject
-    private CommandRegistry commandRegistry;
 
     public ServersServiceEndpoint() throws RemoteException {
         super();
     }
 
-    @PostConstruct
-    public void registerAll() {
-        beansService.bind(new PlayersOnServersConnectionService());
-        beansService.inject(serversContainer);
-
-        registerListeners();
-        registerCommands();
-    }
-
-    private void registerListeners() {
-        ServersDownstreamListener downstreamListener = new ServersDownstreamListener(serversContainer);
-        ServersInputMessagesListener inputMessagesListener = new ServersInputMessagesListener(serversContainer);
-
-        // events.
-        eventService.registerHandler(downstreamListener);
-
-        // protocol.
-        networkDriver.register(inputMessagesListener);
-    }
-
-    private void registerCommands() {
-        commandRegistry.registerCommand(new ServersInfoCommand());
+    @Override
+    protected void construct(EndpointRemoteContext context) {
+        context.registerCommand(new ServersInfoCommand());
+        context.registerEventListener(new ServersDownstreamListener(serversContainer));
+        context.registerMessageListener(new ServersInputMessagesListener(serversContainer));
     }
 
     @Override

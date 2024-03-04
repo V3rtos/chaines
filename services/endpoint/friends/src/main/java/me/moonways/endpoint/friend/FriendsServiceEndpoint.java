@@ -3,57 +3,54 @@ package me.moonways.endpoint.friend;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.Getter;
-import me.moonways.bridgenet.api.event.EventService;
-import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.model.friends.FriendsList;
 import me.moonways.bridgenet.model.friends.FriendsServiceModel;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.endpoint.friend.event.FriendActivityListener;
 
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 @Getter
-@Autobind
-public final class FriendsServiceEndpoint extends AbstractEndpointDefinition implements FriendsServiceModel {
+public final class FriendsServiceEndpoint extends EndpointRemoteObject implements FriendsServiceModel {
 
     private static final long serialVersionUID = 6945343361490533671L;
 
-    @Inject
-    private EventService eventService;
-    @Inject
-    private BeansService beansService;
-    @Inject
-    private PlayersServiceModel playersModel;
-
     private final Cache<UUID, FriendsList> playerFriendsCache = CacheBuilder.newBuilder()
-            .expireAfterAccess(2, TimeUnit.HOURS)
+            .expireAfterAccess(1, TimeUnit.HOURS)
             .build();
 
-    private FriendsDbRepository repository;
+    private final FriendsDbRepository repository = new FriendsDbRepository();
+
+    @Inject
+    private PlayersServiceModel playersServiceModel;
 
     public FriendsServiceEndpoint() throws RemoteException {
         super();
     }
 
-    @PostConstruct
-    private void init() {
-        repository = new FriendsDbRepository();
-        beansService.inject(repository);
+    @Override
+    protected void construct(EndpointRemoteContext context) {
+        context.registerEventListener(new FriendActivityListener());
     }
 
     private FriendsList lookupPlayerFriends(UUID playerUUID) throws RemoteException {
         List<UUID> friendsList = repository.findFriendsList(playerUUID);
-        return new FriendsListStub(
+        FriendsListStub friendsListStub = new FriendsListStub(
                 playerUUID,
-                playersModel,
                 repository,
                 new HashSet<>(friendsList));
+
+        getEndpointContext().inject(friendsListStub);
+
+        return friendsListStub;
     }
 
     @Override
@@ -73,7 +70,7 @@ public final class FriendsServiceEndpoint extends AbstractEndpointDefinition imp
 
     @Override
     public FriendsList getFriends(String playerName) throws RemoteException {
-        UUID playerId = playersModel.findPlayerId(playerName);
+        UUID playerId = playersServiceModel.findPlayerId(playerName);
         return getFriends(playerId);
     }
 

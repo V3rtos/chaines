@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.test.services;
 
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.rsi.module.access.AccessConfig;
 import me.moonways.bridgenet.rsi.module.access.AccessRemoteModule;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
@@ -8,6 +9,7 @@ import me.moonways.bridgenet.model.players.PlayersServiceModel;
 import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
 import me.moonways.bridgenet.model.players.connection.PlayerConnection;
 import me.moonways.bridgenet.model.players.leveling.PlayerLeveling;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,22 +20,15 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(BridgenetJUnitTestRunner.class)
-public class PlayersServiceConnectTest {
+public class PlayersServiceEndpointTest {
 
-    private AccessRemoteModule subj;
-
-    @Before
-    public void setUp() {
-        ServiceInfo serviceInfo = new ServiceInfo("players", 7003, PlayersServiceModel.class);
-
-        subj = new AccessRemoteModule();
-        subj.init(serviceInfo, new AccessConfig("127.0.0.1"));
-    }
+    @Inject
+    private PlayersServiceModel serviceModel;
 
     @Test
+    @Order(0)
     public void test_successPlayerAdd() throws RemoteException {
-        PlayersServiceModel stub = subj.lookupStub();
-        PlayerConnection playerConnection = stub.getPlayerConnection();
+        PlayerConnection playerConnection = serviceModel.getPlayerConnection();
         playerConnection.addConnectedPlayer(
                 new ConnectedEntityPlayer(UUID.randomUUID(), "itzstonlex", null, null)
         );
@@ -44,9 +39,9 @@ public class PlayersServiceConnectTest {
     }
 
     @Test
+    @Order(1)
     public void test_successPlayerLeveling() throws RemoteException {
-        PlayersServiceModel stub = subj.lookupStub();
-        PlayerLeveling playerLeveling = stub.getPlayerLeveling();
+        PlayerLeveling playerLeveling = serviceModel.getPlayerLeveling();
 
         int secondLevelExp = playerLeveling.calculateTotalExperience(2);
 

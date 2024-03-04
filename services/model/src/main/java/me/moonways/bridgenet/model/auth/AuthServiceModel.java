@@ -42,6 +42,19 @@ public interface AuthServiceModel extends RemoteService {
     AuthorizationResult tryRegistration(UUID playerId, String inputPassword) throws RemoteException;
 
     /**
+     * Данная функция воспроизводит попытку смены пароля
+     * пользователя в системе, и в случае если
+     * во время этого процесса была обнаружена какая-то
+     * ошибка входных данных, мы узнаем о ней конкретнее
+     * из описания me.moonways.bridgenet.model.auth.AuthorizationResult
+     *
+     * @param playerId - идентификатор пользователя.
+     * @param actualPassword - актуальный (текущий) пароль пользователя, введенный пользователем.
+     * @param newPassword - новый (изменяемый) пароль пользователя, введенный пользователем.
+     */
+    AuthorizationResult tryPasswordChange(UUID playerId, String actualPassword, String newPassword) throws RemoteException;
+
+    /**
      * Данная функция воспроизводит попытку выхода из аккаунта
      * пользователя в системе, и в случае если
      * во время этого процесса была обнаружена какая-то

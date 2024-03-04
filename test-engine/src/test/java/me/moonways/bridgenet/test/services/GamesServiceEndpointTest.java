@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.games;
+package me.moonways.bridgenet.test.services;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.bus.message.CreateGame;
@@ -8,6 +8,7 @@ import me.moonways.bridgenet.model.bus.message.UpdateGame;
 import me.moonways.bridgenet.model.games.*;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import me.moonways.bridgenet.test.engine.util.TestMTPClientConnection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @RunWith(BridgenetJUnitTestRunner.class)
-public class CreateGameTest {
+public class GamesServiceEndpointTest {
 
     private static final String DEF_GAME_NAME = "Эмоциональные качели";
     private static final String DEF_GAME_MAP = "Детская площадка с программистом";
@@ -56,6 +57,7 @@ public class CreateGameTest {
     }
 
     @Test
+    @Order(0)
     public void test_createGameSuccess() throws RemoteException {
         BridgenetNetworkChannel channel = clientConnection.getChannel();
         sendHandshakeMessage();
@@ -69,6 +71,7 @@ public class CreateGameTest {
     }
 
     @Test
+    @Order(1)
     public void test_updateGameState() throws RemoteException, InterruptedException {
         BridgenetNetworkChannel channel = clientConnection.getChannel();
         channel.send(
@@ -81,6 +84,7 @@ public class CreateGameTest {
     }
 
     @Test
+    @Order(2)
     public void test_successGameDelete() throws RemoteException, InterruptedException {
         BridgenetNetworkChannel channel = clientConnection.getChannel();
         channel.send(
