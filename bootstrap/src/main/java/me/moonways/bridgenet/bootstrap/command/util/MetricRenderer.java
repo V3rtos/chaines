@@ -1,11 +1,11 @@
 
 package me.moonways.bridgenet.bootstrap.command.util;
 
+import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
 import me.moonways.bridgenet.api.inject.decorator.persistence.Async;
-import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
 import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
 import me.moonways.bridgenet.metrics.MetricType;
 

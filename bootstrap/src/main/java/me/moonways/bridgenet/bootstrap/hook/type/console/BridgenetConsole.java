@@ -3,10 +3,10 @@ package me.moonways.bridgenet.bootstrap.hook.type.console;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
+import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 import me.moonways.bridgenet.api.command.CommandExecutor;
-import me.moonways.bridgenet.api.modern_x2_command.obj.entity.ConsoleCommandSender;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
 
 @Log4j2

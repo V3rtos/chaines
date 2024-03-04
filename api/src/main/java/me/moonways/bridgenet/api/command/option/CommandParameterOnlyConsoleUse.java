@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.command.option;
 
 import me.moonways.bridgenet.api.command.CommandSession;
-import me.moonways.bridgenet.api.modern_x2_command.obj.entity.ConsoleCommandSender;
+import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandParameterOnlyConsoleUse implements CommandParameterMatcher {

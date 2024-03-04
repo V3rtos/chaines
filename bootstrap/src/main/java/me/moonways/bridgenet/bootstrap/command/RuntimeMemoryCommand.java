@@ -8,7 +8,7 @@ import me.moonways.bridgenet.api.command.annotation.Command;
 import me.moonways.bridgenet.api.command.annotation.CommandParameter;
 import me.moonways.bridgenet.api.command.annotation.MentorExecutor;
 import me.moonways.bridgenet.api.command.option.CommandParameterOnlyConsoleUse;
-import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 
 import java.text.SimpleDateFormat;
