@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.modern_x2_command.process.annotation.impl;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.modern_x2_command.CommandArg;
-import me.moonways.bridgenet.api.modern_x2_command.ComandArgHelper;
+import me.moonways.bridgenet.api.modern_x2_command.CommandHelper;
 import me.moonways.bridgenet.api.modern_x2_command.CommandRegexId;
 import me.moonways.bridgenet.api.modern_x2_command.process.annotation.CommandBaseAnnotationContext;
 import me.moonways.bridgenet.api.modern_x2_command.process.annotation.CommandAnnotationHandler;
@@ -16,18 +16,18 @@ import me.moonways.bridgenet.api.modern_x2_command.objects.regex.CommandRegexReg
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandAnnotationArgumentHandler extends CommandAnnotationHandler<ComandArgHelper> {
+public class CommandAnnotationArgumentHandler extends CommandAnnotationHandler<CommandHelper> {
 
     @Inject
     private CommandRegexRegistry regexRegistry;
 
     @Override
-    public void prepare(CommandBaseAnnotationContext<ComandArgHelper> context) {
+    public void prepare(CommandBaseAnnotationContext<CommandHelper> context) {
     }
 
     @Override
-    public CommandAnnotationValidateResult validate(CommandAnnotationValidateRequest<ComandArgHelper> request) {
-        ComandArgHelper comandArgHelper = request.getAnnotationContext().getAnnotation();
+    public CommandAnnotationValidateResult validate(CommandAnnotationValidateRequest<CommandHelper> request) {
+        CommandHelper commandHelper = request.getAnnotationContext().getAnnotation();
         CommandArg[] syntaxes = request.getAnnotationContext().getAnnotation().value();
 
         CommandLabelContext labelContext = request.getExecutionContext().getLabel();
@@ -41,7 +41,7 @@ public class CommandAnnotationArgumentHandler extends CommandAnnotationHandler<C
             CommandRegexId annotationCommandRegexId = syntax.regexId();
 
             if (!hasPosition(arguments, position)) {
-                return CommandAnnotationValidateResult.fail(sender, combineUsageAndDescription(comandArgHelper));
+                return CommandAnnotationValidateResult.fail(sender, combineUsageAndDescription(commandHelper));
             }
 
             String regexId = annotationCommandRegexId.value();
@@ -60,7 +60,7 @@ public class CommandAnnotationArgumentHandler extends CommandAnnotationHandler<C
         return CommandAnnotationValidateResult.ok();
     }
 
-    private String combineUsageAndDescription(ComandArgHelper helper) {
+    private String combineUsageAndDescription(CommandHelper helper) {
         return helper.usage() + " - " + helper.description();
     }
 
