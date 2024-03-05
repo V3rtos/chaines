@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.api.command.modern;
+package me.moonways.bridgenet.test.api.command;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.modern_x2_command.process.service.CommandService;
@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(BridgenetJUnitTestRunner.class)
-public class CommandExecutionTest {
+public class CommandExecutionModernTest {
 
     @Inject
     private CommandService commandService;

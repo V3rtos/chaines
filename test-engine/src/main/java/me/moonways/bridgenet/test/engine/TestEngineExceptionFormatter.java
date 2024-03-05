@@ -52,11 +52,11 @@ public class TestEngineExceptionFormatter {
                 .collect(Collectors.joining("\n"));
     }
 
-    private String getDuplicatedElementsLines(boolean filter, Throwable exception, String pattern) {
+    private String getDuplicatedElementsLines(boolean checkPackage, Throwable exception, String pattern) {
         String elementLinePattern = findElementLinePattern(pattern);
         return Stream.of(exception.getStackTrace())
                 .filter(stackTraceElement -> !stackTraceElement.isNativeMethod())
-                .filter(stackTraceElement -> !filter || stackTraceElement.getClassName().contains("bridgenet"))
+                .filter(stackTraceElement -> !checkPackage || stackTraceElement.getClassName().contains("me.moonways"))
                 .map(stackTraceElement -> replaceElementPlaceholders(stackTraceElement, elementLinePattern))
                 .collect(Collectors.joining("\n"));
     }

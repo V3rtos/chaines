@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.api.command.modern;
+package me.moonways.bridgenet.test.api.command.subj;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
@@ -16,7 +16,7 @@ import me.moonways.bridgenet.model.players.PlayersServiceModel;
 import java.util.UUID;
 
 @InjectCommand
-public class TestCommand {
+public class TestModernCommand {
 
     @Inject
     private CommandRegexRegistry regexRegistry;
@@ -47,7 +47,7 @@ public class TestCommand {
         CommandLabelContext.Arguments arguments = labelContext.getArguments();
 
         return CommandExecuteResult.ok(entityCommandSender, entityCommandSender_ -> {
-            UUID playerUuid = arguments.first(playersServiceModel::findPlayerId).orElse(null);
+            UUID playerUuid = arguments.first(this::emulatePlayerId).orElse(null);
             String playerName = arguments.first().orElse(null);
 
             if (playerUuid == null) {
@@ -56,5 +56,13 @@ public class TestCommand {
                 entityCommandSender.sendMessage(ChatColor.YELLOW + "Игрок '%s' найден под идентификатором - %s", playerName, playerUuid);
             }
         });
+    }
+
+    // todo - временное решение, до исправления проблем на стороне PlayersServiceEndpoint.
+    private UUID emulatePlayerId(String playerName) {
+        if (!playerName.matches("[A-z0-9_]{3,16}+")) {
+            return null;
+        }
+        return UUID.randomUUID();
     }
 }
