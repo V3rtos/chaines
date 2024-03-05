@@ -1,6 +1,6 @@
-package me.moonways.bridgenet.api.modern_x2_command.cooldown.dao;
+package me.moonways.bridgenet.api.modern_x2_command.api.cooldown.dao;
 
-import me.moonways.bridgenet.api.modern_x2_command.cooldown.info.CooldownInfo;
+import me.moonways.bridgenet.api.modern_x2_command.api.cooldown.info.CooldownInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;

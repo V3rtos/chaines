@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_x2_command.cooldown.info;
+package me.moonways.bridgenet.api.modern_x2_command.api.cooldown.info;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_x2_command.objects.regex;
+package me.moonways.bridgenet.api.modern_x2_command.api.regex;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

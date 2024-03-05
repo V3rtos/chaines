@@ -1,9 +1,9 @@
-package me.moonways.bridgenet.api.modern_x2_command.event.listener;
+package me.moonways.bridgenet.api.modern_x2_command.api.event.listener;
 
 import me.moonways.bridgenet.api.modern_x2_command.objects.CommandInfo;
 import me.moonways.bridgenet.api.modern_x2_command.objects.CommandExecutionContext;
 import me.moonways.bridgenet.api.modern_x2_command.objects.entity.EntityCommandSender;
-import me.moonways.bridgenet.api.modern_x2_command.event.CommandPreProcessEvent;
+import me.moonways.bridgenet.api.modern_x2_command.api.event.CommandPreProcessEvent;
 
 public class CommandListener {
 

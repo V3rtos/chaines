@@ -10,8 +10,8 @@ import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.C
 import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.CommandAnnotationValidateResult;
 import me.moonways.bridgenet.api.modern_x2_command.objects.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.modern_x2_command.objects.label.CommandLabelContext;
-import me.moonways.bridgenet.api.modern_x2_command.objects.regex.CommandRegex;
-import me.moonways.bridgenet.api.modern_x2_command.objects.regex.CommandRegexRegistry;
+import me.moonways.bridgenet.api.modern_x2_command.api.regex.CommandRegex;
+import me.moonways.bridgenet.api.modern_x2_command.api.regex.CommandRegexRegistry;
 
 import java.util.ArrayList;
 import java.util.List;

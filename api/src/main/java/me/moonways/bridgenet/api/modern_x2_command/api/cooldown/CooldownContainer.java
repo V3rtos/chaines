@@ -1,8 +1,8 @@
-package me.moonways.bridgenet.api.modern_x2_command.cooldown;
+package me.moonways.bridgenet.api.modern_x2_command.api.cooldown;
 
 import me.moonways.bridgenet.api.container.MapContainerImpl;
-import me.moonways.bridgenet.api.modern_x2_command.cooldown.info.ExpirationCooldownInfoImpl;
-import me.moonways.bridgenet.api.modern_x2_command.cooldown.info.CooldownInfoImpl;
+import me.moonways.bridgenet.api.modern_x2_command.api.cooldown.info.ExpirationCooldownInfoImpl;
+import me.moonways.bridgenet.api.modern_x2_command.api.cooldown.info.CooldownInfoImpl;
 
 import java.util.List;
 import java.util.stream.Collectors;

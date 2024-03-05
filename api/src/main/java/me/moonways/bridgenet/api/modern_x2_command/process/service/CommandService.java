@@ -18,14 +18,14 @@ import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.C
 import me.moonways.bridgenet.api.modern_x2_command.objects.CommandExecutionContext;
 import me.moonways.bridgenet.api.modern_x2_command.objects.entity.ConsoleCommandSender;
 import me.moonways.bridgenet.api.modern_x2_command.objects.entity.EntityCommandSender;
-import me.moonways.bridgenet.api.modern_x2_command.event.CommandPostProcessEvent;
-import me.moonways.bridgenet.api.modern_x2_command.event.CommandPreProcessEvent;
+import me.moonways.bridgenet.api.modern_x2_command.api.event.CommandPostProcessEvent;
+import me.moonways.bridgenet.api.modern_x2_command.api.event.CommandPreProcessEvent;
 import me.moonways.bridgenet.api.modern_x2_command.objects.label.CommandLabelContext;
 import me.moonways.bridgenet.api.modern_x2_command.objects.Command;
 import me.moonways.bridgenet.api.modern_x2_command.objects.CommandInfo;
 import me.moonways.bridgenet.api.modern_x2_command.process.CommandSearchStrategy;
 import me.moonways.bridgenet.api.modern_x2_command.registration.CommandRegistrationService;
-import me.moonways.bridgenet.api.modern_x2_command.process.result.CommandExecuteResult;
+import me.moonways.bridgenet.api.modern_x2_command.process.execute.CommandExecuteResult;
 
 import java.util.List;
 import java.util.Optional;

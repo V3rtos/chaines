@@ -1,11 +1,11 @@
-package me.moonways.bridgenet.api.modern_x2_command.cooldown.dao;
+package me.moonways.bridgenet.api.modern_x2_command.api.cooldown.dao;
 
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.modern_x2_command.cooldown.info.CooldownInfo;
-import me.moonways.bridgenet.api.modern_x2_command.cooldown.info.ExpirationCooldownInfoImpl;
-import me.moonways.bridgenet.api.modern_x2_command.cooldown.sql.CooldownRepository;
-import me.moonways.bridgenet.api.modern_x2_command.cooldown.CooldownContainer;
-import me.moonways.bridgenet.api.modern_x2_command.cooldown.info.CooldownInfoImpl;
+import me.moonways.bridgenet.api.modern_x2_command.api.cooldown.info.CooldownInfo;
+import me.moonways.bridgenet.api.modern_x2_command.api.cooldown.info.ExpirationCooldownInfoImpl;
+import me.moonways.bridgenet.api.modern_x2_command.api.cooldown.sql.CooldownRepository;
+import me.moonways.bridgenet.api.modern_x2_command.api.cooldown.CooldownContainer;
+import me.moonways.bridgenet.api.modern_x2_command.api.cooldown.info.CooldownInfoImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
