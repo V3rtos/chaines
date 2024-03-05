@@ -30,7 +30,7 @@ built on layer-services architecture.
 <br>жизнедеятельности системы.
 <br>В указанных ниже документациях можно разобрать каждый их них подробнее:
 
-* _Application Programming Interface (API)_:
+* [Application Programming Interface (API)](.docs/api.md):
     * [API / Autorun](.docs/api/autorun-api.md)
     * [API / Command](.docs/api/commands-api.md)
     * [API / Event](.docs/api/events-api.md)
