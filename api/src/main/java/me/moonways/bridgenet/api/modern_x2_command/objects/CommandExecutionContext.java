@@ -9,10 +9,14 @@ import me.moonways.bridgenet.api.modern_x2_command.objects.label.CommandLabelCon
 @RequiredArgsConstructor
 public class CommandExecutionContext {
 
+    public static CommandExecutionContext create(EntityCommandSender entity, CommandLabelContext label) {
+        return new CommandExecutionContext(entity, label);
+    }
+
     private final EntityCommandSender sender;
     private final CommandLabelContext label;
 
-    public static CommandExecutionContext create(EntityCommandSender entity, CommandLabelContext label) {
-        return new CommandExecutionContext(entity, label);
+    public CommandLabelContext.Arguments getArguments() {
+        return label.getArguments();
     }
 }

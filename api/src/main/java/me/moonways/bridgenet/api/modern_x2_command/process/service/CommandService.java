@@ -64,31 +64,30 @@ public class CommandService {
         registrationService.register(bean);
     }
 
-    public synchronized boolean dispatch(EntityCommandSender sender, String label) {
+    public synchronized Optional<CommandExecutionContext> dispatch(EntityCommandSender sender, String label) {
         Optional<Command> searchedCommand = searchStrategy.search(label);
 
-        boolean found = searchedCommand.isPresent();
-
-        if (found) {
+        if (searchedCommand.isPresent()) {
             Command command = searchedCommand.get();
-            postComposeDispatch(sender, command,
+            return executeCommand(sender, command,
                     CommandLabelContext.create(command, label));
         }
-        return found;
+
+        return Optional.empty();
     }
 
-    private synchronized void postComposeDispatch(EntityCommandSender entity, Command command, CommandLabelContext labelContext) {
+    private Optional<CommandExecutionContext> executeCommand(EntityCommandSender entity, Command command, CommandLabelContext labelContext) {
         CommandExecutionContext commandExecutionContext = CommandExecutionContext.create(entity, labelContext);
 
-        if (!validatePreDispatch(command, commandExecutionContext)) {
-            return;
+        if (validatePreDispatch(command, commandExecutionContext)) {
+            CommandExecuteResult postResult = getResultPostExecute(commandExecutionContext, command);
+            invokeEvent(new CommandPostProcessEvent(commandExecutionContext, postResult));
         }
 
-        CommandExecuteResult postResult = getResultPostExecute(commandExecutionContext, command);
-        invokeEvent(new CommandPostProcessEvent(commandExecutionContext, postResult));
+        return Optional.of(commandExecutionContext);
     }
 
-    private synchronized boolean validatePreDispatch(Command command, CommandExecutionContext commandExecutionContext) {
+    private boolean validatePreDispatch(Command command, CommandExecutionContext commandExecutionContext) {
         return validatePreExecuteEvent(commandExecutionContext, command.getInfo()) && validatePreExecuteAnnotation(commandExecutionContext, command);
     }
 
@@ -107,12 +106,12 @@ public class CommandService {
     }
 
     @Async
-    public void handleAsync(EntityCommandSender entity, String label) {
-        this.dispatch(entity, label);
+    public Optional<CommandExecutionContext> dispatchAsync(EntityCommandSender entity, String label) {
+        return dispatch(entity, label);
     }
 
-    public void dispatchConsole(String label) {
-        this.dispatch(consoleCommandSender, label);
+    public Optional<CommandExecutionContext> dispatchConsole(String label) {
+        return dispatch(consoleCommandSender, label);
     }
 
     public void unregisterAll() {
