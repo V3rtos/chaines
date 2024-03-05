@@ -6,8 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Description {
+@Target({ElementType.METHOD})
+public @interface ComandArgHelper {
 
-    String value();
+    CommandArg[] value();
+
+    String usage() default "";
+
+    String description() default "";
 }

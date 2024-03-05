@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.modern_x2_command.process.result;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.objects.entity.EntityCommandSender;
 
 import java.util.function.Consumer;
 

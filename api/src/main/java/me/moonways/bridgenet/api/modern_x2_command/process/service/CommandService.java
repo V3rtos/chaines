@@ -13,16 +13,16 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.modern_x2_command.InjectCommand;
-import me.moonways.bridgenet.api.modern_x2_command.annotation.validate.AnnotationCommandValidateManagement;
-import me.moonways.bridgenet.api.modern_x2_command.annotation.validate.AnnotationCommandValidateResult;
-import me.moonways.bridgenet.api.modern_x2_command.obj.ExecutionContext;
-import me.moonways.bridgenet.api.modern_x2_command.obj.entity.ConsoleCommandSender;
-import me.moonways.bridgenet.api.modern_x2_command.obj.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.CommandAnnotationValidateManagement;
+import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.CommandAnnotationValidateResult;
+import me.moonways.bridgenet.api.modern_x2_command.objects.CommandExecutionContext;
+import me.moonways.bridgenet.api.modern_x2_command.objects.entity.ConsoleCommandSender;
+import me.moonways.bridgenet.api.modern_x2_command.objects.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.modern_x2_command.event.CommandPostProcessEvent;
 import me.moonways.bridgenet.api.modern_x2_command.event.CommandPreProcessEvent;
-import me.moonways.bridgenet.api.modern_x2_command.obj.label.CommandLabelContext;
-import me.moonways.bridgenet.api.modern_x2_command.obj.Command;
-import me.moonways.bridgenet.api.modern_x2_command.obj.CommandInfo;
+import me.moonways.bridgenet.api.modern_x2_command.objects.label.CommandLabelContext;
+import me.moonways.bridgenet.api.modern_x2_command.objects.Command;
+import me.moonways.bridgenet.api.modern_x2_command.objects.CommandInfo;
 import me.moonways.bridgenet.api.modern_x2_command.process.CommandSearchStrategy;
 import me.moonways.bridgenet.api.modern_x2_command.registration.CommandRegistrationService;
 import me.moonways.bridgenet.api.modern_x2_command.process.result.CommandExecuteResult;
@@ -41,7 +41,7 @@ public class CommandService {
     @Inject
     private CommandSearchStrategy searchStrategy;
     @Inject
-    private AnnotationCommandValidateManagement validateManagement;
+    private CommandAnnotationValidateManagement validateManagement;
 
     @Inject
     private CommandRegistrationService registrationService;
@@ -79,32 +79,32 @@ public class CommandService {
     }
 
     private synchronized void postComposeDispatch(EntityCommandSender entity, Command command, CommandLabelContext labelContext) {
-        ExecutionContext executionContext = ExecutionContext.create(entity, labelContext);
+        CommandExecutionContext commandExecutionContext = CommandExecutionContext.create(entity, labelContext);
 
-        if (validatePreDispatch(command, executionContext)) {
+        if (validatePreDispatch(command, commandExecutionContext)) {
             return;
         }
 
-        CommandExecuteResult postResult = getResultPostExecute(executionContext, command);
-        invokeEvent(new CommandPostProcessEvent(executionContext, postResult));
+        CommandExecuteResult postResult = getResultPostExecute(commandExecutionContext, command);
+        invokeEvent(new CommandPostProcessEvent(commandExecutionContext, postResult));
     }
 
-    private synchronized boolean validatePreDispatch(Command command, ExecutionContext executionContext) {
-        return validatePreExecuteEvent(executionContext, command.getInfo()) && validatePreExecuteAnnotation(executionContext, command);
+    private synchronized boolean validatePreDispatch(Command command, CommandExecutionContext commandExecutionContext) {
+        return validatePreExecuteEvent(commandExecutionContext, command.getInfo()) && validatePreExecuteAnnotation(commandExecutionContext, command);
     }
 
-    private boolean validatePreExecuteEvent(ExecutionContext executionContext, CommandInfo commandInfo) {
-        CommandPreProcessEvent executeEvent = invokeEvent(new CommandPreProcessEvent(executionContext, commandInfo));
+    private boolean validatePreExecuteEvent(CommandExecutionContext commandExecutionContext, CommandInfo commandInfo) {
+        CommandPreProcessEvent executeEvent = invokeEvent(new CommandPreProcessEvent(commandExecutionContext, commandInfo));
         return !executeEvent.isCancelled();
     }
 
-    private boolean validatePreExecuteAnnotation(ExecutionContext executionContext, Command command) {
-        AnnotationCommandValidateResult result = validateManagement.validate(executionContext, command);
+    private boolean validatePreExecuteAnnotation(CommandExecutionContext commandExecutionContext, Command command) {
+        CommandAnnotationValidateResult result = validateManagement.validate(commandExecutionContext, command);
         return result.isOk();
     }
 
-    private CommandExecuteResult getResultPostExecute(ExecutionContext executionContext, Command command) {
-        return invoke(executionContext, command);
+    private CommandExecuteResult getResultPostExecute(CommandExecutionContext commandExecutionContext, Command command) {
+        return invoke(commandExecutionContext, command);
     }
 
     @Async
@@ -131,13 +131,13 @@ public class CommandService {
                 .getCompleted();
     }
 
-    private synchronized CommandExecuteResult invoke(ExecutionContext executionContext, Command command) {
+    private synchronized CommandExecuteResult invoke(CommandExecutionContext commandExecutionContext, Command command) {
         BeanMethod beanMethod = command.getBeanMethod();
 
         if (beanMethod.getRoot().getReturnType().isAssignableFrom(void.class)) {
             return CommandExecuteResult.empty();
         }
 
-        return beanMethod.invoke(executionContext);
+        return beanMethod.invoke(commandExecutionContext);
     }
 }
