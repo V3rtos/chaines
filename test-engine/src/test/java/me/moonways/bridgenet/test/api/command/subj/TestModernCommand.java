@@ -38,7 +38,7 @@ public class TestModernCommand {
 
     @SubCommand({"info info info член", "player", "get"})
     @CommandHelper(
-            value = {@CommandArg(position = 1, regexId = @CommandRegexId(value = "user_name")), @CommandArg(position = 2)}, //info (first arg) | <nick_name> (second arg)
+            value = {@CommandArg(position = 0, regexId = @CommandRegexId(value = "user_name")), @CommandArg(position = 1)}, //info (first arg) | <nick_name> (second arg)
             usage = "/test info <user_name>",
             description = "поиск игрока в базе данных")
     public CommandExecuteResult info(CommandExecutionContext commandExecutionContext) {
