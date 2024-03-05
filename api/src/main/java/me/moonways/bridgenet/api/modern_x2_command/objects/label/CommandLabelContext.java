@@ -46,7 +46,7 @@ public class CommandLabelContext {
         }
 
         private Optional<String> lookup(int position) {
-            if (isEmpty() || size() < position) {
+            if (isEmpty() || size() <= position) {
                 return Optional.empty();
             }
 
