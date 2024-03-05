@@ -113,7 +113,7 @@ public class TelegramAccountLink {
 
 ---
 
-## `SocialsServiceModel.tryUnlink(UUID, Social, String)`
+## `SocialsServiceModel.tryUnlink(UUID, Social)`
 
 **Описание:**
 <br>
