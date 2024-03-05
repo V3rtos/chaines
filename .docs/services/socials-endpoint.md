@@ -31,6 +31,7 @@ private SocialsServiceModel model;
 **Применение:**
 ```java
 UUID playerId = player.getId();
+
 Social social = Social.TELEGRAM;
 
 Optional<SocialProfile> profile = model.findLinkedProfile(playerId, social);
@@ -78,37 +79,26 @@ Collection<Social> acceptedSocials = findSocialsByInput(playerInput);
 **Применение:**
 
 ```java
-import lombok.extern.log4j.Log4j2;
+UUID playerId = player.getId();
 
-@Log4j2
-public class TelegramAccountLink {
-    
-    @Inject
-    private SocialsServiceModel socials;
+String playerInput = "@moonways";
 
-    public void link(UUID playerId, String input) {
-        socials.tryLink(playerId, Social.TELEGRAM, input)
-                .thenAccept((result) -> postLink(playerId, result));
-    }
+CompletableFuture<SocialBindingResult> future = model.tryLink(playerId, Social.TELEGRAM, input);
+future.thenAccept((result) -> {
 
-    private void postLink(UUID playerId, SocialBindingResult result) {
-        switch (result) {
-            case SUCCESS: {
-                log.info("Пользователь {} подтвердил привязку своего аккаунта", playerId);
-                log.info("Аккаунт успешно привязан и сохранен в базу данных!");
-                break;
-            }
-            case FAILURE__NOT_BELONG: {
-                log.warn("Указанный аккаунт уже принадлежит другому человеку");
-                break;
-            }
-            default: {
-                log.warn("Возникла другая ошибка при попытке привязать аккаунт: {}", result);
-                break;
-            }
+    switch (result) {
+        case SUCCESS: {
+            log.info("Пользователь {} подтвердил привязку своего аккаунта", playerId);
+            log.info("Аккаунт успешно привязан и сохранен в базу данных!");
+            break;
         }
+        case FAILURE__NOT_LINKED: {
+            log.warn("Указанный аккаунт уже принадлежит другому человеку");
+            break;
+        }
+        // ...handle more errors
     }
-}
+});
 ```
 
 ---
@@ -126,34 +116,21 @@ public class TelegramAccountLink {
 **Применение:**
 
 ```java
-import lombok.extern.log4j.Log4j2;
-
-@Log4j2
-public class TelegramAccountUnlink {
+UUID playerId = player.getId();
+ 
+CompletableFuture<SocialBindingResult> future = model.tryUnlink(playerId, Social.TELEGRAM);
+future.thenAccept((result) -> {
     
-    @Inject
-    private SocialsServiceModel socials;
-
-    public void unlink(UUID playerId) {
-        socials.tryUnlink(playerId, Social.TELEGRAM)
-                .thenAccept((result) -> postUnlink(playerId, result));
-    }
-
-    private void postUnlink(UUID playerId, SocialBindingResult result) {
-        switch (result) {
-            case SUCCESS: {
-                log.info("Аккаунт успешно отвязан и удален из базы данных!");
-                break;
-            }
-            case FAILURE__NOT_LINKED: {
-                log.warn("Указанный аккаунт не привязан к данному пользователю");
-                break;
-            }
-            default: {
-                log.warn("Возникла другая ошибка при попытке отвязать аккаунт: {}", result);
-                break;
-            }
+    switch (result) {
+        case SUCCESS: {
+            log.info("Аккаунт успешно отвязан и удален из базы данных!");
+            break;
         }
+        case FAILURE__NOT_LINKED: {
+            log.warn("Указанный аккаунт не привязан к данному пользователю");
+            break;
+        }
+        // ...handle more errors
     }
-}
+});
 ```
