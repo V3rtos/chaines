@@ -15,6 +15,10 @@ public class CommandAnnotationValidateResult {
         return type.equals(Type.OK);
     }
 
+    public boolean isFailure() {
+        return type.equals(Type.FAIL);
+    }
+
     public static CommandAnnotationValidateResult ok() {
         return new CommandAnnotationValidateResult(Type.OK, null);
     }
