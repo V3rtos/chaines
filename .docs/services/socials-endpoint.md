@@ -6,7 +6,7 @@
 
 ---
 
-## MODEL API
+# MODEL USAGE
 
 Для начала нам необходимо проинициализировать модель нашего сервиса
 <br>при помощи `Injector API`:
@@ -18,7 +18,7 @@ private SocialsServiceModel model;
 
 ---
 
-### SocialsServiceModel.findLinkedProfile(UUID, Social)
+## `SocialsServiceModel.findLinkedProfile(UUID, Social)`
 
 **Описание:**
 <br>
@@ -38,7 +38,7 @@ Optional<SocialProfile> profile = model.findLinkedProfile(playerId, social);
 
 ---
 
-### SocialsServiceModel.findSocialsByInput(String)
+## `SocialsServiceModel.findSocialsByInput(String)`
 
 **Описание:**
 <br>
@@ -66,7 +66,7 @@ Collection<Social> acceptedSocials = findSocialsByInput(playerInput);
 
 --- 
 
-### SocialsServiceModel.tryLink(UUID, Social, String)
+## `SocialsServiceModel.tryLink(UUID, Social, String)`
 
 **Описание:**
 <br>
@@ -114,7 +114,7 @@ public class TelegramAccountLink {
 
 ---
 
-### SocialsServiceModel.tryUnlink(UUID, Social, String)
+## `SocialsServiceModel.tryUnlink(UUID, Social, String)`
 
 **Описание:**
 <br>
