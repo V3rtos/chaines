@@ -42,7 +42,8 @@ public class CommandService {
     private CommandSearchStrategy searchStrategy;
     @Inject
     private AnnotationCommandValidateManagement validateManagement;
-
+    @Inject
+    private ConsoleCommandSender consoleCommandSender;
     @Inject
     private CommandRegistrationService registrationService;
 
@@ -113,7 +114,7 @@ public class CommandService {
     }
 
     public void dispatchConsole(String label) {
-        this.dispatch(ConsoleCommandSender.INSTANE, label);
+        this.dispatch(consoleCommandSender, label);
     }
 
     public void unregisterAll() {

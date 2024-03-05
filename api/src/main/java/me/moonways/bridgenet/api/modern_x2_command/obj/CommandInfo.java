@@ -19,8 +19,7 @@ public class CommandInfo {
     private String[] helpDescription;
 
     public CommandInfo(String commandName, @Nullable String accessKey) {
-        this.uid = UUID.fromString(commandName).toString();
-
+        this.uid = UUID.nameUUIDFromBytes(commandName.getBytes()).toString();
         this.accessKey = accessKey;
     }
 }

@@ -277,8 +277,8 @@ public class BeansScanningService {
     private List<Bean> sort(List<Bean> beans) {
         List<Class<?>> resources = toResources(beans);
 
-        int sortedBeans = 0;
-        for (Bean bean : new ArrayList<>(beans) /* fix CME */) {
+        //int sortedBeans = 0;
+        for (Bean bean : new ArrayList<>(beans) /* CME fixed */) {
             BeanType beanType = bean.getType();
 
             for (BeanComponent component : beanType.getInjectComponents()) {
@@ -292,11 +292,12 @@ public class BeansScanningService {
                     beans.remove(bean);
                     beans.add(bean);
 
-                    sortedBeans++;
+                    //sortedBeans++;
                 }
             }
         }
-        return sortedBeans > 0 ? sort(beans) : beans;
+        //return sortedBeans > 0 ? sort(beans) : beans;
+        return beans;
     }
 
     /**

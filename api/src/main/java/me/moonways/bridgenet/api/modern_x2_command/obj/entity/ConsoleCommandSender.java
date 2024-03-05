@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.api.modern_x2_command.obj.entity;
 
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +11,8 @@ import java.util.UUID;
 @Autobind
 public final class ConsoleCommandSender implements EntityCommandSender {
 
-    public static ConsoleCommandSender INSTANE = new ConsoleCommandSender();
+    @Getter
+    private final UUID uuid = UUID.randomUUID();
 
     @Override
     public void sendMessage(String message) {
@@ -40,10 +42,5 @@ public final class ConsoleCommandSender implements EntityCommandSender {
     @Override
     public boolean isInstanceOf(EntitySenderType entityType) {
         return entityType.equals(EntitySenderType.CONSOLE);
-    }
-
-    @Override
-    public UUID getUuid() {
-        return UUID.fromString("6cf02237-59ef-430f-8110-83aab96eb14f");
     }
 }

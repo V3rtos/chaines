@@ -9,19 +9,15 @@ import me.moonways.bridgenet.api.modern_x2_command.obj.pattern.PatternFormat;
 import me.moonways.bridgenet.api.modern_x2_command.process.result.CommandExecuteResult;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.UUID;
 
-@RunWith(BridgenetJUnitTestRunner.class)
+@InjectCommand
 public class TestCommand {
 
     @Inject
     private PlayersServiceModel playersServiceModel;
 
-    @Test
     @GeneralCommand("test")
     public CommandExecuteResult general(ExecutionContext executionContext) {
         EntityCommandSender entityCommandSender = executionContext.getSender();
@@ -29,7 +25,6 @@ public class TestCommand {
                 entityCommandSender_.sendMessage("Successful dispatch test command"));
     }
 
-    @Test
     @SubCommand({"info", "player", "get"})
     @ArgSyntaxes(@ArgSyntax(
             position = 1,
