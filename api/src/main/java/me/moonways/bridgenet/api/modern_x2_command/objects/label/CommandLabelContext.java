@@ -27,9 +27,13 @@ public class CommandLabelContext {
         int commandNameIndex = label.indexOf(commandName) + commandName.length();
 
         String[] parsedArgs = label.substring(commandNameIndex).trim().split(" ");
-        Arguments arguments = Arguments.with(parsedArgs);
+        Arguments arguments = Arguments.with(isEmptyArguments(parsedArgs) ? new String[0] : parsedArgs);
 
         return new CommandLabelContext(label, commandName, arguments);
+    }
+
+    private static boolean isEmptyArguments(String[] args) {
+        return args.length == 1 && args[0].isEmpty();
     }
 
     @RequiredArgsConstructor
@@ -40,7 +44,6 @@ public class CommandLabelContext {
         public static Arguments with(String[] args) {
             return new Arguments(args);
         }
-
 
         public Stream<String> stream() {
             return Arrays.stream(value);
@@ -107,7 +110,7 @@ public class CommandLabelContext {
         }
 
         public boolean has(int requiredSize) {
-            return size() >= requiredSize;
+            return size() > requiredSize;
         }
 
         @NotNull
