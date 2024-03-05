@@ -30,34 +30,33 @@ built on layer-services architecture.
 <br>жизнедеятельности системы.
 <br>В указанных ниже документациях можно разобрать каждый их них подробнее:
 
+* [Bridgenet Bootstrap](.docs/bootstrap.md)
+* [Bridgenet Assembly](.docs/assembly.md)
 * [Application Programming Interface (API)](.docs/api.md):
-    * [API / Autorun](.docs/api/autorun-api.md)
-    * [API / Command](.docs/api/commands-api.md)
-    * [API / Event](.docs/api/events-api.md)
-    * [API / Inject](.docs/api/inject-api.md)
-    * [API / JAXB](.docs/api/jaxb-api.md)
-    * [API / Proxy](.docs/api/proxy-api.md)
-    * [API / Scheduler](.docs/api/scheduler-api.md)
-* [Assembly](.docs/assembly.md)
-* [Bootstrap](.docs/bootstrap.md)
-* [Connector](.docs/connector.md)
-* [JDBC](.docs/jdbc.md)
-* [Metrics](.docs/metrics.md)
-* [Message Transfer Protocol (MTP)](.docs/mtp.md)
-* [REST](.docs/rest.md)
+    * [API / Automatically Runnable](.docs/api/autorun-api.md)
+    * [API / Commands](.docs/api/commands-api.md)
+    * [API / Events](.docs/api/events-api.md)
+    * [API / Injector](.docs/api/inject-api.md)
+    * [API / Instances Proxy](.docs/api/proxy-api.md)
+    * [API / Schedulers](.docs/api/scheduler-api.md)
+* [Bridgenet Connector](.docs/connector.md)
+* [Database](.docs/jdbc.md)
+* [Bridgenet Metrics Logger](.docs/metrics.md)
+* [TCP MTP](.docs/mtp.md)
+* [HTTP REST](.docs/rest.md)
 * [Services and Endpoints](.docs/services.md)
-    * [ENDPOINT / Auth](.docs/services/auth-endpoint.md)
-    * [ENDPOINT / Bus](.docs/services/bus-endpoint.md)
-    * [ENDPOINT / Friends](.docs/services/friends-endpoint.md)
-    * [ENDPOINT / Games](.docs/services/games-endpoint.md)
+    * [ENDPOINT / AUTH](.docs/services/auth-endpoint.md)
+    * [ENDPOINT / BUS](.docs/services/bus-endpoint.md)
+    * [ENDPOINT / FRIENDS](.docs/services/friends-endpoint.md)
+    * [ENDPOINT / GAMES](.docs/services/games-endpoint.md)
     * [ENDPOINT / GUI](.docs/services/gui-endpoint.md)
-    * [ENDPOINT / Guilds](.docs/services/guilds-endpoint.md)
-    * [ENDPOINT / Parties](.docs/services/parties-endpoint.md)
-    * [ENDPOINT / Players](.docs/services/players-endpoint.md)
-    * [ENDPOINT / Reports](.docs/services/reports-endpoint.md)
-    * [ENDPOINT / Servers](.docs/services/servers-endpoint.md)
-    * [ENDPOINT / Socials](.docs/services/socials-endpoint.md)
-* [Test-Engine](.docs/test-engine.md)
+    * [ENDPOINT / GUILDS](.docs/services/guilds-endpoint.md)
+    * [ENDPOINT / PARTIES](.docs/services/parties-endpoint.md)
+    * [ENDPOINT / PLAYERS](.docs/services/players-endpoint.md)
+    * [ENDPOINT / REPORTS](.docs/services/reports-endpoint.md)
+    * [ENDPOINT / SERVERS](.docs/services/servers-endpoint.md)
+    * [ENDPOINT / SOCIALS](.docs/services/socials-endpoint.md)
+* [Bridgenet Test-Engine](.docs/test-engine.md)
 
 ---
 
@@ -73,10 +72,6 @@ built on layer-services architecture.
 ---
 
 ```shell
-$ ./bridgenet -e
-```
-_или можно иначе:_
-```shell
 $ ./bridgenet endpoints
 ```
 
@@ -86,21 +81,12 @@ $ ./bridgenet endpoints
 ---
 
 ```shell
-$ ./bridgenet -a
-```
-_или можно иначе:_
-```shell
 $ ./bridgenet assemblyEndpoints
 ```
 
 - Данная команда выполняет конфигурацию скомпилированных сервисов в сборке.
 
 ---
-
-```shell
-$ ./bridgenet -j
-```
-_или можно иначе:_
 ```shell
 $ ./bridgenet jar
 ```
@@ -109,10 +95,6 @@ $ ./bridgenet jar
 
 ---
 
-```shell
-$ ./bridgenet -b
-```
-_или можно иначе:_
 ```shell
 $ ./bridgenet build
 ```
