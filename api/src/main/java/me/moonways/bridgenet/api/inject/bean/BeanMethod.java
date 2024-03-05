@@ -49,8 +49,8 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
      * инициализации бина.
      */
     public void invoke(Object... args) {
-        if (hasConflicts()) {
-            throw new BeanException("Init function " + this + " has conflicts");
+        if ((isAfter() || isBefore()) && hasConflicts()) {
+            throw new BeanException("Method was detected conflicts: " + this);
         }
 
         Method method = getRoot();
