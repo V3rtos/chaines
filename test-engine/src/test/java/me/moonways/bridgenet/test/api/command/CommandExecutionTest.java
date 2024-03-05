@@ -20,7 +20,7 @@ public class CommandExecutionTest {
     private ConsoleCommandSender consoleCommandSender;
 
     @Test
-    @Order(0) //todo
+    @Order(0)
     public void test_executeMentor() {
         try {
             commandExecutor.execute(consoleCommandSender, "test");
