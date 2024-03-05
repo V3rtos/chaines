@@ -8,7 +8,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.modern_x2_command.CommandAccessKey;
 import me.moonways.bridgenet.api.modern_x2_command.GeneralCommand;
 import me.moonways.bridgenet.api.modern_x2_command.SubCommand;
-import me.moonways.bridgenet.api.modern_x2_command.api.exception.CommandException;
+import me.moonways.bridgenet.api.modern_x2_command.exception.CommandException;
 import me.moonways.bridgenet.api.modern_x2_command.objects.Command;
 import me.moonways.bridgenet.api.modern_x2_command.objects.CommandInfo;
 import me.moonways.bridgenet.api.modern_x2_command.process.annotation.CommandAnnotationService;

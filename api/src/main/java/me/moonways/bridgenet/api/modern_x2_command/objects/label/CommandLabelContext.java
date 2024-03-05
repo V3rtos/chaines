@@ -2,7 +2,7 @@ package me.moonways.bridgenet.api.modern_x2_command.objects.label;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.modern_x2_command.api.exception.CommandException;
+import me.moonways.bridgenet.api.modern_x2_command.exception.CommandException;
 import me.moonways.bridgenet.api.util.ExceptionallyFunction;
 import org.jetbrains.annotations.NotNull;
 

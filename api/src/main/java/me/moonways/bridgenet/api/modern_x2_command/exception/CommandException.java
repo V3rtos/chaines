@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_x2_command.api.exception;
+package me.moonways.bridgenet.api.modern_x2_command.exception;
 
 import lombok.experimental.StandardException;
 
