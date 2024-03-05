@@ -46,6 +46,16 @@ built on layer-services architecture.
 * [Message Transfer Protocol (MTP)](.docs/mtp.md)
 * [REST](.docs/rest.md)
 * [Services and Endpoints](.docs/services.md)
+    * [Auth](.docs/services/auth-endpoint.md)
+    * [Bus](.docs/services/auth-endpoint.md)
+    * [Friends](.docs/services/auth-endpoint.md)
+    * [Games](.docs/services/auth-endpoint.md)
+    * [Gui](.docs/services/auth-endpoint.md)
+    * [Guilds](.docs/services/auth-endpoint.md)
+    * [Parties](.docs/services/auth-endpoint.md)
+    * [Players](.docs/services/auth-endpoint.md)
+    * [Reports](.docs/services/auth-endpoint.md)
+    * [Servers](.docs/services/auth-endpoint.md)
 * [TestEngine](.docs/test-engine.md)
 
 ---

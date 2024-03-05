@@ -1,4 +1,4 @@
-# BridgeNet | Assembly
+# BridgeNet / Assembly
 
 Assembly - Вложенный модуль системы Bridgenet, отвечающий за обработку 
 <br>унифицированных ресурсов и конфигураций для сборки проекта.
