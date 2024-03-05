@@ -1,10 +1,10 @@
-package me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate;
+package me.moonways.bridgenet.api.modern_x2_command.process.inject.validate;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.modern_x2_command.objects.CommandInfo;
 import me.moonways.bridgenet.api.modern_x2_command.objects.CommandExecutionContext;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.CommandBaseAnnotationContext;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.CommandBaseAnnotationContext;
 
 import java.lang.annotation.Annotation;
 

@@ -13,8 +13,8 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.modern_x2_command.InjectCommand;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.CommandAnnotationValidateManagement;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.CommandAnnotationValidateResult;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.validate.CommandAnnotationValidateManagement;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.validate.CommandAnnotationValidateResult;
 import me.moonways.bridgenet.api.modern_x2_command.objects.CommandExecutionContext;
 import me.moonways.bridgenet.api.modern_x2_command.objects.entity.ConsoleCommandSender;
 import me.moonways.bridgenet.api.modern_x2_command.objects.entity.EntityCommandSender;
@@ -65,17 +65,15 @@ public class CommandService {
     }
 
     public synchronized boolean dispatch(EntityCommandSender sender, String label) {
-        CommandLabelContext labelContext = CommandLabelContext.create(label);
-
-        Optional<Command> searchedCommand = searchStrategy.search(labelContext);
+        Optional<Command> searchedCommand = searchStrategy.search(label);
 
         boolean found = searchedCommand.isPresent();
 
         if (found) {
             Command command = searchedCommand.get();
-            postComposeDispatch(sender, command, labelContext);
+            postComposeDispatch(sender, command,
+                    CommandLabelContext.create(command, label));
         }
-
         return found;
     }
 

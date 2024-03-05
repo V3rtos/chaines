@@ -36,7 +36,7 @@ public class TestModernCommand {
                 entityCommandSender_.sendMessage("Successful dispatch test command"));
     }
 
-    @SubCommand({"info", "player", "get"})
+    @SubCommand({"info info info член", "player", "get"})
     @CommandHelper(
             value = {@CommandArg(position = 1, regexId = @CommandRegexId(value = "user_name")), @CommandArg(position = 2)}, //info (first arg) | <nick_name> (second arg)
             usage = "/test info <user_name>",

@@ -13,7 +13,12 @@ public class CommandExecutionModernTest {
     private CommandService commandService;
 
     @Test
-    public void test() {
-        commandService.dispatchConsole("test info");
+    public void test_dispatchSuccess() {
+        commandService.dispatchConsole("test info info info член GitCoder");
+    }
+
+    @Test
+    public void test_dispatchNotEnoughArguments() {
+        commandService.dispatchConsole("test info info info член");
     }
 }

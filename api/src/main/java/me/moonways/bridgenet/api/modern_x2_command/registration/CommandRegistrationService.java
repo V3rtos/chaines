@@ -11,8 +11,8 @@ import me.moonways.bridgenet.api.modern_x2_command.SubCommand;
 import me.moonways.bridgenet.api.modern_x2_command.exception.CommandException;
 import me.moonways.bridgenet.api.modern_x2_command.objects.Command;
 import me.moonways.bridgenet.api.modern_x2_command.objects.CommandInfo;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.CommandAnnotationService;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.CommandReflectAnnotationContext;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.CommandAnnotationService;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.CommandReflectAnnotationContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;

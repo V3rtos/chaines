@@ -15,10 +15,20 @@ public final class CommandSearchStrategy {
     @Inject
     private CommandRegistry registry;
 
-    public Optional<Command> search(CommandLabelContext labelContext) {
-        ListIterator<String> iterator = labelContext.getArguments()
-                .stream()
-                .collect(Collectors.toList())
+    public Optional<Command> search(String label) {
+        String[] splitLabel = label.split(" ");
+        String commandName = splitLabel[0];
+        String[] arguments = Arrays.copyOfRange(splitLabel, 1, splitLabel.length);
+
+        if (arguments.length == 0) {
+            if (contains(commandName)) {
+                return Optional.of(get(commandName));
+            } else {
+                return Optional.empty();
+            }
+        }
+
+        ListIterator<String> iterator = new ArrayList<>(Arrays.asList(arguments))
                 .listIterator();
 
         StringBuilder combinedWords = new StringBuilder();
@@ -26,19 +36,27 @@ public final class CommandSearchStrategy {
         while (iterator.hasNext()) {
             String nextWord = iterator.next();
 
-            combinedWords.append(nextWord).append(iterator.hasNext() ? " " : "");
+            combinedWords.append(nextWord);
+            Optional<Command> commandOptional = Optional.empty();
 
             if (!contains(nextWord)) {
                 String completedCombinedWords = combinedWords.toString();
 
                 if (contains(completedCombinedWords)) {
-                    return Optional.of(get(completedCombinedWords));
+                    commandOptional = Optional.of(get(completedCombinedWords));
                 }
             } else {
-                return Optional.of(get(nextWord));
+                commandOptional = Optional.of(get(nextWord));
+            }
+
+            combinedWords.append(iterator.hasNext() ? " " : "");
+
+            if (commandOptional.isPresent()) {
+                return commandOptional;
             }
         }
-        return Optional.ofNullable(get(labelContext.getCommandName()));
+
+        return Optional.ofNullable(get(commandName));
     }
 
     private boolean contains(String name) {

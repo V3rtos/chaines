@@ -1,11 +1,11 @@
-package me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate;
+package me.moonways.bridgenet.api.modern_x2_command.process.inject.validate;
 
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.modern_x2_command.objects.Command;
 import me.moonways.bridgenet.api.modern_x2_command.objects.CommandExecutionContext;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.CommandAnnotationService;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.CommandWrapAnnotationContext;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.CommandAnnotationService;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.CommandWrapAnnotationContext;
 
 import java.util.List;
 import java.util.stream.Collectors;

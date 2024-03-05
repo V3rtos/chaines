@@ -3,12 +3,14 @@ package me.moonways.bridgenet.api.modern_x2_command.objects.label;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.modern_x2_command.exception.CommandException;
+import me.moonways.bridgenet.api.modern_x2_command.objects.Command;
 import me.moonways.bridgenet.api.util.ExceptionallyFunction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -20,9 +22,12 @@ public class CommandLabelContext {
 
     private final Arguments arguments;
 
-    public static CommandLabelContext create(String label) {
-        Arguments arguments = LabelParser.getArguments(label);
-        String commandName = LabelParser.first(label);
+    public static CommandLabelContext create(Command command, String label) {
+        String commandName = command.getInfo().getName();
+        int commandNameIndex = label.indexOf(commandName) + commandName.length();
+
+        String[] parsedArgs = label.substring(commandNameIndex).trim().split(" ");
+        Arguments arguments = Arguments.with(parsedArgs);
 
         return new CommandLabelContext(label, commandName, arguments);
     }

@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_x2_command.process.annotation;
+package me.moonways.bridgenet.api.modern_x2_command.process.inject;
 
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
@@ -6,9 +6,9 @@ import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorAdapter;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.CommandAnnotationValidateManagement;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.CommandAnnotationValidateRequest;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.CommandAnnotationValidateResult;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.validate.CommandAnnotationValidateManagement;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.validate.CommandAnnotationValidateRequest;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.validate.CommandAnnotationValidateResult;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -26,7 +26,7 @@ public class CommandAnnotationService {
 
     @PostConstruct
     public void inject() {
-        Set<Bean> beans = scanningService.scanBeansBySuperclass(CommandAnnotationHandler.class); //Todo я тебя ненавижу, Миша, пофикси этот пиздец
+        Set<Bean> beans = scanningService.scanBeansBySuperclass(CommandAnnotationHandler.class);
 
         for (Bean bean : beans) {
             Class<? extends Annotation> annCls = TypeAnnotationProcessorAdapter.getGenericType(0, bean.getType().getRoot());

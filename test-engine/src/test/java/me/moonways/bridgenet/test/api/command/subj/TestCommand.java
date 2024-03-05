@@ -37,6 +37,8 @@ public class TestCommand {
         EntityCommandSender sender = session.getSender();
         CommandArguments arguments = session.arguments();
 
+        System.out.println(arguments.has(0));
+
         if (arguments.has(1)) {
             UUID playerUuid = arguments.first(playersServiceModel::findPlayerId).orElse(null);
             String playerName = arguments.first().orElse(null);

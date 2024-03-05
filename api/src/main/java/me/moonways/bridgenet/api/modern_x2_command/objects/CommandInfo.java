@@ -10,6 +10,8 @@ public class CommandInfo {
 
     @Getter
     private final UUID uid;
+    @Getter
+    private final String name;
 
     @Getter
     @Setter
@@ -20,6 +22,7 @@ public class CommandInfo {
 
     public CommandInfo(String commandName, @Nullable String accessKey) {
         this.uid = UUID.nameUUIDFromBytes(commandName.getBytes());
+        this.name = commandName;
         this.accessKey = accessKey;
     }
 }

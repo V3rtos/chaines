@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.modern_x2_command.process.annotation;
+package me.moonways.bridgenet.api.modern_x2_command.process.inject;
 
 import lombok.Getter;
 import me.moonways.bridgenet.api.modern_x2_command.objects.Command;

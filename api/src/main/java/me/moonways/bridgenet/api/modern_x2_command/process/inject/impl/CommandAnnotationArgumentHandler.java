@@ -1,13 +1,13 @@
-package me.moonways.bridgenet.api.modern_x2_command.process.annotation.impl;
+package me.moonways.bridgenet.api.modern_x2_command.process.inject.impl;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.modern_x2_command.CommandArg;
 import me.moonways.bridgenet.api.modern_x2_command.CommandHelper;
 import me.moonways.bridgenet.api.modern_x2_command.CommandRegexId;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.CommandBaseAnnotationContext;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.CommandAnnotationHandler;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.CommandAnnotationValidateRequest;
-import me.moonways.bridgenet.api.modern_x2_command.process.annotation.validate.CommandAnnotationValidateResult;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.CommandBaseAnnotationContext;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.CommandAnnotationHandler;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.validate.CommandAnnotationValidateRequest;
+import me.moonways.bridgenet.api.modern_x2_command.process.inject.validate.CommandAnnotationValidateResult;
 import me.moonways.bridgenet.api.modern_x2_command.objects.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.modern_x2_command.objects.label.CommandLabelContext;
 import me.moonways.bridgenet.api.modern_x2_command.objects.regex.CommandRegex;
