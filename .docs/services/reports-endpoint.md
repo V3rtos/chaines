@@ -1,4 +1,4 @@
-# BridgeNet / Services / Reports
+# BridgeNet / Services / Friends
 
 
 ---

@@ -1,4 +1,4 @@
-# BridgeNet / Services / Players
+# BridgeNet / Services / Friends
 
 
 ---

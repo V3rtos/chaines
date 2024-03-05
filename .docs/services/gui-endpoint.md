@@ -1,4 +1,4 @@
-# BridgeNet / Services / GUI
+# BridgeNet / Services / Friends
 
 
 ---

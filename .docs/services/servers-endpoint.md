@@ -1,4 +1,4 @@
-# BridgeNet / Services / Servers
+# BridgeNet / Services / Friends
 
 
 ---
