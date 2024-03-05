@@ -42,7 +42,7 @@ public class TestCommand {
 
     @Test
     @SubCommand({"info", "player", "get"})
-    @ComandArgHelper(
+    @CommandHelper(
             value = {@CommandArg(position = 1, regexId = @CommandRegexId(value = "user_name")), @CommandArg(position = 2)}, //info (first arg) | <nick_name> (second arg)
             usage = "/test info <user_name>",
             description = "поиск игрока в базе данных")
