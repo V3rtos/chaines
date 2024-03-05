@@ -25,7 +25,7 @@ public class CommandAnnotationValidateManagement {
     private List<CommandAnnotationValidateResult> getFailedResults(CommandExecutionContext context, Command command) {
         return commandService.validateAll(CommandWrapAnnotationContext.create(context.getSender(), context.getLabel(), command))
                 .stream()
-                .filter(CommandAnnotationValidateResult::isOk)
+                .filter(CommandAnnotationValidateResult::isFailure)
                 .collect(Collectors.toList());
     }
 }
