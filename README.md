@@ -24,6 +24,42 @@ built on layer-services architecture.
 
 ---
 
+## Модули и их API
+
+Система Bridgenet - модульная система. Каждый модуль отвечает за определенную задачу
+<br>жизнедеятельности системы.
+<br>В указанных ниже документациях можно разобрать каждый их них подробнее:
+
+* _Application Programming Interface (API)_:
+    * [Autorun](.docs/api/autorun-api.md)
+    * [Command](.docs/api/commands-api.md)
+    * [Event](.docs/api/events-api.md)
+    * [Inject](.docs/api/inject-api.md)
+    * [JAXB](.docs/api/jaxb-api.md)
+    * [Proxy](.docs/api/proxy-api.md)
+    * [Scheduler](.docs/api/scheduler-api.md)
+* [Assembly](.docs/assembly.md)
+* [Bootstrap](.docs/bootstrap.md)
+* [Connector](.docs/connector.md)
+* [JDBC](.docs/jdbc.md)
+* [Metrics](.docs/metrics.md)
+* [Message Transfer Protocol (MTP)](.docs/mtp.md)
+* [REST](.docs/rest.md)
+* [Services and Endpoints](.docs/services.md)
+    * [Auth](.docs/services/auth-endpoint.md)
+    * [Bus](.docs/services/auth-endpoint.md)
+    * [Friends](.docs/services/auth-endpoint.md)
+    * [Games](.docs/services/auth-endpoint.md)
+    * [Gui](.docs/services/auth-endpoint.md)
+    * [Guilds](.docs/services/auth-endpoint.md)
+    * [Parties](.docs/services/auth-endpoint.md)
+    * [Players](.docs/services/auth-endpoint.md)
+    * [Reports](.docs/services/auth-endpoint.md)
+    * [Servers](.docs/services/auth-endpoint.md)
+* [TestEngine](.docs/test-engine.md)
+
+---
+
 ## Как пользоваться?
 
 В корневой директории проекта находится скрипт под названием `bridgenet`,<br>
@@ -103,8 +139,6 @@ $ ./bridgenet build
 который содержит статический `main(String[] args)` метод:<br>
 `me.moonways.bridgenet.bootstrap.AppStarter`
 
----
-
 Для тестирования отдельных систем и подсистем был реализован 
 модуль `test-engine`
 
@@ -113,3 +147,4 @@ $ ./bridgenet build
 локальную сборку Bridgenet-сервера.
 
 ---
+
