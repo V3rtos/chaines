@@ -32,16 +32,20 @@ public final class CommandSearchStrategy {
                 String completedCombinedWords = combinedWords.toString();
 
                 if (contains(completedCombinedWords)) {
-                    return Optional.of(registry.get(completedCombinedWords));
+                    return Optional.of(get(completedCombinedWords));
                 }
             } else {
-                return Optional.of(registry.get(nextWord));
+                return Optional.of(get(nextWord));
             }
         }
-        return Optional.ofNullable(registry.get(labelContext.getCommandName()));
+        return Optional.ofNullable(get(labelContext.getCommandName()));
     }
 
     private boolean contains(String name) {
-        return registry.contains(name);
+        return registry.contains(UUID.nameUUIDFromBytes(name.getBytes()));
+    }
+
+    private Command get(String commandName) {
+        return registry.get(UUID.nameUUIDFromBytes(commandName.getBytes()));
     }
 }

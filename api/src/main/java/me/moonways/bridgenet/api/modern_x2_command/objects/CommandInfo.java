@@ -9,7 +9,7 @@ import java.util.UUID;
 public class CommandInfo {
 
     @Getter
-    private final String uid;
+    private final UUID uid;
 
     @Getter
     @Setter
@@ -19,7 +19,7 @@ public class CommandInfo {
     private String[] helpDescription;
 
     public CommandInfo(String commandName, @Nullable String accessKey) {
-        this.uid = UUID.nameUUIDFromBytes(commandName.getBytes()).toString();
+        this.uid = UUID.nameUUIDFromBytes(commandName.getBytes());
         this.accessKey = accessKey;
     }
 }

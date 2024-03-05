@@ -7,11 +7,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
+@Getter
 @Log4j2
 @Autobind
 public final class ConsoleCommandSender implements EntityCommandSender {
 
-    @Getter
     private final UUID uuid = UUID.randomUUID();
 
     @Override

@@ -82,7 +82,7 @@ public class CommandService {
     private synchronized void postComposeDispatch(EntityCommandSender entity, Command command, CommandLabelContext labelContext) {
         CommandExecutionContext commandExecutionContext = CommandExecutionContext.create(entity, labelContext);
 
-        if (validatePreDispatch(command, commandExecutionContext)) {
+        if (!validatePreDispatch(command, commandExecutionContext)) {
             return;
         }
 
