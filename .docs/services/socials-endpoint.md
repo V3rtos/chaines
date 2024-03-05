@@ -92,7 +92,7 @@ future.thenAccept((result) -> {
             log.info("Аккаунт успешно привязан и сохранен в базу данных!");
             break;
         }
-        case FAILURE__NOT_BELONG: {
+        case FAILURE_NOT_BELONG: {
             log.warn("Указанный аккаунт уже принадлежит другому человеку");
             break;
         }
@@ -126,7 +126,7 @@ future.thenAccept((result) -> {
             log.info("Аккаунт успешно отвязан и удален из базы данных!");
             break;
         }
-        case FAILURE__NOT_LINKED: {
+        case FAILURE_NOT_LINKED: {
             log.warn("Указанный аккаунт не привязан к данному пользователю");
             break;
         }

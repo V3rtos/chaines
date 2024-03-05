@@ -108,16 +108,16 @@ public class SocialServiceEndpoint extends EndpointRemoteObject implements Socia
         Optional<SocialProfile> profileOptional = findLinkedProfile(playerId, social);
 
         if (profileOptional.isPresent()) {
-            return CompletableFuture.completedFuture(SocialBindingResult.FAILURE__ALREADY_LINKED);
+            return CompletableFuture.completedFuture(SocialBindingResult.FAILURE_ALREADY_LINKED);
         }
 
         SocialNetworkLinkageApi linkageApi = socialsApisMap.get(social);
 
         if (linkageApi == null) {
-            return CompletableFuture.completedFuture(SocialBindingResult.FAILURE__SOCIAL_NOT_EXISTS);
+            return CompletableFuture.completedFuture(SocialBindingResult.FAILURE_SOCIAL_NOT_EXISTS);
         }
         if (!linkageApi.verify(input)) {
-            return CompletableFuture.completedFuture(SocialBindingResult.FAILURE__UNCORRECTED_INPUT);
+            return CompletableFuture.completedFuture(SocialBindingResult.FAILURE_UNCORRECTED_INPUT);
         }
 
         return linkageApi.link(input)
@@ -129,13 +129,13 @@ public class SocialServiceEndpoint extends EndpointRemoteObject implements Socia
         Optional<SocialProfile> profileOptional = findLinkedProfile(playerId, social);
 
         if (!profileOptional.isPresent()) {
-            return CompletableFuture.completedFuture(SocialBindingResult.FAILURE__NOT_LINKED);
+            return CompletableFuture.completedFuture(SocialBindingResult.FAILURE_NOT_LINKED);
         }
 
         SocialNetworkLinkageApi linkageApi = socialsApisMap.get(social);
 
         if (linkageApi == null) {
-            return CompletableFuture.completedFuture(SocialBindingResult.FAILURE__SOCIAL_NOT_EXISTS);
+            return CompletableFuture.completedFuture(SocialBindingResult.FAILURE_SOCIAL_NOT_EXISTS);
         }
 
         String socialLink = profileOptional.get().getSocialLink();
@@ -151,7 +151,7 @@ public class SocialServiceEndpoint extends EndpointRemoteObject implements Socia
                 SocialProfile profile = result.getProfile();
 
                 if (socialDbRepository.findBySocialId(profile.getSocialId()).isPresent()) {
-                    return SocialBindingResult.FAILURE__NOT_BELONG;
+                    return SocialBindingResult.FAILURE_NOT_BELONG;
                 }
 
                 socialProfileCache.put(toSocialPlayerID(profile), profile);
@@ -161,7 +161,7 @@ public class SocialServiceEndpoint extends EndpointRemoteObject implements Socia
         }
         catch (RemoteException exception) {
             exception.printStackTrace();
-            return SocialBindingResult.FAILURE__NO_CONNECTION;
+            return SocialBindingResult.FAILURE_NO_CONNECTION;
         }
     }
 
@@ -179,7 +179,7 @@ public class SocialServiceEndpoint extends EndpointRemoteObject implements Socia
         }
         catch (RemoteException exception) {
             exception.printStackTrace();
-            return SocialBindingResult.FAILURE__NO_CONNECTION;
+            return SocialBindingResult.FAILURE_NO_CONNECTION;
         }
     }
 }
