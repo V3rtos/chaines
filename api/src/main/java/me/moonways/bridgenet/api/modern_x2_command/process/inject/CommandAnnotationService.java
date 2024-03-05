@@ -5,6 +5,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorAdapter;
 import me.moonways.bridgenet.api.modern_x2_command.process.inject.validate.CommandAnnotationValidateManagement;
 import me.moonways.bridgenet.api.modern_x2_command.process.inject.validate.CommandAnnotationValidateRequest;
@@ -24,6 +25,9 @@ public class CommandAnnotationService {
     @Inject
     private BeansScanningService scanningService;
 
+    @Inject
+    private BeansService beansService;
+
     @PostConstruct
     public void inject() {
         Set<Bean> beans = scanningService.scanBeansBySuperclass(CommandAnnotationHandler.class);
@@ -31,7 +35,10 @@ public class CommandAnnotationService {
         for (Bean bean : beans) {
             Class<? extends Annotation> annCls = TypeAnnotationProcessorAdapter.getGenericType(0, bean.getType().getRoot());
 
-            handlers.put(annCls, (CommandAnnotationHandler<?>) bean.getRoot());
+            CommandAnnotationHandler<?> commandAnnotationHandler = (CommandAnnotationHandler<?>) bean.getRoot();
+            beansService.inject(commandAnnotationHandler);
+
+            handlers.put(annCls, commandAnnotationHandler);
         }
     }
 
@@ -43,7 +50,7 @@ public class CommandAnnotationService {
         List<CommandAnnotationValidateResult> results = new ArrayList<>();
 
         for (Class<? extends Annotation> cls : handlers.keySet()) {
-            if (!context.getCommand().getBean().getType().isAnnotated(cls))
+            if (!context.getCommand().getBeanMethod().isAnnotated(cls))
                 continue;
 
             results.add(validate(context, cls));
