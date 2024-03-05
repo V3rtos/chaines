@@ -82,14 +82,13 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class TelegramAccountLink {
-
-    private static final Social SOCIAL = Social.TELEGRAM;
-
+    
     @Inject
     private SocialsServiceModel socials;
 
     public void link(UUID playerId, String input) {
-        socials.tryLink(playerId, social, input).thenAccept((result) -> postLink(playerId, result));
+        socials.tryLink(playerId, Social.TELEGRAM, input)
+                .thenAccept((result) -> postLink(playerId, result));
     }
 
     private void postLink(UUID playerId, SocialBindingResult result) {
@@ -131,14 +130,13 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class TelegramAccountUnlink {
-
-    private static final Social SOCIAL = Social.TELEGRAM;
-
+    
     @Inject
     private SocialsServiceModel socials;
 
     public void unlink(UUID playerId) {
-        socials.tryUnlink(playerId, social).thenAccept((result) -> postUnlink(playerId, result));
+        socials.tryUnlink(playerId, Social.TELEGRAM)
+                .thenAccept((result) -> postUnlink(playerId, result));
     }
 
     private void postUnlink(UUID playerId, SocialBindingResult result) {
