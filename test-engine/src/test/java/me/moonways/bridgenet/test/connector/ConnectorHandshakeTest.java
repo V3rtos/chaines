@@ -1,18 +1,16 @@
 package me.moonways.bridgenet.test.connector;
 
-import me.moonways.bridgenet.api.command.CommandExecutor;
-import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
-import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
+import me.moonways.bridgenet.api.command.api.process.CommandService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.test.connector.subj.TestConnector;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import me.moonways.bridgenet.test.engine.persistance.Order;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(BridgenetJUnitTestRunner.class)
 public class ConnectorHandshakeTest {
@@ -20,9 +18,7 @@ public class ConnectorHandshakeTest {
     private final TestConnector subj = new TestConnector();
 
     @Inject
-    private CommandExecutor commandExecutor;
-    @Inject
-    private ConsoleCommandSender consoleCommandSender;
+    private CommandService commandService;
 
     @Test
     @Order(0)
@@ -41,11 +37,7 @@ public class ConnectorHandshakeTest {
     }
 
     private void command() {
-        try {
-            commandExecutor.execute(consoleCommandSender, "servers list");
-            commandExecutor.execute(consoleCommandSender, "servers get " + TestConnector.DEVICE_DESCRIPTION.getName());
-        } catch (CommandExecutionException exception) {
-            fail(exception.getMessage());
-        }
+        commandService.dispatchConsole("servers list");
+        commandService.dispatchConsole("servers get " + TestConnector.DEVICE_DESCRIPTION.getName());
     }
 }
