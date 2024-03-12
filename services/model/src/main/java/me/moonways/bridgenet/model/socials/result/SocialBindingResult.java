@@ -10,4 +10,5 @@ public enum SocialBindingResult {
     FAILURE_NOT_BELONG,
     FAILURE_ALREADY_LINKED,
     FAILURE_UNCORRECTED_INPUT,
+    FAILURE_NEEDS_DATA, // необходимо написать боту первым.
 }

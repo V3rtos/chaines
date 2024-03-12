@@ -32,7 +32,7 @@ public interface SocialsServiceModel extends RemoteService {
      *
      * @param input = входящие параметры социальной сети от игрока.
      */
-    Collection<Social> findSocialsByInput(String input);
+    Collection<Social> findSocialsByInput(String input) throws RemoteException;
 
     /**
      * Воспроизвести попытку привязки социальной сети
