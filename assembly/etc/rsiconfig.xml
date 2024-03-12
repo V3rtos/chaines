@@ -97,5 +97,13 @@
             <!-- Target service class type -->
             <modelPath>me.moonways.bridgenet.model.reports.ReportsServiceModel</modelPath>
         </service>
+        <service>
+            <!-- RMI Protocol service bind port -->
+            <bindPort>7010</bindPort>
+            <!-- Service direction name -->
+            <name>economy</name>
+            <!-- Target service class type -->
+            <modelPath>me.moonways.bridgenet.model.economy.EconomyServiceModel</modelPath>
+        </service>
     </services>
 </configuration>
