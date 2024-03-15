@@ -6,7 +6,7 @@ import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.dao.EntityAccessCondition;
 import me.moonways.bridgenet.jdbc.dao.EntityDao;
 import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
-import me.moonways.bridgenet.model.economy.Currency;
+import me.moonways.bridgenet.model.economy.currency.Currency;
 
 import java.util.UUID;
 

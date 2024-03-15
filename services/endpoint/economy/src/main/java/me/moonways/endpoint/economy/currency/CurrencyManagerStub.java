@@ -1,24 +1,32 @@
-package me.moonways.endpoint.economy;
+package me.moonways.endpoint.economy.currency;
 
-import me.moonways.bridgenet.model.economy.EconomyCurrencyManager;
-import me.moonways.bridgenet.model.economy.bank.BankTransaction;
-import me.moonways.bridgenet.model.economy.bank.CurrencyBank;
+import lombok.Getter;
+import me.moonways.bridgenet.model.economy.currency.CurrencyOperationHistory;
+import me.moonways.bridgenet.model.economy.currency.EconomyCurrencyManager;
+import me.moonways.bridgenet.model.economy.currency.bank.BankTransaction;
+import me.moonways.bridgenet.model.economy.currency.bank.CurrencyBank;
 import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 
 import java.rmi.RemoteException;
 import java.util.UUID;
 
 // todo - оптимизировать, добавив кеширование данных
-public class EconomyCurrencyManagerStub extends EndpointRemoteObject implements EconomyCurrencyManager {
+public class CurrencyManagerStub extends EndpointRemoteObject implements EconomyCurrencyManager {
     private static final long serialVersionUID = 2514616303549721781L;
 
     private final UUID playerId;
     private final CurrencyBank bank;
 
-    public EconomyCurrencyManagerStub(UUID playerId, CurrencyBank bank) throws RemoteException {
+    @Getter
+    private final CurrencyOperationHistory history;
+
+    public CurrencyManagerStub(UUID playerId, CurrencyBank bank) throws RemoteException {
         super();
+
         this.playerId = playerId;
         this.bank = bank;
+
+        this.history = new CurrencyOperationsHistory(playerId);
     }
 
     @Override

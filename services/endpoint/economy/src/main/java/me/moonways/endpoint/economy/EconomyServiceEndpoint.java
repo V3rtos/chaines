@@ -3,12 +3,16 @@ package me.moonways.endpoint.economy;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.model.economy.Currency;
-import me.moonways.bridgenet.model.economy.EconomyCurrencyManager;
+import me.moonways.bridgenet.model.economy.credit.EconomyCreditManager;
+import me.moonways.bridgenet.model.economy.currency.Currency;
+import me.moonways.bridgenet.model.economy.currency.EconomyCurrencyManager;
 import me.moonways.bridgenet.model.economy.EconomyServiceModel;
-import me.moonways.bridgenet.model.economy.bank.CurrencyBank;
+import me.moonways.bridgenet.model.economy.currency.bank.CurrencyBank;
+import me.moonways.bridgenet.model.economy.deposit.EconomyDepositManager;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
 import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.endpoint.economy.currency.CurrencyBankStub;
+import me.moonways.endpoint.economy.currency.CurrencyManagerStub;
 import me.moonways.endpoint.economy.db.EconomyCurrencyDbRepository;
 
 import java.rmi.RemoteException;
@@ -38,12 +42,12 @@ public class EconomyServiceEndpoint extends EndpointRemoteObject implements Econ
     }
 
     @Override
-    public EconomyCurrencyManager getManager(UUID playerId, Currency currency) throws RemoteException {
+    public EconomyCurrencyManager getCurrencyManager(UUID playerId, Currency currency) throws RemoteException {
         currencyManagersCache.cleanUp();
         EconomyCurrencyManager current = currencyManagersCache.asMap().get(playerId);
 
         if (current == null) {
-            current = new EconomyCurrencyManagerStub(playerId, createBank(currency));
+            current = new CurrencyManagerStub(playerId, createBank(currency));
             currencyManagersCache.put(playerId, current);
         }
 
@@ -51,8 +55,28 @@ public class EconomyServiceEndpoint extends EndpointRemoteObject implements Econ
     }
 
     @Override
-    public EconomyCurrencyManager getManager(String playerName, Currency currency) throws RemoteException {
+    public EconomyCurrencyManager getCurrencyManager(String playerName, Currency currency) throws RemoteException {
         UUID playerId = playersServiceModel.findPlayerId(playerName);
-        return getManager(playerId, currency);
+        return getCurrencyManager(playerId, currency);
+    }
+
+    @Override
+    public EconomyDepositManager getDepositManager(UUID playerId, Currency currency) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public EconomyDepositManager getDepositManager(String playerName, Currency currency) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public EconomyCreditManager getCreditManager(UUID playerId, Currency currency) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public EconomyCreditManager getCreditManager(String playerName, Currency currency) throws RemoteException {
+        return null;
     }
 }

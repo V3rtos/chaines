@@ -1,6 +1,10 @@
 package me.moonways.bridgenet.model.economy;
 
-import me.moonways.bridgenet.model.economy.bank.CurrencyBank;
+import me.moonways.bridgenet.model.economy.credit.EconomyCreditManager;
+import me.moonways.bridgenet.model.economy.currency.EconomyCurrencyManager;
+import me.moonways.bridgenet.model.economy.currency.bank.CurrencyBank;
+import me.moonways.bridgenet.model.economy.currency.Currency;
+import me.moonways.bridgenet.model.economy.deposit.EconomyDepositManager;
 import me.moonways.bridgenet.rsi.service.RemoteService;
 
 import java.rmi.RemoteException;
@@ -20,7 +24,7 @@ public interface EconomyServiceModel extends RemoteService {
      * @param playerId - уникальный идентификатор пользователя.
      * @param currency - валюта, которой необходимо управлять.
      */
-    EconomyCurrencyManager getManager(UUID playerId, Currency currency) throws RemoteException;
+    EconomyCurrencyManager getCurrencyManager(UUID playerId, Currency currency) throws RemoteException;
 
     /**
      * Получить управленческий объект над операциями пользователя.
@@ -28,5 +32,13 @@ public interface EconomyServiceModel extends RemoteService {
      * @param playerName - имя пользователя.
      * @param currency - валюта, которой необходимо управлять.
      */
-    EconomyCurrencyManager getManager(String playerName, Currency currency) throws RemoteException;
+    EconomyCurrencyManager getCurrencyManager(String playerName, Currency currency) throws RemoteException;
+
+    EconomyDepositManager getDepositManager(UUID playerId, Currency currency) throws RemoteException;
+
+    EconomyDepositManager getDepositManager(String playerName, Currency currency) throws RemoteException;
+
+    EconomyCreditManager getCreditManager(UUID playerId, Currency currency) throws RemoteException;
+
+    EconomyCreditManager getCreditManager(String playerName, Currency currency) throws RemoteException;
 }

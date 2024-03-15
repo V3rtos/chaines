@@ -1,10 +1,10 @@
-package me.moonways.bridgenet.model.economy.bank;
+package me.moonways.bridgenet.model.economy.currency.bank;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.model.economy.Currency;
+import me.moonways.bridgenet.model.economy.currency.Currency;
 
 import java.util.UUID;
 
@@ -14,10 +14,12 @@ import java.util.UUID;
 @EqualsAndHashCode
 public final class BankTransaction {
 
-    private final UUID transactionId;
+    public enum Result {
 
-    private final BankTransactionResult result;
-    private final PostTransferState state;
+        SUCCESS_OPERATION,
+        NOT_ENOUGH,
+        NOT_FOUND,
+    }
 
     @Getter
     @Builder
@@ -31,4 +33,9 @@ public final class BankTransaction {
         private final int spent;
         private final int received;
     }
+
+    private final UUID transactionId;
+
+    private final Result result;
+    private final PostTransferState state;
 }

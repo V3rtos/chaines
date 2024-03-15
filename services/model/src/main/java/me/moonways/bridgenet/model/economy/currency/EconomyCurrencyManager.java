@@ -1,6 +1,6 @@
-package me.moonways.bridgenet.model.economy;
+package me.moonways.bridgenet.model.economy.currency;
 
-import me.moonways.bridgenet.model.economy.bank.BankTransaction;
+import me.moonways.bridgenet.model.economy.currency.bank.BankTransaction;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -14,6 +14,8 @@ import java.util.UUID;
  * и тем самым оптимизируя дальнейшие операции.
  */
 public interface EconomyCurrencyManager extends Remote {
+
+    CurrencyOperationHistory getHistory();
 
     /**
      * Выполнить запрос "ЭХО", который прослушивает

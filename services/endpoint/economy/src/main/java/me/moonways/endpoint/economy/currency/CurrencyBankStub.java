@@ -1,10 +1,9 @@
-package me.moonways.endpoint.economy;
+package me.moonways.endpoint.economy.currency;
 
 import lombok.Getter;
-import me.moonways.bridgenet.model.economy.Currency;
-import me.moonways.bridgenet.model.economy.bank.BankTransaction;
-import me.moonways.bridgenet.model.economy.bank.BankTransactionResult;
-import me.moonways.bridgenet.model.economy.bank.CurrencyBank;
+import me.moonways.bridgenet.model.economy.currency.Currency;
+import me.moonways.bridgenet.model.economy.currency.bank.BankTransaction;
+import me.moonways.bridgenet.model.economy.currency.bank.CurrencyBank;
 import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.economy.db.EconomyCurrencyDbRepository;
 
@@ -34,7 +33,7 @@ public class CurrencyBankStub extends EndpointRemoteObject implements CurrencyBa
                         .current(0)
                         .build())
                 .transactionId(UUID.randomUUID())
-                .result(BankTransactionResult.NOT_FOUND)
+                .result(BankTransaction.Result.NOT_FOUND)
                 .build();
     }
 
@@ -52,7 +51,7 @@ public class CurrencyBankStub extends EndpointRemoteObject implements CurrencyBa
                         .current(value)
                         .build())
                 .transactionId(UUID.randomUUID())
-                .result(BankTransactionResult.SUCCESS_OPERATION)
+                .result(BankTransaction.Result.SUCCESS_OPERATION)
                 .build();
     }
 
@@ -77,7 +76,7 @@ public class CurrencyBankStub extends EndpointRemoteObject implements CurrencyBa
                         .current(hasFunds ? value - sum : value)
                         .build())
                 .transactionId(UUID.randomUUID())
-                .result(hasFunds ? BankTransactionResult.SUCCESS_OPERATION : BankTransactionResult.NOT_ENOUGH)
+                .result(hasFunds ? BankTransaction.Result.SUCCESS_OPERATION : BankTransaction.Result.NOT_ENOUGH)
                 .build();
     }
 
@@ -97,7 +96,7 @@ public class CurrencyBankStub extends EndpointRemoteObject implements CurrencyBa
                         .current(value + sum)
                         .build())
                 .transactionId(UUID.randomUUID())
-                .result(BankTransactionResult.SUCCESS_OPERATION)
+                .result(BankTransaction.Result.SUCCESS_OPERATION)
                 .build();
     }
 
