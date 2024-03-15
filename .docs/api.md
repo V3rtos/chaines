@@ -1,4 +1,4 @@
-# Bridgenet / Metrics
+# Bridgenet / API
 
 ---
 
@@ -8,7 +8,7 @@
 
 ---
 
-## API
+## USAGE
 
 ...
 

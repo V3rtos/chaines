@@ -2,19 +2,17 @@ package me.moonways.bridgenet.api.inject.bean.service;
 
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.IgnoredRegistry;
+import me.moonways.bridgenet.api.inject.bean.*;
 import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
+import me.moonways.bridgenet.api.util.pair.Pair;
 import org.reflections.Configuration;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-import me.moonways.bridgenet.api.inject.bean.Bean;
-import me.moonways.bridgenet.api.inject.bean.BeanComponent;
-import me.moonways.bridgenet.api.inject.bean.BeanMethod;
-import me.moonways.bridgenet.api.inject.bean.BeanType;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProvider;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
@@ -275,6 +273,11 @@ public class BeansScanningService {
      * @param beans - список всех готовых бинов.
      */
     private List<Bean> sort(List<Bean> beans) {
+        Pair<Class<?>, Class<?>> recursionPair = searchRecursiveInjections(beans);
+        if (recursionPair != null) {
+            throw new BeanException("Recursive beans injection in " + recursionPair);
+        }
+
         List<Class<?>> resources = toResources(beans);
 
         int sortedBeans = 0;
@@ -297,6 +300,39 @@ public class BeansScanningService {
             }
         }
         return sortedBeans > 0 ? sort(beans) : beans;
+    }
+
+    /**
+     * Данная функция выполняет поиск конфликтов под
+     * теговым названием "рекурсивная инжекция", и возвращает
+     * первый найденный конфликт между двумя классами,
+     * которые относятся к "рекурсивной инжекции".
+     *
+     * @param beans - список бинов, в которых производится поиск.
+     */
+    private Pair<Class<?>, Class<?>> searchRecursiveInjections(List<Bean> beans) {
+        for (Bean bean : beans) {
+            BeanType beanType = bean.getType();
+
+            for (BeanComponent component : beanType.getInjectComponents()) {
+                Bean componentBean = beans.stream().filter(other -> other.getType().isSimilar(component.getType()))
+                        .findFirst()
+                        .orElse(null);
+
+                                            // skip self-injection
+                if (componentBean != null && !componentBean.isSimilar(bean)) {
+
+                    for (BeanComponent componentInternalComponent : componentBean.getType().getInjectComponents()) {
+
+                        if (beanType.isSimilar(componentInternalComponent.getType())) {
+                            return Pair.immutable(beanType.getRoot(), component.getType());
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
