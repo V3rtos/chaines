@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.command.api.process.verification.inject;
 
-import me.moonways.bridgenet.api.command.api.process.verification.inject.validate.CommandAnnotationValidateManagement;
 import me.moonways.bridgenet.api.command.api.process.verification.inject.validate.CommandAnnotationValidateRequest;
+import me.moonways.bridgenet.api.command.api.process.verification.inject.validate.CommandAnnotationValidateResult;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
@@ -9,7 +9,6 @@ import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorAdapter;
-import me.moonways.bridgenet.api.command.api.process.verification.inject.validate.CommandAnnotationValidateResult;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -22,9 +21,6 @@ import java.util.*;
 public class CommandAnnotationService {
 
     private final Map<Class<? extends Annotation>, CommandAnnotationHandler<?>> handlers = new HashMap<>();
-
-    @Inject
-    private CommandAnnotationValidateManagement verifyManagement;
 
     @Inject
     private BeansScanningService scanningService;
