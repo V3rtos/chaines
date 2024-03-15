@@ -297,7 +297,6 @@ public class BeansScanningService {
             }
         }
         return sortedBeans > 0 ? sort(beans) : beans;
-        //return beans;
     }
 
     /**
