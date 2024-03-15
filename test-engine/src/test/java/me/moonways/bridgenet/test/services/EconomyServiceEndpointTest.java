@@ -26,6 +26,13 @@ public class EconomyServiceEndpointTest {
     private static final UUID PLAYER_ID = UUID.randomUUID();
     private static final Currency CURRENCY = Currency.COINS;
 
+    private static final int BANK_CHARGE_AMOUNT = 2000;
+    private static final int BANK_PAY_AMOUNT = 100;
+    private static final int BANK_TRANSFER_AMOUNT = 990;
+
+    private static final int DEPOSIT_INVEST_AMOUNT = 62_000;
+    private static final int DEPOSIT_WITHDRAW_AMOUNT = 20_000;
+
     @Inject
     private EconomyServiceModel serviceModel;
 
@@ -42,9 +49,9 @@ public class EconomyServiceEndpointTest {
     public void test_bankExecuteCharge() throws RemoteException {
         EconomyCurrencyManager currencyManager = serviceModel.getCurrencyManager(PLAYER_ID, CURRENCY);
 
-        BankTransaction transaction = currencyManager.executeCharge(2000);
+        BankTransaction transaction = currencyManager.executeCharge(BANK_CHARGE_AMOUNT);
 
-        assertBankTransaction(transaction, 2000, 0, 2000);
+        assertBankTransaction(transaction, BANK_CHARGE_AMOUNT, 0, BANK_CHARGE_AMOUNT);
     }
 
     @Test
@@ -52,9 +59,9 @@ public class EconomyServiceEndpointTest {
     public void test_bankExecutePay() throws RemoteException {
         EconomyCurrencyManager currencyManager = serviceModel.getCurrencyManager(PLAYER_ID, CURRENCY);
 
-        BankTransaction transaction = currencyManager.executePay(100);
+        BankTransaction transaction = currencyManager.executePay(BANK_PAY_AMOUNT);
 
-        assertBankTransaction(transaction, 0, 100, 1900);
+        assertBankTransaction(transaction, 0, BANK_PAY_AMOUNT, (BANK_CHARGE_AMOUNT - BANK_PAY_AMOUNT));
     }
 
     @Test
@@ -62,9 +69,9 @@ public class EconomyServiceEndpointTest {
     public void test_bankExecuteTransfer() throws RemoteException {
         EconomyCurrencyManager currencyManager = serviceModel.getCurrencyManager(PLAYER_ID, CURRENCY);
 
-        BankTransaction transaction = currencyManager.executeTransfer(UUID.randomUUID(), 990);
+        BankTransaction transaction = currencyManager.executeTransfer(UUID.randomUUID(), BANK_TRANSFER_AMOUNT);
 
-        assertBankTransaction(transaction, 0, 990, 910);
+        assertBankTransaction(transaction, 0, BANK_TRANSFER_AMOUNT, 910);
     }
 
     @Test
@@ -102,7 +109,7 @@ public class EconomyServiceEndpointTest {
         EconomyDepositManager depositManager = serviceModel.getDepositManager(PLAYER_ID, CURRENCY);
         ActiveDeposit deposit = depositManager.getActiveDeposits(PLAYER_ID).stream().findFirst().orElse(null);
 
-        DepositOperation depositOperation = depositManager.invest(deposit.getDepositId(), ActiveDeposit.MIN_INVESTED_SUM);
+        DepositOperation depositOperation = depositManager.invest(deposit.getDepositId(), DEPOSIT_INVEST_AMOUNT);
     }
 
     @Test
@@ -111,7 +118,7 @@ public class EconomyServiceEndpointTest {
         EconomyDepositManager depositManager = serviceModel.getDepositManager(PLAYER_ID, CURRENCY);
         ActiveDeposit deposit = depositManager.getActiveDeposits(PLAYER_ID).stream().findFirst().orElse(null);
 
-        DepositOperation depositOperation = depositManager.withdraw(deposit.getDepositId(), ActiveDeposit.MIN_INVESTED_SUM);
+        DepositOperation depositOperation = depositManager.withdraw(deposit.getDepositId(), DEPOSIT_WITHDRAW_AMOUNT);
     }
 
     @Test
