@@ -95,7 +95,7 @@ public class CommandService {
 
         if (searchedCommand.isPresent()) {
             Command command = searchedCommand.get();
-            return executeCommand(sender, command,
+            return dispatch(sender, command,
                     CommandLabelContext.create(command, label));
         }
 
@@ -109,11 +109,11 @@ public class CommandService {
      * @param command - команда для выполнения.
      * @param labelContext - контекст строки.
      */
-    private Optional<CommandExecutionContext> executeCommand(EntityCommandSender sender, Command command, CommandLabelContext labelContext) {
+    private Optional<CommandExecutionContext> dispatch(EntityCommandSender sender, Command command, CommandLabelContext labelContext) {
         CommandExecutionContext commandExecutionContext = CommandExecutionContext.create(sender, labelContext);
 
         if (validatePreDispatch(command, commandExecutionContext)) {
-            CommandExecuteResult postResult = getResultPostExecute(commandExecutionContext, command);
+            CommandExecuteResult postResult = getResultPostInvoke(commandExecutionContext, command);
             invokeEvent(new CommandPostProcessEvent(commandExecutionContext, postResult));
         }
 
@@ -128,7 +128,7 @@ public class CommandService {
      * @param commandExecutionContext - контекст выполнения команды.
      */
     private boolean validatePreDispatch(Command command, CommandExecutionContext commandExecutionContext) {
-        return validatePreExecuteEvent(commandExecutionContext, command.getInfo()) && validatePreExecuteAnnotation(commandExecutionContext, command);
+        return validatePreDispatchInvokeEvent(commandExecutionContext, command.getInfo()) && validatePreDispatchProcessAnnotation(commandExecutionContext, command);
     }
 
     /**
@@ -138,7 +138,7 @@ public class CommandService {
      * @param commandExecutionContext - контекст выполнения команды.
      * @param commandInfo - информация о команде.
      */
-    private boolean validatePreExecuteEvent(CommandExecutionContext commandExecutionContext, CommandInfo commandInfo) {
+    private boolean validatePreDispatchInvokeEvent(CommandExecutionContext commandExecutionContext, CommandInfo commandInfo) {
         CommandPreProcessEvent executeEvent = invokeEvent(new CommandPreProcessEvent(commandExecutionContext, commandInfo));
         return !executeEvent.isCancelled();
     }
@@ -150,7 +150,7 @@ public class CommandService {
      * @param commandExecutionContext - контекст выполнения команды.
      * @param command - команда.
      */
-    private boolean validatePreExecuteAnnotation(CommandExecutionContext commandExecutionContext, Command command) {
+    private boolean validatePreDispatchProcessAnnotation(CommandExecutionContext commandExecutionContext, Command command) {
         CommandAnnotationValidateResult result = validateManagement.validate(commandExecutionContext, command);
         return result.isOk();
     }
@@ -161,7 +161,7 @@ public class CommandService {
      * @param commandExecutionContext - контекст выполнения команды.
      * @param command - команда.
      */
-    private CommandExecuteResult getResultPostExecute(CommandExecutionContext commandExecutionContext, Command command) {
+    private CommandExecuteResult getResultPostInvoke(CommandExecutionContext commandExecutionContext, Command command) {
         return invoke(commandExecutionContext, command);
     }
 
