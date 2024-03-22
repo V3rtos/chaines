@@ -8,8 +8,7 @@ public enum ParameterAddon {
     NOTNULL("NOT NULL"),
     INCREMENTING("AUTO_INCREMENT"),
     UNIQUE("UNIQUE"),
-    PRIMARY("PRIMARY KEY"),
-    // todo - надо потом вынести отдельно в сигнатуру, потому что надо по другому их форматировать если > 1
+    PRIMARY(""), // moved to other collection "primary" and "has_primary"
     ;
 
     private final String toSqlString;
