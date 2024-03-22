@@ -18,10 +18,8 @@ import static junit.framework.TestCase.assertEquals;
 @RunWith(BridgenetJUnitTestRunner.class)
 public class CreatePlayersTableTest {
 
-    private static final String COMPLETED_QUERY_NATIVE = "CREATE TABLE IF NOT EXISTS Players ( ID BIGINT AUTO_INCREMENT NOT NULL UNIQUE, NAME VARCHAR(32) UNIQUE NOT NULL CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, AGE INT NOT NULL DEFAULT 1 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+    private static final String COMPLETED_QUERY_NATIVE = "CREATE TABLE IF NOT EXISTS Players ( ID BIGINT AUTO_INCREMENT NOT NULL UNIQUE , NAME VARCHAR(32) UNIQUE NOT NULL  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, AGE INT NOT NULL DEFAULT 1 , PRIMARY KEY ( ID, NAME ) ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
 
-    @Inject
-    private DatabaseProvider provider;
     @Inject
     private DatabaseComposer composer;
 
@@ -41,7 +39,8 @@ public class CreatePlayersTableTest {
                                         .addons(Arrays.asList(
                                                 ParameterAddon.INCREMENTING,
                                                 ParameterAddon.NOTNULL,
-                                                ParameterAddon.UNIQUE))
+                                                ParameterAddon.UNIQUE,
+                                                ParameterAddon.PRIMARY))
                                         .build()))
                         .with(CombinedStructs.styledParameter("NAME",
                                 ParameterStyle.builder()
@@ -49,7 +48,8 @@ public class CreatePlayersTableTest {
                                         .type(ParameterType.STRING)
                                         .addons(Arrays.asList(
                                                 ParameterAddon.UNIQUE,
-                                                ParameterAddon.NOTNULL))
+                                                ParameterAddon.NOTNULL,
+                                                ParameterAddon.PRIMARY))
                                         .encoding(Encoding.builder()
                                                 .characterStyle("utf8mb4")
                                                 .collate("utf8mb4_unicode_ci")

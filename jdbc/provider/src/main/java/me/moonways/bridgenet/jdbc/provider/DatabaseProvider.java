@@ -44,7 +44,7 @@ public final class DatabaseProvider {
                 .id(connectionID)
                 .jdbcWrapper(JdbcWrapper.builder()
                         .connectionID(connectionID)
-                        .exceptionHandler((t, e) -> log.error("§4Bridgenet jdbc framework thread '{}' caught an exception:", t.getName(), e))
+                        .exceptionHandler((t, e) -> log.error("§4Bridgenet database-framework thread '{}' caught an exception:", t.getName(), e))
                         .credentials(credentials)
                         .build())
                 .build();

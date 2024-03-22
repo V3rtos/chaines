@@ -17,8 +17,6 @@ public class DeletePlayerTest {
     private static final String COMPLETED_QUERY_NATIVE = "DELETE FROM Players WHERE NAME = 'moonways_user'";
 
     @Inject
-    private DatabaseProvider provider;
-    @Inject
     private DatabaseComposer composer;
 
     @Test

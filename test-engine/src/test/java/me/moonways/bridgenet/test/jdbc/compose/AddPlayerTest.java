@@ -18,8 +18,6 @@ public class AddPlayerTest {
     private static final String COMPLETED_QUERY_NATIVE = "INSERT INTO Players ( NAME, AGE ) VALUES ( 'moonways_user', 1 ) ON DUPLICATE KEY UPDATE NAME = 'moonways_user'";
 
     @Inject
-    private DatabaseProvider provider;
-    @Inject
     private DatabaseComposer composer;
     
     @Test

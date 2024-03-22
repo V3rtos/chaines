@@ -17,8 +17,6 @@ public class DeletePlayersTableTest {
     private static final String COMPLETED_QUERY_NATIVE = "DROP TABLE Players";
 
     @Inject
-    private DatabaseProvider provider;
-    @Inject
     private DatabaseComposer composer;
 
     @Test

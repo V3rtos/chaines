@@ -3,12 +3,12 @@ package me.moonways.bridgenet.jdbc.dao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.var;
+import me.moonways.bridgenet.jdbc.dao.entity.Element;
+import me.moonways.bridgenet.jdbc.dao.entity.Entity;
 import me.moonways.bridgenet.jdbc.dao.entity.EntityTransmitter;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedQuery;
-import me.moonways.bridgenet.jdbc.dao.entity.Element;
-import me.moonways.bridgenet.jdbc.dao.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
