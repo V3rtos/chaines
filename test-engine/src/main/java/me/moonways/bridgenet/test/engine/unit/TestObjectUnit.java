@@ -2,6 +2,7 @@ package me.moonways.bridgenet.test.engine.unit;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.runner.notification.RunNotifier;
 
@@ -11,8 +12,9 @@ import java.util.*;
 import java.util.function.Consumer;
 
 @Getter
+@Log4j2
 @RequiredArgsConstructor
-public class TestUnit {
+public class TestObjectUnit {
 
     private final RunNotifier notifier;
     private final Object source;

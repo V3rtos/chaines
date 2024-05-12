@@ -10,6 +10,7 @@ import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import me.moonways.bridgenet.test.engine.jdbc.entity.StatusEntity;
 import me.moonways.bridgenet.test.engine.jdbc.entity.UserEntity;
 import me.moonways.bridgenet.test.engine.persistance.Order;
+import me.moonways.bridgenet.test.engine.persistance.SleepExecution;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,6 +65,7 @@ public class JdbcEntityRepositoryTest {
 
     @Test
     @Order(1)
+    @SleepExecution(duration = 500)
     public void test_userGet() {
         Optional<UserEntity> userOptional = userRepository.searchIf(
                 userRepository.newSearchMarker()
@@ -76,6 +78,7 @@ public class JdbcEntityRepositoryTest {
 
     @Test
     @Order(2)
+    @SleepExecution(duration = 500)
     public void test_statusGet() {
         Optional<StatusEntity> statusOptional = statusRepository.searchIf(
                 statusRepository.newSearchMarker()
@@ -88,6 +91,7 @@ public class JdbcEntityRepositoryTest {
 
     @Test
     @Order(3)
+    @SleepExecution(duration = 750)
     public void test_userDelete() {
         SearchMarker<UserEntity> searchMarker = userRepository.newSearchMarker()
                 .withGet(UserEntity::getId, 1)
@@ -103,6 +107,7 @@ public class JdbcEntityRepositoryTest {
 
     @Test
     @Order(4)
+    @SleepExecution(duration = 750)
     public void test_statusDelete() {
         SearchMarker<StatusEntity> searchMarker = statusRepository.newSearchMarker()
                 .withGet(StatusEntity::getId, 1)

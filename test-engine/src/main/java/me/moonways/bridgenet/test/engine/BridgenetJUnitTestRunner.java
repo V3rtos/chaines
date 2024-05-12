@@ -3,8 +3,8 @@ package me.moonways.bridgenet.test.engine;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.factory.type.ConstructorFactory;
+import me.moonways.bridgenet.test.engine.unit.TestObjectUnit;
 import me.moonways.bridgenet.test.engine.unit.TestRunnableStep;
-import me.moonways.bridgenet.test.engine.unit.TestUnit;
 import me.moonways.bridgenet.test.engine.unit.step.TestCreateStep;
 import me.moonways.bridgenet.test.engine.unit.step.TestEmulateRunningStep;
 import me.moonways.bridgenet.test.engine.unit.step.TestFinishStep;
@@ -40,7 +40,7 @@ public class BridgenetJUnitTestRunner extends BlockJUnit4ClassRunner {
     public void run(RunNotifier notifier) {
         try {
             Object testClassInstance = BEAN_FACTORY.create(testClass);
-            TestUnit testUnit = new TestUnit(notifier, testClassInstance);
+            TestObjectUnit testUnit = new TestObjectUnit(notifier, testClassInstance);
 
             BOOTSTRAP.init(testClassInstance);
 
