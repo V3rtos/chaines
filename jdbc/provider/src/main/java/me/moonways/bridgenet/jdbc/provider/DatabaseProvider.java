@@ -14,8 +14,6 @@ import me.moonways.bridgenet.jdbc.core.transaction.TransactionQuery;
 import me.moonways.bridgenet.jdbc.core.transaction.impl.DatabaseTransactionQuery;
 import me.moonways.bridgenet.jdbc.core.transaction.repository.TransactionRepository;
 import me.moonways.bridgenet.jdbc.core.wrap.JdbcWrapper;
-import me.moonways.bridgenet.jdbc.dao.EntityDao;
-import me.moonways.bridgenet.jdbc.dao.TypedEntityDao;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;
@@ -76,9 +74,5 @@ public final class DatabaseProvider {
 
     public synchronized Collection<DatabaseConnection> getActiveConnections() {
         return Collections.unmodifiableCollection(activeConnections);
-    }
-
-    public <E> EntityDao<E> createDao(@NotNull Class<E> entity, @NotNull DatabaseConnection connection) {
-        return new TypedEntityDao<>(composer, connection, entity);
     }
 }

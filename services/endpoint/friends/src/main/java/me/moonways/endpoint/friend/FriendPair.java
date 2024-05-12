@@ -3,20 +3,19 @@ package me.moonways.endpoint.friend;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.jdbc.dao.entity.EntityAccessible;
-import me.moonways.bridgenet.jdbc.dao.entity.EntityElement;
+import me.moonways.bridgenet.jdbc.entity.persistence.DatabaseEntity;
+import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
 
 import java.util.UUID;
 
-@Getter
 @Builder
 @ToString
-@EntityAccessible(name = "friends")
+@DatabaseEntity(name = "friends")
 public class FriendPair {
 
-    @EntityElement(id = "player_id", order = 1)
+    @Getter(onMethod_ = @EntityParameter(id = "player_id", order = 1))
     private UUID playerID;
 
-    @EntityElement(id = "friend_id", order = 2)
+    @Getter(onMethod_ = @EntityParameter(id = "friend_id", order = 2))
     private UUID friendID;
 }
