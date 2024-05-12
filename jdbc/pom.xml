@@ -12,7 +12,7 @@
 
     <modules>
         <module>core</module>
-        <module>dao</module>
+        <module>entities</module>
         <module>provider</module>
     </modules>
 

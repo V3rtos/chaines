@@ -25,7 +25,7 @@
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>jdbc-dao</artifactId>
+            <artifactId>jdbc-entities</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>

@@ -9,7 +9,7 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>jdbc-dao</artifactId>
+    <artifactId>jdbc-entities</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
