@@ -6,6 +6,7 @@ import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.Field;
+import me.moonways.bridgenet.jdbc.core.ResponseRow;
 import me.moonways.bridgenet.jdbc.core.ResponseStream;
 import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedQuery;
@@ -121,7 +122,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     private EntityID doInsert(EntityDescriptor descriptor) {
-        checkExternalsAndInsert(descriptor);
+        checkExternalsBeforeInsert(descriptor);
 
         EntityOperationComposer.EntityComposedOperation operation =
                 new EntityOperationComposer(composer)
@@ -151,6 +152,32 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         return result;
     }
 
+    private <V> List<V> callAndCollect(EntityOperationComposer.EntityComposedOperation operation) {
+        List<V> entitisList = new ArrayList<>();
+
+        CompletedQuery completedQuery = operation.getQueries().get(operation.getResultIndex());
+        Result<ResponseStream> result = completedQuery.call(connection);
+
+        for (ResponseRow responseRow : result.get()) {
+            EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
+            checkExternalsAfterSearch(entityDescriptor);
+
+            Object entity = EntityReadAndWriteUtil.write(entityDescriptor);
+
+            //noinspection unchecked
+            entitisList.add((V) entity);
+        }
+
+        return entitisList;
+    }
+
+    private <V> List<V> doSearch(SearchMarker<V> searchMarker) {
+        EntityOperationComposer.EntityComposedOperation operation =
+                new EntityOperationComposer(composer)
+                        .composeSearch(EntityReadAndWriteUtil.read(entityClass), searchMarker);
+        return callAndCollect(operation);
+    }
+
     @Override
     public Optional<T> search(Long id) {
         log.debug("search({})", id);
@@ -166,7 +193,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     @Override
     public Optional<T> searchIf(SearchMarker<T> searchMarker) {
         log.debug("searchIf({})", searchMarker);
-        return Optional.empty(); // todo
+        return doSearch(searchMarker.withLimit(1)).stream().findFirst();
     }
 
     @Override
@@ -182,33 +209,33 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     @Override
     public List<T> searchManyIf(SearchMarker<T> searchMarker) {
         log.debug("searchManyIf({}})", searchMarker);
-        return searchManyIf(SearchMarker.UNLIMITED_LIMIT, searchMarker);
+        return doSearch(searchMarker);
     }
 
     @Override
     public List<T> searchManyIf(int limit, SearchMarker<T> searchMarker) {
         log.debug("searchManyIf({}, {})", limit, searchMarker);
-        return null; // todo
+        return doSearch(searchMarker.withLimit(limit));
     }
 
     @Override
     public List<T> searchEach(int limit) {
         log.debug("searchEach({})", limit);
-        return null; // todo
+        return doSearch(newSearchMarker().withLimit(limit).with("*", "*"));
     }
 
     @Override
     public List<T> searchEach() {
         log.debug("searchEach()");
-        return searchEach(SearchMarker.UNLIMITED_LIMIT);
+        return doSearch(newSearchMarker().with("*", "*"));
     }
 
     @Override
     public SearchMarker<T> newSearchMarker() {
-        return new SearchMarker<>(entityClass);
+        return new SearchMarker<>(new SearchMarker.ProxiedParametersFounder<>(entityClass));
     }
 
-    private void checkExternalsAndInsert(EntityDescriptor entity) {
+    private void checkExternalsBeforeInsert(EntityDescriptor entity) {
         List<EntityParametersDescriptor.ParameterUnit> externalUnits = entity.getParameters().getExternalUnits();
 
         if (!externalUnits.isEmpty()) {
@@ -224,6 +251,15 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
                 externalUnit.setType(int.class);
             }
+        }
+    }
+
+    private void checkExternalsAfterSearch(EntityDescriptor entity) {
+        for (EntityParametersDescriptor.ParameterUnit externalUnit : entity.getParameters().getExternalUnits()) {
+            EntityParametersDescriptor.ParameterUnit externalUnitId = EntityReadAndWriteUtil.read(externalUnit.getType())
+                    .getParameters()
+                    .findIdUnit()
+                    .orElse(null);
         }
     }
 

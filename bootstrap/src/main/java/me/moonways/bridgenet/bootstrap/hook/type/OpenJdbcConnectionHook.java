@@ -11,7 +11,7 @@ import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
 import me.moonways.bridgenet.jdbc.core.observer.ObserverAdapter;
 import me.moonways.bridgenet.jdbc.core.observer.event.*;
-import me.moonways.bridgenet.jdbc.entity.EntityRepositoryAllocator;
+import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
 import me.moonways.bridgenet.jdbc.provider.BridgenetJdbcProvider;
 import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
 import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
@@ -50,7 +50,7 @@ public class OpenJdbcConnectionHook extends ApplicationBootstrapHook {
         beansService.bind(databaseProvider);
         beansService.bind(composer);
         beansService.bind(databaseConnection);
-        beansService.bind(new EntityRepositoryAllocator(composer, databaseConnection));
+        beansService.bind(new EntityRepositoryFactory(composer, databaseConnection));
     }
 
     private BridgenetJdbcProvider.JdbcSettingsConfig readSettings() {

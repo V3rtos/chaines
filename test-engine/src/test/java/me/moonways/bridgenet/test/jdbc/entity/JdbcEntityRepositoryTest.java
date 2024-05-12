@@ -4,12 +4,12 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.entity.EntityID;
 import me.moonways.bridgenet.jdbc.entity.EntityRepository;
-import me.moonways.bridgenet.jdbc.entity.EntityRepositoryAllocator;
+import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import me.moonways.bridgenet.test.engine.jdbc.entity.StatusEntity;
 import me.moonways.bridgenet.test.engine.jdbc.entity.UserEntity;
+import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,23 +25,24 @@ public class JdbcEntityRepositoryTest {
     private static final StatusEntity STATUS_2 = StatusEntity.builder().name("CEO_2").build();
     private static final StatusEntity STATUS_3 = StatusEntity.builder().name("CEO_3").build();
 
-    private static final UserEntity USER_1 = UserEntity.builder().firstName("Oleg").lastName("Saburov").statusEntity(STATUS_1).build();
-    private static final UserEntity USER_2 = UserEntity.builder().firstName("Piter").lastName("Parker").statusEntity(STATUS_2).build();
-    private static final UserEntity USER_3 = UserEntity.builder().firstName("Mark").lastName("Zukerberg").statusEntity(STATUS_3).build();
+    private static final UserEntity USER_1 = UserEntity.builder().firstName("Oleg").lastName("Saburov").age(36).statusEntity(STATUS_1).build();
+    private static final UserEntity USER_2 = UserEntity.builder().firstName("Piter").lastName("Parker").age(17).statusEntity(STATUS_2).build();
+    private static final UserEntity USER_3 = UserEntity.builder().firstName("Mark").lastName("Zukerberg").age(45).statusEntity(STATUS_3).build();
 
     private EntityRepository<StatusEntity> statusRepository;
     private EntityRepository<UserEntity> userRepository;
 
     @Inject
-    private EntityRepositoryAllocator repositoryAllocator;
+    private EntityRepositoryFactory repositoryFactory;
 
     @Before
     public void setUp() {
-        this.statusRepository = repositoryAllocator.allocate(StatusEntity.class);
-        this.userRepository = repositoryAllocator.allocate(UserEntity.class);
+        this.statusRepository = repositoryFactory.fromEntityType(StatusEntity.class);
+        this.userRepository = repositoryFactory.fromEntityType(UserEntity.class);
     }
 
     @Test
+    @Order(0)
     public void test_userInsert() {
         EntityID entityID = userRepository.insert(USER_2);
         assertEquals(1, entityID.getId());
@@ -61,7 +62,7 @@ public class JdbcEntityRepositoryTest {
     }
 
     @Test
-    @Ignore
+    @Order(1)
     public void test_userGet() {
         Optional<UserEntity> userOptional = userRepository.searchIf(
                 userRepository.newSearchMarker()

@@ -1,21 +1,46 @@
 package me.moonways.bridgenet.jdbc.entity.util.search;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import javassist.util.proxy.MethodHandler;
 import me.moonways.bridgenet.jdbc.entity.util.EntityPersistenceUtil;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
-@RequiredArgsConstructor
-public class EntityMethodHandler {
+public class EntityMethodHandler implements MethodHandler {
 
-    @Getter
-    private final List<String> expectedParametersByName = Collections.synchronizedList(new LinkedList<>());
+    private final AtomicReference<String> invokedIdRef = new AtomicReference<>();
 
-    public Object handle(Object source, Method method, Object[] args) {
+    public Optional<String> getInvocation() {
+        return Optional.ofNullable(invokedIdRef.get());
+    }
+
+    @Override
+    public Object invoke(Object source, Method method, Method proceed, Object[] args) throws Throwable {
+        invokedIdRef.set(null);
         if (EntityPersistenceUtil.isParameter(method)) {
-            expectedParametersByName.add(EntityPersistenceUtil.getParameterId(method));
+            invokedIdRef.set(EntityPersistenceUtil.getParameterId(method));
+        }
+        return defaultReturn(method.getReturnType());
+    }
+
+    public static Object defaultReturn(Class<?> returnType) {
+        if (returnType.isPrimitive() && !returnType.equals(boolean.class)) {
+            if (returnType.equals(long.class)) { // fuck java cast
+                return 0L;
+            } else {
+                return 0;
+            }
+        }
+        if (Number.class.isAssignableFrom(returnType)) {
+            if (returnType.equals(Long.class)) { // fuck java cast
+                return 0L;
+            } else {
+                return 0;
+            }
+        }
+        if (returnType.equals(boolean.class) || returnType.equals(Boolean.class)) {
+            return false;
         }
         return null;
     }

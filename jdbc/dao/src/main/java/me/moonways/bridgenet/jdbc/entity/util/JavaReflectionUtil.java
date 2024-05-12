@@ -1,12 +1,25 @@
 package me.moonways.bridgenet.jdbc.entity.util;
 
 import lombok.experimental.UtilityClass;
+import sun.misc.Unsafe;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
 @UtilityClass
 public class JavaReflectionUtil {
+
+    private static final Unsafe UNSAFE;
+    static {
+        try {
+            Field unsafeInstanceField = Unsafe.class.getDeclaredField("theUnsafe");
+            unsafeInstanceField.setAccessible(true);
+
+            UNSAFE = ((Unsafe) unsafeInstanceField.get(null));
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 
     public void setFieldValue(Object instance, String name, Object value) {
         Field field = getField(instance, name);
@@ -31,8 +44,8 @@ public class JavaReflectionUtil {
         Object instance = tryCreateInstanceByConstructor(cls);
         if (instance == null) {
             try {
-                return cls.newInstance();
-            } catch (InstantiationException | IllegalAccessException exception) {
+                return UNSAFE.allocateInstance(cls);
+            } catch (InstantiationException exception) {
                 throw new RuntimeException(exception);
             }
         }

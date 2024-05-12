@@ -6,12 +6,16 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.jdbc.core.compose.*;
 import me.moonways.bridgenet.jdbc.core.compose.template.CreationTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.InsertionTemplate;
+import me.moonways.bridgenet.jdbc.core.compose.template.SearchTemplate;
+import me.moonways.bridgenet.jdbc.core.compose.template.collection.PredicatesTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.collection.SignatureTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedQuery;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
+import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,6 +34,34 @@ class EntityOperationComposer {
     }
 
     private final DatabaseComposer composer;
+
+    public EntityComposedOperation composeSearch(EntityDescriptor entity, SearchMarker<?> searchMarker) {
+        SearchTemplate searchTemplate = composer.useSearchPattern()
+                .container(entity.getContainerName())
+                .limit(searchMarker.getLimit())
+                .subjects(composer.subjects()
+                        .selectAll()
+                        .combine());
+
+        PredicatesTemplate predicates = composer.predicates();
+
+        for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
+            String parameterId = parameterUnit.getId();
+            if (searchMarker.isExpectationAwait(parameterId)) {
+                predicates = predicates.ifEqual(
+                        CombinedStructs.CombinedField.builder()
+                                .label(parameterId)
+                                .value(searchMarker.getExpectation(parameterId))
+                                .build()
+                ).and(); // todo - customize
+            }
+        }
+
+        return EntityComposedOperation.builder()
+                .queries(Collections.singletonList(searchTemplate.combine()))
+                .resultIndex(0)
+                .build();
+    }
 
     public EntityComposedOperation composeInsert(EntityDescriptor entity) {
         return EntityComposedOperation.builder()

@@ -162,7 +162,7 @@ public class EntityPersistenceUtil {
     @Getter
     @Setter
     @ToString
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor
     public static class WrappedEntityParameter {
 
         private EntityParametersDescriptor.ParameterUnit unit;
