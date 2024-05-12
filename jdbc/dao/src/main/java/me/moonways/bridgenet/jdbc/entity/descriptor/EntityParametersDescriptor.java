@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @ToString
 @EqualsAndHashCode
@@ -63,6 +64,14 @@ public class EntityParametersDescriptor {
         private Class<?> type;
         @Setter
         private Object value;
+
+        public boolean isMaybeStatical() {
+            return Stream.of(indexes).anyMatch(this::isMaybeStatical);
+        }
+
+        private boolean isMaybeStatical(ParameterAddon parameterAddon) {
+            return parameterAddon == ParameterAddon.INCREMENTING || parameterAddon == ParameterAddon.UNIQUE || parameterAddon == ParameterAddon.PRIMARY;
+        }
 
         public Method findGetter(Class<?> source) {
             for (Method declaredMethod : source.getDeclaredMethods()) {

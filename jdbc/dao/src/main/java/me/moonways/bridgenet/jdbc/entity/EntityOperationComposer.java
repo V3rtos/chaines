@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.jdbc.core.compose.*;
 import me.moonways.bridgenet.jdbc.core.compose.template.CreationTemplate;
+import me.moonways.bridgenet.jdbc.core.compose.template.DeletionTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.InsertionTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.SearchTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.collection.PredicatesTemplate;
@@ -36,14 +37,31 @@ class EntityOperationComposer {
 
     private final DatabaseComposer composer;
 
-    public EntityComposedOperation composeSearch(EntityDescriptor entity, SearchMarker<?> searchMarker) {
-        SearchTemplate searchTemplate = composer.useSearchPattern()
-                .container(entity.getContainerName())
-                .limit(searchMarker.getLimit())
-                .subjects(composer.subjects()
-                        .selectAll()
-                        .combine());
+    public EntityComposedOperation composeDelete(EntityDescriptor entity, SearchMarker<?> searchMarker) {
+        return EntityComposedOperation.builder()
+                .queries(Collections.singletonList(composer.useDeletionPattern()
+                        .container(entity.getContainerName())
+                        .predicates(composePredicatesTemplate(entity, searchMarker).combine())
+                        .combine()))
+                .resultIndex(0)
+                .build();
+    }
 
+    public EntityComposedOperation composeSearch(EntityDescriptor entity, SearchMarker<?> searchMarker) {
+        return EntityComposedOperation.builder()
+                .queries(Collections.singletonList(composer.useSearchPattern()
+                        .container(entity.getContainerName())
+                        .limit(searchMarker.getLimit())
+                        .subjects(composer.subjects()
+                                .selectAll()
+                                .combine())
+                        .predicates(composePredicatesTemplate(entity, searchMarker).combine())
+                        .combine()))
+                .resultIndex(0)
+                .build();
+    }
+
+    private PredicatesTemplate composePredicatesTemplate(EntityDescriptor entity, SearchMarker<?> searchMarker) {
         PredicatesTemplate predicates = composer.predicates();
 
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
@@ -56,7 +74,7 @@ class EntityOperationComposer {
                     throw new NullPointerException("expectation for " + parameterId + " from " + entity.getRootClass());
                 }
 
-                predicates = composeSearchPredicates(predicates, searchElement,
+                predicates = fillPredicationElement(predicates, searchElement,
                         CombinedStructs.CombinedField.builder()
                                 .label(parameterId)
                                 .value(searchElement.getExpectation())
@@ -64,13 +82,10 @@ class EntityOperationComposer {
             }
         }
 
-        return EntityComposedOperation.builder()
-                .queries(Collections.singletonList(searchTemplate.combine()))
-                .resultIndex(0)
-                .build();
+        return predicates;
     }
 
-    private PredicatesTemplate composeSearchPredicates(PredicatesTemplate predicates, SearchElement<?> searchElement, CombinedStructs.CombinedField field) {
+    private PredicatesTemplate fillPredicationElement(PredicatesTemplate predicates, SearchElement<?> searchElement, CombinedStructs.CombinedField field) {
         PredicatesTemplate.PredicationAgent predicationAgent = null;
         switch (searchElement.getMatcher()) {
             case LESS: {

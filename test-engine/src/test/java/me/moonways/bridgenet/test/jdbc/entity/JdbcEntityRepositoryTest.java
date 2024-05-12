@@ -5,6 +5,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.entity.EntityID;
 import me.moonways.bridgenet.jdbc.entity.EntityRepository;
 import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
+import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import me.moonways.bridgenet.test.engine.jdbc.entity.StatusEntity;
 import me.moonways.bridgenet.test.engine.jdbc.entity.UserEntity;
@@ -15,8 +16,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @Log4j2
 @RunWith(BridgenetJUnitTestRunner.class)
@@ -84,5 +84,35 @@ public class JdbcEntityRepositoryTest {
 
         assertTrue(statusOptional.isPresent());
         log.debug("Founded status: {}", statusOptional.orElse(null));
+    }
+
+    @Test
+    @Order(3)
+    public void test_userDelete() {
+        SearchMarker<UserEntity> searchMarker = userRepository.newSearchMarker()
+                .withGet(UserEntity::getId, 1)
+                .withGet(UserEntity::getFirstName, USER_1.getFirstName());
+
+        userRepository.deleteIf(searchMarker);
+
+        Optional<UserEntity> userOptional = userRepository.searchIf(searchMarker);
+
+        assertFalse(userOptional.isPresent());
+        log.debug("User is deleted successful");
+    }
+
+    @Test
+    @Order(4)
+    public void test_statusDelete() {
+        SearchMarker<StatusEntity> searchMarker = statusRepository.newSearchMarker()
+                .withGet(StatusEntity::getId, 1)
+                .withGet(StatusEntity::getName, STATUS_1.getName());
+
+        statusRepository.deleteIf(searchMarker);
+
+        Optional<StatusEntity> statusOptional = statusRepository.searchIf(searchMarker);
+
+        assertFalse(statusOptional.isPresent());
+        log.debug("Status is deleted successful");
     }
 }

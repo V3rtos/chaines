@@ -35,6 +35,18 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     private final DatabaseComposer composer;
     private final DatabaseConnection connection;
 
+    private void doCallDelete(SearchMarker<T> searchMarker) {
+        EntityOperationComposer.EntityComposedOperation operation =
+                new EntityOperationComposer(composer)
+                        .composeDelete(EntityReadAndWriteUtil.read(entityClass), searchMarker);
+        justCall(operation);
+    }
+
+    private void justCall(EntityOperationComposer.EntityComposedOperation operation) {
+        CompletedQuery completedQuery = operation.getQueries().get(operation.getResultIndex());
+        completedQuery.call(connection);
+    }
+
     @Override
     public void delete(Long id) {
         log.debug("delete({})", id);
@@ -51,7 +63,30 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     @Override
     public void delete(T entity) {
         log.debug("delete({})", entity);
-        // todo
+
+        EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entity);
+        EntityParametersDescriptor parameters = entityDescriptor.getParameters();
+
+        Optional<EntityParametersDescriptor.ParameterUnit> idUnitOptional = parameters.findIdUnit();
+
+        if (idUnitOptional.isPresent()) {
+            deleteIf(newSearchMarker().with(idUnitOptional.get().getId(), entityDescriptor.getId().getId()));
+        } else {
+            SearchMarker<T> searchMarker = newSearchMarker();
+            List<EntityParametersDescriptor.ParameterUnit> parameterUnits = parameters.getParameterUnits();
+
+            parameterUnits.stream()
+                    .filter(EntityParametersDescriptor.ParameterUnit::isMaybeStatical)
+                    .forEach(parameterUnit ->
+                            searchMarker.with(parameterUnit.getId(), parameterUnit.getValue()));
+
+            if (searchMarker.getExpectationMap().isEmpty()) {
+                parameterUnits.forEach(parameterUnit ->
+                                searchMarker.with(parameterUnit.getId(), parameterUnit.getValue()));
+            }
+
+            deleteIf(searchMarker);
+        }
     }
 
     @Override
@@ -80,7 +115,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     @Override
     public void deleteIf(SearchMarker<T> searchMarker) {
         log.debug("deleteIf({})", searchMarker);
-        // todo
+        doCallDelete(searchMarker);
     }
 
     @Override
