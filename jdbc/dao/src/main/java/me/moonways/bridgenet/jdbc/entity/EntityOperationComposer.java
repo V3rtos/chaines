@@ -12,6 +12,7 @@ import me.moonways.bridgenet.jdbc.core.compose.template.collection.SignatureTemp
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedQuery;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
+import me.moonways.bridgenet.jdbc.entity.util.search.SearchElement;
 import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
 
 import java.util.Arrays;
@@ -47,13 +48,19 @@ class EntityOperationComposer {
 
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
             String parameterId = parameterUnit.getId();
+
             if (searchMarker.isExpectationAwait(parameterId)) {
-                predicates = predicates.ifEqual(
+                SearchElement<?> searchElement = searchMarker.getExpectation(parameterId);
+
+                if (searchElement == null) {
+                    throw new NullPointerException("expectation for " + parameterId + " from " + entity.getRootClass());
+                }
+
+                predicates = composeSearchPredicates(predicates, searchElement,
                         CombinedStructs.CombinedField.builder()
                                 .label(parameterId)
-                                .value(searchMarker.getExpectation(parameterId))
-                                .build()
-                ).and(); // todo - customize
+                                .value(searchElement.getExpectation())
+                                .build());
             }
         }
 
@@ -61,6 +68,51 @@ class EntityOperationComposer {
                 .queries(Collections.singletonList(searchTemplate.combine()))
                 .resultIndex(0)
                 .build();
+    }
+
+    private PredicatesTemplate composeSearchPredicates(PredicatesTemplate predicates, SearchElement<?> searchElement, CombinedStructs.CombinedField field) {
+        PredicatesTemplate.PredicationAgent predicationAgent = null;
+        switch (searchElement.getMatcher()) {
+            case LESS: {
+                predicationAgent = predicates.ifLessThen(field);
+                break;
+            }
+            case LESS_OR_EQUAL: {
+                predicationAgent = predicates.ifLessOrEqual(field);
+                break;
+            }
+            case MORE: {
+                predicationAgent = predicates.ifMoreThen(field);
+                break;
+            }
+            case MORE_OR_EQUAL: {
+                predicationAgent = predicates.ifMoreOrEqual(field);
+                break;
+            }
+            case MATCHES: {
+                predicationAgent = predicates.ifMatches(field);
+                break;
+            }
+            case EQUALS: {
+                predicationAgent = predicates.ifEqual(field);
+                break;
+            }
+        }
+        switch (searchElement.getBinder()) {
+            case OR: {
+                predicates = predicationAgent.or();
+                break;
+            }
+            case AND: {
+                predicates = predicationAgent.and();
+                break;
+            }
+            case WHERE: {
+                predicates = predicationAgent.bind();
+                break;
+            }
+        }
+        return predicates;
     }
 
     public EntityComposedOperation composeInsert(EntityDescriptor entity) {

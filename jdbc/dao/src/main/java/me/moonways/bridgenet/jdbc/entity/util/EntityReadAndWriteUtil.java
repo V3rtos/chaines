@@ -1,13 +1,19 @@
 package me.moonways.bridgenet.jdbc.entity.util;
 
 import lombok.experimental.UtilityClass;
+import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.ResponseRow;
+import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
+import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
 import me.moonways.bridgenet.jdbc.entity.EntityID;
+import me.moonways.bridgenet.jdbc.entity.EntityRepository;
+import me.moonways.bridgenet.jdbc.entity.ForceEntityRepository;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @UtilityClass
 public class EntityReadAndWriteUtil {
@@ -72,16 +78,32 @@ public class EntityReadAndWriteUtil {
                 EntityID.createGenerated((Long) identifyParam.getUnit().getValue()));
     }
 
-    public Object write(EntityDescriptor entity) {
+    public Object write(EntityDescriptor entity, DatabaseComposer composer, DatabaseConnection connection) {
         Object instance = JavaReflectionUtil.createInstance(entity.getRootClass());
 
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
             Optional<String> fieldNameOptional = EntityParameterNameUtil.fromGetter(parameterUnit.findGetter(entity.getRootClass()));
 
+            AtomicReference<Object> valueRef = new AtomicReference<>(parameterUnit.getValue());
+
+            if (parameterUnit.isExternal()) {
+                valueRef.set(findExternalValue(parameterUnit, composer, connection));
+            }
+
             fieldNameOptional.ifPresent(name ->
-                    JavaReflectionUtil.setFieldValue(instance, name, parameterUnit.getValue()));
+                    JavaReflectionUtil.setFieldValue(instance, name, valueRef.get()));
         }
 
         return instance;
+    }
+
+    private Object findExternalValue(EntityParametersDescriptor.ParameterUnit parameterUnit,
+                                     DatabaseComposer composer, DatabaseConnection connection) {
+        // урааа костыли
+        EntityRepository<?> externalEntityRepository = new ForceEntityRepository<>(parameterUnit.getType(), composer, connection);
+        Long externalId = Long.parseLong(parameterUnit.getValue().toString());
+
+        return externalEntityRepository.search(externalId)
+                .orElseThrow(() -> new DatabaseEntityException("External entity with ID:{" + parameterUnit.getValue() + "} by type " + parameterUnit.getType() + " is not founded"));
     }
 }

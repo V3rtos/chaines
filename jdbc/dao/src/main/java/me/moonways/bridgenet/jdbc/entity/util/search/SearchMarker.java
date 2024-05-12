@@ -3,6 +3,9 @@ package me.moonways.bridgenet.jdbc.entity.util.search;
 import javassist.util.proxy.ProxyFactory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import me.moonways.bridgenet.jdbc.core.compose.ConditionBinder;
+import me.moonways.bridgenet.jdbc.core.compose.ConditionMatcher;
 import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
 
 import java.lang.reflect.Constructor;
@@ -10,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Function;
 
+@ToString(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
 public final class SearchMarker<T> {
 
@@ -18,9 +22,12 @@ public final class SearchMarker<T> {
     private final ProxiedParametersFounder<T> founder;
 
     @Getter
+    @ToString.Include
     private int limit = UNLIMITED_LIMIT;
+
     @Getter
-    private Map<String, Object> expectationMap;
+    @ToString.Include
+    private Map<String, SearchElement<?>> expectationMap;
 
     public SearchMarker<T> withLimit(int limit) {
         this.limit = limit;
@@ -36,14 +43,41 @@ public final class SearchMarker<T> {
     }
 
     public <E> SearchMarker<T> withGet(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), expected);
+        return withGet(parameterGetter, SearchElement.<E>builder()
+                .expectation(expected)
+                .build());
     }
 
-    public SearchMarker<T> with(String name, Object expectedValue) {
+    public <E> SearchMarker<T> withGet(Function<T, E> parameterGetter, SearchElement<E> element) {
+        return with(findParameterId(parameterGetter), element);
+    }
+
+    public SearchMarker<T> with(String name, Object expected) {
+        return with(name, SearchElement.builder()
+                .expectation(expected)
+                .build());
+    }
+
+    public SearchMarker<T> with(String name, SearchElement<?> element) {
+        if (element.getExpectation() == null) {
+            throw new NullPointerException("SearchElement#getExpectation() not filled");
+        }
+
         if (expectationMap == null) {
             expectationMap = Collections.synchronizedMap(new HashMap<>());
         }
-        expectationMap.put(name.toLowerCase(), expectedValue);
+
+        if (element.getMatcher() == null) {
+            element = element.toBuilder()
+                    .matcher(ConditionMatcher.EQUALS)
+                    .build();
+        }
+        if (element.getBinder() == null) {
+            element = element.toBuilder()
+                    .binder(ConditionBinder.AND)
+                    .build();
+        }
+        expectationMap.put(name.toLowerCase(), element);
         return this;
     }
 
@@ -54,7 +88,7 @@ public final class SearchMarker<T> {
         return expectationMap.containsKey(id.toLowerCase());
     }
 
-    public Object getExpectation(String id) {
+    public SearchElement<?> getExpectation(String id) {
         if (expectationMap == null) {
             return null;
         }

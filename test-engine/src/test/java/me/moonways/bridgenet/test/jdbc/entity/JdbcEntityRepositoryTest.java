@@ -16,14 +16,15 @@ import org.junit.runner.RunWith;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @Log4j2
 @RunWith(BridgenetJUnitTestRunner.class)
 public class JdbcEntityRepositoryTest {
 
-    private static final StatusEntity STATUS_1 = StatusEntity.builder().name("CEO_1").build();
-    private static final StatusEntity STATUS_2 = StatusEntity.builder().name("CEO_2").build();
-    private static final StatusEntity STATUS_3 = StatusEntity.builder().name("CEO_3").build();
+    private static final StatusEntity STATUS_1 = StatusEntity.builder().name("StandUp").build();
+    private static final StatusEntity STATUS_2 = StatusEntity.builder().name("SpiderMan").build();
+    private static final StatusEntity STATUS_3 = StatusEntity.builder().name("CEO").build();
 
     private static final UserEntity USER_1 = UserEntity.builder().firstName("Oleg").lastName("Saburov").age(36).statusEntity(STATUS_1).build();
     private static final UserEntity USER_2 = UserEntity.builder().firstName("Piter").lastName("Parker").age(17).statusEntity(STATUS_2).build();
@@ -44,7 +45,7 @@ public class JdbcEntityRepositoryTest {
     @Test
     @Order(0)
     public void test_userInsert() {
-        EntityID entityID = userRepository.insert(USER_2);
+        EntityID entityID = userRepository.insert(USER_1);
         assertEquals(1, entityID.getId());
 
         log.debug("Inserted user identify: {}", entityID);
@@ -66,9 +67,22 @@ public class JdbcEntityRepositoryTest {
     public void test_userGet() {
         Optional<UserEntity> userOptional = userRepository.searchIf(
                 userRepository.newSearchMarker()
-                        .withGet(UserEntity::getId, 2)
-                        .withGet(UserEntity::getFirstName, "Piter"));
+                        .withGet(UserEntity::getId, 1)
+                        .withGet(UserEntity::getFirstName, USER_1.getFirstName()));
 
+        assertTrue(userOptional.isPresent());
         log.debug("Founded user: {}", userOptional.orElse(null));
+    }
+
+    @Test
+    @Order(2)
+    public void test_statusGet() {
+        Optional<StatusEntity> statusOptional = statusRepository.searchIf(
+                statusRepository.newSearchMarker()
+                        .withGet(StatusEntity::getId, 1)
+                        .withGet(StatusEntity::getName, STATUS_1.getName()));
+
+        assertTrue(statusOptional.isPresent());
+        log.debug("Founded status: {}", statusOptional.orElse(null));
     }
 }

@@ -162,7 +162,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
             EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
             checkExternalsAfterSearch(entityDescriptor);
 
-            Object entity = EntityReadAndWriteUtil.write(entityDescriptor);
+            Object entity = EntityReadAndWriteUtil.write(entityDescriptor, composer, connection);
 
             //noinspection unchecked
             entitisList.add((V) entity);
