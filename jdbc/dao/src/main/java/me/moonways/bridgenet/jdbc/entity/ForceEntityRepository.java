@@ -134,7 +134,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     @Override
     public void updateIf(T entity, SearchMarker<T> searchMarker) {
         log.debug("updateIf({}, {})", entity, searchMarker);
-        // todo
+        throw new UnsupportedOperationException("jdbc-core is not supported UPDATE function");
     }
 
     private EntityID callAndGetEntityId(EntityOperationComposer.EntityComposedOperation operation) {
