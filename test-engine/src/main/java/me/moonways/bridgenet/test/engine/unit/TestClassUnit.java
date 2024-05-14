@@ -3,6 +3,7 @@ package me.moonways.bridgenet.test.engine.unit;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.test.engine.persistance.PutTestUnit;
 import me.moonways.bridgenet.test.engine.persistance.Order;
 import org.junit.runner.notification.RunNotifier;
 
@@ -10,11 +11,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 @Log4j2
 @RequiredArgsConstructor
-public class TestObjectUnit {
+public class TestClassUnit {
 
     private final RunNotifier notifier;
     private final Object source;
@@ -75,5 +78,17 @@ public class TestObjectUnit {
         }
 
         return methods.toArray(new Method[0]);
+    }
+
+    public Set<ExternalUnit> getDelegateExternalsUnits() {
+        return Stream.of(source.getClass().getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(PutTestUnit.class))
+                .map(field -> ExternalUnit.builder()
+                        .instance(source)
+                        .testClass(field.getType())
+                        .factoryProvider(field.getDeclaredAnnotation(PutTestUnit.class).factory())
+                        .field(field)
+                        .build())
+                .collect(Collectors.toSet());
     }
 }
