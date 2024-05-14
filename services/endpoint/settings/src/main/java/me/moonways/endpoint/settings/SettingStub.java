@@ -1,5 +1,7 @@
 package me.moonways.endpoint.settings;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.model.settings.Setting;
 import me.moonways.bridgenet.model.settings.SettingID;
@@ -12,10 +14,16 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SettingStub<T> implements Setting<T> {
 
     private final SettingID<T> id;
     private T value;
+
+    @Override
+    public Setting<T> copy() throws RemoteException {
+        return new SettingStub<>(id, value);
+    }
 
     @Override
     public SettingID<T> id() {

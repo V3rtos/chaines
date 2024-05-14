@@ -14,7 +14,7 @@ public final class SettingID<T> {
 // ================================================================================================================================== //
 
     private static <T> SettingID<T> createID(String name, Class<T> type) {
-        return new SettingID<T>(UUID.nameUUIDFromBytes(name.getBytes()), name, type);
+        return new SettingID<>(UUID.nameUUIDFromBytes(name.getBytes()), name, type);
     }
 
 // ================================================================================================================================== //
@@ -38,6 +38,23 @@ public final class SettingID<T> {
     public static final SettingID<Boolean> BOSS_BAR_VISIBILITY          = createID("bossBarVisibility", Boolean.class);
     public static final SettingID<Boolean> LEVEL_VISIBILITY             = createID("levelVisibility", Boolean.class);
     public static final SettingID<Boolean> PLAYERS_AT_LOBBY_VISIBILITY  = createID("playersAtLobbyVisibility", Boolean.class);
+
+    public static final SettingID<?>[] TYPES = {
+            GLOWING_COLOR,
+            GLOWING_ALLOW,
+            PERSONAL_MESSAGES_ALLOW,
+            AUTO_FLIGHT_MODE_ON_JOIN,
+            AUTO_ANNOUNCEMENTS_AT_CHAT,
+            PARTIES_INVITATION_ALLOW,
+            FRIENDS_INVITATION_ALLOW,
+            GUILDS_INVITATION_ALLOW,
+            SOCIALS_VISIBILITY,
+            GUILD_VISIBILITY,
+            FRIENDS_VISIBILITY,
+            BOSS_BAR_VISIBILITY,
+            LEVEL_VISIBILITY,
+            PLAYERS_AT_LOBBY_VISIBILITY,
+    };
 
 // ================================================================================================================================== //
 
