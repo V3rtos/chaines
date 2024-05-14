@@ -17,8 +17,8 @@ public class EntityID {
 
     private final long id;
 
-    public boolean isIncorrect() {
-        return id <= 0;
+    public boolean isValid() {
+        return id > 0;
     }
 
     public boolean isNotFound() {

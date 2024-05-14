@@ -51,7 +51,7 @@ public class JdbcEntityRepositoryTest {
 
         log.debug("Inserted user identify: {}", entityID);
 
-        if (entityID.isIncorrect()) {
+        if (!entityID.isValid()) {
 
             if (entityID.isNotFound()) {
                 log.debug("entity id is not found");
