@@ -14,7 +14,7 @@ build:
   interruptible: true
   tags:
     - $CI_RUNNER_TAG
-  script: /bin/bash bridgenet build
+  #script: /bin/bash bridgenet build
   artifacts:
     when: always
     expire_in: 5 days
@@ -28,8 +28,11 @@ test:
   tags:
     - $CI_RUNNER_TAG
   script:
-    - cp -R $CI_PROJECT_DIR/.m2 $HOME  # Копируем кеш Maven из джобы build в домашнюю директорию
-    - cd $CI_PROJECT_DIR  # Переходим в корневую директорию проекта
+    - cp -R $CI_PROJECT_DIR/.m2 $HOME
+    - cd $CI_PROJECT_DIR
+    - ls
+    - cd /test-engine
+    - ls
     - mvn test -pl test-engine
   dependencies:
     - build
