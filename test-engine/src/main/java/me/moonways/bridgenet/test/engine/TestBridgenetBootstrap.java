@@ -12,7 +12,7 @@ public final class TestBridgenetBootstrap {
     private static AppBootstrap bootstrap;
     private static final TestEngineExceptionFormatter EXCEPTION_FORMATTER = new TestEngineExceptionFormatter();
 
-    public void init(Object testObject) {
+    public BeansService init(Object testObject) {
         if (bootstrap == null) {
 
             log.info("Running initialization Bridgenet systems");
@@ -24,6 +24,8 @@ public final class TestBridgenetBootstrap {
 
         BeansService injector = bootstrap.getBeansService();
         injector.bind(testObject);
+
+        return injector;
     }
 
     public void throwException(Throwable exception) {

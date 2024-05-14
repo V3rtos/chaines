@@ -19,8 +19,6 @@ public class ModifyPlayersTableStructureTest {
     private static final String COMPLETED_QUERY_NATIVE = "";
 
     @Inject
-    private DatabaseProvider provider;
-    @Inject
     private DatabaseComposer composer;
 
     @Test

@@ -24,8 +24,6 @@ public class GetPlayerTest {
     private static final String COMPLETED_QUERY_NATIVE = "SELECT AVG(AGE) AS AVG_AGES, MIN(ID), ID FROM Players  OUTER JOIN PlayersAges ON ID = PlayersAges.ID WHERE NAME LIKE 'moonways_user' OR AGE = 5 GROUP BY ID ORDER BY AGE DESC LIMIT 2";
 
     @Inject
-    private DatabaseProvider provider;
-    @Inject
     private DatabaseComposer composer;
 
     @Test

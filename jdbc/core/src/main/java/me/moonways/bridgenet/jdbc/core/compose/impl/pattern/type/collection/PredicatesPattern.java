@@ -9,6 +9,7 @@ import me.moonways.bridgenet.jdbc.core.compose.ConditionMatcher;
 
 import java.util.LinkedList;
 
+@ToString
 public class PredicatesPattern implements PredicatesTemplate, CompletedPredicates {
 
     private final LinkedList<CompletedPredicateNodePattern> list = new LinkedList<>();
@@ -99,6 +100,7 @@ public class PredicatesPattern implements PredicatesTemplate, CompletedPredicate
         }
     }
 
+    @ToString
     @AllArgsConstructor
     private class CompletedPredicateNodePattern implements CompletedPredicateNode {
 
