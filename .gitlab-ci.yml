@@ -30,9 +30,7 @@ test:
   script:
     - cp -R $CI_PROJECT_DIR/.m2 $HOME
     - cd $CI_PROJECT_DIR
-    - ls
     - cd test-engine
-    - ls
     - mvn test
   dependencies:
     - build
