@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.engine.util;
+package me.moonways.bridgenet.test.engine.objects.mtp;
 
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;

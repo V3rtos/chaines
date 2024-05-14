@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.engine.jdbc.entity;
+package me.moonways.bridgenet.test.engine.objects.jdbc;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

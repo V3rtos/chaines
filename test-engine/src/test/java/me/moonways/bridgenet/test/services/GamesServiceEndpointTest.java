@@ -9,7 +9,7 @@ import me.moonways.bridgenet.model.games.*;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
 import me.moonways.bridgenet.test.engine.persistance.Order;
-import me.moonways.bridgenet.test.engine.util.TestMTPClientConnection;
+import me.moonways.bridgenet.test.engine.objects.mtp.TestMTPClientConnection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
