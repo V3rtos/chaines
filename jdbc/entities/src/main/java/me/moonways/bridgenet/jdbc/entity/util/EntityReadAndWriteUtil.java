@@ -31,7 +31,7 @@ public class EntityReadAndWriteUtil {
     public EntityDescriptor read(Class<?> entityType) {
         List<EntityPersistenceUtil.WrappedEntityParameter> parameters = EntityPersistenceUtil.getParameters(entityType);
         return EntityDescriptor.builder()
-                .id(EntityID.createNotFound())
+                .id(EntityID.NOT_FOUND)
                 .parameters(EntityParametersDescriptor.fromPersistenceList(parameters))
                 .containerName(EntityPersistenceUtil.getEntityName(entityType))
                 .rootClass(entityType)
@@ -74,8 +74,8 @@ public class EntityReadAndWriteUtil {
     }
 
     private EntityID toEntityID(EntityPersistenceUtil.WrappedEntityParameter identifyParam) {
-        return (identifyParam == null ? EntityID.createNotFound() :
-                EntityID.createGenerated((Long) identifyParam.getUnit().getValue()));
+        return (identifyParam == null ? EntityID.NOT_FOUND :
+                EntityID.fromId((Long) identifyParam.getUnit().getValue()));
     }
 
     public Object write(EntityDescriptor entity, DatabaseComposer composer, DatabaseConnection connection) {
