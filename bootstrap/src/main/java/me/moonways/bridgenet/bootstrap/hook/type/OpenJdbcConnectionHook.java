@@ -1,6 +1,5 @@
 package me.moonways.bridgenet.bootstrap.hook.type;
 
-import com.google.gson.Gson;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
@@ -27,8 +26,6 @@ public class OpenJdbcConnectionHook extends ApplicationBootstrapHook {
     private ResourcesAssembly assembly;
     @Inject
     private BridgenetMetricsLogger bridgenetMetricsLogger;
-    @Inject
-    private Gson gson;
 
     @Override
     protected void process(@NotNull AppBootstrap bootstrap) {
@@ -54,10 +51,8 @@ public class OpenJdbcConnectionHook extends ApplicationBootstrapHook {
     }
 
     private BridgenetJdbcProvider.JdbcSettingsConfig readSettings() {
-        return gson.fromJson(
-                assembly.readResourceFullContent(
-                        ResourcesTypes.JDBC_SETTINGS_JSON,
-                        StandardCharsets.UTF_8),
+        return assembly.readJsonAtEntity(ResourcesTypes.JDBC_SETTINGS_JSON,
+                StandardCharsets.UTF_8,
                 BridgenetJdbcProvider.JdbcSettingsConfig.class);
     }
 

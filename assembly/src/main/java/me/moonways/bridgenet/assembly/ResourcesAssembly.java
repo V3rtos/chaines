@@ -1,5 +1,7 @@
 package me.moonways.bridgenet.assembly;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
@@ -10,6 +12,8 @@ import java.nio.charset.Charset;
 
 @Log4j2
 public class ResourcesAssembly {
+
+    private static final Gson GSON = new GsonBuilder().setLenient().create();
 
     @Getter
     private final ResourcesClassLoader classLoader = new ResourcesClassLoader(ResourcesAssembly.class.getClassLoader());
@@ -73,6 +77,31 @@ public class ResourcesAssembly {
      */
     public String readResourceFullContent(String resourceName) {
         return StreamToStringUtils.toStringFull(readResourceStream(resourceName));
+    }
+
+    /**
+     * Прочитать полное содержание ресурса, спарсить
+     * полученный текст как json и создать по его шаблону
+     * и типа класса сущности объект.
+     *
+     * @param resourceName - наименование ресурса.
+     * @param charset - кодировка, в которой воспроизводить чтение.
+     * @param entity - тип сущности, в которую преобразовывать полученный json.
+     */
+    public <T> T readJsonAtEntity(String resourceName, Charset charset, Class<T> entity) {
+        return GSON.fromJson(readResourceFullContent(resourceName, charset), entity);
+    }
+
+    /**
+     * Прочитать полное содержание ресурса, спарсить
+     * полученный текст как json и создать по его шаблону
+     * и типа класса сущности объект.
+     *
+     * @param resourceName - наименование ресурса.
+     * @param entity - тип сущности, в которую преобразовывать полученный json.
+     */
+    public <T> T readJsonAtEntity(String resourceName, Class<T> entity) {
+        return GSON.fromJson(readResourceFullContent(resourceName), entity);
     }
 
     /**

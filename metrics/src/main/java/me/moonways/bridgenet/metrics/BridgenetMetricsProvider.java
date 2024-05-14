@@ -1,6 +1,8 @@
 package me.moonways.bridgenet.metrics;
 
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.metrics.chart.ChartType;
 import me.moonways.bridgenet.metrics.chart.ChartDataMapper;
 import me.moonways.bridgenet.metrics.quickchart.QuickChartApi;
@@ -8,7 +10,6 @@ import me.moonways.bridgenet.metrics.quickchart.dto.ChartData;
 import me.moonways.bridgenet.metrics.quickchart.dto.IllustrationRequest;
 import me.moonways.bridgenet.metrics.quickchart.dto.Options;
 import me.moonways.bridgenet.metrics.settings.MetricsSettings;
-import me.moonways.bridgenet.metrics.settings.MetricsSettingsParser;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -26,10 +27,13 @@ public final class BridgenetMetricsProvider {
     private static final String DEFAULT_IMAGE_BACKGROUND_COLOR = "transparent";
     private static final String DEFAULT_IMAGE_FORMAT = "png";
 
+    private static final ResourcesAssembly ASSEMBLY = new ResourcesAssembly();
+
     private final QuickChartApi api = new QuickChartApi();
 
     private final MetricsSettings settings; {
-        settings = new MetricsSettingsParser().readSettings();
+        settings = ASSEMBLY.readJsonAtEntity(ResourcesTypes.METRICS_SETTINGS_JSON,
+                MetricsSettings.class);
     }
 
     /**

@@ -34,8 +34,6 @@ public final class ConnectorEngine {
 
     @Inject
     private ResourcesAssembly assembly;
-    @Inject
-    private Gson gson;
 
     public void setProperties() {
         // jdbc settings.
@@ -70,10 +68,8 @@ public final class ConnectorEngine {
     }
 
     private BridgenetJdbcProvider.JdbcSettingsConfig readSettings() {
-        return gson.fromJson(
-                assembly.readResourceFullContent(
-                        ResourcesTypes.JDBC_SETTINGS_JSON,
-                        StandardCharsets.UTF_8),
+        return assembly.readJsonAtEntity(ResourcesTypes.JDBC_SETTINGS_JSON,
+                StandardCharsets.UTF_8,
                 BridgenetJdbcProvider.JdbcSettingsConfig.class);
     }
 
