@@ -78,32 +78,16 @@ public class EntityReadAndWriteUtil {
                 EntityID.fromId((Long) identifyParam.getUnit().getValue()));
     }
 
-    public Object write(EntityDescriptor entity, DatabaseComposer composer, DatabaseConnection connection) {
+    public Object write(EntityDescriptor entity) {
         Object instance = JavaReflectionUtil.createInstance(entity.getRootClass());
 
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
             Optional<String> fieldNameOptional = EntityParameterNameUtil.fromGetter(parameterUnit.findGetter(entity.getRootClass()));
 
-            AtomicReference<Object> valueRef = new AtomicReference<>(parameterUnit.getValue());
-
-            if (parameterUnit.isExternal()) {
-                valueRef.set(findExternalValue(parameterUnit, composer, connection));
-            }
-
             fieldNameOptional.ifPresent(name ->
-                    JavaReflectionUtil.setFieldValue(instance, name, valueRef.get()));
+                    JavaReflectionUtil.setFieldValue(instance, name, parameterUnit.getValue()));
         }
 
         return instance;
-    }
-
-    private Object findExternalValue(EntityParametersDescriptor.ParameterUnit parameterUnit,
-                                     DatabaseComposer composer, DatabaseConnection connection) {
-        // урааа костыли
-        EntityRepository<?> externalEntityRepository = new ForceEntityRepository<>(parameterUnit.getType(), composer, connection);
-        Long externalId = Long.parseLong(parameterUnit.getValue().toString());
-
-        return externalEntityRepository.search(externalId)
-                .orElseThrow(() -> new DatabaseEntityException("External entity with ID:{" + parameterUnit.getValue() + "} by type " + parameterUnit.getType() + " is not founded"));
     }
 }

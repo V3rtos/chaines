@@ -197,7 +197,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
             EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
             checkExternalsAfterSearch(entityDescriptor);
 
-            Object entity = EntityReadAndWriteUtil.write(entityDescriptor, composer, connection);
+            Object entity = EntityReadAndWriteUtil.write(entityDescriptor);
 
             //noinspection unchecked
             entitisList.add((V) entity);
@@ -291,11 +291,20 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
     private void checkExternalsAfterSearch(EntityDescriptor entity) {
         for (EntityParametersDescriptor.ParameterUnit externalUnit : entity.getParameters().getExternalUnits()) {
-            EntityParametersDescriptor.ParameterUnit externalUnitId = EntityReadAndWriteUtil.read(externalUnit.getType())
-                    .getParameters()
-                    .findIdUnit()
-                    .orElse(null);
+
+            Object externalEntity = researchExternalUnitValue(externalUnit);
+            externalUnit.setValue(externalEntity);
         }
+    }
+
+    private Object researchExternalUnitValue(EntityParametersDescriptor.ParameterUnit externalUnit) {
+        Object value = externalUnit.getValue();
+        Class<?> type = externalUnit.getType();
+
+        EntityRepository<?> externalEntityRepository = new ForceEntityRepository<>(type, composer, connection);
+
+        return externalEntityRepository.search(Long.parseLong(value.toString()))
+                .orElseThrow(() -> new DatabaseEntityException("External entity with ID:{" + value + "} by type " + type + " is not founded"));
     }
 
     private Optional<String> findEntityIDParameterName() {
