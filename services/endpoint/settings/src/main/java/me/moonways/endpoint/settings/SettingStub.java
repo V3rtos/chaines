@@ -28,8 +28,8 @@ public class SettingStub<T> implements Setting<T> {
     }
 
     @Override
-    public boolean isDisabled() throws RemoteException {
-        return SettingStub.isDisabled(this);
+    public boolean isEnabled() throws RemoteException {
+        return !SettingStub.isDisabled(this);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class SettingStub<T> implements Setting<T> {
 
     @Override
     public Setting<T> ifEnabled(Consumer<T> consumer) throws RemoteException {
-        if (value != null && !isDisabled()) {
+        if (isEnabled()) {
             consumer.accept(value);
         }
         return this;
@@ -73,7 +73,7 @@ public class SettingStub<T> implements Setting<T> {
         if (type.equals(Boolean.class) || type.equals(boolean.class)) {
             return Objects.equals(settingStub.get(), DISABLED_BOOLEAN);
         }
-        if (type.isPrimitive()) {
+        if (type.isPrimitive() || Number.class.isAssignableFrom(type)) {
             return Objects.equals(settingStub.get(), DISABLED_NUMBER);
         }
 

@@ -64,6 +64,14 @@ public interface Setting<T> extends Remote {
     Setting<T> set(Supplier<T> value) throws RemoteException;
 
     /**
+     * Преобразовать значение пользовательской настройки в
+     * другое.
+     *
+     * @param function - маппер значения.
+     */
+    <R> Setting<R> map(Function<T, R> function) throws RemoteException;
+
+    /**
      * Данная функция применяет вводных консумер только в том случае,
      * если пользовательская настройка была включена относительно
      * нашего пользователя.
@@ -73,16 +81,8 @@ public interface Setting<T> extends Remote {
     Setting<T> ifEnabled(Consumer<T> enabledConsumer) throws RemoteException;
 
     /**
-     * Преобразовать значение пользовательской настройки в
-     * другое.
-     *
-     * @param function - маппер значения.
-     */
-    <R> Setting<R> map(Function<T, R> function) throws RemoteException;
-
-    /**
-     * Проверить, выключена ли пользовательская настройка
+     * Проверить, включена ли пользовательская настройка
      * относительно пользователя, из которого мы ее получили.
      */
-    boolean isDisabled() throws RemoteException;
+    boolean isEnabled() throws RemoteException;
 }
