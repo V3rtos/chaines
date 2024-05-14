@@ -7,12 +7,6 @@ import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
 import me.moonways.bridgenet.jdbc.core.compose.impl.PatternDatabaseComposerImpl;
 import me.moonways.bridgenet.jdbc.core.security.Credentials;
-import me.moonways.bridgenet.jdbc.core.transaction.PreparedTransaction;
-import me.moonways.bridgenet.jdbc.core.transaction.Transaction;
-import me.moonways.bridgenet.jdbc.core.transaction.TransactionFactory;
-import me.moonways.bridgenet.jdbc.core.transaction.TransactionQuery;
-import me.moonways.bridgenet.jdbc.core.transaction.impl.DatabaseTransactionQuery;
-import me.moonways.bridgenet.jdbc.core.transaction.repository.TransactionRepository;
 import me.moonways.bridgenet.jdbc.core.wrap.JdbcWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,8 +24,6 @@ public final class DatabaseProvider {
 
     @Getter
     private final DatabaseComposer composer = new PatternDatabaseComposerImpl();
-
-    private final TransactionFactory transactionFactory = new TransactionFactory();
 
     private DatabaseConnection createDatabaseConnection(Credentials credentials) {
         ConnectionID connectionID = ConnectionID.builder()
@@ -58,18 +50,6 @@ public final class DatabaseProvider {
     public synchronized void closeConnection(@NotNull DatabaseConnection connection) {
         activeConnections.remove(connection);
         connection.close();
-    }
-
-    public PreparedTransaction prepareTransaction(TransactionRepository repository) {
-        return transactionFactory.createPreparedTransaction(repository);
-    }
-
-    public synchronized Transaction openTransaction() {
-        return transactionFactory.createTransaction();
-    }
-
-    public synchronized TransactionQuery openTransactionQuery() {
-        return new DatabaseTransactionQuery();
     }
 
     public synchronized Collection<DatabaseConnection> getActiveConnections() {
