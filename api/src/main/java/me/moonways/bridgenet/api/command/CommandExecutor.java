@@ -38,8 +38,6 @@ public final class CommandExecutor {
     @Inject
     private CommandRegistry registry;
     @Inject
-    private BeansService beansService;
-    @Inject
     private AnnotationInterceptor interceptor;
 
     @GetTypeAnnotationProcessor

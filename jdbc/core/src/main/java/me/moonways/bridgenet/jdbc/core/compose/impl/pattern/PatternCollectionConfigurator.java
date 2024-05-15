@@ -183,4 +183,14 @@ public class PatternCollectionConfigurator {
         push(collection);
         return this;
     }
+
+    public PatternCollectionConfigurator pushPrimaryKey(CombinedStructs.CombinedStyledParameter parameter) {
+        validateCollectionsType(CompletedGroups.class);
+
+        var collection = WrappedPatternCollection.multiplied();
+        collection.add(MAPPER.mapNamed(CombinedStructs.field(parameter.getName(), null)));
+
+        push(collection);
+        return this;
+    }
 }

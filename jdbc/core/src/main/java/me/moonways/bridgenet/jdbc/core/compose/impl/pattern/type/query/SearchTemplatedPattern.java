@@ -22,9 +22,11 @@ public class SearchTemplatedPattern extends AbstractPattern implements SearchTem
 
     @Override
     public SearchTemplate limit(int limit) {
-        PatternCollectionConfigurator.create("limit")
-                .pushStringOnly(String.valueOf(limit))
-                .adjust(getTotals());
+        if (limit >= 0) {
+            PatternCollectionConfigurator.create("limit")
+                    .pushStringOnly(String.valueOf(limit))
+                    .adjust(getTotals());
+        }
         return this;
     }
 

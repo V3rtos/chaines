@@ -30,7 +30,7 @@ public class BeansAnnotationsAwaitService {
      *
      * @param bean - бин, в рамках которого ищем аннотацию.
      */
-    private Class<? extends Annotation>[] getAwaitsAnnotationsTypes(Bean bean) {
+    public Class<? extends Annotation>[] getAwaitsAnnotationsTypes(Bean bean) {
         return bean.getType().getAnnotation(WaitTypeAnnotationProcessor.class)
                 .map(WaitTypeAnnotationProcessor::value)
                 .orElse(null);

@@ -27,6 +27,10 @@ public final class BeansStore {
 
     private final BeansScanningService scanner;
 
+    public Collection<Bean> getTotalBeans() {
+        return Collections.unmodifiableCollection(store.values());
+    }
+
     /**
      * Сохранить подготовленный бин для его дальнейших иженкций.
      * @param bean - бин.

@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.jdbc.core.wrap;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -22,6 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Getter
 @Log4j2
 @Builder
 public class JdbcWrapper {
@@ -110,7 +112,7 @@ public class JdbcWrapper {
     @SneakyThrows
     private Result<ResultWrapper> executeOrdered(String sql,
                                                  SqlFunction<PreparedQuerySession, ResultWrapper> resultLookup) {
-        log.info("Begin sql-query execution: §2{}", sql);
+        log.info("Inbound Query: §2{}", sql);
 
         final Thread thread = Thread.currentThread();
         final Result<ResultWrapper> result = Result.ofEmpty();
