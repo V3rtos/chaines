@@ -114,23 +114,10 @@ public class ResourcesAssembly {
      * и типа класса сущности объект.
      *
      * @param resourceName - наименование ресурса.
-     * @param charset - кодировка, в которой воспроизводить чтение.
-     * @param entity - тип сущности, в которую преобразовывать полученный XML.
-     */
-    public <T extends XmlRootObject> T readXmlAtEntity(String resourceName, Charset charset, Class<T> entity) {
-        return xmlJaxbParser.parseToDescriptorByType(readResourceFullContent(resourceName, charset), entity);
-    }
-
-    /**
-     * Прочитать полное содержание ресурса, спарсить
-     * полученный текст как XML и создать по его шаблону
-     * и типа класса сущности объект.
-     *
-     * @param resourceName - наименование ресурса.
      * @param entity - тип сущности, в которую преобразовывать полученный XML.
      */
     public <T extends XmlRootObject> T readXmlAtEntity(String resourceName, Class<T> entity) {
-        return xmlJaxbParser.parseToDescriptorByType(readResourceFullContent(resourceName), entity);
+        return xmlJaxbParser.parseToDescriptorByType(readResourceStream(resourceName), entity);
     }
 
     /**

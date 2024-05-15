@@ -33,8 +33,4 @@ public final class XmlJaxbParser {
     public <X extends XmlRootObject> X parseToDescriptorByType(InputStream inputStream, Class<X> cls) {
         return parseInputStream(inputStream, cls);
     }
-
-    public <X extends XmlRootObject> X parseToDescriptorByType(String resourceFilepath, Class<X> cls) {
-        return parseToDescriptorByType(assembly.readResourceStream(resourceFilepath), cls);
-    }
 }
