@@ -1,9 +1,6 @@
 package me.moonways.bridgenet.jdbc.provider;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.security.Credentials;
 import me.moonways.bridgenet.jdbc.core.security.DbCredentials;
@@ -14,6 +11,7 @@ public class BridgenetJdbcProvider {
 
     @Getter
     @Builder
+    @ToString
     @EqualsAndHashCode
     @RequiredArgsConstructor
     public static class JdbcSettingsConfig {
