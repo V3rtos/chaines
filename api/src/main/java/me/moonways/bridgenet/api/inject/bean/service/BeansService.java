@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.api.inject.bean.service;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanComponent;
@@ -48,9 +49,12 @@ public final class BeansService {
         return properties;
     }
 
+    @Getter
     private final BeansStore store;
+    @Getter
     private final BeansScanningService scanner;
     private final BeansInjectionService injector;
+    @Getter
     private final BeansAnnotationsAwaitService annotationsAwaits;
 
     private final AnnotationInterceptor interceptor = new AnnotationInterceptor();
@@ -99,15 +103,32 @@ public final class BeansService {
      *
      * @param properties - проперти-конфигурация Dependency Injection.
      */
+    public void fakeStart(Properties properties) {
+        this.properties = properties;
+
+        log.info("BeansService.fakeStart -> begin;");
+
+        bindThis();
+        initBeanFactories();
+
+        log.info("BeansService.fakeStart -> end;");
+    }
+
+    /**
+     * Инициализация проекта и системы Dependency Injection
+     * по указанной проперти-конфигурации.
+     *
+     * @param properties - проперти-конфигурация Dependency Injection.
+     */
     public void start(Properties properties) {
         this.properties = properties;
 
         log.info("BeansService.start -> begin;");
 
         bindThis();
-
         initBeanFactories();
-        processTypeAnnotationProcessors();
+
+        scanAllAnnotationProcessors();
 
         log.info("BeansService.start -> end;");
     }
@@ -137,15 +158,24 @@ public final class BeansService {
      * подходящих под параметры процессора. Следующим шагом проводим дополнительную
      * верификацию обнаруженного бина и передаем его в обработку процессору аннотации.
      */
-    private void processTypeAnnotationProcessors() {
-        log.info("Processing all type annotations processors...");
-        List<TypeAnnotationProcessor<?>> typeAnnotationProcessors = scanner.scanTypeAnnotationProcessors();
+    public void scanAnnotationProcessors(List<TypeAnnotationProcessor<?>> inboundProcessors) {
+        log.info("Processing inbound list of TypeAnnotationProcessor`s...");
+        log.info("Founded §3{} §rannotation-processors", inboundProcessors.size());
 
-        log.info("Founded §3{} §rtype annotations processors", typeAnnotationProcessors.size());
-
-        for (TypeAnnotationProcessor<?> processor : typeAnnotationProcessors) {
+        for (TypeAnnotationProcessor<?> processor : inboundProcessors) {
             processTypeAnnotationProcessor(processor);
         }
+    }
+
+    /**
+     * Обрабатываем типовые процессоры аннотаций:
+     * Сканируем проект, ищем все доступные процессоры, затем конфигурируем
+     * и сканируем по полученной конфигурации проект еще раз на поиск бинов,
+     * подходящих под параметры процессора. Следующим шагом проводим дополнительную
+     * верификацию обнаруженного бина и передаем его в обработку процессору аннотации.
+     */
+    private void scanAllAnnotationProcessors() {
+        scanAnnotationProcessors(scanner.scanAnnotationProcessors());
     }
 
     /**
@@ -167,7 +197,7 @@ public final class BeansService {
                     return;
                 }
 
-                log.info("Processing type annotation processor of §2@{}", annotationType.getName());
+                log.info("Processing TypeAnnotationProcessor implement - §2@{}", annotationType.getName());
 
                 initializedAnnotationsSet.add(annotationType);
                 scanner.scanBeans(config).forEach(bean -> processBean(config, bean));
@@ -340,5 +370,26 @@ public final class BeansService {
      */
     public void inject(Object object) {
         injector.injectComponents(object);
+    }
+
+    /**
+     * Получить проинициализированный бин по одному
+     * из его основных классов.
+     *
+     * @param cls - регистрационный класс бина.
+     */
+    public Optional<Bean> get(Class<?> cls) {
+        return store.find(cls);
+    }
+
+    /**
+     * Получить проинициализированный бин по одному
+     * из его основных классов.
+     *
+     * @param cls - регистрационный класс бина.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> Optional<T> getInstance(Class<T> cls) {
+        return get(cls).map(bean -> (T) bean.getRoot());
     }
 }

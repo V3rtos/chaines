@@ -112,7 +112,7 @@ public class JdbcWrapper {
     @SneakyThrows
     private Result<ResultWrapper> executeOrdered(String sql,
                                                  SqlFunction<PreparedQuerySession, ResultWrapper> resultLookup) {
-        log.info("Begin sql-query execution: §2{}", sql);
+        log.info("Inbound Query: §2{}", sql);
 
         final Thread thread = Thread.currentThread();
         final Result<ResultWrapper> result = Result.ofEmpty();

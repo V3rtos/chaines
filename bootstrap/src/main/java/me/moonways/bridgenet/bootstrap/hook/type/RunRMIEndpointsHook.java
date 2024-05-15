@@ -1,21 +1,24 @@
 package me.moonways.bridgenet.bootstrap.hook.type;
 
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
-import me.moonways.bridgenet.bootstrap.hook.ApplicationBootstrapHook;
+import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
+import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
 import org.jetbrains.annotations.NotNull;
 
-public class RunRMIEndpointsHook extends ApplicationBootstrapHook {
+public class RunRMIEndpointsHook extends BootstrapHook {
 
     @Inject
-    private RemoteServiceRegistry remoteServiceRegistry;
+    private RemoteServicesManagement remoteServicesManagement;
 
     @Override
     protected void process(@NotNull AppBootstrap bootstrap) {
-        remoteServiceRegistry.initializeXmlConfiguration();
-        remoteServiceRegistry.initializeEndpointsController();
+        if (remoteServicesManagement != null) {
 
-        remoteServiceRegistry.bindEndpoints();
+            remoteServicesManagement.initConfig();
+            remoteServicesManagement.initEndpointsController();
+
+            remoteServicesManagement.bindEndpoints();
+        }
     }
 }

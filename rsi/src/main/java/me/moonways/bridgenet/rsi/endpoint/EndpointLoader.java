@@ -3,7 +3,8 @@ package me.moonways.bridgenet.rsi.endpoint;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
+import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +25,9 @@ public class EndpointLoader {
     private static final String CONFIG_FILE_NAME = "endpoint_config.json";
 
     @Inject
-    private RemoteServiceRegistry remoteServiceRegistry;
-
+    private RemoteServicesManagement remoteServicesManagement;
+    @Inject
+    private ResourcesAssembly assembly;
     @Inject
     private Gson gson;
 
@@ -64,13 +66,13 @@ public class EndpointLoader {
     }
 
     private ServiceInfo findServiceInfo(String name) {
-        return remoteServiceRegistry.getServicesInfos().get(name.toLowerCase());
+        return remoteServicesManagement.getServicesInfos().get(name.toLowerCase());
     }
 
     @SuppressWarnings("resource")
     public List<Endpoint> lookupStoredEndpoints() {
         String servicesContentPathname = correctPath(isDedicatedStart() ? DEDICATED_BUILD_DIR : LOCAL_BUILD_DIR);
-        Path servicesContentPath = Paths.get(servicesContentPathname);
+        Path servicesContentPath = assembly.getFileSystem().findPathAtProject(servicesContentPathname);
 
         if (!Files.exists(servicesContentPath) || !Files.isDirectory(servicesContentPath)) {
             servicesContentPath = servicesContentPath.toAbsolutePath()

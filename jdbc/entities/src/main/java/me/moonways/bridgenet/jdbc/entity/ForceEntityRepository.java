@@ -43,8 +43,9 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     private void justCall(EntityOperationComposer.EntityComposedOperation operation) {
-        CompletedQuery completedQuery = operation.getQueries().get(operation.getResultIndex());
-        completedQuery.call(connection);
+        for (CompletedQuery completedQuery : operation.getQueries()) {
+            completedQuery.call(connection);
+        }
     }
 
     @Override
@@ -80,7 +81,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                     .forEach(parameterUnit ->
                             searchMarker.with(parameterUnit.getId(), parameterUnit.getValue()));
 
-            if (searchMarker.getExpectationMap().isEmpty()) {
+            if (searchMarker.getExpectationMap() == null || searchMarker.getExpectationMap().isEmpty()) {
                 parameterUnits.forEach(parameterUnit ->
                                 searchMarker.with(parameterUnit.getId(), parameterUnit.getValue()));
             }
@@ -190,17 +191,21 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     private <V> List<V> callAndCollect(EntityOperationComposer.EntityComposedOperation operation) {
         List<V> entitisList = new ArrayList<>();
 
-        CompletedQuery completedQuery = operation.getQueries().get(operation.getResultIndex());
-        Result<ResponseStream> result = completedQuery.call(connection);
+        for (CompletedQuery completedQuery : operation.getQueries()) {
+            Result<ResponseStream> result = completedQuery.call(connection);
 
-        for (ResponseRow responseRow : result.get()) {
-            EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
-            checkExternalsAfterSearch(entityDescriptor);
+            if (Objects.equals(operation.getResultQuery(), completedQuery)) {
 
-            Object entity = EntityReadAndWriteUtil.write(entityDescriptor);
+                for (ResponseRow responseRow : result.get()) {
+                    EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
+                    checkExternalsAfterSearch(entityDescriptor);
 
-            //noinspection unchecked
-            entitisList.add((V) entity);
+                    Object entity = EntityReadAndWriteUtil.write(entityDescriptor);
+
+                    //noinspection unchecked
+                    entitisList.add((V) entity);
+                }
+            }
         }
 
         return entitisList;

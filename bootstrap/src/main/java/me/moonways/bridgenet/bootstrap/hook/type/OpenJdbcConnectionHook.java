@@ -5,7 +5,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
-import me.moonways.bridgenet.bootstrap.hook.ApplicationBootstrapHook;
+import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
 import me.moonways.bridgenet.jdbc.core.observer.ObserverAdapter;
@@ -18,25 +18,29 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 
-public class OpenJdbcConnectionHook extends ApplicationBootstrapHook {
+public class OpenJdbcConnectionHook extends BootstrapHook {
 
     @Inject
     private BeansService beansService;
     @Inject
     private ResourcesAssembly assembly;
     @Inject
+    private DatabaseProvider databaseProvider;
+    @Inject
     private BridgenetMetricsLogger bridgenetMetricsLogger;
 
     @Override
     protected void process(@NotNull AppBootstrap bootstrap) {
-        BridgenetJdbcProvider.JdbcSettingsConfig jdbcSettingsConfig = readSettings();
+        if (databaseProvider != null) {
+            BridgenetJdbcProvider.JdbcSettingsConfig jdbcSettingsConfig = readSettings();
 
-        BridgenetJdbcProvider bridgenetJdbcProvider = new BridgenetJdbcProvider();
-        bridgenetJdbcProvider.initConnection(jdbcSettingsConfig);
+            BridgenetJdbcProvider bridgenetJdbcProvider = new BridgenetJdbcProvider(databaseProvider);
+            bridgenetJdbcProvider.initConnection(jdbcSettingsConfig);
 
-        handleDatabaseEventsForMetric(bridgenetJdbcProvider.getDatabaseConnection());
+            handleDatabaseEventsForMetric(bridgenetJdbcProvider.getDatabaseConnection());
 
-        bindAllBeans(bridgenetJdbcProvider);
+            bindAllBeans(bridgenetJdbcProvider);
+        }
     }
 
     private void bindAllBeans(BridgenetJdbcProvider bridgenetJdbcProvider) {
@@ -44,7 +48,6 @@ public class OpenJdbcConnectionHook extends ApplicationBootstrapHook {
         DatabaseConnection databaseConnection = bridgenetJdbcProvider.getDatabaseConnection();
         DatabaseComposer composer = databaseProvider.getComposer();
 
-        beansService.bind(databaseProvider);
         beansService.bind(composer);
         beansService.bind(databaseConnection);
         beansService.bind(new EntityRepositoryFactory(composer, databaseConnection));

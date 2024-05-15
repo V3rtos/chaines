@@ -23,6 +23,13 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>api</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- Annotations processing utility dependencies -->
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -16,6 +16,8 @@ public class ResponsibleMessageCleanUpRunner {
 
     @Runnable
     public void run() {
-        service.cleanUp();
+        if (service != null) {
+            service.cleanUp();
+        }
     }
 }

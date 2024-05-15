@@ -48,6 +48,12 @@
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>jdbc-provider</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rsi</artifactId>
             <version>1.0</version>
             <scope>compile</scope>

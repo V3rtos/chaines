@@ -23,7 +23,7 @@ public class BridgenetJdbcProvider {
         private final String password;
     }
 
-    private final DatabaseProvider databaseProvider = new DatabaseProvider();
+    private final DatabaseProvider databaseProvider;
     private DatabaseConnection databaseConnection;
 
     public void initConnection(JdbcSettingsConfig jdbcSettingsConfig) {

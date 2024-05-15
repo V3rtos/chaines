@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.rsi.module.ServiceModulesContainer;
 import me.moonways.bridgenet.rsi.module.access.AccessRemoteModule;
 import me.moonways.bridgenet.rsi.service.RemoteService;
-import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
+import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 
 import java.io.File;
@@ -30,7 +30,7 @@ public class EndpointRunner {
     private final Map<Endpoint, Class<?>> servicesImplementsMap = Collections.synchronizedMap(new HashMap<>());
 
     @Inject
-    private RemoteServiceRegistry remoteServiceRegistry;
+    private RemoteServicesManagement remoteServicesManagement;
 
     public void start(Endpoint endpoint) {
         String name = endpoint.getServiceInfo().getName();
@@ -104,7 +104,7 @@ public class EndpointRunner {
         ServiceInfo serviceInfo = endpoint.getServiceInfo();
 
         Class<?> serviceImplementClass = servicesImplementsMap.remove(endpoint);
-        ServiceModulesContainer serviceModulesContainer = remoteServiceRegistry.getModulesContainerMap().get(serviceInfo);
+        ServiceModulesContainer serviceModulesContainer = remoteServicesManagement.getModulesContainerMap().get(serviceInfo);
 
         AccessRemoteModule accessModule = serviceModulesContainer.getModuleInstance(AccessRemoteModule.class);
 

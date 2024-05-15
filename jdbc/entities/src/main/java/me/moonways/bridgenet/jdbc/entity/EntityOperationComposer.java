@@ -16,12 +16,12 @@ import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 import me.moonways.bridgenet.jdbc.entity.util.search.SearchElement;
 import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 class EntityOperationComposer {
+
+    private static final Set<String> tables = Collections.synchronizedSet(new HashSet<>());
 
     @Getter
     @Builder
@@ -37,28 +37,40 @@ class EntityOperationComposer {
 
     private final DatabaseComposer composer;
 
-    public EntityComposedOperation composeDelete(EntityDescriptor entity, SearchMarker<?> searchMarker) {
+    private EntityComposedOperation composeWithContainer(EntityDescriptor entity, CompletedQuery query) {
+        List<CompletedQuery> queries = new ArrayList<>();
+
+        boolean contains = tables.contains(entity.getContainerName());
+        if (!contains) {
+            queries.add(prepareCreateContainerQuery(entity));
+        }
+
+        queries.add(query);
+
         return EntityComposedOperation.builder()
-                .queries(Collections.singletonList(composer.useDeletionPattern()
-                        .container(entity.getContainerName())
-                        .predicates(composePredicatesTemplate(entity, searchMarker).combine())
-                        .combine()))
-                .resultIndex(0)
+                .queries(queries)
+                .resultIndex(contains ? 0 : 1)
                 .build();
     }
 
+    public EntityComposedOperation composeDelete(EntityDescriptor entity, SearchMarker<?> searchMarker) {
+        return composeWithContainer(entity,
+                composer.useDeletionPattern()
+                        .container(entity.getContainerName())
+                        .predicates(composePredicatesTemplate(entity, searchMarker).combine())
+                        .combine());
+    }
+
     public EntityComposedOperation composeSearch(EntityDescriptor entity, SearchMarker<?> searchMarker) {
-        return EntityComposedOperation.builder()
-                .queries(Collections.singletonList(composer.useSearchPattern()
+        return composeWithContainer(entity,
+                composer.useSearchPattern()
                         .container(entity.getContainerName())
                         .limit(searchMarker.getLimit())
                         .subjects(composer.subjects()
                                 .selectAll()
                                 .combine())
                         .predicates(composePredicatesTemplate(entity, searchMarker).combine())
-                        .combine()))
-                .resultIndex(0)
-                .build();
+                        .combine());
     }
 
     private PredicatesTemplate composePredicatesTemplate(EntityDescriptor entity, SearchMarker<?> searchMarker) {
@@ -131,12 +143,8 @@ class EntityOperationComposer {
     }
 
     public EntityComposedOperation composeInsert(EntityDescriptor entity) {
-        return EntityComposedOperation.builder()
-                .queries(Arrays.asList(
-                        prepareCreateContainerQuery(entity),
-                        prepareInsertQuery(entity)))
-                .resultIndex(1)
-                .build();
+        return composeWithContainer(entity, prepareInsertQuery(entity));
+
     }
 
     private CompletedQuery prepareInsertQuery(EntityDescriptor entity) {
@@ -166,6 +174,8 @@ class EntityOperationComposer {
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
             signatureTemplate = signatureTemplate.with(toStyledParameter(parameterUnit));
         }
+
+        tables.add(entity.getContainerName());
 
         return creationTemplate.signature(signatureTemplate.combine())
                 .combine();
