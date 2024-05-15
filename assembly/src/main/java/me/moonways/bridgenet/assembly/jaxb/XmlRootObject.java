@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.util.jaxb;
+package me.moonways.bridgenet.assembly.jaxb;
 
 // marking interface
 public interface XmlRootObject {

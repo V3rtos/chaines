@@ -1,10 +1,9 @@
 package me.moonways.bridgenet.bootstrap.hook;
 
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.bootstrap.xml.XMLBootstrapConfigDescriptor;
 import me.moonways.bridgenet.bootstrap.xml.XMLHookDescriptor;
@@ -22,14 +21,11 @@ public final class BootstrapHookContainer {
 
     @Inject
     private BeansService beansService;
-
     @Inject
-    private XmlJaxbParser jaxbParser;
+    private ResourcesAssembly assembly;
 
-    @SneakyThrows
     private XMLBootstrapConfigDescriptor parseConfiguration() {
-        return jaxbParser.parseToDescriptorByType(ResourcesTypes.BOOTSTRAP_XML,
-                XMLBootstrapConfigDescriptor.class);
+        return assembly.readXmlAtEntity(ResourcesTypes.BOOTSTRAP_XML, XMLBootstrapConfigDescriptor.class);
     }
 
     public void bindHooks() {

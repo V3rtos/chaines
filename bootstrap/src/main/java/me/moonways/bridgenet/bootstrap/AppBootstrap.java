@@ -38,7 +38,11 @@ public class AppBootstrap {
         return isRunning.get();
     }
 
-    private void processBootstrapHooks(@NotNull BootstrapHookPriority priority) {
+    public synchronized void setRunning(Boolean state) {
+        isRunning.set(state);
+    }
+
+    public void processBootstrapHooks(@NotNull BootstrapHookPriority priority) {
         Collection<ApplicationBootstrapHook> hooksByPriority = hooksContainer.findOrderedHooks(priority);
         if (hooksByPriority == null)
             return;
@@ -54,22 +58,23 @@ public class AppBootstrap {
         log.info("AppBootstrap.processBootstrapHooks() => end;");
     }
 
-    private void startBeansActivity() {
+    public void startBeansActivity(boolean canStartingFull) {
         log.info("Starting beans service processing");
 
         beansService.bind(System.getProperties());
-
-        beansService.start(BeansService.generateDefaultProperties());
-
         beansService.bind(this);
-        beansService.inject(hooksContainer);
+
+        if (canStartingFull) {
+            beansService.start(BeansService.generateDefaultProperties());
+            beansService.inject(hooksContainer);
+        }
     }
 
     public void start(String[] args) {
-        isRunning.set(true);
+        setRunning(true);
         log.info("Running Bridgenet bootstrap process with args = {}", Arrays.toString(args));
 
-        startBeansActivity();
+        startBeansActivity(true);
         hooksContainer.bindHooks();
 
         processBootstrapHooks(BootstrapHookPriority.RUNNER);
@@ -81,7 +86,7 @@ public class AppBootstrap {
     }
 
     public void shutdown() {
-        isRunning.set(false);
+        setRunning(false);
         log.info("§4Shutting down Bridgenet services");
 
         processBootstrapHooks(BootstrapHookPriority.PRE_SHUTDOWN);

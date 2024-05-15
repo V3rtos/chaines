@@ -1,7 +1,7 @@
-package me.moonways.bridgenet.api.util.jaxb;
+package me.moonways.bridgenet.assembly.jaxb;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 
 import javax.xml.bind.JAXBContext;
@@ -10,10 +10,10 @@ import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
 
 @Log4j2
+@RequiredArgsConstructor
 public final class XmlJaxbParser {
 
-    @Inject
-    private ResourcesAssembly assembly;
+    private final ResourcesAssembly assembly;
 
     @SuppressWarnings("unchecked")
     private <X extends XmlRootObject> X parseInputStream(InputStream inputStream, Class<X> cls) {
