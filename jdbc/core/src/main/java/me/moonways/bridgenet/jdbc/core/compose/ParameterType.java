@@ -19,7 +19,7 @@ public enum ParameterType {
 
     BOOLEAN("SMALLINT", new Class[]{boolean.class, Boolean.class}),
 
-    STRING("VARCHAR", new Class[]{String.class, UUID.class}),
+    STRING("VARCHAR", new Class[]{String.class}),
 
     TIMESTAMP("TIMESTAMP", new Class[]{Timestamp.class}),
     DATETIME("DATETIME", new Class[]{Date.class}),
@@ -27,8 +27,7 @@ public enum ParameterType {
 
     SERIALIZATION("BLOB", new Class[]{
             byte[].class,
-            short[].class,
-            Serializable.class}
+            short[].class}
     ),
     ;
 
