@@ -11,7 +11,6 @@ import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.rest.api.HttpHost;
 import me.moonways.bridgenet.rest.api.exchange.response.RestResponse;
 import me.moonways.bridgenet.test.engine.persistance.BeforeAll;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

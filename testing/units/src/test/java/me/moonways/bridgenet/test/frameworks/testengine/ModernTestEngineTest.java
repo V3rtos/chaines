@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNull;
 
 @Log4j2
 @RunWith(ModernTestEngineRunner.class)
-@TestModules({DatabasesModule.class})
 public class ModernTestEngineTest {
 
     @Inject
@@ -34,8 +33,8 @@ public class ModernTestEngineTest {
 
     @Test
     @TestOrdered(1)
-    public void test_executing() {
-        log.debug("Executing test function without timeout!");
+    public void test_dependenciesAssertion() {
+        log.debug("Asserting injectable dependencies");
 
         assertNull(eventService);
         assertNotNull(databaseProvider);
@@ -44,10 +43,7 @@ public class ModernTestEngineTest {
     @Test
     @TestOrdered(2)
     @TestSleeping(1500)
-    public void test_executingWithTimeout() {
+    public void test_sleepingTimeout() {
         log.debug("Executing test function with 3000ms timeout!");
-
-        assertNull(eventService);
-        assertNotNull(databaseProvider);
     }
 }

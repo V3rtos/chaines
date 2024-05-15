@@ -4,12 +4,10 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
 import me.moonways.bridgenet.metrics.MetricType;
+import me.moonways.bridgenet.test.data.junit.assertion.DataAssert;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 
 @Log4j2
 @RunWith(ModernTestEngineRunner.class)
@@ -23,8 +21,9 @@ public class ProfilingDatabaseQueriesTest {
         logDatabaseQueries();
 
         String illustrationURL = bridgenetMetricsLogger.requestIllustrationURL(MetricType.JDBC_QUERIES);
+        log.debug("Completed metric illustration url: {} [click]", illustrationURL);
 
-        assertIllustration(illustrationURL);
+        DataAssert.assertIllustrationUrl(illustrationURL);
     }
 
     private void logDatabaseQueries() {
@@ -54,12 +53,5 @@ public class ProfilingDatabaseQueriesTest {
         bridgenetMetricsLogger.logDatabaseTransaction();
 
         // result = [success=[1, 2, 3, 4, 5, 6], failure=[1, 2, 3, 4], rollback=[1], transaction=[1, 2]]
-    }
-
-    private void assertIllustration(String illustrationURL) {
-        log.debug("Completed metric illustration url: {} [click]", illustrationURL);
-
-        assertNotNull(illustrationURL);
-        assertNotEquals("", illustrationURL);
     }
 }

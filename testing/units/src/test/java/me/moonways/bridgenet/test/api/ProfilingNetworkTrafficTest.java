@@ -4,12 +4,10 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
 import me.moonways.bridgenet.metrics.MetricType;
+import me.moonways.bridgenet.test.data.junit.assertion.DataAssert;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 
 @Log4j2
 @RunWith(ModernTestEngineRunner.class)
@@ -23,8 +21,9 @@ public class ProfilingNetworkTrafficTest {
         logNetworkConnections();
 
         String illustrationURL = bridgenetMetricsLogger.requestIllustrationURL(MetricType.MTP_CONNECTIONS);
+        log.debug("Completed metric illustration url: {} [click]", illustrationURL);
 
-        assertIllustration(illustrationURL);
+        DataAssert.assertIllustrationUrl(illustrationURL);
     }
 
     private void logNetworkConnections() {
@@ -43,12 +42,5 @@ public class ProfilingNetworkTrafficTest {
         bridgenetMetricsLogger.logNetworkConnectionOpened(metricType);
 
         // result = [1, 2, 3, 2, 1, 2]
-    }
-
-    private void assertIllustration(String illustrationURL) {
-        log.debug("Completed metric illustration url: {} [click]", illustrationURL);
-
-        assertNotNull(illustrationURL);
-        assertNotEquals("", illustrationURL);
     }
 }
