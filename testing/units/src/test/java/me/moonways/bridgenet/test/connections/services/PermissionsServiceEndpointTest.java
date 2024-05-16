@@ -106,7 +106,7 @@ public class PermissionsServiceEndpointTest {
     public void test_getGroup() throws RemoteException {
         GroupsManager groups = serviceModel.getGroups();
 
-        Optional<PermissionGroup> permissionGroupOptional = groups.fromPlayerId(TestConst.Player.ID);
+        Optional<PermissionGroup> permissionGroupOptional = groups.getPlayerGroup(TestConst.Player.ID);
         assertTrue(permissionGroupOptional.isPresent());
 
         PermissionGroup permissionGroup = permissionGroupOptional.get();
@@ -120,7 +120,7 @@ public class PermissionsServiceEndpointTest {
     public void test_updateGroup() throws RemoteException {
         GroupsManager groups = serviceModel.getGroups();
 
-        Optional<PlayerGroupUpdateEvent> eventOptional = groups.updatePlayer(TestConst.Player.ID, GroupTypes.DEVELOPER);
+        Optional<PlayerGroupUpdateEvent> eventOptional = groups.setPlayerGroup(TestConst.Player.ID, GroupTypes.DEVELOPER);
 
         assertTrue(groups.isTechPersonal(TestConst.Player.ID));
         assertTrue(groups.isPersonal(TestConst.Player.ID));

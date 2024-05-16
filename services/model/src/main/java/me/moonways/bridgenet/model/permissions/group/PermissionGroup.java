@@ -9,6 +9,7 @@ import me.moonways.bridgenet.model.permissions.TemporalState;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class PermissionGroup {
+    private static final String ADDITIONAL_NAME_FEATURE = "+";
 
     public static PermissionGroup create(int id, String name, ChatColor color) {
         return new PermissionGroup(id, name, color, color, TemporalState.infinity());
@@ -65,5 +66,14 @@ public class PermissionGroup {
 
     private boolean rangeClosedIn(PermissionGroup min, PermissionGroup max) {
         return id >= Math.min(min.id, max.id) && id <= Math.max(min.id, max.id);
+    }
+
+    public String getDisplayName() {
+        if (name.contains(ADDITIONAL_NAME_FEATURE)) {
+            return String.format("%s%s%s%s", color,
+                    name.replace(ADDITIONAL_NAME_FEATURE, ""),
+                    plusColor, ADDITIONAL_NAME_FEATURE);
+        }
+        return String.format("%s%s", color, name);
     }
 }
