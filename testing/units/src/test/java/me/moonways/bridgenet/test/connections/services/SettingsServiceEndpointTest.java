@@ -2,6 +2,7 @@ package me.moonways.bridgenet.test.connections.services;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 import me.moonways.bridgenet.model.settings.PlayerSettingsServiceModel;
 import me.moonways.bridgenet.model.settings.Setting;
 import me.moonways.bridgenet.model.settings.SettingID;
@@ -38,7 +39,7 @@ public class SettingsServiceEndpointTest {
 
     @Test
     public void test_individualSettingGet() throws RemoteException {
-        Setting<Boolean> setting = getExampleSetting();
+        Setting<ChatColor> setting = getExampleSetting();
 
         log.debug(setting);
 
@@ -48,9 +49,9 @@ public class SettingsServiceEndpointTest {
 
     @Test
     public void test_individualSettingUpdate() throws RemoteException {
-        Setting<Boolean> setting = getExampleSetting();
+        Setting<ChatColor> setting = getExampleSetting();
 
-        setting.set(true);
+        setting.set(ChatColor.GREEN);
 
         log.debug(setting);
 
@@ -58,7 +59,7 @@ public class SettingsServiceEndpointTest {
         assertTrue(setting.isEnabled());
     }
 
-    public Setting<Boolean> getExampleSetting() throws RemoteException {
-        return serviceModel.getSetting(TestConst.Player.ID, SettingID.SCOREBOARD_VISIBILITY);
+    public Setting<ChatColor> getExampleSetting() throws RemoteException {
+        return serviceModel.getSetting(TestConst.Player.ID, SettingID.GLOWING_COLOR);
     }
 }
