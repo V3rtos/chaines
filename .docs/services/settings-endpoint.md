@@ -73,7 +73,6 @@ public interface PlayerSettingsServiceModel extends RemoteService {
 ```
 
 - Реализация эндпоинта лежит в модуле `endpoints/settings`;
-- 
 - Реализация основного модельного интерфейса сервиса 
   <br>является `me.moonways.endpoint.settings.PlayerSettingsServiceEndpoint`;
 
