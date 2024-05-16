@@ -1,5 +1,8 @@
 package me.moonways.bridgenet.test.data;
 
+import me.moonways.bridgenet.model.permissions.permission.Permission;
+
+import java.time.Duration;
 import java.util.UUID;
 
 public final class TestConst {
@@ -26,12 +29,18 @@ public final class TestConst {
         public static final String SOURCE = "MoonWays";
     }
 
-    public static final class Entity {
-        public static final int AGE = 20;
+    public static final class Permissions {
+        public static final String PERMISSION_NAME = "bridgenet.test";
 
+        public static final Permission PERMISSION = Permission.named(PERMISSION_NAME);
+        public static final Permission TEMP_PERMISSION = Permission.temp(PERMISSION_NAME, Duration.ofSeconds(3));
+    }
+
+    public static final class Entity {
         public static final String FIRST_NAME = "Mikhail";
         public static final String LAST_NAME = "Sterkhov";
         public static final String STATUS_NAME = "Middle Java Developer";
+        public static final int AGE = 20;
     }
 
     public static final class SqlQuery {
