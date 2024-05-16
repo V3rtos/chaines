@@ -1,4 +1,6 @@
-package me.moonways.bridgenet.jdbc.entity.descriptor.adapter;
+package me.moonways.bridgenet.jdbc.entity.adapter;
+
+import me.moonways.bridgenet.jdbc.entity.adapter.type.*;
 
 /**
  * Список всех доступных адаптеров типов
@@ -8,6 +10,7 @@ public interface TypeAdapters {
 
     ParameterTypeAdapter SERIALIZATION = new SerializableTypeAdapter();
     ParameterTypeAdapter BOOLEAN = new BooleanTypeAdapter();
+    ParameterTypeAdapter ENUMS = new EnumsTypeAdapter();
     ParameterTypeAdapter UUID = new UuidTypeAdapter();
     ParameterTypeAdapter CLASS = new ClassTypeAdapter();
     ParameterTypeAdapter JSON = new JsonTypeAdapter();
@@ -21,9 +24,12 @@ public interface TypeAdapters {
     ParameterTypeAdapter[] TYPES =
             {
                     JSON, // <--- Обязательно должен быть первым.
+            // ---------------- //
                     BOOLEAN,
+                    ENUMS,
                     UUID,
                     CLASS,
+            // ---------------- //
                     SERIALIZATION, // <--- Обязательно должен быть последним.
             };
 }

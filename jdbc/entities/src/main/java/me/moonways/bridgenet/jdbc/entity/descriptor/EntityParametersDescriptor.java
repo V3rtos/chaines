@@ -75,7 +75,8 @@ public class EntityParametersDescriptor {
         }
 
         private boolean isMaybeStatical(ParameterAddon parameterAddon) {
-            return parameterAddon == ParameterAddon.INCREMENTING || parameterAddon == ParameterAddon.UNIQUE || parameterAddon == ParameterAddon.PRIMARY;
+            return parameterAddon == ParameterAddon.INCREMENTING || parameterAddon == ParameterAddon.UNIQUE ||
+                    parameterAddon == ParameterAddon.PRIMARY || parameterAddon == ParameterAddon.KEY;
         }
 
         public Method findGetter(Class<?> source) {

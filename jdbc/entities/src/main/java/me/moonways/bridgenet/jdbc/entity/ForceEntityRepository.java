@@ -9,16 +9,13 @@ import me.moonways.bridgenet.jdbc.core.Field;
 import me.moonways.bridgenet.jdbc.core.ResponseRow;
 import me.moonways.bridgenet.jdbc.core.ResponseStream;
 import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
-import me.moonways.bridgenet.jdbc.core.compose.ParameterType;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedQuery;
 import me.moonways.bridgenet.jdbc.core.util.result.Result;
+import me.moonways.bridgenet.jdbc.entity.adapter.TypeAdaptersControl;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
-import me.moonways.bridgenet.jdbc.entity.descriptor.adapter.ParameterTypeAdapter;
-import me.moonways.bridgenet.jdbc.entity.descriptor.adapter.TypeAdapters;
 import me.moonways.bridgenet.jdbc.entity.util.EntityPersistenceUtil;
 import me.moonways.bridgenet.jdbc.entity.util.EntityReadAndWriteUtil;
-import me.moonways.bridgenet.jdbc.entity.util.search.SearchElement;
 import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
 
 import java.util.*;
@@ -39,11 +36,13 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     private final DatabaseComposer composer;
     private final DatabaseConnection connection;
 
+    private final TypeAdaptersControl typeAdaptersControl = new TypeAdaptersControl();
+
     private void doDelete(SearchMarker<T> searchMarker) {
         EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entityClass);
 
         searchMarker.getExpectationMap().forEach((name, searchElement) ->
-                searchMarker.with(name, trySerialize(name, entityDescriptor, searchElement)));
+                searchMarker.with(name, typeAdaptersControl.trySerializeSearchElement(name, entityDescriptor, searchElement)));
 
         EntityOperationComposer.EntityComposedOperation operation =
                 new EntityOperationComposer(composer)
@@ -57,7 +56,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
     private <V> List<V> doSearch(SearchMarker<V> searchMarker) {
         EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entityClass);
-        serializeValues(entityDescriptor);
+        typeAdaptersControl.trySerializeValues(entityDescriptor);
 
         EntityOperationComposer.EntityComposedOperation operation =
                 new EntityOperationComposer(composer)
@@ -68,7 +67,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
     private EntityID doInsert(EntityDescriptor descriptor) {
         checkExternalsBeforeInsert(descriptor);
-        serializeValues(descriptor);
+        typeAdaptersControl.trySerializeValues(descriptor);
 
         EntityOperationComposer.EntityComposedOperation operation =
                 new EntityOperationComposer(composer)
@@ -263,7 +262,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                     EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
 
                     checkExternalsAfterSearch(entityDescriptor);
-                    deserializeValues(entityDescriptor);
+                    typeAdaptersControl.tryDeserializeValues(entityDescriptor);
 
                     Object entity = EntityReadAndWriteUtil.write(entityDescriptor);
 
@@ -335,88 +334,5 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     private Optional<String> findEntityIDParameterName() {
         return EntityPersistenceUtil.findEntityIDWrapper(entityClass)
                 .map(wrappedEntityParameter -> wrappedEntityParameter.getUnit().getId());
-    }
-
-    private void deserializeValues(EntityDescriptor entityDescriptor) {
-        for (EntityParametersDescriptor.ParameterUnit parameterUnit : entityDescriptor.getParameters().getParameterUnits()) {
-            for (ParameterTypeAdapter adapter : TypeAdapters.TYPES) {
-
-                if (adapter.canDeserialize(parameterUnit)) {
-
-                    if (parameterUnit.getValue() != null) {
-                        Object object = adapter.deserialize(parameterUnit);
-                        parameterUnit.setValue(object);
-                    }
-
-                    parameterUnit.setType(adapter.getOutputDeserializationType());
-                    break;
-                }
-            }
-        }
-    }
-
-    private void serializeValues(EntityDescriptor entityDescriptor) {
-        for (EntityParametersDescriptor.ParameterUnit parameterUnit : entityDescriptor.getParameters().getParameterUnits()) {
-            if (ParameterType.fromJavaType(parameterUnit.getType()) != null) {
-                continue;
-            }
-
-            for (ParameterTypeAdapter adapter : TypeAdapters.TYPES) {
-                if (adapter.canSerialize(parameterUnit)) {
-
-                    if (parameterUnit.getValue() != null) {
-                        Object object = adapter.serialize(parameterUnit);
-                        parameterUnit.setValue(object);
-                    }
-
-                    parameterUnit.setType(adapter.getOutputSerializationType());
-                    break;
-                }
-            }
-        }
-    }
-
-    private void serializeUnit(EntityParametersDescriptor.ParameterUnit parameterUnit) {
-        for (ParameterTypeAdapter adapter : TypeAdapters.TYPES) {
-            if (adapter.canSerialize(parameterUnit)) {
-
-                if (parameterUnit.getValue() != null) {
-                    Object object = adapter.serialize(parameterUnit);
-                    parameterUnit.setValue(object);
-                }
-
-                parameterUnit.setType(adapter.getOutputSerializationType());
-                break;
-            }
-        }
-    }
-
-    private <E> SearchElement<?> trySerialize(String id, EntityDescriptor entityDescriptor, SearchElement<E> searchElement) {
-        Optional<EntityParametersDescriptor.ParameterUnit> parameterUnitOptional
-                = entityDescriptor.getParameters().find(id);
-
-        if (!parameterUnitOptional.isPresent()) {
-            return searchElement;
-        }
-
-        Class<?> type = parameterUnitOptional.get().getType();
-
-        if (ParameterType.fromJavaType(type) != null) {
-            return searchElement;
-        }
-
-        EntityParametersDescriptor.ParameterUnit parameterUnit =
-                EntityParametersDescriptor.ParameterUnit.builder()
-                        .id(id)
-                        .value(searchElement.getExpectation())
-                        .type(type)
-                        .build();
-
-        serializeUnit(parameterUnit);
-        return SearchElement.builder()
-                .expectation(parameterUnit.getValue())
-                .binder(searchElement.getBinder())
-                .matcher(searchElement.getMatcher())
-                .build();
     }
 }

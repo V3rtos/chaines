@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.jdbc.entity.descriptor.adapter;
+package me.moonways.bridgenet.jdbc.entity.adapter;
 
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 

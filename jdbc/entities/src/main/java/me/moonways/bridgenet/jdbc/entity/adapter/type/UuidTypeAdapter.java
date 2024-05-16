@@ -1,35 +1,31 @@
-package me.moonways.bridgenet.jdbc.entity.descriptor.adapter;
+package me.moonways.bridgenet.jdbc.entity.adapter.type;
 
-import lombok.SneakyThrows;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
+import me.moonways.bridgenet.jdbc.entity.adapter.ParameterTypeAdapter;
 
 import java.util.Objects;
+import java.util.UUID;
 
-public class ClassTypeAdapter implements ParameterTypeAdapter {
-
-    private boolean isClassType(EntityParametersDescriptor.ParameterUnit unit) {
-        return Objects.equals(Class.class, unit.getType());
-    }
+public class UuidTypeAdapter implements ParameterTypeAdapter {
 
     @Override
     public boolean canSerialize(EntityParametersDescriptor.ParameterUnit unit) {
-        return isClassType(unit);
+        return Objects.equals(UUID.class, unit.getType());
     }
 
     @Override
     public boolean canDeserialize(EntityParametersDescriptor.ParameterUnit unit) {
-        return isClassType(unit);
+        return Objects.equals(UUID.class, unit.getType());
     }
 
     @Override
     public Object serialize(EntityParametersDescriptor.ParameterUnit unit) {
-        return ((Class<?>)unit.getValue()).getName();
+        return unit.getValue().toString();
     }
 
-    @SneakyThrows
     @Override
     public Object deserialize(EntityParametersDescriptor.ParameterUnit unit) {
-        return Class.forName(unit.getValue().toString());
+        return UUID.fromString(unit.getValue().toString());
     }
 
     @Override
@@ -39,6 +35,6 @@ public class ClassTypeAdapter implements ParameterTypeAdapter {
 
     @Override
     public Class<?> getOutputDeserializationType() {
-        return Class.class;
+        return UUID.class;
     }
 }

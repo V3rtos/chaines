@@ -1,13 +1,17 @@
-package me.moonways.bridgenet.jdbc.entity.descriptor.adapter;
+package me.moonways.bridgenet.jdbc.entity.adapter.type;
 
 import com.google.gson.Gson;
 import lombok.Builder;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
+import me.moonways.bridgenet.jdbc.entity.adapter.ParameterTypeAdapter;
 
 import java.util.Objects;
 
 public class JsonTypeAdapter implements ParameterTypeAdapter {
+
+    private static final String JSON_BEGIN = "{";
+    private static final String JSON_END = "}";
 
     private static final Gson GSON = new Gson();
 
@@ -15,10 +19,10 @@ public class JsonTypeAdapter implements ParameterTypeAdapter {
     private static class WrappedObject {
 
         private final Object source;
-        private final String classname;
+        private final String classpath;
 
         public Object cast() throws ClassNotFoundException {
-            return Class.forName(classname).cast(source);
+            return Class.forName(classpath).cast(source);
         }
     }
 
@@ -30,9 +34,10 @@ public class JsonTypeAdapter implements ParameterTypeAdapter {
     @Override
     public boolean canDeserialize(EntityParametersDescriptor.ParameterUnit unit) {
         String string = unit.getValue().toString();
+
         return Objects.equals(String.class, unit.getType())
-                && string.startsWith("{")
-                && string.endsWith("}");
+                && string.startsWith(JSON_BEGIN)
+                && string.endsWith(JSON_END);
     }
 
     @Override
@@ -40,7 +45,7 @@ public class JsonTypeAdapter implements ParameterTypeAdapter {
         Object value = !unit.getType().equals(Object.class) ? unit.getValue() :
                 WrappedObject.builder()
                         .source(unit.getValue())
-                        .classname(unit.getValue().getClass().getName())
+                        .classpath(unit.getValue().getClass().getName())
                         .build();
 
         return GSON.toJson(value);
