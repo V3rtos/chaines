@@ -90,4 +90,25 @@ public class ReflectionUtils {
             return null;
         }
     }
+
+    public Object defaultValue(Class<?> returnType) {
+        if (returnType.isPrimitive() && !returnType.equals(boolean.class)) {
+            if (returnType.equals(long.class)) { // fuck java cast
+                return 0L;
+            } else {
+                return 0;
+            }
+        }
+        if (Number.class.isAssignableFrom(returnType)) {
+            if (returnType.equals(Long.class)) { // fuck java cast
+                return 0L;
+            } else {
+                return 0;
+            }
+        }
+        if (returnType.equals(boolean.class) || returnType.equals(Boolean.class)) {
+            return false;
+        }
+        return null;
+    }
 }

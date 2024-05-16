@@ -5,6 +5,9 @@ import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import me.moonways.bridgenet.api.proxy.MethodHandler;
 import me.moonways.bridgenet.api.proxy.MethodInterceptor;
 import me.moonways.bridgenet.api.proxy.ProxiedMethod;
+import me.moonways.bridgenet.test.data.ExampleGreeting;
+import me.moonways.bridgenet.test.data.ExampleGreetingProxy;
+import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,28 +27,7 @@ public class ProxyClassInterceptionTest {
 
     @Test
     public void test_sayHello() {
-        GreetingService greetingService = interceptor.createProxyChecked(GreetingService.class, new GreetingProxy());
-
-        assertEquals(greetingService.sayHello(), "Hello world!");
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.METHOD)
-    public @interface Greeting {
-    }
-
-    public interface GreetingService {
-
-        @Greeting
-        String sayHello();
-    }
-
-    @MethodInterceptor
-    public class GreetingProxy {
-
-        @MethodHandler(target = Greeting.class)
-        public Object handle(ProxiedMethod method, Object[] args) {
-            return "Hello world!";
-        }
+        ExampleGreeting greeting = interceptor.createProxyChecked(ExampleGreeting.class, new ExampleGreetingProxy());
+        assertEquals(greeting.sayHello(), TestConst.Interceptor.HELLO_MESSAGE);
     }
 }

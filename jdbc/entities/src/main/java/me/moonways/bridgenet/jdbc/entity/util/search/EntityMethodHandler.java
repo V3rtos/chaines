@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.jdbc.entity.util.search;
 
 import javassist.util.proxy.MethodHandler;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.jdbc.entity.util.EntityPersistenceUtil;
 
 import java.lang.reflect.Method;
@@ -21,27 +22,6 @@ public class EntityMethodHandler implements MethodHandler {
         if (EntityPersistenceUtil.isParameter(method)) {
             invokedIdRef.set(EntityPersistenceUtil.getParameterId(method));
         }
-        return defaultReturn(method.getReturnType());
-    }
-
-    public static Object defaultReturn(Class<?> returnType) {
-        if (returnType.isPrimitive() && !returnType.equals(boolean.class)) {
-            if (returnType.equals(long.class)) { // fuck java cast
-                return 0L;
-            } else {
-                return 0;
-            }
-        }
-        if (Number.class.isAssignableFrom(returnType)) {
-            if (returnType.equals(Long.class)) { // fuck java cast
-                return 0L;
-            } else {
-                return 0;
-            }
-        }
-        if (returnType.equals(boolean.class) || returnType.equals(Boolean.class)) {
-            return false;
-        }
-        return null;
+        return ReflectionUtils.defaultValue(method.getReturnType());
     }
 }

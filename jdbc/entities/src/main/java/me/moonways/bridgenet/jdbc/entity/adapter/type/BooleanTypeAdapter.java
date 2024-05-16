@@ -27,14 +27,11 @@ public class BooleanTypeAdapter implements ParameterTypeAdapter {
 
     @Override
     public Object serialize(EntityParametersDescriptor.ParameterUnit unit) {
-        System.out.println("serialize " + unit);
         return Boolean.parseBoolean(unit.getValue().toString()) ? TRUE : FALSE;
     }
 
     @Override
     public Object deserialize(EntityParametersDescriptor.ParameterUnit unit) {
-        System.out.println("deserialize " + unit);
-
         short shortValue = (short) unit.getValue();
         return shortValue == TRUE || shortValue == FALSE ? shortValue == TRUE : unit.getValue();
     }
