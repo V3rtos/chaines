@@ -1,5 +1,7 @@
 package me.moonways.bridgenet.model.settings;
 
+import me.moonways.bridgenet.api.util.ExceptionallyConsumer;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.function.Consumer;
@@ -90,4 +92,12 @@ public interface Setting<T> extends Remote {
      * относительно пользователя, из которого мы ее получили.
      */
     boolean isEnabled() throws RemoteException;
+
+    /**
+     * Подписка на изменения значения инстанса
+     * данной настройки.
+     *
+     * @param subscriber - обработчик входящего изменения значения.
+     */
+    void onChanged(ExceptionallyConsumer<T> subscriber) throws RemoteException;
 }

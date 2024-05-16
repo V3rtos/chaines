@@ -4,6 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.jdbc.entity.EntityRepository;
+import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
 import me.moonways.bridgenet.model.settings.Setting;
 import me.moonways.bridgenet.model.settings.SettingID;
 
@@ -20,34 +23,70 @@ public class PlayerSettings {
     private final Map<SettingID<?>, Setting<?>> settings;
     private final UUID playerID;
 
+    @Inject
+    private EntityRepositoryFactory entityRepositoryFactory;
+
     @SuppressWarnings("unchecked")
     public <T> Setting<T> get(SettingID<T> id) throws RemoteException {
         if (settings.containsKey(id)) {
             return (Setting<T>) settings.get(id);
         }
-        return create(id);
+        return createAndInsert(id);
     }
 
     private <T> Setting<T> create(SettingID<T> id) throws RemoteException {
         Setting<T> setting = new SettingStub<>(id);
         settings.put(id, setting);
 
-        doInsert(setting);
+        setting.onChanged(value -> updateEntity(setting));
 
         return setting;
     }
 
-    public void loadAll() {
-        // todo: fill settings map from entity-repository
+    private <T> Setting<T> createAndInsert(SettingID<T> id) throws RemoteException {
+        Setting<T> setting = create(id);
+        insertEntity(setting);
+        return setting;
     }
 
-    private void doInsert(Setting<?> setting) throws RemoteException {
-        SettingPair settingPair = SettingPair.builder()
-                .playerId(playerID)
-                .settingId(setting.id().getId())
-                .value(null)
-                .build();
+    public void loadAll() {
+        EntityRepository<EntitySetting> repository
+                = entityRepositoryFactory.fromEntityType(EntitySetting.class);
 
-        // todo - insert `settingPair` to entity-repository.
+        repository.searchManyIf(
+                repository.newSearchMarker()
+                        .withGet(EntitySetting::getPlayerId, playerID))
+                .forEach(this::loadEntity);
+    }
+
+    private void loadEntity(EntitySetting entitySetting) {
+        //noinspection unchecked
+        SettingID<Object> settingID = (SettingID<Object>) SettingID.fromUuid(entitySetting.getSettingId())
+                .orElseThrow(() -> new SettingsEndpointException("setting by id - " + entitySetting.getSettingId() + " is not found"));
+        try {
+            Setting<Object> setting = create(settingID);
+            setting.set(entitySetting.getValue());
+
+        } catch (RemoteException exception) {
+            throw new SettingsEndpointException(exception);
+        }
+    }
+
+    private void updateEntity(Setting<?> setting) throws RemoteException {
+        EntitySetting entitySetting = EntitySetting.fromSetting(playerID, setting);
+        EntityRepository<EntitySetting> repository
+                = entityRepositoryFactory.fromEntityType(entitySetting);
+
+        repository.delete(entitySetting);
+
+        insertEntity(setting);
+    }
+
+    private <T> void insertEntity(Setting<?> setting) throws RemoteException {
+        EntitySetting entitySetting = EntitySetting.fromSetting(playerID, setting);
+        EntityRepository<EntitySetting> repository
+                = entityRepositoryFactory.fromEntityType(entitySetting);
+
+        repository.insert(entitySetting);
     }
 }

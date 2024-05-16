@@ -3,10 +3,13 @@ package me.moonways.bridgenet.model.settings;
 import lombok.*;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Getter
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SettingID<T> {
@@ -15,6 +18,10 @@ public final class SettingID<T> {
 
     private static <T> SettingID<T> createID(String name, Class<T> type) {
         return new SettingID<>(UUID.nameUUIDFromBytes(name.getBytes()), name, type);
+    }
+
+    public static Optional<SettingID<?>> fromUuid(UUID uuid) {
+        return Stream.of(TYPES).filter(settingID -> Objects.equals(settingID.id, uuid)).findFirst();
     }
 
 // ================================================================================================================================== //
@@ -59,7 +66,8 @@ public final class SettingID<T> {
 // ================================================================================================================================== //
 
     private final UUID id;
-    private final String name;
 
+    @ToString.Include
+    private final String name;
     private final Class<T> type;
 }

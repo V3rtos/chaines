@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.ResponseRow;
 import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
+import me.moonways.bridgenet.jdbc.core.compose.ParameterType;
 import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
 import me.moonways.bridgenet.jdbc.entity.EntityID;
 import me.moonways.bridgenet.jdbc.entity.EntityRepository;
@@ -13,6 +14,7 @@ import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @UtilityClass

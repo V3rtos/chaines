@@ -1,5 +1,7 @@
 package me.moonways.bridgenet.test.data;
 
+import java.util.UUID;
+
 public final class TestConst {
 
     public static final class Game {
@@ -8,7 +10,13 @@ public final class TestConst {
     }
 
     public static final class Player {
+        public static final UUID ID = UUID.randomUUID();
         public static final String NICKNAME = "itzstonlex";
+    }
+
+    public static final class Friend {
+        public static final UUID FRIEND_ID = UUID.randomUUID();
+        public static final String FRIEND_NICKNAME = "bridgenet_user";
     }
 
     public static final class Report {

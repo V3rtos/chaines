@@ -38,7 +38,7 @@ public class EntityPersistenceUtil {
 
     public String getEntityName(Class<?> entityClass) {
         if (!isEntity(entityClass)) {
-            return null;
+            throw new DatabaseEntityException("Class " + entityClass.getName() + " is not annotated as Entity");
         }
         return entityClass.getDeclaredAnnotation(DatabaseEntity.class).name();
     }
@@ -130,7 +130,7 @@ public class EntityPersistenceUtil {
 
     public List<WrappedEntityParameter> getParameters(Object source) {
         if (!isEntity(source)) {
-            return Collections.emptyList();
+            throw new DatabaseEntityException("Class " + source.getClass().getName() + " is not annotated as Entity");
         }
         return Arrays.stream(source.getClass().getDeclaredMethods())
                 .filter(EntityPersistenceUtil::isParameter)
@@ -140,7 +140,7 @@ public class EntityPersistenceUtil {
 
     public List<WrappedEntityParameter> getParameters(Class<?> entityClass) {
         if (!isEntity(entityClass)) {
-            return Collections.emptyList();
+            throw new DatabaseEntityException("Class " + entityClass.getName() + " is not annotated as Entity");
         }
         return Arrays.stream(entityClass.getDeclaredMethods())
                 .filter(EntityPersistenceUtil::isParameter)

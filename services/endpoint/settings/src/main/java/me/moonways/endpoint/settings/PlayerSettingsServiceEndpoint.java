@@ -39,7 +39,7 @@ public class PlayerSettingsServiceEndpoint extends EndpointRemoteObject implemen
 
     @Override
     public Collection<SettingID<?>> getTotalSettings() throws RemoteException {
-        return Arrays.asList(SettingID.TYPES);
+        return Collections.unmodifiableCollection(Arrays.asList(SettingID.TYPES));
     }
 
     @Override
