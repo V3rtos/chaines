@@ -5,7 +5,7 @@ import me.moonways.bridgenet.rsi.service.RemoteService;
 import me.moonways.bridgenet.model.players.connection.PlayerConnection;
 import me.moonways.bridgenet.model.players.leveling.PlayerLeveling;
 import me.moonways.bridgenet.model.players.offline.PlayerOfflineManager;
-import me.moonways.bridgenet.model.players.permission.PlayerPermissions;
+import me.moonways.bridgenet.model.permissions.PermissionsServiceModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;
@@ -16,8 +16,6 @@ public interface PlayersServiceModel extends RemoteService {
     PlayerConnection getPlayerConnection() throws RemoteException;
 
     PlayerLeveling getPlayerLeveling() throws RemoteException;
-
-    PlayerPermissions getPlayerPermissions() throws RemoteException;
 
     PlayerSocials getPlayerSocials() throws RemoteException;
 

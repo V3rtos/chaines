@@ -12,7 +12,7 @@ Settings - Внутриигровой сервис удаленного дост
 
 ```java
 @Inject
-private PlayerSettingsServiceModel settingsService;
+private PlayerSettingsServiceModel serviceModel;
 ```
 
 ### Интерфейс представляет из себя следующее описание:

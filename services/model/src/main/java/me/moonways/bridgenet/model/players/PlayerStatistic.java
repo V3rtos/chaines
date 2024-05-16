@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.model.players;
 
-import me.moonways.bridgenet.model.players.permission.PermissionGroup;
+import me.moonways.bridgenet.model.permissions.group.PermissionGroup;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.Remote;

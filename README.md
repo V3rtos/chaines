@@ -56,6 +56,7 @@ built on layer-services architecture.
     * [ENDPOINT / REPORTS](.docs/services/reports-endpoint.md)
     * [ENDPOINT / SERVERS](.docs/services/servers-endpoint.md)
     * [ENDPOINT / SETTINGS](.docs/services/settings-endpoint.md)
+    * [ENDPOINT / PERMISSIONS](.docs/services/permissions-endpoint.md)
 * [Bridgenet Test-Engine](.docs/test-engine.md)
 
 ---
@@ -106,7 +107,7 @@ $ ./bridgenet build
 ## Сборка системы
 
 После выполнения скриптов и команд, информация к которым предоставлена выше -<br>
-в локальном проекте должна будет создасться папка `.build`<br>
+в локальном проекте должна будет создаться папка `.build`<br>
 <br>
 На актуальный момент написания документации полное содержимое выглядит следующим образом:
 

@@ -285,6 +285,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                 entityId = EntityID.fromId(
                         Optional.ofNullable(result.get().findFirst())
                                 .map(responseRow -> responseRow.field(0))
+                                .filter(field -> field.getAsObject() instanceof Number)
                                 .map(Field::getAsLong)
                                 .orElse(EntityID.NOT_AUTO_GENERATED.getId())
                 );

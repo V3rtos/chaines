@@ -105,5 +105,13 @@
             <!-- Target service class type -->
             <modelPath>me.moonways.bridgenet.model.settings.PlayerSettingsServiceModel</modelPath>
         </service>
+        <service>
+            <!-- RMI Protocol service bind port -->
+            <bindPort>7011</bindPort>
+            <!-- Service direction name -->
+            <name>permissions</name>
+            <!-- Target service class type -->
+            <modelPath>me.moonways.bridgenet.model.permissions.PermissionsServiceModel</modelPath>
+        </service>
     </services>
 </configuration>
