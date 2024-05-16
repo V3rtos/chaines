@@ -49,6 +49,11 @@ public final class PermissionsManagerStub implements PermissionsManager {
                 repository.newSearchMarker()
                         .withGet(EntityPermission::getPlayerId, playerId))
                 .stream()
+                .peek(entityPermission -> {
+                    if (entityPermission.isExpired()) {
+                        deletePermission(playerId, fromEntityPermission(entityPermission));
+                    }
+                })
                 .filter(entityPermission -> !entityPermission.isExpired())
                 .map(PermissionsManagerStub::fromEntityPermission)
                 .collect(Collectors.toSet());

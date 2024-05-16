@@ -1,6 +1,8 @@
 package me.moonways.bridgenet.test.connections.services;
 
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.event.EventService;
+import me.moonways.bridgenet.api.event.subscribe.EventSubscribeBuilder;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.permissions.PermissionsServiceModel;
 import me.moonways.bridgenet.model.permissions.group.GroupTypes;
@@ -32,6 +34,9 @@ public class PermissionsServiceEndpointTest {
 
     @Inject
     private PermissionsServiceModel serviceModel;
+
+    @Inject
+    private EventService eventService;
 
     @Test
     @TestOrdered(1)
@@ -84,21 +89,23 @@ public class PermissionsServiceEndpointTest {
 
 
     private Optional<PlayerPermissionPutEvent> processPermissionAdd(Permission permission) throws RemoteException {
+        eventService.subscribe(
+                EventSubscribeBuilder.newBuilder(PlayerPermissionPutEvent.class)
+                        .follow(log::debug)
+                        .build());
+
         PermissionsManager permissions = serviceModel.getPermissions();
-
-        Optional<PlayerPermissionPutEvent> eventOptional = permissions.addPermission(TestConst.Player.ID, permission);
-        eventOptional.ifPresent(log::debug);
-
-        return eventOptional;
+        return permissions.addPermission(TestConst.Player.ID, permission);
     }
 
     private Optional<PlayerPermissionRemoveEvent> processPermissionRemove(Permission permission) throws RemoteException {
+        eventService.subscribe(
+                EventSubscribeBuilder.newBuilder(PlayerPermissionRemoveEvent.class)
+                        .follow(log::debug)
+                        .build());
+
         PermissionsManager permissions = serviceModel.getPermissions();
-
-        Optional<PlayerPermissionRemoveEvent> eventOptional = permissions.removePermission(TestConst.Player.ID, permission);
-        eventOptional.ifPresent(log::debug);
-
-        return eventOptional;
+        return permissions.removePermission(TestConst.Player.ID, permission);
     }
 
     @Test
@@ -118,6 +125,11 @@ public class PermissionsServiceEndpointTest {
     @Test
     @TestOrdered(7)
     public void test_updateGroup() throws RemoteException {
+        eventService.subscribe(
+                EventSubscribeBuilder.newBuilder(PlayerGroupUpdateEvent.class)
+                        .follow(log::debug)
+                        .build());
+
         GroupsManager groups = serviceModel.getGroups();
 
         Optional<PlayerGroupUpdateEvent> eventOptional = groups.setPlayerGroup(TestConst.Player.ID, GroupTypes.DEVELOPER);
