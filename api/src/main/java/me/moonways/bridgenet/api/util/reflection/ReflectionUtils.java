@@ -65,23 +65,23 @@ public class ReflectionUtils {
         try {
             return instance.getClass().getDeclaredField(name);
         } catch (NoSuchFieldException exception) {
-            throw new RuntimeException(exception);
+            throw new BridgenetReflectionException(exception);
         }
     }
 
     public Object createInstance(Class<?> cls) {
-        Object instance = tryCreateInstanceByConstructor(cls);
+        Object instance = tryConstructInstanceOrNull(cls);
         if (instance == null) {
             try {
                 return UNSAFE.allocateInstance(cls);
             } catch (InstantiationException exception) {
-                throw new RuntimeException(exception);
+                throw new BridgenetReflectionException(exception);
             }
         }
         return instance;
     }
 
-    private Object tryCreateInstanceByConstructor(Class<?> cls) {
+    private Object tryConstructInstanceOrNull(Class<?> cls) {
         try {
             Constructor<?> constructor = cls.getConstructor();
             return constructor.newInstance();
