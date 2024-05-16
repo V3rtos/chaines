@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.test.engine;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.ToString;
 import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.test.engine.persistance.PersistenceAcceptType;
@@ -23,7 +22,6 @@ public class ExternalTestingObject extends TestingObject {
         this.frameworkField = frameworkField;
     }
 
-    @SneakyThrows
     public void setInstanceAt(Object source) {
         ReflectionUtils.setField(source, frameworkField.getName(), getInstance());
     }

@@ -4,6 +4,7 @@ import javassist.util.proxy.ProxyFactory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.jdbc.core.compose.ConditionBinder;
 import me.moonways.bridgenet.jdbc.core.compose.ConditionMatcher;
 import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
@@ -136,7 +137,7 @@ public final class SearchMarker<T> {
 
         private Object[] prepareConstructValues() {
             return Arrays.stream(prepareConstructTypes())
-                    .map(EntityMethodHandler::defaultReturn)
+                    .map(ReflectionUtils::defaultValue)
                     .toArray(Object[]::new);
         }
 

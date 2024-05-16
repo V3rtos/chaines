@@ -61,4 +61,8 @@ public final class TestConst {
         public static final String PLAYER_NAME_COLUMN = "NAME";
         public static final String PLAYER_AGE_COLUMN = "AGE";
     }
+
+    public static final class Interceptor {
+        public static final String HELLO_MESSAGE = "Hello world!";
+    }
 }
