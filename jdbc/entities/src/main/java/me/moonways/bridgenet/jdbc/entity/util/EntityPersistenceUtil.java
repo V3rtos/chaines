@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
-import me.moonways.bridgenet.jdbc.entity.persistence.DatabaseEntity;
+import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityExternalParameter;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityId;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
@@ -13,10 +13,8 @@ import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -29,7 +27,7 @@ public class EntityPersistenceUtil {
     }
 
     public boolean isEntity(Class<?> entityClass) {
-        return entityClass.isAnnotationPresent(DatabaseEntity.class);
+        return entityClass.isAnnotationPresent(Entity.class);
     }
 
     public String getEntityName(Object object) {
@@ -40,7 +38,7 @@ public class EntityPersistenceUtil {
         if (!isEntity(entityClass)) {
             throw new DatabaseEntityException("Class " + entityClass.getName() + " is not annotated as Entity");
         }
-        return entityClass.getDeclaredAnnotation(DatabaseEntity.class).name();
+        return entityClass.getDeclaredAnnotation(Entity.class).name();
     }
 
     public boolean isEntityId(Method method) {

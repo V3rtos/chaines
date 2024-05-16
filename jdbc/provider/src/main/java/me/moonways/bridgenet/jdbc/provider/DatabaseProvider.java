@@ -9,7 +9,6 @@ import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
 import me.moonways.bridgenet.jdbc.core.compose.impl.PatternDatabaseComposerImpl;
 import me.moonways.bridgenet.jdbc.core.security.Credentials;
 import me.moonways.bridgenet.jdbc.core.wrap.JdbcWrapper;
-import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;

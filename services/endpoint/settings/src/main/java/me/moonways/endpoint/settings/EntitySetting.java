@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
-import me.moonways.bridgenet.jdbc.entity.persistence.DatabaseEntity;
+import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
 import me.moonways.bridgenet.model.settings.Setting;
 
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @ToString
 @EqualsAndHashCode
-@DatabaseEntity(name = "players_settings")
+@Entity(name = "players_settings")
 public class EntitySetting {
 
     public static EntitySetting fromSetting(UUID playerID, Setting<?> setting) throws RemoteException {
