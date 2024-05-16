@@ -1,7 +1,9 @@
 package me.moonways.bridgenet.api.util.reflection;
 
 import lombok.experimental.UtilityClass;
+import sun.misc.Unsafe;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,6 +11,18 @@ import java.util.stream.Stream;
 
 @UtilityClass
 public class ReflectionUtils {
+
+    private static final Unsafe UNSAFE;
+    static {
+        try {
+            Field unsafeInstanceField = Unsafe.class.getDeclaredField("theUnsafe");
+            unsafeInstanceField.setAccessible(true);
+
+            UNSAFE = ((Unsafe) unsafeInstanceField.get(null));
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 
     public Object callMethod(Object instance, String methodName, Class<?>[] params, Object[] args) {
         Class<?> instanceType = instance.getClass();
@@ -44,6 +58,36 @@ public class ReflectionUtils {
         }
         catch (NoSuchFieldException | IllegalAccessException exception) {
             throw new BridgenetReflectionException(exception);
+        }
+    }
+
+    public Field getField(Object instance, String name) {
+        try {
+            return instance.getClass().getDeclaredField(name);
+        } catch (NoSuchFieldException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    public Object createInstance(Class<?> cls) {
+        Object instance = tryCreateInstanceByConstructor(cls);
+        if (instance == null) {
+            try {
+                return UNSAFE.allocateInstance(cls);
+            } catch (InstantiationException exception) {
+                throw new RuntimeException(exception);
+            }
+        }
+        return instance;
+    }
+
+    private Object tryCreateInstanceByConstructor(Class<?> cls) {
+        try {
+            Constructor<?> constructor = cls.getConstructor();
+            return constructor.newInstance();
+
+        } catch (Exception exception) {
+            return null;
         }
     }
 }
