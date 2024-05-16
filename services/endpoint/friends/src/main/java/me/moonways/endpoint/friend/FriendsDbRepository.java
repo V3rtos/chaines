@@ -13,36 +13,36 @@ public class FriendsDbRepository {
     @Inject
     private EntityRepositoryFactory repositoryFactory;
 
-    private EntityRepository<FriendPair> friendPairEntityDao;
+    private EntityRepository<EntityFriend> friendPairEntityDao;
 
-    public EntityRepository<FriendPair> getRepository() {
+    public EntityRepository<EntityFriend> getRepository() {
         if (friendPairEntityDao == null) {
-            friendPairEntityDao = repositoryFactory.fromEntityType(FriendPair.class);
+            friendPairEntityDao = repositoryFactory.fromEntityType(EntityFriend.class);
         }
         return friendPairEntityDao;
     }
 
     public List<UUID> findFriendsList(UUID playerID) {
-        EntityRepository<FriendPair> friendsPairRepository = getRepository();
+        EntityRepository<EntityFriend> friendsPairRepository = getRepository();
         return friendsPairRepository.searchManyIf(friendsPairRepository.newSearchMarker()
-                        .withGet(FriendPair::getPlayerID, playerID))
+                        .withGet(EntityFriend::getPlayerID, playerID))
                 .stream()
-                .map(FriendPair::getFriendID)
+                .map(EntityFriend::getFriendID)
                 .collect(Collectors.toList());
     }
 
-    public void addFriend(FriendPair pair) {
-        EntityRepository<FriendPair> friendsPairRepository = getRepository();
+    public void addFriend(EntityFriend pair) {
+        EntityRepository<EntityFriend> friendsPairRepository = getRepository();
         friendsPairRepository.insertMany(pair, reverse(pair));
     }
 
-    public void removeFriend(FriendPair pair) {
-        EntityRepository<FriendPair> friendsPairRepository = getRepository();
+    public void removeFriend(EntityFriend pair) {
+        EntityRepository<EntityFriend> friendsPairRepository = getRepository();
         friendsPairRepository.deleteMany(pair, reverse(pair));
     }
 
-    private FriendPair reverse(FriendPair pair) {
-        return FriendPair.builder()
+    private EntityFriend reverse(EntityFriend pair) {
+        return EntityFriend.builder()
                 .playerID(pair.getFriendID())
                 .friendID(pair.getPlayerID())
                 .build();

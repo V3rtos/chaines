@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.jdbc.core.compose.*;
 import me.moonways.bridgenet.jdbc.core.compose.template.CreationTemplate;
-import me.moonways.bridgenet.jdbc.core.compose.template.DeletionTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.InsertionTemplate;
-import me.moonways.bridgenet.jdbc.core.compose.template.SearchTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.collection.PredicatesTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.collection.SignatureTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedQuery;
@@ -21,7 +19,7 @@ import java.util.*;
 @RequiredArgsConstructor
 class EntityOperationComposer {
 
-    private static final Set<String> tables = Collections.synchronizedSet(new HashSet<>());
+    private static final Set<String> TABLES_STORE = Collections.synchronizedSet(new HashSet<>());
 
     @Getter
     @Builder
@@ -37,18 +35,18 @@ class EntityOperationComposer {
 
     private final DatabaseComposer composer;
 
-    private EntityComposedOperation composeWithContainer(EntityDescriptor entity, CompletedQuery query) {
-        List<CompletedQuery> queries = new ArrayList<>();
+    private EntityComposedOperation composeWithContainer(EntityDescriptor entity, CompletedQuery completedQuery) {
+        List<CompletedQuery> completedQueryArrayList = new ArrayList<>();
 
-        boolean contains = tables.contains(entity.getContainerName());
+        boolean contains = TABLES_STORE.contains(entity.getContainerName());
         if (!contains) {
-            queries.add(prepareCreateContainerQuery(entity));
+            completedQueryArrayList.add(prepareCreateContainerQuery(entity));
         }
 
-        queries.add(query);
+        completedQueryArrayList.add(completedQuery);
 
         return EntityComposedOperation.builder()
-                .queries(queries)
+                .queries(completedQueryArrayList)
                 .resultIndex(contains ? 0 : 1)
                 .build();
     }
@@ -144,7 +142,6 @@ class EntityOperationComposer {
 
     public EntityComposedOperation composeInsert(EntityDescriptor entity) {
         return composeWithContainer(entity, prepareInsertQuery(entity));
-
     }
 
     private CompletedQuery prepareInsertQuery(EntityDescriptor entity) {
@@ -171,12 +168,12 @@ class EntityOperationComposer {
                 .name(entity.getContainerName());
 
         SignatureTemplate signatureTemplate = composer.signature();
-        for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
+
+        for (EntityParametersDescriptor.ParameterUnit parameterUnit : new ArrayList<>(entity.getParameters().getParameterUnits())) {
             signatureTemplate = signatureTemplate.with(toStyledParameter(parameterUnit));
         }
 
-        tables.add(entity.getContainerName());
-
+        TABLES_STORE.add(entity.getContainerName());
         return creationTemplate.signature(signatureTemplate.combine())
                 .combine();
     }

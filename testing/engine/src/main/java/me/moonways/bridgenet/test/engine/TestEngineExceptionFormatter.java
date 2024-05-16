@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 public class TestEngineExceptionFormatter {
 
+    private static final String STACKTRACE_ELEMENT_PREFIX = "me.moonways";
     private static final String RESOURCE_PATH = "stacktrace.pattern";
     private static final String ELEMENT_LINE_PREFIX = "!@";
     private static final String
@@ -56,7 +57,7 @@ public class TestEngineExceptionFormatter {
         String elementLinePattern = findElementLinePattern(pattern);
         return Stream.of(exception.getStackTrace())
                 .filter(stackTraceElement -> !stackTraceElement.isNativeMethod())
-                .filter(stackTraceElement -> !filter || stackTraceElement.getClassName().contains("bridgenet"))
+                .filter(stackTraceElement -> !filter || stackTraceElement.getClassName().contains(STACKTRACE_ELEMENT_PREFIX))
                 .map(stackTraceElement -> replaceElementPlaceholders(stackTraceElement, elementLinePattern))
                 .collect(Collectors.joining("\n"));
     }

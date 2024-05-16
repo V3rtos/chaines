@@ -55,6 +55,7 @@ built on layer-services architecture.
     * [ENDPOINT / PLAYERS](.docs/services/players-endpoint.md)
     * [ENDPOINT / REPORTS](.docs/services/reports-endpoint.md)
     * [ENDPOINT / SERVERS](.docs/services/servers-endpoint.md)
+    * [ENDPOINT / SETTINGS](.docs/services/settings-endpoint.md)
 * [Bridgenet Test-Engine](.docs/test-engine.md)
 
 ---
@@ -122,11 +123,8 @@ $ ./bridgenet build
 `me.moonways.bridgenet.bootstrap.AppStarter`
 
 Для тестирования отдельных систем и подсистем был реализован 
-модуль `test-engine`
-
-Его основной код содержит базовую реализацию интеграции Bridgenet-сервера 
-в запуск юнит-тестов, а каждый юнит-тест отдельно запускает 
-локальную сборку Bridgenet-сервера.
-
----
+модуль `testing`, разбитый на несколько модулей:
+- **Test-Data**: Сборка модельных компонентов, вспомогательных тестированию - константы, базовые реализации абстракций, и прочее... 
+- **Test-Engine**: Фреймворк, базирующийся на кастомном раннере JUnit, вспомогающий к автоматизации процессов тестирования относительно системы Bridgenet.
+- **Test-Units**: Юнит-тесты
 

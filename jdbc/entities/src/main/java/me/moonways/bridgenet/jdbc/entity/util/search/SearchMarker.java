@@ -58,7 +58,7 @@ public final class SearchMarker<T> {
                 .build());
     }
 
-    public SearchMarker<T> with(String name, SearchElement<?> element) {
+    public <E> SearchMarker<T> with(String name, SearchElement<E> element) {
         if (element.getExpectation() == null) {
             throw new NullPointerException("SearchElement#getExpectation() not filled");
         }

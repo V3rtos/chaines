@@ -1,19 +1,14 @@
 package me.moonways.bridgenet.jdbc.entity.util;
 
 import lombok.experimental.UtilityClass;
-import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.jdbc.core.ResponseRow;
-import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
-import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
 import me.moonways.bridgenet.jdbc.entity.EntityID;
-import me.moonways.bridgenet.jdbc.entity.EntityRepository;
-import me.moonways.bridgenet.jdbc.entity.ForceEntityRepository;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 @UtilityClass
 public class EntityReadAndWriteUtil {
@@ -79,13 +74,13 @@ public class EntityReadAndWriteUtil {
     }
 
     public Object write(EntityDescriptor entity) {
-        Object instance = JavaReflectionUtil.createInstance(entity.getRootClass());
+        Object instance = ReflectionUtils.createInstance(entity.getRootClass());
 
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
             Optional<String> fieldNameOptional = EntityParameterNameUtil.fromGetter(parameterUnit.findGetter(entity.getRootClass()));
 
             fieldNameOptional.ifPresent(name ->
-                    JavaReflectionUtil.setFieldValue(instance, name, parameterUnit.getValue()));
+                    ReflectionUtils.setField(instance, name, parameterUnit.getValue()));
         }
 
         return instance;
