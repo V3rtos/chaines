@@ -69,7 +69,7 @@ public class ReflectionUtils {
         }
     }
 
-    public Object createInstance(Class<?> cls) {
+    public Object createInstance(Class cls) {
         Object instance = tryConstructInstanceOrNull(cls);
         if (instance == null) {
             try {
