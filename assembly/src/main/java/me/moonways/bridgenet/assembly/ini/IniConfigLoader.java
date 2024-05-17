@@ -14,7 +14,10 @@ import java.util.stream.Collectors;
 
 public final class IniConfigLoader {
 
-    public IniConfig loadAbsolute(@NotNull File file) {
+    public IniConfig loadAbsolute(File file) {
+        if (file == null) {
+            return null;
+        }
         try {
             return load(new FileInputStream(file));
         }
@@ -23,7 +26,10 @@ public final class IniConfigLoader {
         }
     }
 
-    public IniConfig load(@NotNull InputStream inputStream) {
+    public IniConfig load(InputStream inputStream) {
+        if (inputStream == null) {
+            return null;
+        }
         Set<IniGroup> properties = loadGroups(inputStream);
         return new IniConfig(properties);
     }

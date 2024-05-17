@@ -59,6 +59,11 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
             String resourceName = String.format(LANGUAGES_CONFIGS_FORMAT, language.getName());
             IniConfig iniConfig = assembly.readIniConfig(resourceName);
 
+            if (iniConfig == null) {
+                log.warn("§4Language resource /{} is undefined", resourceName);
+                return;
+            }
+
             RegisteredLanguage registeredLanguage =
                     RegisteredLanguage.builder()
                             .language(language)

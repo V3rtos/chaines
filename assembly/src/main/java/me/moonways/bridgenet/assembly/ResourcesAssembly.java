@@ -132,7 +132,7 @@ public class ResourcesAssembly {
      *
      * @param resourceName - наименование ресурса.
      */
-    public <T extends XmlRootObject> IniConfig readIniConfig(String resourceName) {
+    public IniConfig readIniConfig(String resourceName) {
         return iniConfigLoader.load(readResourceStream(resourceName));
     }
 
