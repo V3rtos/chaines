@@ -84,7 +84,7 @@ public class GuiServiceEndpointTest {
 
     @Test
     public void test_createGuiWithItems() throws RemoteException{
-        Gui gui = serviceModel.createGui(GuiType.CHEST);
+        Gui gui = serviceModel.createGui(TestConst.Inventory.TYPE);
         gui.setItem(TestConst.Items.SLOT,
                 ItemStack.create()
                         .material(TestConst.Items.MATERIAL)
