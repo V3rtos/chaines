@@ -4,35 +4,41 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GuiSlot {
 
-    public static GuiSlot matrix(int x, int y) {
+    @Contract("_, _ -> new")
+    public static @NotNull GuiSlot matrix(int x, int y) {
         return new GuiSlot(y * 9 - (9 - x));
     }
 
-    public static GuiSlot at(int slot) {
+    @Contract("_ -> new")
+    public static @NotNull GuiSlot at(int slot) {
         return new GuiSlot(slot);
     }
 
-    public static GuiSlot first() {
+    @Contract(" -> new")
+    public static @NotNull GuiSlot first() {
         return at(1);
     }
 
-    public static GuiSlot center(int row, GuiDescription description) {
+    public static @NotNull GuiSlot center(int row, @NotNull GuiDescription description) {
         int rowSize = description.getType().getRowSize();
         return at(((row - 1) * rowSize) + (rowSize / 2) + 1);
     }
 
-    public static GuiSlot center(GuiDescription description) {
+    public static @NotNull GuiSlot center(@NotNull GuiDescription description) {
         int middleRow = description.getSize() / description.getType().getRowSize();
         return center(middleRow, description);
     }
 
-    public static GuiSlot last(GuiDescription description) {
+    @Contract("_ -> new")
+    public static @NotNull GuiSlot last(@NotNull GuiDescription description) {
         return at(description.getSize());
     }
 
