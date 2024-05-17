@@ -17,8 +17,7 @@ public class ItemsStub implements Items {
 
     @Override
     public ItemStack empty(int amount) throws RemoteException {
-        return ItemStack.create()
-                .amount(amount);
+        return empty().amount(amount);
     }
 
     @Override
