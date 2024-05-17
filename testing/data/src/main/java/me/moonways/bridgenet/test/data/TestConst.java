@@ -1,5 +1,11 @@
 package me.moonways.bridgenet.test.data;
 
+import me.moonways.bridgenet.model.gui.GuiDescription;
+import me.moonways.bridgenet.model.gui.GuiSlot;
+import me.moonways.bridgenet.model.gui.GuiType;
+import me.moonways.bridgenet.model.gui.click.ClickType;
+import me.moonways.bridgenet.model.gui.item.entries.material.Material;
+import me.moonways.bridgenet.model.gui.item.types.Materials;
 import me.moonways.bridgenet.model.language.Language;
 import me.moonways.bridgenet.model.language.Message;
 import me.moonways.bridgenet.model.permissions.permission.Permission;
@@ -43,6 +49,19 @@ public final class TestConst {
         public static final Message ANY_UNKNOWN_MESSAGE = Message.keyed("any.unknown");
     }
 
+    public static final class Items {
+        public static final GuiSlot SLOT = GuiSlot.first();
+        public static final Material MATERIAL = Materials.DIAMOND_BLOCK;
+        public static final String NAME = "Tested item stack";
+        public static final ClickType CLICK_TYPE = ClickType.LEFT_MOUSE;
+    }
+
+    public static final class Inventory {
+        public static final GuiType TYPE = GuiType.CHEST;
+        public static final String TITLE = "Testing inventory";
+        public static final int SIZE = GuiDescription.toSize(4, TYPE);
+    }
+
     public static final class Entity {
         public static final String FIRST_NAME = "Mikhail";
         public static final String LAST_NAME = "Sterkhov";
@@ -51,7 +70,6 @@ public final class TestConst {
     }
 
     public static final class SqlQuery {
-
         public static final String PLAYERS_CREATE_ENCODED_TABLE_NATIVE = "CREATE TABLE IF NOT EXISTS Players ( ID BIGINT AUTO_INCREMENT NOT NULL UNIQUE , NAME VARCHAR(32) UNIQUE NOT NULL  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, AGE INT NOT NULL DEFAULT 1 , PRIMARY KEY ( ID, NAME ) ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
         public static final String PLAYERS_CREATE_TABLE_NATIVE = "CREATE TABLE IF NOT EXISTS Players ( ID BIGINT AUTO_INCREMENT NOT NULL UNIQUE , NAME VARCHAR(32) UNIQUE NOT NULL, AGE INT NOT NULL DEFAULT 1 , PRIMARY KEY ( ID, NAME ) )";
         public static final String PLAYERS_DELETE_TABLE_NATIVE = "DROP TABLE Players";

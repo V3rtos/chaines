@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.bootstrap.hook.type;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
