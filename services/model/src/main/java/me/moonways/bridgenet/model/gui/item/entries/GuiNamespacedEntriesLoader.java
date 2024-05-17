@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.IgnoredRegistry;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,7 +30,7 @@ public final class GuiNamespacedEntriesLoader<T extends ItemsEntry> {
     @Inject
     private ResourcesAssembly assembly;
 
-    public void load(List<GuiNamespacedEntry<T>> entries) {
+    public void load(@NotNull List<GuiNamespacedEntry<T>> entries) {
         InputStream inputStream = assembly.readResourceStream(DATA_FOLDER + resourceName);
         JsonElement jsonElement = JsonParser.parseReader(
                 new JsonReader(

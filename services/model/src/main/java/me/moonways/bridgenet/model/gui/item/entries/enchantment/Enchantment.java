@@ -2,6 +2,7 @@ package me.moonways.bridgenet.model.gui.item.entries.enchantment;
 
 import lombok.*;
 import me.moonways.bridgenet.model.gui.item.entries.ItemsEntryable;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @ToString
@@ -9,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Enchantment implements ItemsEntryable<EnchantmentEntry> {
 
-    public static Enchantment get(@NotNull String namespace) {
+    @Contract("_ -> new")
+    public static @NotNull Enchantment get(@NotNull String namespace) {
         return new Enchantment(namespace);
     }
 

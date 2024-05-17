@@ -5,6 +5,8 @@ import lombok.experimental.Accessors;
 import me.moonways.bridgenet.model.gui.item.entries.enchantment.Enchantment;
 import me.moonways.bridgenet.model.gui.item.entries.material.Material;
 import me.moonways.bridgenet.model.gui.item.types.Materials;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +20,13 @@ import java.util.List;
 @NoArgsConstructor
 public final class ItemStack {
 
-    public static ItemStack create() {
+    public static @NotNull ItemStack create() {
         ItemStack itemStack = new ItemStack();
         setDefaults(itemStack);
         return itemStack;
     }
 
-    private static void setDefaults(ItemStack itemStack) {
+    private static void setDefaults(@NotNull ItemStack itemStack) {
         itemStack.amount = 1;
         itemStack.material = Materials.AIR;
         itemStack.lore = new ArrayList<>();
@@ -48,9 +50,10 @@ public final class ItemStack {
         return this;
     }
 
+    @Contract(" -> new")
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public ItemStack clone() {
+    public @NotNull ItemStack clone() {
         return new ItemStack(amount, durability, material, name, lore, flags, enchantments);
     }
 }
