@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.connections.services;
+package me.moonways.bridgenet.test.services;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.event.EventService;

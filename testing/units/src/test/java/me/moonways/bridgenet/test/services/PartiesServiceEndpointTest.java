@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.connections.services;
+package me.moonways.bridgenet.test.services;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.parties.PartiesServiceModel;
