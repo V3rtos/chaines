@@ -39,19 +39,19 @@ public final class GuiSlot {
     @EqualsAndHashCode.Include
     private int slot;
 
-    public final int get() {
+    public int get() {
         return slot;
     }
 
-    public final int x() {
+    public int x() {
         return slot % 10;
     }
 
-    public final int y() {
+    public int y() {
         return slot / 10 + 1;
     }
 
-    public final GuiSlot right(int count) {
+    public GuiSlot right(int count) {
         int right = (slot + count);
         if (right <= 0)
             throw new IllegalArgumentException("Slot value cannot be < 0");
@@ -60,7 +60,7 @@ public final class GuiSlot {
         return this;
     }
 
-    public final GuiSlot left(int count) {
+    public GuiSlot left(int count) {
         int left = (slot - count);
         if (left <= 0)
             throw new IllegalArgumentException("Slot value cannot be < 0");
@@ -69,17 +69,17 @@ public final class GuiSlot {
         return this;
     }
 
-    public final GuiSlot up(int count) {
+    public GuiSlot up(int count) {
         return left(count * 9);
     }
 
-    public final GuiSlot down(int count) {
+    public GuiSlot down(int count) {
         return right(count * 9);
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public final GuiSlot clone() {
+    public GuiSlot clone() {
         return new GuiSlot(slot);
     }
 }
