@@ -42,7 +42,7 @@ public class ModernTestEngineTest {
 
     @Test
     @TestOrdered(2)
-    @TestSleeping(1500)
+    @TestSleeping(3000)
     public void test_sleepingTimeout() {
         log.debug("Executing test function with 3000ms timeout!");
     }

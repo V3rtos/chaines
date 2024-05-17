@@ -25,6 +25,7 @@ public final class ResourcesFileSystem {
      * @param resourceName - наименование ресурса.
      */
     private Path findPath(String resourceName) {
+        resourceName = resourceName.replace("/", File.separator);
         Path etcDirectoryPath = Paths.get("assembly", ETC_DIRECTORY_PREFIX);
 
         if (!Files.exists(etcDirectoryPath)) {
@@ -40,6 +41,7 @@ public final class ResourcesFileSystem {
      * @param resourceName - наименования поискового ресурса.
      */
     public Path findPathAtProject(String resourceName) {
+        resourceName = resourceName.replace("/", File.separator);
         String rootPathname = Paths.get("").toAbsolutePath().toString();
 
         if (rootPathname.contains(EXCLUDE_DIRECTORY_NAME)) {
@@ -60,6 +62,7 @@ public final class ResourcesFileSystem {
      * @param resourceName - наименование ресурса.
      */
     private Path findPathWithExclude(String resourceName) {
+        resourceName = resourceName.replace("/", File.separator);
         String rootPathname = Paths.get("").toAbsolutePath().toString();
 
         if (rootPathname.contains(EXCLUDE_DIRECTORY_NAME)) {

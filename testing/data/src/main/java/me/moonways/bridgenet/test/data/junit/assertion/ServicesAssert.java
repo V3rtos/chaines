@@ -6,6 +6,7 @@ import me.moonways.bridgenet.model.games.ActiveGame;
 import me.moonways.bridgenet.model.games.Game;
 import me.moonways.bridgenet.model.games.GameState;
 import me.moonways.bridgenet.model.games.GameStatus;
+import me.moonways.bridgenet.model.language.Language;
 import me.moonways.bridgenet.test.data.TestConst;
 import org.junit.Assert;
 
@@ -30,5 +31,12 @@ public class ServicesAssert {
         Assert.assertEquals(state.getPlayers(), 0);
         Assert.assertEquals(state.getSpectators(), 0);
         Assert.assertEquals(state.getStatus(), gameStatus);
+    }
+
+    public void assertLanguage(Language expect, Language actual) {
+        Assert.assertNotNull(expect);
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(expect.getId(), actual.getId());
+        Assert.assertEquals(expect.getName(), actual.getName());
     }
 }
