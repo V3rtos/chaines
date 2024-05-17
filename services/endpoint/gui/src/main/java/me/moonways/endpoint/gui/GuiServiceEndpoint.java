@@ -71,10 +71,4 @@ public final class GuiServiceEndpoint extends EndpointRemoteObject implements Gu
     public void fireClickAction(Gui gui, ItemClickEvent event) throws RemoteException {
         fireClickAction(gui.getId(), event);
     }
-
-    /*
-     *
-     * ItemStack(amount=0, durability=0, material=Material(namespace=minecraft:diamond_block, entry=MaterialEntry(id=90, maxStackSize=0, maxDamage=0, isFood=false, translationKey=block.minecraft.diamond_block, correspondingBlock=minecraft:diamond_block, eatingSound=null, drinkingSound=null)), name=Tested item stack, lore=null, flags=null, enchantments=null)
-     * ItemStack(amount=1, durability=0, material=Material(namespace=minecraft:diamond_block, entry=MaterialEntry(id=90, maxStackSize=0, maxDamage=0, isFood=false, translationKey=block.minecraft.diamond_block, correspondingBlock=minecraft:diamond_block, eatingSound=null, drinkingSound=null)), name=Tested item stack, lore=null, flags=null, enchantments=null)
-     */
 }
