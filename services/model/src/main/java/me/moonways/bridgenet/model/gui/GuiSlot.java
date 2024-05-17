@@ -83,9 +83,10 @@ public final class GuiSlot {
         return right(count * 9);
     }
 
+    @Contract(" -> new")
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public GuiSlot clone() {
+    public @NotNull GuiSlot clone() {
         return new GuiSlot(slot);
     }
 }
