@@ -40,7 +40,7 @@ public final class PermissionsManagerStub implements PermissionsManager {
 
     private final Cache<UUID, Set<Permission>> playersPermissionsCache =
             CacheBuilder.newBuilder()
-                    .expireAfterAccess(12, TimeUnit.HOURS)
+                    .expireAfterAccess(5, TimeUnit.HOURS)
                     .build();
 
     private Set<Permission> findPermissions(UUID playerId) {

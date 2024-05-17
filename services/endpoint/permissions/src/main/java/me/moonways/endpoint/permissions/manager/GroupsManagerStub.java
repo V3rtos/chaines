@@ -41,7 +41,7 @@ public final class GroupsManagerStub implements GroupsManager {
 
     private final Cache<UUID, PermissionGroup> playersGroupsCache =
             CacheBuilder.newBuilder()
-                    .expireAfterAccess(12, TimeUnit.HOURS)
+                    .expireAfterAccess(5, TimeUnit.HOURS)
                     .build();
 
     private Optional<PermissionGroup> findPlayerGroup(UUID playerId) {

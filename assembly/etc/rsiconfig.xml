@@ -113,5 +113,13 @@
             <!-- Target service class type -->
             <modelPath>me.moonways.bridgenet.model.permissions.PermissionsServiceModel</modelPath>
         </service>
+        <service>
+            <!-- RMI Protocol service bind port -->
+            <bindPort>7012</bindPort>
+            <!-- Service direction name -->
+            <name>language</name>
+            <!-- Target service class type -->
+            <modelPath>me.moonways.bridgenet.model.language.LanguageServiceModel</modelPath>
+        </service>
     </services>
 </configuration>

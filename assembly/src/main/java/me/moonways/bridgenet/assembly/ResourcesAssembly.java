@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.assembly.ini.IniConfig;
+import me.moonways.bridgenet.assembly.ini.IniConfigLoader;
 import me.moonways.bridgenet.assembly.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.assembly.jaxb.XmlRootObject;
 import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
@@ -15,7 +17,9 @@ import java.nio.charset.Charset;
 @Log4j2
 public class ResourcesAssembly {
 
-    private static final Gson GSON = new GsonBuilder().setLenient().create();
+    private static final Gson GSON = new GsonBuilder()
+            .setLenient()
+            .create();
 
     @Getter
     private final ResourcesClassLoader classLoader = new ResourcesClassLoader(ResourcesAssembly.class.getClassLoader());
@@ -23,6 +27,8 @@ public class ResourcesAssembly {
     private final ResourcesFileSystem fileSystem = new ResourcesFileSystem(this);
     @Getter
     private final XmlJaxbParser xmlJaxbParser = new XmlJaxbParser(this);
+    @Getter
+    private final IniConfigLoader iniConfigLoader = new IniConfigLoader();
 
     /**
      * Найти и прочитать ресурс во всевозможных файловых системах
@@ -118,6 +124,16 @@ public class ResourcesAssembly {
      */
     public <T extends XmlRootObject> T readXmlAtEntity(String resourceName, Class<T> entity) {
         return xmlJaxbParser.parseToDescriptorByType(readResourceStream(resourceName), entity);
+    }
+
+    /**
+     * Прочитать полное содержание ресурса и спарсить
+     * полученный текст как INI конфигурация
+     *
+     * @param resourceName - наименование ресурса.
+     */
+    public <T extends XmlRootObject> IniConfig readIniConfig(String resourceName) {
+        return iniConfigLoader.load(readResourceStream(resourceName));
     }
 
     /**

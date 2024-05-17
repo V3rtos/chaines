@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class RmiServicesModule extends TestEngineModuleAdapter {
+    private static final String SERVICES_MODEL_PACKAGE = "me.moonways.bridgenet.model";
 
     public RmiServicesModule() {
         super(TestModuleBeans.builder()
@@ -20,7 +21,8 @@ public class RmiServicesModule extends TestEngineModuleAdapter {
                                 MtpModule.class
                         ))
                 .packagesToScanning(
-                        Collections.singletonList(
+                        Arrays.asList(
+                                SERVICES_MODEL_PACKAGE,
                                 fromClassPackage(RemoteServicesManagement.class)
                         ))
                 .build());

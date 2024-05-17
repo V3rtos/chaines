@@ -1,5 +1,7 @@
 package me.moonways.bridgenet.test.data;
 
+import me.moonways.bridgenet.model.language.Language;
+import me.moonways.bridgenet.model.language.Message;
 import me.moonways.bridgenet.model.permissions.permission.Permission;
 
 import java.time.Duration;
@@ -34,6 +36,11 @@ public final class TestConst {
 
         public static final Permission PERMISSION = Permission.named(PERMISSION_NAME);
         public static final Permission TEMP_PERMISSION = Permission.temp(PERMISSION_NAME, Duration.ofSeconds(3));
+    }
+
+    public static final class Languages {
+        public static final Language ANY_UNKNOWN_LANG = Language.fromName("any_unknown");
+        public static final Message ANY_UNKNOWN_MESSAGE = Message.keyed("any.unknown");
     }
 
     public static final class Entity {
