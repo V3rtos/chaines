@@ -1,27 +1,25 @@
 package me.moonways.bridgenet.bootstrap.command;
 
-import me.moonways.bridgenet.api.command.CommandHelper;
+import me.moonways.bridgenet.api.command.Command;
+import me.moonways.bridgenet.api.command.CommandStructure;
 import me.moonways.bridgenet.api.command.GeneralCommand;
-import me.moonways.bridgenet.api.command.InjectCommand;
-import me.moonways.bridgenet.api.command.api.uses.CommandExecutionContext;
-import me.moonways.bridgenet.api.command.api.uses.entity.EntityCommandSender;
-import me.moonways.bridgenet.api.command.api.uses.entity.EntitySenderType;
+import me.moonways.bridgenet.api.command.uses.CommandExecutionContext;
+import me.moonways.bridgenet.api.command.uses.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
-import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
+import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 
 import java.util.List;
 import java.util.Map;
 
-@InjectCommand
+@Command
 public class EndpointsStatisticsCommand {
 
     @Inject
-    private RemoteServicesManagement registry;
+    private RemoteServiceRegistry registry;
 
     @GeneralCommand({"endpoint", "ep", "endpoints"})
-    @CommandHelper(senderType = EntitySenderType.CONSOLE)
     public void defaultCommand(CommandExecutionContext executionContext) {
         final EntityCommandSender entityCommandSender = executionContext.getSender();
 

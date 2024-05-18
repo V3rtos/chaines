@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.model.players.offline;
 
-import me.moonways.bridgenet.api.command.api.uses.entity.EntitySenderType;
+import me.moonways.bridgenet.api.command.uses.entity.EntitySenderType;
 import me.moonways.bridgenet.model.players.EntityPlayer;
 import me.moonways.bridgenet.model.players.Title;
 import me.moonways.bridgenet.model.servers.EntityServer;

@@ -2,18 +2,16 @@ package me.moonways.bridgenet.bootstrap.command;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import me.moonways.bridgenet.api.command.CommandHelper;
+import me.moonways.bridgenet.api.command.Command;
 import me.moonways.bridgenet.api.command.GeneralCommand;
-import me.moonways.bridgenet.api.command.InjectCommand;
-import me.moonways.bridgenet.api.command.api.uses.CommandExecutionContext;
-import me.moonways.bridgenet.api.command.api.uses.entity.EntityCommandSender;
-import me.moonways.bridgenet.api.command.api.uses.entity.EntitySenderType;
+import me.moonways.bridgenet.api.command.uses.CommandExecutionContext;
+import me.moonways.bridgenet.api.command.uses.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 
 import java.text.SimpleDateFormat;
 import java.util.function.Function;
 
-@InjectCommand
+@Command
 public class RuntimeMemoryCommand {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy в HH:mm:ss.SSS");
@@ -21,7 +19,6 @@ public class RuntimeMemoryCommand {
     private MemoryDump previousDump = MemoryDump.fix();
 
     @GeneralCommand({"mem", "memory"})
-    @CommandHelper(senderType = EntitySenderType.CONSOLE)
     public void defaultCommand(CommandExecutionContext executionContext) {
         EntityCommandSender sender = executionContext.getSender();
         MemoryDump actualDump = MemoryDump.fix();

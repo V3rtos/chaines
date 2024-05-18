@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.rsi.endpoint.persistance;
 
-import me.moonways.bridgenet.api.command.api.process.CommandService;
+import me.moonways.bridgenet.api.command.process.CommandService;
 import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;

@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.endpoint.servers.command;
 
 import me.moonways.bridgenet.api.command.*;
-import me.moonways.bridgenet.api.command.api.uses.CommandExecutionContext;
-import me.moonways.bridgenet.api.command.api.uses.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.command.uses.CommandExecutionContext;
+import me.moonways.bridgenet.api.command.uses.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 import me.moonways.bridgenet.model.servers.EntityServer;
@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Optional;
 
-@InjectCommand
+@Command
 public class ServersInfoCommand {
 
     @Inject
@@ -27,7 +27,7 @@ public class ServersInfoCommand {
     }
 
     @SubCommand({"get", "info"})
-    @CommandHelper(usage = "info <server-name>", description = "Get a server information by name", value = @CommandArg(position = 1))
+    @CommandStructure(usage = "info <server-name>", description = "Get a server information by name", value = @CommandArgument(position = 1))
     public void info(CommandExecutionContext executionContext) throws RemoteException {
         Optional<String> serverName = executionContext.getArguments().get(0);
         EntityCommandSender sender = executionContext.getSender();
@@ -43,7 +43,7 @@ public class ServersInfoCommand {
     }
 
     @SubCommand({"list", "lists"})
-    @CommandHelper(usage = "list", description = "Get a total servers list")
+    @CommandStructure(usage = "list", description = "Get a total servers list")
     public void list(CommandExecutionContext executionContext) throws RemoteException {
         List<EntityServer> totalServers = servers.getTotalServers();
         EntityCommandSender sender = executionContext.getSender();

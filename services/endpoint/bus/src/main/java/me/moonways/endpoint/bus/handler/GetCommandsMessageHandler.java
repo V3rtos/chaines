@@ -1,6 +1,6 @@
 package me.moonways.endpoint.bus.handler;
 
-import me.moonways.bridgenet.api.command.api.process.CommandService;
+import me.moonways.bridgenet.api.command.process.CommandService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.bus.message.GetCommands;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;

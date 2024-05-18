@@ -1,9 +1,9 @@
 package me.moonways.bridgenet.bootstrap.command;
 
+import me.moonways.bridgenet.api.command.Command;
 import me.moonways.bridgenet.api.command.GeneralCommand;
-import me.moonways.bridgenet.api.command.InjectCommand;
-import me.moonways.bridgenet.api.command.api.uses.CommandExecutionContext;
-import me.moonways.bridgenet.api.command.api.uses.entity.EntityCommandSender;
+import me.moonways.bridgenet.api.command.uses.CommandExecutionContext;
+import me.moonways.bridgenet.api.command.uses.entity.EntityCommandSender;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@InjectCommand
+@Command
 public class BridgenetStatisticsCommand {
 
     private static final SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS");

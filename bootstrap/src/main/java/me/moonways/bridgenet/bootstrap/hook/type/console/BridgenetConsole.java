@@ -2,10 +2,10 @@ package me.moonways.bridgenet.bootstrap.hook.type.console;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.command.api.uses.entity.ConsoleCommandSender;
+import me.moonways.bridgenet.api.command.uses.entity.ConsoleCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.command.api.uses.CommandExecutionContext;
-import me.moonways.bridgenet.api.command.api.process.CommandService;
+import me.moonways.bridgenet.api.command.uses.CommandExecutionContext;
+import me.moonways.bridgenet.api.command.process.CommandService;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
 
