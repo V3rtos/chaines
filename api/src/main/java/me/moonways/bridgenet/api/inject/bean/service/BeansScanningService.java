@@ -1,12 +1,13 @@
 package me.moonways.bridgenet.api.inject.bean.service;
 
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.IgnoredRegistry;
 import me.moonways.bridgenet.api.inject.bean.*;
 import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import me.moonways.bridgenet.api.util.pair.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.reflections.Configuration;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
@@ -28,7 +29,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("rawtypes")
 @RequiredArgsConstructor
 public class BeansScanningService {
 
@@ -51,14 +51,30 @@ public class BeansScanningService {
     }
 
     /**
+     * Создание конфигурации для сканирования и поиска бинов.
+     * @param config - конфигурация фильтра для процесса сканирования.
+     */
+    private Configuration createBeansScannerConfiguration(AnnotationProcessorConfig<?> config) {
+        ConfigurationBuilder builder = createScannerConfigurationBaseBuilder();
+
+        FilterBuilder filter = new FilterBuilder();
+        config.getPackages()
+                .forEach(filter::includePackage);
+
+        return builder
+                .setScanners(Scanners.TypesAnnotated, Scanners.SubTypes)
+                .filterInputsBy(filter);
+    }
+
+    /**
      * Воспроизвести сканирование проекта для поиска
      * и дальнейшей инициализации и применения объектов,
      * которые наследуют указанный тип класса.
      *
      * @param superclass - класс наследник, по которому собираемся искать объекты.
      */
-    public Set<Bean> scanBeansBySuperclass(Class<?> superclass) {
-        return scanTypesBySuperclass(superclass).stream().map(this::createBean)
+    public Set<Bean> scanBeansBySuperclass(@NotNull Class<?> superclass) {
+        return scanBySuperclass(superclass).stream().map(this::createBean)
                 .collect(Collectors.toSet());
     }
 
@@ -69,14 +85,45 @@ public class BeansScanningService {
      *
      * @param superclass - класс наследник, по которому собираемся искать объекты.
      */
-    public Set<Class<?>> scanTypesBySuperclass(Class<?> superclass) {
+    public Set<Class<?>> scanBySuperclass(@NotNull Class<?> superclass) {
         Configuration configuration = createScannerConfigurationBaseBuilder();
         Reflections reflections = new Reflections(configuration);
 
-        @SuppressWarnings("unchecked")
-        Set<Class<?>> classes = (Set<Class<?>>) reflections.getSubTypesOf(superclass);
+        //noinspection unchecked
+        return (Set<Class<?>>) reflections.getSubTypesOf(superclass);
+    }
 
-        return classes;
+    /**
+     * Воспроизвести сканирование проекта для поиска
+     * и дальнейшей инициализации и применения процессоров
+     * аннотаций классов, относящихся к технологии Dependency Injection.
+     *
+     * @param packageNames - имя пакейджа, в котором искать бины.
+     */
+    public List<Bean> scanByPackage(String... packageNames) {
+        if (packageNames.length == 0) {
+            return Collections.emptyList();
+        }
+
+        AnnotationProcessorConfig<Autobind> config = AnnotationProcessorConfig.newConfigBuilder(Autobind.class)
+                .addPackages(packageNames)
+                .build();
+
+        Configuration configuration = createBeansScannerConfiguration(config);
+        Reflections reflections = new Reflections(configuration);
+
+        Set<Class<?>> classes = reflections.getTypesAnnotatedWith(config.getAnnotationType());
+        List<Bean> resultList = new ArrayList<>();
+
+        for (Class<?> probablyClass : classes) {
+            for (Annotation annotation : probablyClass.getDeclaredAnnotations()) {
+                if (annotation.annotationType().isAnnotationPresent(UseTypeAnnotationProcessor.class)) {
+                    resultList.add(createBean(probablyClass));
+                }
+            }
+        }
+
+        return resultList;
     }
 
     /**
@@ -84,7 +131,7 @@ public class BeansScanningService {
      * и дальнейшей инициализации и применения процессоров
      * аннотаций классов, относящихся к технологии Dependency Injection.
      */
-    public List<TypeAnnotationProcessor<?>> scanTypeAnnotationProcessors() {
+    public List<TypeAnnotationProcessor<?>> scanAnnotationProcessors() {
         Configuration configuration = createScannerConfigurationBaseBuilder();
         Reflections reflections = new Reflections(configuration);
 
@@ -124,21 +171,6 @@ public class BeansScanningService {
         }
 
         return result;
-    }
-
-    /**
-     * Создание конфигурации для сканирования и поиска бинов.
-     * @param config - конфигурация фильтра для процесса сканирования.
-     */
-    private Configuration createBeansScannerConfiguration(AnnotationProcessorConfig<?> config) {
-        ConfigurationBuilder builder = createScannerConfigurationBaseBuilder();
-
-        FilterBuilder filter = new FilterBuilder();
-        config.getPackages().forEach(filter::includePackage);
-
-        return builder
-                .setScanners(Scanners.TypesAnnotated, Scanners.SubTypes)
-                .filterInputsBy(filter);
     }
 
     /**

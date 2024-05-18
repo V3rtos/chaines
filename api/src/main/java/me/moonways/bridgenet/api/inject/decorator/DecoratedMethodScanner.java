@@ -7,11 +7,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.decorator.config.XMLMethodHandlerDescriptor;
 import me.moonways.bridgenet.api.inject.decorator.config.XMLInterceptorDescriptor;
 import me.moonways.bridgenet.api.inject.decorator.config.XMLInputDescriptor;
-import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 
 import java.lang.annotation.Annotation;
@@ -27,10 +26,10 @@ public final class DecoratedMethodScanner {
     private final Map<String, Set<String>> conflictsMap = new HashMap<>(), inheritsMap = new HashMap<>();
 
     @Inject
-    private XmlJaxbParser xmlJaxbParser;
+    private ResourcesAssembly assembly;
 
     private XMLInterceptorDescriptor parseXmlInterceptor() {
-        return xmlJaxbParser.parseToDescriptorByType(ResourcesTypes.DECORATORS_XML, XMLInterceptorDescriptor.class);
+        return assembly.readXmlAtEntity(ResourcesTypes.DECORATORS_XML, XMLInterceptorDescriptor.class);
     }
 
     public void bindHandlers() {

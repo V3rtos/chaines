@@ -11,7 +11,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
 import me.moonways.bridgenet.api.inject.decorator.persistence.Async;
 import me.moonways.bridgenet.api.inject.decorator.persistence.KeepTime;
-import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.rest.api.HttpHost;
 import me.moonways.bridgenet.rest.server.controller.HttpContextPattern;
@@ -56,7 +56,7 @@ public class WrappedHttpServer {
     @Inject
     private BeansService beansService;
     @Inject
-    private XmlJaxbParser jaxbParser;
+    private ResourcesAssembly assembly;
 
     @Inject // self-inject
     private WrappedHttpServer current;
@@ -87,7 +87,7 @@ public class WrappedHttpServer {
     }
 
     private void initConfig() {
-        JaxbServerContext jaxbServerContext = jaxbParser.parseToDescriptorByType(ResourcesTypes.REST_SERVER_XML, JaxbServerContext.class);
+        JaxbServerContext jaxbServerContext = assembly.readXmlAtEntity(ResourcesTypes.REST_SERVER_XML, JaxbServerContext.class);
         this.exceptionHandler = new HttpServerExceptionHandler(jaxbServerContext.getPrintExceptions());
 
         initConfigInstance(jaxbServerContext);

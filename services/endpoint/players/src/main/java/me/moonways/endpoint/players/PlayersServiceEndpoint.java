@@ -6,7 +6,7 @@ import me.moonways.bridgenet.model.players.connection.PlayerConnection;
 import me.moonways.bridgenet.model.players.leveling.PlayerLeveling;
 import me.moonways.bridgenet.model.players.offline.OfflineDao;
 import me.moonways.bridgenet.model.players.offline.PlayerOfflineManager;
-import me.moonways.bridgenet.model.players.permission.PlayerPermissions;
+import me.moonways.bridgenet.model.permissions.PermissionsServiceModel;
 import me.moonways.bridgenet.model.players.social.PlayerSocials;
 import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.players.connection.PlayerConnectionStub;
@@ -24,7 +24,7 @@ public final class PlayersServiceEndpoint extends EndpointRemoteObject implement
 
     private final PlayerConnection playerConnection = new PlayerConnectionStub();
     private final PlayerLeveling playerLeveling = new PlayerLevelingStub();
-    private final PlayerPermissions playerPermissions = null;
+    private final PermissionsServiceModel permissionsServiceModel = null;
     private final PlayerSocials playerSocials = new PlayerSocialsStub();
     private final PlayerOfflineManager playerOfflineManager = null;
 

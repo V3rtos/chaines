@@ -51,10 +51,13 @@ built on layer-services architecture.
     * [ENDPOINT / GAMES](.docs/services/games-endpoint.md)
     * [ENDPOINT / GUI](.docs/services/gui-endpoint.md)
     * [ENDPOINT / GUILDS](.docs/services/guilds-endpoint.md)
+    * [ENDPOINT / LANGUAGE](.docs/services/language-endpoint.md)
     * [ENDPOINT / PARTIES](.docs/services/parties-endpoint.md)
+    * [ENDPOINT / PERMISSIONS](.docs/services/permissions-endpoint.md)
     * [ENDPOINT / PLAYERS](.docs/services/players-endpoint.md)
     * [ENDPOINT / REPORTS](.docs/services/reports-endpoint.md)
     * [ENDPOINT / SERVERS](.docs/services/servers-endpoint.md)
+    * [ENDPOINT / SETTINGS](.docs/services/settings-endpoint.md)
 * [Bridgenet Test-Engine](.docs/test-engine.md)
 
 ---
@@ -105,7 +108,7 @@ $ ./bridgenet build
 ## Сборка системы
 
 После выполнения скриптов и команд, информация к которым предоставлена выше -<br>
-в локальном проекте должна будет создасться папка `.build`<br>
+в локальном проекте должна будет создаться папка `.build`<br>
 <br>
 На актуальный момент написания документации полное содержимое выглядит следующим образом:
 
@@ -122,11 +125,8 @@ $ ./bridgenet build
 `me.moonways.bridgenet.bootstrap.AppStarter`
 
 Для тестирования отдельных систем и подсистем был реализован 
-модуль `test-engine`
-
-Его основной код содержит базовую реализацию интеграции Bridgenet-сервера 
-в запуск юнит-тестов, а каждый юнит-тест отдельно запускает 
-локальную сборку Bridgenet-сервера.
-
----
+модуль `testing`, разбитый на несколько модулей:
+- **Test-Data**: Сборка модельных компонентов, вспомогательных тестированию - константы, базовые реализации абстракций, и прочее... 
+- **Test-Engine**: Фреймворк, базирующийся на кастомном раннере JUnit, вспомогающий к автоматизации процессов тестирования относительно системы Bridgenet.
+- **Test-Units**: Юнит-тесты
 

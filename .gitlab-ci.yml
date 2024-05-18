@@ -20,15 +20,22 @@ build:
     expire_in: 5 days
     paths:
       - $CI_PROJECT_DIR/*
-#      - target/
+
 #test:
 #  image: maven:3-jdk-8
 #  stage: test
 #  interruptible: true
 #  tags:
 #    - $CI_RUNNER_TAG
+#  script:
+#    - cp -R $CI_PROJECT_DIR/.m2 $HOME
+#    - cd $CI_PROJECT_DIR
+#    - cd test-engine
+#    - mvn test
 #  dependencies:
 #    - build
-#  script: |-
-#    cd test-engine
-#    mvn test
+#  artifacts:
+#    when: always
+#    expire_in: 5 days
+#    paths:
+#      - $CI_PROJECT_DIR/*

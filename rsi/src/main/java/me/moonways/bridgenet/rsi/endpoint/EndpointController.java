@@ -2,7 +2,7 @@ package me.moonways.bridgenet.rsi.endpoint;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
+import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +15,7 @@ public class EndpointController {
     @Inject
     private BeansService beansService;
     @Inject
-    private RemoteServiceRegistry remoteServiceRegistry;
+    private RemoteServicesManagement remoteServicesManagement;
 
     private List<Endpoint> endpointsList;
 

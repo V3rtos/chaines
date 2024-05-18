@@ -102,6 +102,8 @@ public class ServersInputMessagesListener {
 
         if (serverId == null) {
             ConnectedServerStub server = createServer(input, serverInfo);
+            beansService.inject(server);
+
             serverId = container.registerServer(server);
 
             doSuccessRegister(serverId, server);

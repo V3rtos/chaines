@@ -1,10 +1,9 @@
 package me.moonways.bridgenet.bootstrap.hook;
 
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.bootstrap.xml.XMLBootstrapConfigDescriptor;
 import me.moonways.bridgenet.bootstrap.xml.XMLHookDescriptor;
@@ -16,19 +15,17 @@ import java.util.stream.Collectors;
 @Log4j2
 public final class BootstrapHookContainer {
 
-    private final Map<Class<? extends ApplicationBootstrapHook>, ApplicationBootstrapHook> instancesByHooksTypesMap = new HashMap<>();
+    private final Map<Class<? extends BootstrapHook>, BootstrapHook> instancesByHooksTypesMap = new HashMap<>();
     private final Map<Class<?>, BootstrapHookPriority> prioririesByHooksTypesMap = new HashMap<>();
     private final Map<Class<?>, XMLHookDescriptor> xmlByHooksTypesMap = new HashMap<>();
 
     @Inject
     private BeansService beansService;
-
     @Inject
-    private XmlJaxbParser jaxbParser;
+    private ResourcesAssembly assembly;
 
-    @SneakyThrows
     private XMLBootstrapConfigDescriptor parseConfiguration() {
-        return jaxbParser.parseToDescriptorByType(ResourcesTypes.BOOTSTRAP_XML,
+        return assembly.readXmlAtEntity(ResourcesTypes.BOOTSTRAP_XML,
                 XMLBootstrapConfigDescriptor.class);
     }
 
@@ -44,13 +41,13 @@ public final class BootstrapHookContainer {
 
         for (XMLHookDescriptor xmlHook : hooks) {
 
-            ApplicationBootstrapHook bootstrapHook = parseHook(xmlHook);
+            BootstrapHook bootstrapHook = parseHook(xmlHook);
             if (bootstrapHook == null)
                 continue;
 
             log.info("Hook '{}' was success parsed", xmlHook.getDisplayName());
 
-            Class<? extends ApplicationBootstrapHook> cls = bootstrapHook.getClass();
+            Class<? extends BootstrapHook> cls = bootstrapHook.getClass();
 
             xmlByHooksTypesMap.put(cls, xmlHook);
             instancesByHooksTypesMap.put(cls, bootstrapHook);
@@ -59,14 +56,14 @@ public final class BootstrapHookContainer {
         log.info("BootstrapHookContainer.bindHooks() => end;");
     }
 
-    private ApplicationBootstrapHook parseHook(XMLHookDescriptor xmlHook) {
+    private BootstrapHook parseHook(XMLHookDescriptor xmlHook) {
         final String displayName = xmlHook.getDisplayName();
         final String priorityName = xmlHook.getPriority();
         final String executorPath = xmlHook.getExecutorPath();
 
         try {
             final Class<?> cls = Class.forName(executorPath);
-            Class<? extends ApplicationBootstrapHook> hookCls = cls.asSubclass(ApplicationBootstrapHook.class);
+            Class<? extends BootstrapHook> hookCls = cls.asSubclass(BootstrapHook.class);
 
             BootstrapHookPriority priority = Enum.valueOf(BootstrapHookPriority.class, priorityName.toUpperCase());
             prioririesByHooksTypesMap.put(hookCls, priority);
@@ -80,11 +77,11 @@ public final class BootstrapHookContainer {
         return null;
     }
 
-    public String findHookName(Class<? extends ApplicationBootstrapHook> cls) {
+    public String findHookName(Class<? extends BootstrapHook> cls) {
         return xmlByHooksTypesMap.get(cls).getDisplayName();
     }
 
-    public int findHookPriorityID(Class<? extends ApplicationBootstrapHook> cls) {
+    public int findHookPriorityID(Class<? extends BootstrapHook> cls) {
         final XMLHookDescriptor xmlHook = xmlByHooksTypesMap.get(cls);
         final int defaultPriorityID = -1;
 
@@ -100,17 +97,17 @@ public final class BootstrapHookContainer {
         return Integer.parseInt(priorityIDString);
     }
 
-    public ApplicationBootstrapHook findHookInstance(Class<? extends ApplicationBootstrapHook> cls) {
-        ApplicationBootstrapHook bootstrapHook = instancesByHooksTypesMap.get(cls);
+    public BootstrapHook findHookInstance(Class<? extends BootstrapHook> cls) {
+        BootstrapHook bootstrapHook = instancesByHooksTypesMap.get(cls);
         beansService.inject(bootstrapHook);
         return bootstrapHook;
     }
 
-    public BootstrapHookPriority findHookPriority(Class<? extends ApplicationBootstrapHook> cls) {
+    public BootstrapHookPriority findHookPriority(Class<? extends BootstrapHook> cls) {
         return prioririesByHooksTypesMap.get(cls);
     }
 
-    public Collection<ApplicationBootstrapHook> getRegisteredHooks(@NotNull BootstrapHookPriority scope) {
+    public Collection<BootstrapHook> getRegisteredHooks(@NotNull BootstrapHookPriority scope) {
         return instancesByHooksTypesMap.keySet()
                 .stream()
                 .filter(cls -> Objects.equals(findHookPriority(cls), scope))
@@ -118,8 +115,8 @@ public final class BootstrapHookContainer {
                 .collect(Collectors.toSet());
     }
 
-    public Collection<ApplicationBootstrapHook> findOrderedHooks(@NotNull BootstrapHookPriority priority) {
-        Collection<ApplicationBootstrapHook> registeredHooks = getRegisteredHooks(priority);
+    public Collection<BootstrapHook> findOrderedHooks(@NotNull BootstrapHookPriority priority) {
+        Collection<BootstrapHook> registeredHooks = getRegisteredHooks(priority);
 
         if (registeredHooks.size() > 1) {
             if (registeredHooks.stream()
@@ -130,7 +127,7 @@ public final class BootstrapHookContainer {
                 return null;
             }
 
-            Comparator<ApplicationBootstrapHook> comparator = Comparator.comparingInt(
+            Comparator<BootstrapHook> comparator = Comparator.comparingInt(
                     hook -> findHookPriorityID(hook.getClass()));
 
             registeredHooks = registeredHooks.stream().sorted(comparator).collect(Collectors.toList());
@@ -140,13 +137,13 @@ public final class BootstrapHookContainer {
         return registeredHooks;
     }
 
-    private String joinHooksToNamesLine(Collection<ApplicationBootstrapHook> registeredHooks) {
+    private String joinHooksToNamesLine(Collection<BootstrapHook> registeredHooks) {
         return registeredHooks.stream()
                 .map(instance -> findHookName(instance.getClass()))
                 .collect(Collectors.joining(", "));
     }
 
-    public void unbind(Class<? extends ApplicationBootstrapHook> cls) {
+    public void unbind(Class<? extends BootstrapHook> cls) {
         xmlByHooksTypesMap.remove(cls);
         instancesByHooksTypesMap.remove(cls);
     }

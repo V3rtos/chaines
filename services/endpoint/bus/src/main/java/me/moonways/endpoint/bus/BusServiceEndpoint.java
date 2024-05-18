@@ -40,7 +40,7 @@ public class BusServiceEndpoint extends EndpointRemoteObject implements BusServi
 
     @Override
     protected void construct(EndpointRemoteContext context) {
-        scheduler.schedule(ScheduledTime.of(5, TimeUnit.SECONDS))
+        scheduler.schedule(ScheduledTime.of(3, TimeUnit.SECONDS))
                 .follow(task -> {
                     networkController.bindMessages();
                     networkController.bindMessageListeners();

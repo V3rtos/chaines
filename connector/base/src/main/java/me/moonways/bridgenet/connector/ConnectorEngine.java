@@ -1,6 +1,5 @@
 package me.moonways.bridgenet.connector;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -8,7 +7,11 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
+import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
+import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
+import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
 import me.moonways.bridgenet.jdbc.provider.BridgenetJdbcProvider;
+import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
 import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.mtp.connection.client.BridgenetNetworkClientHandler;
@@ -16,7 +19,7 @@ import me.moonways.bridgenet.mtp.connection.client.NetworkClientConnectionFactor
 import me.moonways.bridgenet.rsi.module.access.AccessConfig;
 import me.moonways.bridgenet.rsi.module.access.AccessRemoteModule;
 import me.moonways.bridgenet.rsi.service.RemoteService;
-import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
+import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import me.moonways.bridgenet.rsi.xml.XMLServiceModuleDescriptor;
 import me.moonways.bridgenet.rsi.xml.XMLServiceModulePropertyDescriptor;
@@ -35,7 +38,7 @@ public final class ConnectorEngine {
     @Inject
     private ResourcesAssembly assembly;
     @Inject
-    private Gson gson;
+    private DatabaseProvider databaseProvider;
 
     public void setProperties() {
         // jdbc settings.
@@ -60,25 +63,27 @@ public final class ConnectorEngine {
 
     private void bindJdbcConnection() {
         BridgenetJdbcProvider.JdbcSettingsConfig jdbcSettingsConfig = readSettings();
-        BridgenetJdbcProvider bridgenetJdbcProvider = new BridgenetJdbcProvider();
+        BridgenetJdbcProvider bridgenetJdbcProvider = new BridgenetJdbcProvider(databaseProvider);
 
         bridgenetJdbcProvider.initConnection(jdbcSettingsConfig);
 
-        beansService.bind(bridgenetJdbcProvider.getDatabaseProvider());
-        beansService.bind(bridgenetJdbcProvider.getDatabaseProvider().getComposer());
-        beansService.bind(bridgenetJdbcProvider.getDatabaseConnection());
+        DatabaseProvider databaseProvider = bridgenetJdbcProvider.getDatabaseProvider();
+        DatabaseConnection databaseConnection = bridgenetJdbcProvider.getDatabaseConnection();
+        DatabaseComposer composer = databaseProvider.getComposer();
+
+        beansService.bind(composer);
+        beansService.bind(databaseConnection);
+        beansService.bind(new EntityRepositoryFactory(composer, databaseConnection));
     }
 
     private BridgenetJdbcProvider.JdbcSettingsConfig readSettings() {
-        return gson.fromJson(
-                assembly.readResourceFullContent(
-                        ResourcesTypes.JDBC_SETTINGS_JSON,
-                        StandardCharsets.UTF_8),
+        return assembly.readJsonAtEntity(ResourcesTypes.JDBC_SETTINGS_JSON,
+                StandardCharsets.UTF_8,
                 BridgenetJdbcProvider.JdbcSettingsConfig.class);
     }
 
-    public void connectToEndpoints(RemoteServiceRegistry registry) {
-        registry.initializeXmlConfiguration();
+    public void connectToEndpoints(RemoteServicesManagement registry) {
+        registry.initConfig();
 
         XMLServicesConfigDescriptor xmlConfiguration = registry.getXmlConfiguration();
         List<XmlServiceInfoDescriptor> servicesList = xmlConfiguration.getServicesList();
@@ -98,7 +103,7 @@ public final class ConnectorEngine {
         }
     }
 
-    public void disconnectToEndpoints(RemoteServiceRegistry registry) {
+    public void disconnectToEndpoints(RemoteServicesManagement registry) {
         XMLServicesConfigDescriptor xmlConfiguration = registry.getXmlConfiguration();
 
         if (xmlConfiguration != null) {

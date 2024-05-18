@@ -8,7 +8,7 @@ import me.moonways.bridgenet.api.command.api.uses.entity.EntityCommandSender;
 import me.moonways.bridgenet.api.command.api.uses.entity.EntitySenderType;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.rsi.endpoint.Endpoint;
-import me.moonways.bridgenet.rsi.service.RemoteServiceRegistry;
+import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class EndpointsStatisticsCommand {
 
     @Inject
-    private RemoteServiceRegistry registry;
+    private RemoteServicesManagement registry;
 
     @GeneralCommand({"endpoint", "ep", "endpoints"})
     @CommandHelper(senderType = EntitySenderType.CONSOLE)

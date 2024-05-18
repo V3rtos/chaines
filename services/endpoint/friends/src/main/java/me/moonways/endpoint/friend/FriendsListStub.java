@@ -37,7 +37,7 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
     public boolean addFriend(UUID uuid) {
         boolean add = uuids.add(uuid);
         if (add) {
-            repository.addFriend(FriendPair.builder()
+            repository.addFriend(EntityFriend.builder()
                     .playerID(playerUUID)
                     .friendID(uuid)
                     .build());
@@ -54,7 +54,7 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
     public boolean removeFriend(UUID uuid) {
         boolean add = uuids.remove(uuid);
         if (add) {
-            repository.removeFriend(FriendPair.builder()
+            repository.removeFriend(EntityFriend.builder()
                     .playerID(playerUUID)
                     .friendID(uuid)
                     .build());

@@ -13,6 +13,7 @@ import me.moonways.bridgenet.api.scheduler.Scheduler;
 import me.moonways.bridgenet.api.util.autorun.persistence.AutoRunner;
 import me.moonways.bridgenet.api.util.autorun.persistence.Runnable;
 import me.moonways.bridgenet.api.util.autorun.persistence.RunningPeriod;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -42,11 +43,12 @@ public class ScheduledRunnersService {
 
     private void startGlobalTimer(List<Object> runners) {
         List<RunnableUnit> units = toUnits(runners);
-
         Map<RunnableUnit, Long> unitsMap = units.stream()
-                .collect(Collectors.toMap(unit -> unit, unit -> 0L));
+                .collect(Collectors.toMap(
+                        unit -> unit,
+                        unit -> 0L));
 
-        scheduler.schedule(ScheduledTime.ofSeconds(10), DEFAULT_PERIOD)
+        scheduler.schedule(ScheduledTime.ofSeconds(1), DEFAULT_PERIOD)
                 .follow(new ScheduledRunnersInvocationTask(unitsMap));
     }
 
@@ -73,8 +75,8 @@ public class ScheduledRunnersService {
                         period = ScheduledTime.of(periodAnnotation.period(), periodAnnotation.unit());
                     }
 
-                    method.setAccessible(true);
-                    result.add(new RunnableUnit(period, () -> method.invoke(runner)));
+                    result.add(new RunnableUnit(period,
+                            () -> ReflectionUtils.callMethod(runner, method.getName())));
                 }
             }
         }

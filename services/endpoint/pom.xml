@@ -21,10 +21,13 @@
         <module>games</module>
         <module>gui</module>
         <module>guilds</module>
+        <module>language</module>
         <module>parties</module>
+        <module>permissions</module>
         <module>players</module>
         <module>reports</module>
         <module>servers</module>
+        <module>settings</module>
     </modules>
 
     <dependencies>

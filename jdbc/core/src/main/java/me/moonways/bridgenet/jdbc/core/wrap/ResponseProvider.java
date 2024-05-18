@@ -208,12 +208,16 @@ public class ResponseProvider {
 
         @Override
         public ResponseRow findFirst() {
-            return responseRowList.getFirst();
+            return responseRowList.stream()
+                    .findFirst()
+                    .orElse(null);
         }
 
         @Override
         public ResponseRow findLast() {
-            return responseRowList.getLast();
+            return responseRowList.stream().skip(responseRowList.size() - 1)
+                    .findFirst()
+                    .orElse(null);
         }
 
         @Override

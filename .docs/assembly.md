@@ -47,7 +47,7 @@ public String readResourceContent(String resourceName) {
 }
 ```
 ```java
-String json = this.readResourceContent(ResourcesTypes.METRICS_SETTINGS_JSON);
+String json = readResourceContent(ResourcesTypes.METRICS_SETTINGS_JSON);
 ```
 или напрямую из основного сервиса `ResourcesAssembly`:
 ```java
