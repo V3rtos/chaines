@@ -1,6 +1,5 @@
 package me.moonways.bridgenet.bootstrap.command;
 
-import me.moonways.bridgenet.api.command.CommandStructure;
 import me.moonways.bridgenet.api.command.GeneralCommand;
 import me.moonways.bridgenet.api.command.Command;
 import me.moonways.bridgenet.api.command.uses.CommandExecutionContext;
