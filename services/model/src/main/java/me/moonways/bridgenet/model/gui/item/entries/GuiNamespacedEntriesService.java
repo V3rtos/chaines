@@ -4,6 +4,7 @@ import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.model.gui.item.entries.enchantment.EnchantmentEntry;
 import me.moonways.bridgenet.model.gui.item.entries.material.MaterialEntry;
 import me.moonways.bridgenet.model.gui.item.types.Enchantments;
@@ -21,8 +22,8 @@ public final class GuiNamespacedEntriesService {
 
     @PostConstruct
     private void init() throws IllegalAccessException {
-        GuiNamespacedEntriesLoader<MaterialEntry> materialsLoader = new GuiNamespacedEntriesLoader<>("items.json", MaterialEntry.class);
-        GuiNamespacedEntriesLoader<EnchantmentEntry> enchantmentsLoader = new GuiNamespacedEntriesLoader<>("enchantments.json", EnchantmentEntry.class);
+        GuiNamespacedEntriesLoader<MaterialEntry> materialsLoader = new GuiNamespacedEntriesLoader<>(ResourcesTypes.MINECRAFT_ITEMS_JSON, MaterialEntry.class);
+        GuiNamespacedEntriesLoader<EnchantmentEntry> enchantmentsLoader = new GuiNamespacedEntriesLoader<>(ResourcesTypes.MINECRAFT_ENCHANTS_JSON, EnchantmentEntry.class);
 
         beansService.inject(materialsLoader);
         beansService.inject(enchantmentsLoader);

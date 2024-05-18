@@ -22,7 +22,6 @@ import java.util.List;
 public final class GuiNamespacedEntriesLoader<T extends ItemsEntry> {
 
     private static final Gson GSON = new Gson();
-    private static final String DATA_FOLDER = "minecraft_data/";
 
     private final String resourceName;
     private final Class<T> entryClass;
@@ -31,7 +30,7 @@ public final class GuiNamespacedEntriesLoader<T extends ItemsEntry> {
     private ResourcesAssembly assembly;
 
     public void load(@NotNull List<GuiNamespacedEntry<T>> entries) {
-        InputStream inputStream = assembly.readResourceStream(DATA_FOLDER + resourceName);
+        InputStream inputStream = assembly.readResourceStream(resourceName);
         JsonElement jsonElement = JsonParser.parseReader(
                 new JsonReader(
                         new InputStreamReader(inputStream)));

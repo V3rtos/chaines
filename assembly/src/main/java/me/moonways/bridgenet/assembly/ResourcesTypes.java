@@ -17,6 +17,10 @@ public final class ResourcesTypes {
     public static final String DECORATORS_XML = "decorators.xml";
     public static final String RMI_POLICY = "rmi.policy";
 
+    // minecraft data json files.
+    public static final String MINECRAFT_ENCHANTS_JSON = "minecraft_data/items.json";
+    public static final String MINECRAFT_ITEMS_JSON = "minecraft_data/items.json";
+
     // class-loader resources with InputStream.
     public static final String LOG4J2_XML = "log4j2.xml";
 
