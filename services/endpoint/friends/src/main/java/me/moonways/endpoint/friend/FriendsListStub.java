@@ -47,7 +47,7 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
 
     @Override
     public boolean addFriend(String name) throws RemoteException {
-        return addFriend(playersModel.findPlayerId(name));
+        return addFriend(playersModel.store().idByName(name));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
 
     @Override
     public boolean removeFriend(String name) throws RemoteException {
-        return removeFriend(playersModel.findPlayerId(name));
+        return removeFriend(playersModel.store().idByName(name));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
 
     @Override
     public boolean hasFriend(String name) throws RemoteException {
-        return hasFriend(playersModel.findPlayerId(name));
+        return hasFriend(playersModel.store().idByName(name));
     }
 
     @Override
@@ -86,7 +86,7 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
     public Set<String> getFriendsNames() {
         return uuids.stream().map(uuid -> {
                     try {
-                        return playersModel.findPlayerName(uuid);
+                        return playersModel.store().nameById(uuid);
                     } catch (RemoteException exception) {
                         throw new RuntimeException(exception);
                     }

@@ -21,6 +21,7 @@ public final class TestConst {
     }
 
     public static final class Player {
+        public static final UUID PROXY_ID = UUID.randomUUID();
         public static final UUID ID = UUID.randomUUID();
         public static final String NICKNAME = "itzstonlex";
     }

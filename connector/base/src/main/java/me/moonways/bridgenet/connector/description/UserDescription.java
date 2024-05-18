@@ -14,6 +14,6 @@ import java.util.UUID;
 public class UserDescription {
 
     private final String name;
-    private final UUID proxyUuid;
+    private final UUID proxyId;
     private final UUID uniqueId;
 }

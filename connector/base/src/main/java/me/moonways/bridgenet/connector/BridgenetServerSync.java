@@ -44,7 +44,7 @@ public final class BridgenetServerSync {
         Properties properties = new Properties();
         properties.setProperty("user.name", description.getName());
         properties.setProperty("user.uuid", description.getUniqueId().toString());
-        properties.setProperty("user.proxy", description.getProxyUuid().toString());
+        properties.setProperty("user.proxy", description.getProxyId().toString());
         return properties;
     }
 

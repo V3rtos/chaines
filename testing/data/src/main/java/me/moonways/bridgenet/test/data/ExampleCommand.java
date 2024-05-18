@@ -9,6 +9,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
 
+import java.rmi.RemoteException;
 import java.util.UUID;
 
 @Command("test")
@@ -33,12 +34,12 @@ public class ExampleCommand {
     @ProducerExecutor("info")
     @ProducerUsageDescription("info <player-name>")
     @ProducerDescription("Get a player information by name")
-    public void handleInfo(CommandSession session) {
+    public void handleInfo(CommandSession session) throws RemoteException {
         EntityCommandSender sender = session.getSender();
         CommandArguments arguments = session.arguments();
 
         if (arguments.has(1)) {
-            UUID playerUuid = arguments.first(playersServiceModel::findPlayerId).orElse(null);
+            UUID playerUuid = arguments.first(playersServiceModel.store()::idByName).orElse(null);
             String playerName = arguments.first().orElse(null);
 
             if (playerUuid == null) {

@@ -14,5 +14,9 @@ public class Message {
         return new Message(key);
     }
 
+    public static Message empty() {
+        return new Message("");
+    }
+
     private final String key;
 }

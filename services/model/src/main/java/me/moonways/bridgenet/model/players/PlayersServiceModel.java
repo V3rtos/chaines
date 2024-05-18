@@ -1,27 +1,37 @@
 package me.moonways.bridgenet.model.players;
 
-import me.moonways.bridgenet.model.players.social.PlayerSocials;
+import me.moonways.bridgenet.model.players.service.PlayerLeveling;
+import me.moonways.bridgenet.model.players.service.PlayerStore;
 import me.moonways.bridgenet.rsi.service.RemoteService;
-import me.moonways.bridgenet.model.players.connection.PlayerConnection;
-import me.moonways.bridgenet.model.players.leveling.PlayerLeveling;
-import me.moonways.bridgenet.model.players.offline.PlayerOfflineManager;
-import me.moonways.bridgenet.model.permissions.PermissionsServiceModel;
-import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;
-import java.util.UUID;
+import java.util.List;
 
+/**
+ * Интерфейс PlayersServiceModel расширяет интерфейс RemoteService и
+ * предоставляет методы для работы с игроками в сетевой игре в Minecraft.
+ * Этот интерфейс включает методы для получения объекта PlayerLeveling,
+ * объекта PlayerStore, общего количества игроков онлайн и списка онлайн игроков.
+ */
 public interface PlayersServiceModel extends RemoteService {
 
-    PlayerConnection getPlayerConnection() throws RemoteException;
+    /**
+     * Получить объект PlayerLeveling для работы с уровнем игроков.
+     */
+    PlayerLeveling leveling() throws RemoteException;
 
-    PlayerLeveling getPlayerLeveling() throws RemoteException;
+    /**
+     * Получить объект PlayerStore для работы с хранилищем игроков.
+     */
+    PlayerStore store() throws RemoteException;
 
-    PlayerSocials getPlayerSocials() throws RemoteException;
+    /**
+     * Получить общее количество игроков онлайн.
+     */
+    int getTotalOnline() throws RemoteException;
 
-    PlayerOfflineManager getPlayerOfflineManager() throws RemoteException;
-
-    String findPlayerName(@NotNull UUID playerUUID) throws RemoteException;
-
-    UUID findPlayerId(@NotNull String playerName) throws RemoteException;
+    /**
+     * Получить список онлайн игроков.
+     */
+    List<Player> getOnlinePlayers() throws RemoteException;
 }

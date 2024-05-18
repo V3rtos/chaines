@@ -3,7 +3,7 @@ package me.moonways.endpoint.settings;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.players.util.PlayerIdMap;
+import me.moonways.bridgenet.model.util.players.PlayerIdMap;
 import me.moonways.bridgenet.model.settings.PlayerSettingsServiceModel;
 import me.moonways.bridgenet.model.settings.Setting;
 import me.moonways.bridgenet.model.settings.SettingID;
@@ -50,6 +50,6 @@ public class PlayerSettingsServiceEndpoint extends EndpointRemoteObject implemen
 
     @Override
     public <T> Setting<T> getSetting(String playerName, SettingID<T> id) throws RemoteException {
-        return getSetting(playersServiceModel.findPlayerId(playerName), id);
+        return getSetting(playersServiceModel.store().idByName(playerName), id);
     }
 }

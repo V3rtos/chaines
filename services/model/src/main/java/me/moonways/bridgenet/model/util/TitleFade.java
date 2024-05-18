@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.model.players;
+package me.moonways.bridgenet.model.util;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,10 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Builder(toBuilder = true)
-public class Title {
-
-    private String title;
-    private String subtitle;
+public class TitleFade {
 
     private int fadeIn;
     private int stay;
