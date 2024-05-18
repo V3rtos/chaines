@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.model.servers;
 
-import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
+import me.moonways.bridgenet.model.players.Player;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,12 +47,12 @@ public interface EntityServer extends Remote {
      * Подключить какого-то игрока к текущему серверу.
      * @param player - игрок, которого подключаем.
      */
-    CompletableFuture<Boolean> connectThat(@NotNull ConnectedEntityPlayer player) throws RemoteException;
+    CompletableFuture<Boolean> connectThat(@NotNull Player player) throws RemoteException;
 
     /**
      * Получить список подключенных игроков к серверу.
      */
-    Collection<ConnectedEntityPlayer> getConnectedPlayers() throws RemoteException;
+    Collection<Player> getConnectedPlayers() throws RemoteException;
 
     /**
      * Получить общее число онлайна на сервере.
