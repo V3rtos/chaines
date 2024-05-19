@@ -91,13 +91,14 @@ public class NetworkMessageHandlerList {
                     continue;
                 }
 
+                String handlerClassName = subscriber.getSource().getClass().getSimpleName();
+
+                log.info("Received message §3{} §rredirected to §2{}", messageClass, handlerClassName);
+
                 method.setAccessible(true);
                 method.invoke(subscriber.getSource(), value);
 
                 handlingCount++;
-
-                String handlerClassName = subscriber.getSource().getClass().getSimpleName();
-                log.info("Received message §3{} §rhandling redirected to §2{}", messageClass, handlerClassName);
             }
             catch (Throwable exception) {
                 if (isNotClassCastException(exception)) {

@@ -3,6 +3,8 @@ package me.moonways.endpoint.players.player;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.model.language.Language;
+import me.moonways.bridgenet.model.language.LanguageServiceModel;
 import me.moonways.bridgenet.model.language.Message;
 import me.moonways.bridgenet.model.permissions.PermissionsServiceModel;
 import me.moonways.bridgenet.model.permissions.group.PermissionGroup;
@@ -25,22 +27,31 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OfflinePlayerStub implements OfflinePlayer {
 
+    private static final String PLAYER_IS_OFFLINE = "player \"%s\" is offline";
+
     private final UUID id;
     private final String name;
 
     private final PlayerDescription description;
 
     @Inject
-    private PermissionsServiceModel permissionsServiceModel;
+    protected PermissionsServiceModel permissionsServiceModel;
+    @Inject
+    protected LanguageServiceModel languageServiceModel;
 
     @Override
     public Set<Permission> getPermissions() throws RemoteException {
-        return permissionsServiceModel.getPermissions().getActivePermissions(id);
+        return permissionsServiceModel.getPermissions().getActivePermissions(getId());
     }
 
     @Override
     public PermissionGroup getGroup() throws RemoteException {
-        return permissionsServiceModel.getGroups().getPlayerGroup(id).get();
+        return permissionsServiceModel.getGroups().getPlayerGroup(getId()).get();
+    }
+
+    @Override
+    public Language getLanguage() throws RemoteException {
+        return languageServiceModel.getPlayerLang(getId());
     }
 
     @Override
@@ -68,34 +79,58 @@ public class OfflinePlayerStub implements OfflinePlayer {
         return false;
     }
 
-    @Override
-    public Optional<AudienceSendEvent> sendMessage(@NotNull Component message) throws RemoteException {
+    protected Optional<AudienceSendEvent> doMessageSend(Component message, ComponentHolders holders) throws RemoteException {
+        // override me.
         return Optional.empty();
     }
 
     @Override
-    public Optional<AudienceSendEvent> sendMessage(@NotNull Message message) throws RemoteException {
-        return Optional.empty();
+    public final Optional<AudienceSendEvent> sendMessage(@NotNull Component message) throws RemoteException {
+        if (!isOnline()) {
+            throw new UnsupportedOperationException(String.format(PLAYER_IS_OFFLINE, getName()));
+        }
+        return sendMessage(message, ComponentHolders.begin());
     }
 
     @Override
-    public Optional<AudienceSendEvent> sendMessage(@Nullable String message) throws RemoteException {
-        return Optional.empty();
+    public final Optional<AudienceSendEvent> sendMessage(@NotNull Message message) throws RemoteException {
+        if (!isOnline()) {
+            throw new UnsupportedOperationException(String.format(PLAYER_IS_OFFLINE, getName()));
+        }
+        return sendMessage(message, ComponentHolders.begin());
     }
 
     @Override
-    public Optional<AudienceSendEvent> sendMessage(@NotNull Component message, @NotNull ComponentHolders holders) throws RemoteException {
-        return Optional.empty();
+    public final Optional<AudienceSendEvent> sendMessage(@Nullable String message) throws RemoteException {
+        if (!isOnline()) {
+            throw new UnsupportedOperationException(String.format(PLAYER_IS_OFFLINE, getName()));
+        }
+        return sendMessage(message, ComponentHolders.begin());
     }
 
     @Override
-    public Optional<AudienceSendEvent> sendMessage(@NotNull Message message, @NotNull ComponentHolders holders) throws RemoteException {
-        return Optional.empty();
+    public final Optional<AudienceSendEvent> sendMessage(@NotNull Component message, @NotNull ComponentHolders holders) throws RemoteException {
+        if (!isOnline()) {
+            throw new UnsupportedOperationException(String.format(PLAYER_IS_OFFLINE, getName()));
+        }
+        return doMessageSend(message, holders);
     }
 
     @Override
-    public Optional<AudienceSendEvent> sendMessage(@Nullable String message, @NotNull ComponentHolders holders) throws RemoteException {
-        return Optional.empty();
+    public final Optional<AudienceSendEvent> sendMessage(@NotNull Message message, @NotNull ComponentHolders holders) throws RemoteException {
+        if (!isOnline()) {
+            throw new UnsupportedOperationException(String.format(PLAYER_IS_OFFLINE, getName()));
+        }
+        Component component = languageServiceModel.message(getLanguage(), message);
+        return sendMessage(component, holders);
+    }
+
+    @Override
+    public final Optional<AudienceSendEvent> sendMessage(@Nullable String message, @NotNull ComponentHolders holders) throws RemoteException {
+        if (!isOnline()) {
+            throw new UnsupportedOperationException(String.format(PLAYER_IS_OFFLINE, getName()));
+        }
+        return sendMessage(message != null ? Component.text(message) : Component.empty(), holders);
     }
 
     @Override

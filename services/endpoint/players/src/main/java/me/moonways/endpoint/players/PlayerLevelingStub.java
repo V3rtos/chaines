@@ -47,7 +47,7 @@ public final class PlayerLevelingStub implements PlayerLeveling {
 
     @Override
     public int experienceToNextLevel(int level) {
-        return getExperiencePercentToNextLevel(level);
+        return getExperienceToNextLevel(level);
     }
 
     @Override

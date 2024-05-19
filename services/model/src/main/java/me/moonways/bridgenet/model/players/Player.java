@@ -3,13 +3,16 @@ package me.moonways.bridgenet.model.players;
 import me.moonways.bridgenet.model.language.Message;
 import me.moonways.bridgenet.model.players.service.PlayerConnection;
 import me.moonways.bridgenet.model.players.service.statistic.ActivityStatistics;
+import me.moonways.bridgenet.model.util.Title;
 import me.moonways.bridgenet.model.util.TitleFade;
+import me.moonways.bridgenet.model.util.audience.ComponentHolders;
 import me.moonways.bridgenet.model.util.audience.event.AudienceSendEvent;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public interface Player extends OfflinePlayer, Remote {
@@ -30,111 +33,117 @@ public interface Player extends OfflinePlayer, Remote {
      *
      * @param message - Компонент сообщения, который будет отправлен на панель действий.
      *
-     * @return - CompletableFuture, представляющий асинхронный результат
+     * @return - Optional, представляющий результат успешности проведения процесса
      * операции отправки сообщения на панель действий.
      */
-    CompletableFuture<AudienceSendEvent> sendActionbar(Component message) throws RemoteException;
+    Optional<AudienceSendEvent> sendActionbar(Component message) throws RemoteException;
 
     /**
      * Отправляет сообщение на панель действий игрока с указанным компонентом сообщения.
      *
      * @param message - Компонент сообщения, который будет отправлен на панель действий.
      *
-     * @return - CompletableFuture, представляющий асинхронный результат
+     * @return - Optional, представляющий результат успешности проведения процесса
      * операции отправки сообщения на панель действий.
      */
-    CompletableFuture<AudienceSendEvent> sendActionbar(Message message) throws RemoteException;;
+    Optional<AudienceSendEvent> sendActionbar(Component message, ComponentHolders holders) throws RemoteException;
 
     /**
      * Отправляет сообщение на панель действий игрока с указанным компонентом сообщения.
      *
      * @param message - Компонент сообщения, который будет отправлен на панель действий.
      *
-     * @return - CompletableFuture, представляющий асинхронный результат
+     * @return - Optional, представляющий результат успешности проведения процесса
+     * операции отправки сообщения на панель действий.
+     */
+    Optional<AudienceSendEvent> sendActionbar(Message message) throws RemoteException;
+
+    /**
+     * Отправляет сообщение на панель действий игрока с указанным компонентом сообщения.
+     *
+     * @param message - Компонент сообщения, который будет отправлен на панель действий.
+     *
+     * @return - Optional, представляющий результат успешности проведения процесса
+     * операции отправки сообщения на панель действий.
+     */
+    Optional<AudienceSendEvent> sendActionbar(Message message, ComponentHolders holders) throws RemoteException;
+
+    /**
+     * Отправляет сообщение на панель действий игрока с указанным компонентом сообщения.
+     *
+     * @param message - Компонент сообщения, который будет отправлен на панель действий.
+     *
+     * @return - Optional, представляющий результат успешности проведения процесса
      * операции отправки сообщения на панель действий.
      */
     @Deprecated
     @ApiStatus.ScheduledForRemoval
-    CompletableFuture<AudienceSendEvent> sendActionbar(String message) throws RemoteException;;
+    Optional<AudienceSendEvent> sendActionbar(String message) throws RemoteException;
+
+    /**
+     * Отправляет сообщение на панель действий игрока с указанным компонентом сообщения.
+     *
+     * @param message - Компонент сообщения, который будет отправлен на панель действий.
+     *
+     * @return - Optional, представляющий результат успешности проведения процесса
+     * операции отправки сообщения на панель действий.
+     */
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval
+    Optional<AudienceSendEvent> sendActionbar(String message, ComponentHolders holders) throws RemoteException;
 
     /**
      * Отправить заголовок на экран игрока с указанным текстом,
      * подзаголовком и эффектами затухания.
      *
-     * @param title - Текст заголовка.
-     * @param subtitle - Текст подзаголовка.
-     * @param fade - Эффекты затухания заголовка.
+     * @param title - Содержание заголовка.
      */
-    CompletableFuture<AudienceSendEvent> sendTitle(Component title, Component subtitle, TitleFade fade) throws RemoteException;
-
-    /**
-     * Отправить заголовок на экран игрока с указанным
-     * текстом и подзаголовком.
-     *
-     * @param title - Текст заголовка.
-     * @param subtitle - Текст подзаголовка.
-     */
-    CompletableFuture<AudienceSendEvent> sendTitle(Component title, Component subtitle) throws RemoteException;
-
-    /**
-     * Отправить заголовок на экран игрока с указанным текстом.
-     * @param title - Текст заголовка.
-     */
-    CompletableFuture<AudienceSendEvent> sendTitle(Component title) throws RemoteException;
+    Optional<AudienceSendEvent> sendComponentTitle(Title<Component> title) throws RemoteException;
 
     /**
      * Отправить заголовок на экран игрока с указанным текстом,
      * подзаголовком и эффектами затухания.
      *
-     * @param title - Текст заголовка.
-     * @param subtitle - Текст подзаголовка.
-     * @param fade - Эффекты затухания заголовка.
+     * @param title - Содержание заголовка.
+     * @param holders - переменные, меняющие текстовый образ сообщения.
      */
-    CompletableFuture<AudienceSendEvent> sendTitle(Message title, Message subtitle, TitleFade fade) throws RemoteException;
-
-    /**
-     * Отправить заголовок на экран игрока с указанным
-     * текстом и подзаголовком.
-     *
-     * @param title - Текст заголовка.
-     * @param subtitle - Текст подзаголовка.
-     */
-    CompletableFuture<AudienceSendEvent> sendTitle(Message title, Message subtitle) throws RemoteException;
-
-    /**
-     * Отправить заголовок на экран игрока с указанным текстом.
-     * @param title - Текст заголовка.
-     */
-    CompletableFuture<AudienceSendEvent> sendTitle(Message title) throws RemoteException;
+    Optional<AudienceSendEvent> sendComponentTitle(Title<Component> title, ComponentHolders holders) throws RemoteException;
 
     /**
      * Отправить заголовок на экран игрока с указанным текстом,
      * подзаголовком и эффектами затухания.
      *
-     * @param title - Текст заголовка.
-     * @param subtitle - Текст подзаголовка.
-     * @param fade - Эффекты затухания заголовка.
+     * @param title - Содержание заголовка.
+     */
+    Optional<AudienceSendEvent> sendTranslatedTitle(Title<Message> title) throws RemoteException;
+
+    /**
+     * Отправить заголовок на экран игрока с указанным текстом,
+     * подзаголовком и эффектами затухания.
+     *
+     * @param title - Содержание заголовка.
+     * @param holders - переменные, меняющие текстовый образ сообщения.
+     */
+    Optional<AudienceSendEvent> sendTranslatedTitle(Title<Message> title, ComponentHolders holders) throws RemoteException;
+
+    /**
+     * Отправить заголовок на экран игрока с указанным текстом,
+     * подзаголовком и эффектами затухания.
+     *
+     * @param title - Содержание заголовка.
      */
     @Deprecated
     @ApiStatus.ScheduledForRemoval
-    CompletableFuture<AudienceSendEvent> sendTitle(String title, String subtitle, TitleFade fade) throws RemoteException;
+    Optional<AudienceSendEvent> sendTitle(Title<String> title) throws RemoteException;
 
     /**
      * Отправить заголовок на экран игрока с указанным
      * текстом и подзаголовком.
      *
-     * @param title - Текст заголовка.
-     * @param subtitle - Текст подзаголовка.
+     * @param title - Содержание заголовка.
+     * @param holders - переменные, меняющие текстовый образ сообщения.
      */
     @Deprecated
     @ApiStatus.ScheduledForRemoval
-    CompletableFuture<AudienceSendEvent> sendTitle(String title, String subtitle) throws RemoteException;
-
-    /**
-     * Отправить заголовок на экран игрока с указанным текстом.
-     * @param title - Текст заголовка.
-     */
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval
-    CompletableFuture<AudienceSendEvent> sendTitle(String title) throws RemoteException;
+    Optional<AudienceSendEvent> sendTitle(Title<String> title, ComponentHolders holders) throws RemoteException;
 }

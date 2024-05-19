@@ -33,8 +33,19 @@ public final class PlayersRepository {
         return namespacesRepository.searchIf(
                 namespacesRepository.newSearchMarker()
                         .withGet(EntityNamespace::getUuid, id))
-                .flatMap(entityNamespace -> playersRepository
-                        .searchIf(playersRepository.newSearchMarker()
-                                .withGet(EntityPlayer::getId, entityNamespace.getId())));
+                .flatMap(this::toEntityPlayer);
+    }
+
+    public Optional<EntityPlayer> get(String name) {
+        return namespacesRepository.searchIf(
+                        namespacesRepository.newSearchMarker()
+                                .withGet(EntityNamespace::getName, name.toLowerCase()))
+                .flatMap(this::toEntityPlayer);
+    }
+
+    private Optional<EntityPlayer> toEntityPlayer(EntityNamespace entityNamespace) {
+        return playersRepository
+                .searchIf(playersRepository.newSearchMarker()
+                        .withGet(EntityPlayer::getNamespace, entityNamespace.getId()));
     }
 }

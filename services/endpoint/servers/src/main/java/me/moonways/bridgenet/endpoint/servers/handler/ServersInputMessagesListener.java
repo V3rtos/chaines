@@ -8,6 +8,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.endpoint.servers.ConnectedServerStub;
 import me.moonways.bridgenet.endpoint.servers.ServersContainer;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
+import me.moonways.bridgenet.model.bus.HandshakePropertiesConst;
 import me.moonways.bridgenet.model.bus.message.Disconnect;
 import me.moonways.bridgenet.model.bus.message.Handshake;
 import me.moonways.bridgenet.model.bus.message.Redirect;
@@ -145,12 +146,12 @@ public class ServersInputMessagesListener {
 
     private ServerInfo toServerInfo(Properties properties) {
         InetSocketAddress address = new InetSocketAddress(
-                properties.getProperty("server.address.host"),
-                Integer.parseInt(properties.getProperty("server.address.port")));
+                properties.getProperty(HandshakePropertiesConst.SERVER_ADDRESS_HOST),
+                Integer.parseInt(properties.getProperty(HandshakePropertiesConst.SERVER_ADDRESS_PORT)));
 
         return ServerInfo.builder()
                 .address(address)
-                .name(properties.getProperty("server.name"))
+                .name(properties.getProperty(HandshakePropertiesConst.SERVER_NAME))
                 .flags(getServerFlags(properties))
                 .build();
     }

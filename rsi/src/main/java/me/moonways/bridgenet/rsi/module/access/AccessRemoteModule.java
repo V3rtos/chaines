@@ -10,6 +10,7 @@ import me.moonways.bridgenet.rsi.module.AbstractRemoteModule;
 import me.moonways.bridgenet.rsi.module.ModuleConst;
 import me.moonways.bridgenet.rsi.module.ModuleID;
 import me.moonways.bridgenet.rsi.service.RemoteService;
+import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
 import me.moonways.bridgenet.rsi.service.ServiceInfo;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +31,8 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
 
     @Inject
     private BeansService beansService;
+    @Inject
+    private RemoteServicesManagement remoteServicesManagement;
 
     public AccessRemoteModule() {
         super(ModuleID.of(ModuleConst.REMOTE_ACCESS_ID, "accessModule"));
@@ -58,6 +61,7 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
                 Naming.rebind(uri, stub);
 
                 log.info("Endpoint '{}' was success exported: §f{}", name, stub);
+                remoteServicesManagement.registerService(serviceInfo, stub);
             }
             catch (RemoteException exception) {
                 log.error("§4Cannot be export endpoint uri {}: §c{}", uri, exception.toString());

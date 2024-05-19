@@ -52,6 +52,9 @@ class EntityOperationComposer {
     }
 
     public EntityComposedOperation composeDelete(EntityDescriptor entity, SearchMarker<?> searchMarker) {
+        //if (!TABLES_STORE.contains(entity.getContainerName())) {
+        //    return EntityComposedOperation.builder().build();
+        //}
         return composeWithContainer(entity,
                 composer.useDeletionPattern()
                         .container(entity.getContainerName())

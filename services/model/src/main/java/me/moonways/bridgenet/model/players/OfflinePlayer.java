@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.model.players;
 
+import me.moonways.bridgenet.model.language.Language;
 import me.moonways.bridgenet.model.permissions.group.PermissionGroup;
 import me.moonways.bridgenet.model.permissions.permission.Permission;
 import me.moonways.bridgenet.model.util.audience.EntityAudience;
@@ -37,6 +38,11 @@ public interface OfflinePlayer extends Remote, EntityAudience {
      * Получить группу разрешений офлайн игрока.
      */
     PermissionGroup getGroup() throws RemoteException;
+
+    /**
+     * Получить выбранный пользователем тип мирового языка.
+     */
+    Language getLanguage() throws RemoteException;
 
     /**
      * Получить уровень офлайн игрока.

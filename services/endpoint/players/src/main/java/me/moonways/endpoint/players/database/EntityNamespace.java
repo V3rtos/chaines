@@ -17,7 +17,7 @@ import java.util.UUID;
 public class EntityNamespace {
 
     @Getter(onMethod_ = @EntityId(indexes = ParameterAddon.PRIMARY))
-    private final int id;
+    private final long id;
 
     @Getter(onMethod_ = @EntityParameter(indexes = {ParameterAddon.PRIMARY, ParameterAddon.NOTNULL}))
     private final UUID uuid;

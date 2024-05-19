@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import me.moonways.bridgenet.connector.description.*;
+import me.moonways.bridgenet.model.bus.HandshakePropertiesConst;
 import me.moonways.bridgenet.model.bus.message.*;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 
@@ -21,34 +22,6 @@ public final class BridgenetServerSync {
     private UUID currentDeviceId;
 
     /**
-     * Подготовка конфигурации сообщения о рукопожатии с
-     * единым сервером Bridgenet.
-     *
-     * @param description - описание подключаемого устройства.
-     */
-    private static Properties prepareDeviceHandshakeProperties(DeviceDescription description) {
-        Properties properties = new Properties();
-        properties.setProperty("server.name", description.getName());
-        properties.setProperty("server.address.host", description.getHost());
-        properties.setProperty("server.address.port", Integer.toString(description.getPort()));
-        return properties;
-    }
-
-    /**
-     * Подготовка конфигурации сообщения о рукопожатии
-     * пользователя с единым сервером Bridgenet.
-     *
-     * @param description - описание подключаемого пользователя.
-     */
-    private static Properties prepareUserHandshakeProperties(UserDescription description) {
-        Properties properties = new Properties();
-        properties.setProperty("user.name", description.getName());
-        properties.setProperty("user.uuid", description.getUniqueId().toString());
-        properties.setProperty("user.proxy", description.getProxyId().toString());
-        return properties;
-    }
-
-    /**
      * Выполнить обмен данными с единым сервером Bridgenet при
      * помощи рукопожатия и получить в результате уникальный идентификатор
      * текущего устройства.
@@ -57,8 +30,7 @@ public final class BridgenetServerSync {
      */
     public Handshake.Result exportDeviceHandshake(DeviceDescription description) {
         CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class,
-                new Handshake(Handshake.Type.SERVER,
-                        prepareDeviceHandshakeProperties(description)));
+                new Handshake(Handshake.Type.SERVER, description.toProperties()));
 
         Handshake.Result result = future.join();
         result.onSuccess(() -> currentDeviceId = result.getKey());
@@ -151,8 +123,7 @@ public final class BridgenetServerSync {
      */
     public boolean exportUserHandshake(UserDescription description) {
         CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class,
-                new Handshake(Handshake.Type.PLAYER,
-                        prepareUserHandshakeProperties(description)));
+                new Handshake(Handshake.Type.PLAYER, description.toProperties()));
 
         Handshake.Result result = future.join();
 

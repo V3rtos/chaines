@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 import java.util.EnumMap;
 
 public final class ActivityStatisticsStub implements ActivityStatistics {
+
     private final EnumMap<Statistic, Number> statisticsValuesMap
             = new EnumMap<>(Statistic.class);
 

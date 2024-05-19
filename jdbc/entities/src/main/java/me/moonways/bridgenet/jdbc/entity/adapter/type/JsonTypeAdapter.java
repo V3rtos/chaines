@@ -28,7 +28,7 @@ public class JsonTypeAdapter implements ParameterTypeAdapter {
 
     @Override
     public boolean canSerialize(EntityParametersDescriptor.ParameterUnit unit) {
-        return Objects.equals(unit.getType(), Object.class);
+        return true;
     }
 
     @Override

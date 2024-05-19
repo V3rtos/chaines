@@ -1,5 +1,7 @@
 package me.moonways.bridgenet.test.data;
 
+import me.moonways.bridgenet.connector.description.DeviceDescription;
+import me.moonways.bridgenet.connector.description.UserDescription;
 import me.moonways.bridgenet.model.gui.GuiDescription;
 import me.moonways.bridgenet.model.gui.GuiSlot;
 import me.moonways.bridgenet.model.gui.GuiType;
@@ -15,15 +17,60 @@ import java.util.UUID;
 
 public final class TestConst {
 
+    public static final class Exceptions {
+        // Printing stacktrace elements only with packages of Bridgenet if this value is TRUE.
+        public static final boolean FILTER_BY_PACKAGE = Boolean.TRUE;
+    }
+
     public static final class Game {
         public static final String NAME = "Developing Game";
         public static final String MAP = "IDE with opened Bridgenet project";
+
+        public static final String SERVER_NAME = "development-arena-1";
+        public static final String SERVER_HOST = "127.0.0.1";
+        public static final int SERVER_PORT = 12345;
+
+        public static final DeviceDescription SERVER_DESC =
+                DeviceDescription.builder()
+                        .name(SERVER_NAME)
+                        .host(SERVER_HOST)
+                        .port(SERVER_PORT)
+                        .build();
     }
 
     public static final class Player {
         public static final UUID PROXY_ID = UUID.randomUUID();
         public static final UUID ID = UUID.randomUUID();
         public static final String NICKNAME = "itzstonlex";
+
+        public static final UserDescription DESC =
+                UserDescription.builder()
+                        .name(NICKNAME)
+                        .uniqueId(ID)
+                        .proxyId(PROXY_ID)
+                        .build();
+    }
+
+    public static final class Server {
+        public static final String NAME = "testing-local-1";
+        public static final String HOST = "127.0.0.1";
+        public static final int PORT = 25565;
+
+        public static final DeviceDescription DESC =
+                DeviceDescription.builder()
+                        .name(NAME)
+                        .host(HOST)
+                        .port(PORT)
+                        .build();
+    }
+
+    public static final class Connector {
+        public static final DeviceDescription DEVICE_DESC =
+                DeviceDescription.builder()
+                        .name("testing-connector")
+                        .host(Server.HOST)
+                        .port(Server.PORT + 1)
+                        .build();
     }
 
     public static final class Friend {
