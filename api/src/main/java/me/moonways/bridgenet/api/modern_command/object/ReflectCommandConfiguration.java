@@ -7,7 +7,7 @@ import me.moonways.bridgenet.api.inject.bean.BeanMethod;
 
 @Getter
 @RequiredArgsConstructor
-public class NativeCommandConfiguration {
+public class ReflectCommandConfiguration {
 
     private final Bean bean;
     private final BeanMethod beanMethod;
