@@ -38,19 +38,19 @@ public class ComposeCreateTableQueryTest {
                                 ParameterStyle.builder()
                                         .type(ParameterType.BIGINT)
                                         .addons(Arrays.asList(
-                                                ParameterAddon.INCREMENTING,
-                                                ParameterAddon.NOTNULL,
-                                                ParameterAddon.UNIQUE,
-                                                ParameterAddon.PRIMARY))
+                                                ParameterSignature.AUTO_GENERATED,
+                                                ParameterSignature.NOTNULL,
+                                                ParameterSignature.UNIQUE,
+                                                ParameterSignature.PRIMARY))
                                         .build()))
                         .with(CombinedStructs.styledParameter("NAME",
                                 ParameterStyle.builder()
                                         .length(32)
                                         .type(ParameterType.STRING)
                                         .addons(Arrays.asList(
-                                                ParameterAddon.UNIQUE,
-                                                ParameterAddon.NOTNULL,
-                                                ParameterAddon.PRIMARY))
+                                                ParameterSignature.UNIQUE,
+                                                ParameterSignature.NOTNULL,
+                                                ParameterSignature.PRIMARY))
                                         .encoding(Encoding.builder()
                                                 .characterStyle("utf8mb4")
                                                 .collate("utf8mb4_unicode_ci")
@@ -60,7 +60,7 @@ public class ComposeCreateTableQueryTest {
                                 ParameterStyle.builder()
                                         .type(ParameterType.INT)
                                         .addons(Collections.singletonList(
-                                                ParameterAddon.NOTNULL))
+                                                ParameterSignature.NOTNULL))
                                         .defaultValue(1)
                                         .build()))
                         .combine())

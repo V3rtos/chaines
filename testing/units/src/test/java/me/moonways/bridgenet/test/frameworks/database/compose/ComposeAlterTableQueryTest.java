@@ -32,7 +32,7 @@ public class ComposeAlterTableQueryTest {
                         ParameterStyle.builder()
                                 .defaultValue(165)
                                 .type(ParameterType.INT)
-                                .addons(Collections.singletonList(ParameterAddon.NOTNULL))
+                                .addons(Collections.singletonList(ParameterSignature.NOTNULL))
                                 .build()))
                 .combine()
                 .toNativeQuery()

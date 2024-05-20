@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
+import me.moonways.bridgenet.jdbc.core.compose.ParameterSignature;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityExternalParameter;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityId;
@@ -20,7 +20,7 @@ public class EntityUser {
     @Getter(onMethod_ = @EntityId)
     private final long id;
 
-    @Getter(onMethod_ = @EntityParameter(id = "first_name", indexes = ParameterAddon.PRIMARY))
+    @Getter(onMethod_ = @EntityParameter(id = "first_name", indexes = ParameterSignature.PRIMARY))
     private final String firstName;
 
     @Getter(onMethod_ = @EntityParameter(id = "last_name"))

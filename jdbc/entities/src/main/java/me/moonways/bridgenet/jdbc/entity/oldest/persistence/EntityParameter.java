@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.jdbc.entity.persistence;
 
-import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
+import me.moonways.bridgenet.jdbc.core.compose.ParameterSignature;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -15,5 +15,5 @@ public @interface EntityParameter {
 
     String id() default "";
 
-    ParameterAddon[] indexes() default { };
+    ParameterSignature[] indexes() default { };
 }

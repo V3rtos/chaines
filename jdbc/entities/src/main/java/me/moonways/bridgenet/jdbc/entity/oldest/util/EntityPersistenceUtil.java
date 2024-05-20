@@ -2,7 +2,7 @@ package me.moonways.bridgenet.jdbc.entity.util;
 
 import lombok.*;
 import lombok.experimental.UtilityClass;
-import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
+import me.moonways.bridgenet.jdbc.core.compose.ParameterSignature;
 import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
@@ -87,7 +87,7 @@ public class EntityPersistenceUtil {
         throw new DatabaseEntityException("method is not an entity parameter getter");
     }
 
-    public ParameterAddon[] getParameterIndexes(Method method) {
+    public ParameterSignature[] getParameterIndexes(Method method) {
         if (isEntityId(method)) {
             return method.getDeclaredAnnotation(EntityId.class).indexes();
         }

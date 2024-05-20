@@ -3,10 +3,9 @@ package me.moonways.bridgenet.jdbc.core.compose.impl.collection.element;
 import lombok.var;
 import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 import me.moonways.bridgenet.jdbc.core.compose.MergeDirection;
-import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
+import me.moonways.bridgenet.jdbc.core.compose.ParameterSignature;
 import me.moonways.bridgenet.jdbc.core.compose.SubjectFunction;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedPredicates;
-import me.moonways.bridgenet.jdbc.core.compose.*;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -70,7 +69,7 @@ public final class CollectionElementMapper {
         var encoding = style.getEncoding();
         var defaultValue = style.getDefaultValue();
 
-        var addons = (style.getAddons() != null ? style.getAddons() : Collections.<ParameterAddon>emptyList())
+        var addons = (style.getAddons() != null ? style.getAddons() : Collections.<ParameterSignature>emptyList())
                 .stream()
                 .map(Enum::toString)
                 .collect(Collectors.joining(" "));

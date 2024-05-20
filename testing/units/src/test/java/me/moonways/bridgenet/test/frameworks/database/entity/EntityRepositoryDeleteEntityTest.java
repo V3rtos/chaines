@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.test.frameworks.database.entity;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.jdbc.entity.EntityRepository;
+import me.moonways.bridgenet.jdbc.entity.oldest.EntityRepository;
 import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
 import me.moonways.bridgenet.test.data.EntityStatus;
 import me.moonways.bridgenet.test.data.EntityUser;

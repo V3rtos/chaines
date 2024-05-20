@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.jdbc.entity;
+package me.moonways.bridgenet.jdbc.entity.oldest;
 
 import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
 

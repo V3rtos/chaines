@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
+import me.moonways.bridgenet.jdbc.core.compose.ParameterSignature;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
 import me.moonways.bridgenet.model.settings.Setting;
@@ -27,11 +27,11 @@ public class EntitySetting {
     }
 
     @Getter(onMethod_ = @EntityParameter(order = 1, id = "player_id",
-            indexes = ParameterAddon.KEY))
+            indexes = ParameterSignature.KEY))
     private UUID playerId;
 
     @Getter(onMethod_ = @EntityParameter(order = 2, id = "setting_id",
-            indexes = ParameterAddon.KEY))
+            indexes = ParameterSignature.KEY))
     private UUID settingId;
 
     @Getter(onMethod_ = @EntityParameter(order = 3, id = "setting_value"))

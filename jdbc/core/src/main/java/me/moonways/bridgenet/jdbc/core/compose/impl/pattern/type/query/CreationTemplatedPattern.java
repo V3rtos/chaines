@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.jdbc.core.compose.impl.pattern.type.query;
 
 import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
-import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
+import me.moonways.bridgenet.jdbc.core.compose.ParameterSignature;
 import me.moonways.bridgenet.jdbc.core.compose.impl.collection.element.Encoding;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.AbstractPattern;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.PatternCollectionConfigurator;
@@ -47,7 +47,7 @@ public class CreationTemplatedPattern extends AbstractPattern implements Creatio
         boolean hasPrimaryKeys = false;
 
         for (CombinedStructs.CombinedStyledParameter parameter : signature.parameters()) {
-            if (parameter.getStyle().getAddons().contains(ParameterAddon.PRIMARY)) {
+            if (parameter.getStyle().getAddons().contains(ParameterSignature.PRIMARY)) {
                 hasPrimaryKeys = true;
                 primaryKeysConfigurator.pushPrimaryKey(parameter);
             }

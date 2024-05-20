@@ -17,7 +17,7 @@ public class ParameterStyle {
 
     private final Encoding encoding;
 
-    private final List<ParameterAddon> addons;
+    private final List<ParameterSignature> addons;
 
     private final Object defaultValue;
 }
