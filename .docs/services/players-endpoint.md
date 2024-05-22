@@ -67,10 +67,10 @@ Optional<OfflinePlayer> offlinePlayer = store.getOffline("bridgenet_user");
 
 Examples: `player_namespaces` (`me.moonways.endpoint.players.database.EntityNamespace`)
 
-| player_id | permission                            | expired_in     |
-|-----------|---------------------------------------|----------------|
-| 1         | 756d7e30-d173-4c85-8827-67aad3c258aa  | itzstonlex     |
-| 2         | 04d15ffd-066e-4332-96ad-64670b7c56dd  | bridgenet_user |
+| id | uuid                                 | name           |
+|----|--------------------------------------|----------------|
+| 1  | 756d7e30-d173-4c85-8827-67aad3c258aa | itzstonlex     |
+| 2  | 04d15ffd-066e-4332-96ad-64670b7c56dd | bridgenet_user |
 
 <br>
 
