@@ -259,7 +259,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
             completedQuery.call(connection);
         }
 
-        log.debug("Operation result: []");
+        log.debug("Operation result: <NO RETURN CONTENT>");
     }
 
     private <V> List<V> callAndCollect(EntityOperationComposer.EntityComposedOperation operation) {
