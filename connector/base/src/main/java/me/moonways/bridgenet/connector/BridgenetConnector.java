@@ -8,7 +8,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.connector.description.DeviceDescription;
-import me.moonways.bridgenet.model.bus.message.Handshake;
+import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.mtp.connection.client.NetworkClientConnectionFactory;

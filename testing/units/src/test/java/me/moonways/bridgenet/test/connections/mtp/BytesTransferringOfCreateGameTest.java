@@ -2,7 +2,7 @@ package me.moonways.bridgenet.test.connections.mtp;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import me.moonways.bridgenet.model.bus.message.CreateGame;
+import me.moonways.bridgenet.model.message.CreateGame;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;

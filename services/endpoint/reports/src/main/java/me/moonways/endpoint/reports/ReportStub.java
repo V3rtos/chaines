@@ -3,8 +3,8 @@ package me.moonways.endpoint.reports;
 import lombok.Getter;
 import lombok.ToString;
 import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
-import me.moonways.bridgenet.model.reports.Report;
-import me.moonways.bridgenet.model.reports.ReportReason;
+import me.moonways.bridgenet.model.service.reports.Report;
+import me.moonways.bridgenet.model.service.reports.ReportReason;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

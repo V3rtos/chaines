@@ -2,15 +2,15 @@ package me.moonways.bridgenet.test.data;
 
 import me.moonways.bridgenet.connector.description.DeviceDescription;
 import me.moonways.bridgenet.connector.description.UserDescription;
-import me.moonways.bridgenet.model.gui.GuiDescription;
-import me.moonways.bridgenet.model.gui.GuiSlot;
-import me.moonways.bridgenet.model.gui.GuiType;
-import me.moonways.bridgenet.model.gui.click.ClickType;
-import me.moonways.bridgenet.model.gui.item.entries.material.Material;
-import me.moonways.bridgenet.model.gui.item.types.Materials;
-import me.moonways.bridgenet.model.language.Language;
-import me.moonways.bridgenet.model.language.Message;
-import me.moonways.bridgenet.model.permissions.permission.Permission;
+import me.moonways.bridgenet.model.service.gui.GuiDescription;
+import me.moonways.bridgenet.model.service.gui.GuiSlot;
+import me.moonways.bridgenet.model.service.gui.GuiType;
+import me.moonways.bridgenet.model.service.gui.click.ClickType;
+import me.moonways.bridgenet.model.service.gui.item.entries.material.Material;
+import me.moonways.bridgenet.model.service.gui.item.types.Materials;
+import me.moonways.bridgenet.model.service.language.Language;
+import me.moonways.bridgenet.model.service.language.Message;
+import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 
 import java.time.Duration;
 import java.util.UUID;

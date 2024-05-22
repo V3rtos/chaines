@@ -3,9 +3,9 @@ package me.moonways.endpoint.games.stub;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import me.moonways.bridgenet.model.games.ActiveGame;
-import me.moonways.bridgenet.model.games.Game;
-import me.moonways.bridgenet.model.games.GameState;
+import me.moonways.bridgenet.model.service.games.ActiveGame;
+import me.moonways.bridgenet.model.service.games.Game;
+import me.moonways.bridgenet.model.service.games.GameState;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;

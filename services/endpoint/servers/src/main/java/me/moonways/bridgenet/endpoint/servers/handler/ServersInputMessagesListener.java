@@ -8,16 +8,16 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.endpoint.servers.ConnectedServerStub;
 import me.moonways.bridgenet.endpoint.servers.ServersContainer;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
-import me.moonways.bridgenet.model.bus.HandshakePropertiesConst;
-import me.moonways.bridgenet.model.bus.message.Disconnect;
-import me.moonways.bridgenet.model.bus.message.Handshake;
-import me.moonways.bridgenet.model.bus.message.Redirect;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.servers.EntityServer;
-import me.moonways.bridgenet.model.servers.ServerFlag;
-import me.moonways.bridgenet.model.servers.ServerInfo;
-import me.moonways.bridgenet.model.servers.event.ServerDisconnectEvent;
-import me.moonways.bridgenet.model.servers.event.ServerHandshakeEvent;
+import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
+import me.moonways.bridgenet.model.message.Disconnect;
+import me.moonways.bridgenet.model.message.Handshake;
+import me.moonways.bridgenet.model.message.Redirect;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
+import me.moonways.bridgenet.model.service.servers.ServerFlag;
+import me.moonways.bridgenet.model.service.servers.ServerInfo;
+import me.moonways.bridgenet.model.event.ServerDisconnectEvent;
+import me.moonways.bridgenet.model.event.ServerHandshakeEvent;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;
 import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
@@ -46,13 +46,19 @@ public class ServersInputMessagesListener {
     private PlayersServiceModel playersServiceModel;
 
     private void callServerDisconnectEvent(EntityServer entityServer) {
-        ServerDisconnectEvent event = new ServerDisconnectEvent(ServerDisconnectEvent.DownstreamType.DISCONNECT_MESSAGE, entityServer);
-        eventService.fireEvent(event);
+        eventService.fireEvent(
+                ServerDisconnectEvent.builder()
+                        .server(entityServer)
+                        .downstreamType(ServerDisconnectEvent.DownstreamType.DISCONNECT_REQUEST)
+                        .build());
     }
 
     private void callServerHandshakeEvent(Handshake handshake, EntityServer entityServer) {
-        ServerHandshakeEvent event = new ServerHandshakeEvent(handshake, entityServer);
-        eventService.fireEvent(event);
+        eventService.fireEvent(
+                ServerHandshakeEvent.builder()
+                        .handshake(handshake)
+                        .server(entityServer)
+                        .build());
     }
 
     @SubscribeMessage

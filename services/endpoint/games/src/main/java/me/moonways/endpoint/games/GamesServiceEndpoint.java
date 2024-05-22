@@ -1,9 +1,9 @@
 package me.moonways.endpoint.games;
 
-import me.moonways.bridgenet.model.games.Game;
-import me.moonways.bridgenet.model.games.GameServer;
-import me.moonways.bridgenet.model.games.GamesServiceModel;
-import me.moonways.bridgenet.model.servers.EntityServer;
+import me.moonways.bridgenet.model.service.games.Game;
+import me.moonways.bridgenet.model.service.games.GameServer;
+import me.moonways.bridgenet.model.service.games.GamesServiceModel;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
 import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.games.handler.GamesInputMessageListener;

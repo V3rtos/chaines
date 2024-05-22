@@ -3,9 +3,9 @@ package me.moonways.endpoint.auth;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
-import me.moonways.bridgenet.model.auth.Account;
-import me.moonways.bridgenet.model.auth.AuthServiceModel;
-import me.moonways.bridgenet.model.auth.AuthorizationResult;
+import me.moonways.bridgenet.model.service.auth.Account;
+import me.moonways.bridgenet.model.service.auth.AuthServiceModel;
+import me.moonways.bridgenet.model.service.auth.AuthorizationResult;
 import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
 import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
 

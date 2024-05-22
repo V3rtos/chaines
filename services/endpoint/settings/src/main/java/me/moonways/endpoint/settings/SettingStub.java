@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.api.util.ExceptionallyConsumer;
-import me.moonways.bridgenet.model.settings.Setting;
-import me.moonways.bridgenet.model.settings.SettingID;
+import me.moonways.bridgenet.model.service.settings.Setting;
+import me.moonways.bridgenet.model.service.settings.SettingID;
 
 import java.rmi.RemoteException;
 import java.util.Objects;

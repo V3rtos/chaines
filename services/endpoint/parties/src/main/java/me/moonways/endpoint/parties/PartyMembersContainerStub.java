@@ -1,11 +1,17 @@
 package me.moonways.endpoint.parties;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.model.parties.PartyMembersContainer;
-import me.moonways.bridgenet.model.parties.PartyMember;
+import me.moonways.bridgenet.api.event.EventService;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.model.event.PartyPlayerJoinEvent;
+import me.moonways.bridgenet.model.event.PartyPlayerQuitEvent;
+import me.moonways.bridgenet.model.service.parties.PartyMembersContainer;
+import me.moonways.bridgenet.model.service.parties.PartyMember;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 @RequiredArgsConstructor
@@ -14,6 +20,11 @@ public class PartyMembersContainerStub extends ArrayList<PartyMember> implements
     private static final long serialVersionUID = 5483527348123762769L;
 
     private final PartyStub partyStub;
+
+    @Inject
+    private EventService eventService;
+    @Inject
+    private PlayersServiceModel playersServiceModel;
 
     private void validateNull(String playerName) {
         if (playerName == null) {
@@ -33,17 +44,23 @@ public class PartyMembersContainerStub extends ArrayList<PartyMember> implements
 
     @NotNull
     @Override
-    public PartyMember addMember(@NotNull String name) {
+    public PartyMember addMember(@NotNull String name) throws RemoteException {
         validateNull(name);
         PartyMember partyMember = new PartyMember(name, partyStub);
 
         super.add(partyMember);
+
+        eventService.fireEvent(
+                PartyPlayerJoinEvent.builder()
+                        .party(partyStub)
+                        .joinedPlayer(playersServiceModel.store().get(name).orElse(null))
+                        .build());
         return partyMember;
     }
 
     @Nullable
     @Override
-    public PartyMember removeMember(@NotNull String name) {
+    public PartyMember removeMember(@NotNull String name) throws RemoteException {
         validateNull(name);
         PartyMember memberByName = getMemberByName(name);
 
@@ -52,6 +69,13 @@ public class PartyMembersContainerStub extends ArrayList<PartyMember> implements
         }
 
         super.remove(memberByName);
+
+        eventService.fireEvent(
+                PartyPlayerQuitEvent.builder()
+                        .party(partyStub)
+                        .leavedPlayer(playersServiceModel.store().get(name).orElse(null))
+                        .build());
+
         return memberByName;
     }
 

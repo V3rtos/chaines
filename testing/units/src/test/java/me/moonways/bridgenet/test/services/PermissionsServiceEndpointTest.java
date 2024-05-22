@@ -4,15 +4,15 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscribeBuilder;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.model.permissions.PermissionsServiceModel;
-import me.moonways.bridgenet.model.permissions.group.GroupTypes;
-import me.moonways.bridgenet.model.permissions.group.GroupsManager;
-import me.moonways.bridgenet.model.permissions.group.PermissionGroup;
-import me.moonways.bridgenet.model.permissions.group.PlayerGroupUpdateEvent;
-import me.moonways.bridgenet.model.permissions.permission.Permission;
-import me.moonways.bridgenet.model.permissions.permission.PermissionsManager;
-import me.moonways.bridgenet.model.permissions.permission.PlayerPermissionPutEvent;
-import me.moonways.bridgenet.model.permissions.permission.PlayerPermissionRemoveEvent;
+import me.moonways.bridgenet.model.service.permissions.PermissionsServiceModel;
+import me.moonways.bridgenet.model.service.permissions.group.GroupTypes;
+import me.moonways.bridgenet.model.service.permissions.group.GroupsManager;
+import me.moonways.bridgenet.model.service.permissions.group.PermissionGroup;
+import me.moonways.bridgenet.model.event.PlayerGroupUpdateEvent;
+import me.moonways.bridgenet.model.service.permissions.permission.Permission;
+import me.moonways.bridgenet.model.service.permissions.permission.PermissionsManager;
+import me.moonways.bridgenet.model.event.PlayerPermissionAddEvent;
+import me.moonways.bridgenet.model.event.PlayerPermissionRemoveEvent;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
@@ -41,14 +41,14 @@ public class PermissionsServiceEndpointTest {
     @Test
     @TestOrdered(1)
     public void test_addPermission() throws RemoteException {
-        Optional<PlayerPermissionPutEvent> eventOptional = processPermissionAdd(TestConst.Permissions.TEMP_PERMISSION);
+        Optional<PlayerPermissionAddEvent> eventOptional = processPermissionAdd(TestConst.Permissions.TEMP_PERMISSION);
         assertTrue(eventOptional.isPresent());
     }
 
     @Test
     @TestOrdered(2)
     public void test_addPermissionDuplicate() throws RemoteException {
-        Optional<PlayerPermissionPutEvent> eventOptional = processPermissionAdd(TestConst.Permissions.PERMISSION);
+        Optional<PlayerPermissionAddEvent> eventOptional = processPermissionAdd(TestConst.Permissions.PERMISSION);
         assertFalse(eventOptional.isPresent());
     }
 
@@ -88,9 +88,9 @@ public class PermissionsServiceEndpointTest {
     }
 
 
-    private Optional<PlayerPermissionPutEvent> processPermissionAdd(Permission permission) throws RemoteException {
+    private Optional<PlayerPermissionAddEvent> processPermissionAdd(Permission permission) throws RemoteException {
         eventService.subscribe(
-                EventSubscribeBuilder.newBuilder(PlayerPermissionPutEvent.class)
+                EventSubscribeBuilder.newBuilder(PlayerPermissionAddEvent.class)
                         .follow(log::debug)
                         .build());
 
