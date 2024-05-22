@@ -25,7 +25,6 @@ public final class PlayersRepository {
     }
 
     public void insert(EntityPlayer player) {
-        playersRepository.delete(player);
         playersRepository.insert(player);
     }
 
