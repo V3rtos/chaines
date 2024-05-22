@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public final class PlayerStoreStub implements PlayerStore {
             .build();
 
     @Getter
-    private final PlayerIdMap<Player> onlinePlayersMap = new PlayerIdMap<>(this);
+    private final PlayerIdMap<Player> onlinePlayersMap = new PlayerIdMap<>();
 
     @Inject
     private PlayersRepository playersRepository;
@@ -49,9 +50,12 @@ public final class PlayerStoreStub implements PlayerStore {
     private BeansService beansService;
 
     public Player addOnlinePlayer(Properties properties) throws RemoteException {
-        Player player = createPlayer(properties);
+        PlayerStub player = createPlayer(properties);
 
         beansService.inject(player);
+
+        idByNamesCache.put(player.getName().toLowerCase(), player.getDescription());
+        nameByIdsCache.put(player.getId(), player.getDescription());
         onlinePlayersMap.put(player.getId(), player);
 
         return player;
@@ -67,7 +71,7 @@ public final class PlayerStoreStub implements PlayerStore {
         return removed;
     }
 
-    private Player createPlayer(Properties properties) throws RemoteException {
+    private PlayerStub createPlayer(Properties properties) throws RemoteException {
         UUID uuid = UUID.fromString(properties.getProperty(HandshakePropertiesConst.USER_UUID));
         String username = properties.getProperty(HandshakePropertiesConst.USER_NAME);
 
@@ -167,14 +171,20 @@ public final class PlayerStoreStub implements PlayerStore {
     public String nameById(UUID id) throws RemoteException {
         nameByIdsCache.cleanUp();
 
-        PlayerDescription cachedDescription = nameByIdsCache.getIfPresent(id);
-        if (cachedDescription == null) {
+        AtomicReference<PlayerDescription> cachedDescription =
+                new AtomicReference<>(nameByIdsCache.getIfPresent(id));
+
+        if (cachedDescription.get() == null) {
             playersRepository.get(id)
                     .map(EntityPlayer::getDescription)
-                    .ifPresent(playerDescription -> nameByIdsCache.put(id, playerDescription));
+                    .ifPresent(playerDescription -> {
+
+                        cachedDescription.set(playerDescription);
+                        nameByIdsCache.put(id, playerDescription);
+                    });
         }
 
-        return Optional.ofNullable(cachedDescription)
+        return Optional.ofNullable(cachedDescription.get())
                 .map(PlayerDescription::getNamespace)
                 .map(EntityNamespace::getName)
                 .orElse(null);
@@ -184,14 +194,20 @@ public final class PlayerStoreStub implements PlayerStore {
     public UUID idByName(String name) throws RemoteException {
         idByNamesCache.cleanUp();
 
-        PlayerDescription cachedDescription = idByNamesCache.getIfPresent(name.toLowerCase());
-        if (cachedDescription == null) {
+        AtomicReference<PlayerDescription> cachedDescription =
+                new AtomicReference<>(idByNamesCache.getIfPresent(name.toLowerCase()));
+
+        if (cachedDescription.get() == null) {
             playersRepository.get(name)
                     .map(EntityPlayer::getDescription)
-                    .ifPresent(playerDescription -> idByNamesCache.put(name.toLowerCase(), playerDescription));
+                    .ifPresent(playerDescription -> {
+
+                        cachedDescription.set(playerDescription);
+                        idByNamesCache.put(name.toLowerCase(), playerDescription);
+                    });
         }
 
-        return Optional.ofNullable(cachedDescription)
+        return Optional.ofNullable(cachedDescription.get())
                 .map(PlayerDescription::getNamespace)
                 .map(EntityNamespace::getUuid)
                 .orElse(null);

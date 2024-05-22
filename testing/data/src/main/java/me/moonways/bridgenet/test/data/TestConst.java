@@ -80,14 +80,13 @@ public final class TestConst {
 
     public static final class Report {
         public static final String REPORTER = "itzstonlex";
-        public static final String INTRUDER = "any_player";
+        public static final String INTRUDER = "AnyPlayer";
         public static final String COMMENT = "Flying, KillAura and etc..";
         public static final String SOURCE = "MoonWays";
     }
 
     public static final class Permissions {
         public static final String PERMISSION_NAME = "bridgenet.test";
-
         public static final Permission PERMISSION = Permission.named(PERMISSION_NAME);
         public static final Permission TEMP_PERMISSION = Permission.temp(PERMISSION_NAME, Duration.ofSeconds(3));
     }

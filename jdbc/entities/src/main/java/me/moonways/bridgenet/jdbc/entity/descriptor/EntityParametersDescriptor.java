@@ -82,8 +82,7 @@ public class EntityParametersDescriptor {
         public Method findGetter(Class<?> source) {
             for (Method declaredMethod : source.getDeclaredMethods()) {
                 if (EntityPersistenceUtil.isParameter(declaredMethod)
-                        && Objects.equals(EntityPersistenceUtil.getParameterId(declaredMethod), id)
-                        && Arrays.equals(EntityPersistenceUtil.getParameterIndexes(declaredMethod), indexes)) {
+                        && Objects.equals(EntityPersistenceUtil.getParameterId(declaredMethod), id)) {
                     return declaredMethod;
                 }
             }

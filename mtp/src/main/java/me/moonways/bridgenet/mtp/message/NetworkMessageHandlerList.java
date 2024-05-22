@@ -68,7 +68,7 @@ public class NetworkMessageHandlerList {
         subscribers.sort(SORTING);
 
         int handlingCount = 0;
-        for (MessageSubscriberState subscriber : subscribers) {
+        for (MessageSubscriberState subscriber : new ArrayList<>(subscribers)) {
             Method method = subscriber.getMethod();
 
             if (method.getParameterCount() != 1) {

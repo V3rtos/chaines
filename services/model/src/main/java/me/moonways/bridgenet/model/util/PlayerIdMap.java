@@ -1,11 +1,8 @@
 package me.moonways.bridgenet.model.util;
 
-import lombok.SneakyThrows;
 import me.moonways.bridgenet.model.players.Player;
-import me.moonways.bridgenet.model.players.service.PlayerStore;
 
 import java.rmi.RemoteException;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,30 +12,15 @@ public class PlayerIdMap<V> extends ConcurrentHashMap<UUID, V> {
 
     private static final long serialVersionUID = 8540228284873559054L;
 
-    private final PlayerStore playerStore;
-
-    public PlayerIdMap(PlayerStore playerStore) {
+    public PlayerIdMap() {
         super();
-        this.playerStore = playerStore;
     }
 
-    public PlayerIdMap(PlayerStore playerStore, PlayerIdMap<V> other) {
+    public PlayerIdMap(PlayerIdMap<V> other) {
         super(other);
-        this.playerStore = playerStore;
-    }
-
-    @SneakyThrows
-    private void checkIfNotOnline() {
-        for (UUID playerId : new HashSet<>(keySet())) {
-
-            if (!playerStore.get(playerId).isPresent()) {
-                remove(playerId);
-            }
-        }
     }
 
     public synchronized Optional<V> get(UUID playerId) {
-        checkIfNotOnline();
         return Optional.ofNullable(super.get(playerId));
     }
 

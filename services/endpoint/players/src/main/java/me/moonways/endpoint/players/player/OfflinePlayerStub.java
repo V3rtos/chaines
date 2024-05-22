@@ -32,6 +32,7 @@ public class OfflinePlayerStub implements OfflinePlayer {
     private final UUID id;
     private final String name;
 
+    @Getter
     private final PlayerDescription description;
 
     @Inject

@@ -31,7 +31,7 @@ public class PlayerSettingsServiceEndpoint extends EndpointRemoteObject implemen
 
     @Override
     protected void construct(EndpointRemoteContext context) throws RemoteException {
-        this.playerSettingsCacheMap = new PlayerIdMap<>(playersServiceModel.store());
+        this.playerSettingsCacheMap = new PlayerIdMap<>();
     }
 
     private PlayerSettings createPlayerSettings(UUID playerId) {
