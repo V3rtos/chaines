@@ -5,7 +5,6 @@ import me.moonways.bridgenet.model.message.CreateGame;
 import me.moonways.bridgenet.model.message.DeleteGame;
 import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.model.message.UpdateGame;
-import me.moonways.bridgenet.model.games.*;
 import me.moonways.bridgenet.model.service.games.Game;
 import me.moonways.bridgenet.model.service.games.GameStatus;
 import me.moonways.bridgenet.model.service.games.GamesServiceModel;

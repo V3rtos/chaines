@@ -5,7 +5,6 @@ import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscribeBuilder;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.event.PlayerLanguageUpdateEvent;
-import me.moonways.bridgenet.model.language.*;
 import me.moonways.bridgenet.model.service.language.*;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.data.junit.assertion.ServicesAssert;

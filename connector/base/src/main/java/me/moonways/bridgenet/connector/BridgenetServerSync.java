@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import me.moonways.bridgenet.connector.description.*;
 import me.moonways.bridgenet.model.message.*;
-import me.moonways.bridgenet.model.service.bus.message.*;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 
 import java.util.List;

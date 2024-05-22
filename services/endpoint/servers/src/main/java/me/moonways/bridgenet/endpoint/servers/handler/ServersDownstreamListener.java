@@ -24,8 +24,11 @@ public class ServersDownstreamListener {
     private EventService eventService;
 
     private void callServerDisconnectEvent(EntityServer entityServer) {
-        ServerDisconnectEvent event = new ServerDisconnectEvent(ServerDisconnectEvent.DownstreamType.DOWNSTREAM, entityServer);
-        eventService.fireEvent(event);
+        eventService.fireEvent(
+                ServerDisconnectEvent.builder()
+                        .downstreamType(ServerDisconnectEvent.DownstreamType.DOWNSTREAM)
+                        .server(entityServer)
+                        .build());
     }
 
     @EventHandle
