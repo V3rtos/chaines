@@ -16,7 +16,7 @@ import me.moonways.bridgenet.jdbc.core.observer.event.DbTransactionRollbackEvent
 import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
 import me.moonways.bridgenet.jdbc.provider.BridgenetJdbcProvider;
 import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
-import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
@@ -30,7 +30,7 @@ public class OpenJdbcConnectionHook extends BootstrapHook {
     @Inject
     private DatabaseProvider databaseProvider;
     @Inject
-    private BridgenetMetricsLogger bridgenetMetricsLogger;
+    private BridgenetDataLogger bridgenetDataLogger;
 
     @Override
     protected void process(@NotNull AppBootstrap bootstrap) {
@@ -70,22 +70,22 @@ public class OpenJdbcConnectionHook extends BootstrapHook {
 
             @Override
             protected void observe(DbRequestCompletedEvent event) {
-                bridgenetMetricsLogger.logDatabaseSuccessQuery();
+                bridgenetDataLogger.logDatabaseSuccessQuery();
             }
 
             @Override
             protected void observe(DbRequestFailureEvent event) {
-                bridgenetMetricsLogger.logDatabaseFailureQuery();
+                bridgenetDataLogger.logDatabaseFailureQuery();
             }
 
             @Override
             protected void observe(DbTransactionOpenEvent event) {
-                bridgenetMetricsLogger.logDatabaseTransaction();
+                bridgenetDataLogger.logDatabaseTransaction();
             }
 
             @Override
             protected void observe(DbTransactionRollbackEvent event) {
-                bridgenetMetricsLogger.logDatabaseRollbackQuery();
+                bridgenetDataLogger.logDatabaseRollbackQuery();
             }
         });
     }

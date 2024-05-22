@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.metrics;
+package me.moonways.bridgenet.profiler;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class MetricValue {
+public class TimedValue {
 
     private final String label;
     private final Long value;

@@ -15,7 +15,7 @@ import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerific
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationResult;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
-import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -70,7 +70,7 @@ public final class BeansService {
         onBinding(ResourcesAssembly.class, ResourcesAssembly::overrideSystemProperties);
 
         bind(new ResourcesAssembly());
-        bind(new BridgenetMetricsLogger());
+        bind(new BridgenetDataLogger());
     }
 
     /**

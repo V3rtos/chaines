@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.metrics;
+package me.moonways.bridgenet.profiler;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.*;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
-public class Metric {
+public class Profiler {
 
     private static final int MAX_VALUES_SIZE = 290;
 
@@ -20,7 +20,7 @@ public class Metric {
     @EqualsAndHashCode.Include
     private final String name;
 
-    private final List<MetricValue> values = Collections.synchronizedList(new ArrayList<>());
+    private final List<TimedValue> values = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Добавить новое значение метрики в кеш.
@@ -28,8 +28,8 @@ public class Metric {
      * @param label - наименование значения.
      * @param value - числовое значение кеша.
      */
-    public Metric put(String label, long value) {
-        values.add(new MetricValue(label, value, System.nanoTime()));
+    public Profiler put(String label, long value) {
+        values.add(new TimedValue(label, value, System.nanoTime()));
 
         if (values.size() >= MAX_VALUES_SIZE)
             values.remove(0);
@@ -43,7 +43,7 @@ public class Metric {
      * @param label - наименование значения.
      * @param value - сколько необходимо добавить к актуальному значению.
      */
-    public Metric add(String label, long value) {
+    public Profiler add(String label, long value) {
         return put(label, (get(label) + value));
     }
 
@@ -54,7 +54,7 @@ public class Metric {
      * @param label - наименование значения.
      * @param value - сколько необходимо отнять от актуального значения.
      */
-    public Metric subtract(String label, long value) {
+    public Profiler subtract(String label, long value) {
         return put(label, (get(label) - value));
     }
 
@@ -64,7 +64,7 @@ public class Metric {
      *
      * @param label - наименование, по которому удалить все значения.
      */
-    public Metric removeAll(String label) {
+    public Profiler removeAll(String label) {
         values.removeIf(value -> value.getLabel().equalsIgnoreCase(label));
         return this;
     }
@@ -77,8 +77,8 @@ public class Metric {
      */
     public Long get(String label) {
         return values.stream().filter(value -> value.getLabel().equalsIgnoreCase(label))
-                .max(Comparator.comparingLong(MetricValue::getTimestamp))
-                .map(MetricValue::getValue)
+                .max(Comparator.comparingLong(TimedValue::getTimestamp))
+                .map(TimedValue::getValue)
                 .orElse(0L);
     }
 }

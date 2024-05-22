@@ -6,8 +6,8 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
-import me.moonways.bridgenet.metrics.MetricType;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
+import me.moonways.bridgenet.profiler.ProfilerType;
 import me.moonways.bridgenet.mtp.config.NetworkJsonConfiguration;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.NetworkMessagesService;
@@ -31,7 +31,7 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
     private final NetworkJsonConfiguration configuration;
 
     @Inject
-    private BridgenetMetricsLogger bridgenetMetricsLogger;
+    private BridgenetDataLogger bridgenetDataLogger;
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
@@ -42,7 +42,7 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
                 return;
             }
 
-            bridgenetMetricsLogger.logNetworkTrafficBytesRead(MetricType.MTP_TRAFFIC, readableBytes);
+            bridgenetDataLogger.logNetworkTrafficBytesRead(ProfilerType.MTP_TRAFFIC, readableBytes);
 
             int messageId = byteBuf.readInt();
             ExportedMessage message = decodeMessage(messageId, byteBuf);

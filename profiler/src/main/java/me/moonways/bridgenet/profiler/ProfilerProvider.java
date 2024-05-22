@@ -1,15 +1,14 @@
-package me.moonways.bridgenet.metrics;
+package me.moonways.bridgenet.profiler;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
-import me.moonways.bridgenet.metrics.chart.ChartDataMapper;
-import me.moonways.bridgenet.metrics.chart.ChartType;
-import me.moonways.bridgenet.metrics.quickchart.QuickChartApi;
-import me.moonways.bridgenet.metrics.quickchart.dto.ChartData;
-import me.moonways.bridgenet.metrics.quickchart.dto.IllustrationRequest;
-import me.moonways.bridgenet.metrics.quickchart.dto.Options;
-import me.moonways.bridgenet.metrics.settings.MetricsSettings;
+import me.moonways.bridgenet.profiler.chart.ChartDataMapper;
+import me.moonways.bridgenet.profiler.chart.ChartType;
+import me.moonways.bridgenet.profiler.quickchart.QuickChartApi;
+import me.moonways.bridgenet.profiler.quickchart.dto.ChartData;
+import me.moonways.bridgenet.profiler.quickchart.dto.IllustrationRequest;
+import me.moonways.bridgenet.profiler.quickchart.dto.Options;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,7 +21,7 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Log4j2
-public final class BridgenetMetricsProvider {
+public final class ProfilerProvider {
 
     private static final String DEFAULT_IMAGE_BACKGROUND_COLOR = "transparent";
     private static final String DEFAULT_IMAGE_FORMAT = "png";
@@ -31,11 +30,11 @@ public final class BridgenetMetricsProvider {
 
     private final QuickChartApi api = new QuickChartApi();
 
-    private final MetricsSettings settings;
+    private final ProfilerSettings settings;
 
     {
         settings = ASSEMBLY.readJsonAtEntity(ResourcesTypes.METRICS_SETTINGS_JSON,
-                MetricsSettings.class);
+                ProfilerSettings.class);
     }
 
     /**
@@ -45,8 +44,8 @@ public final class BridgenetMetricsProvider {
      *
      * @param name - уникальное наименование метрики.
      */
-    public Metric createMetric(String name) {
-        return new Metric(UUID.randomUUID(), name);
+    public Profiler createMetric(String name) {
+        return new Profiler(UUID.randomUUID(), name);
     }
 
     /**
@@ -55,13 +54,13 @@ public final class BridgenetMetricsProvider {
      * гибкость изменения данных в ходе определенного
      * временного промежутка.
      *
-     * @param metric - метрика, из которой берем данные для генерации иллюстрации.
+     * @param profiler - метрика, из которой берем данные для генерации иллюстрации.
      * @return - ссылка на готовую иллюстрацию с рисованными данными метрики.
      */
-    public String provideMetricIllustration(ChartType chartType, Metric metric) {
-        log.info("Requesting '{}' type of metrics illustration for §2{}", chartType, metric);
+    public String provideMetricIllustration(ChartType chartType, Profiler profiler) {
+        log.info("Requesting '{}' type of metrics illustration for §2{}", chartType, profiler);
 
-        ChartDataMapper chartDataMapper = new ChartDataMapper(chartType, metric);
+        ChartDataMapper chartDataMapper = new ChartDataMapper(chartType, profiler);
         IllustrationRequest request = wrapChartToRequestBody(
                 ChartData.builder()
                         .type(chartDataMapper.getTypeName())
@@ -72,13 +71,13 @@ public final class BridgenetMetricsProvider {
                         .options(Options.builder()
                                 .title(Options.Title.builder()
                                         .isDisplay(true)
-                                        .text(metric.getName())
+                                        .text(profiler.getName())
                                         .build())
                                 .build())
                         .build());
 
         String illustrationURL = api.requestIllustrationURL(request);
-        storeImage(metric, chartType, illustrationURL);
+        storeImage(profiler, chartType, illustrationURL);
 
         return illustrationURL;
     }
@@ -103,12 +102,12 @@ public final class BridgenetMetricsProvider {
      * в директорию, с условием, что если в настройках метрики
      * включена возможность сохранения их в файл.
      *
-     * @param metric - метрика, от которой была сгенерирована иллюстрация.
+     * @param profiler - метрика, от которой была сгенерирована иллюстрация.
      * @param url    - https ссылка на иллюстрацию.
      */
-    private void storeImage(Metric metric, ChartType chartType, String url) {
+    private void storeImage(Profiler profiler, ChartType chartType, String url) {
         try {
-            MetricsSettings.ImagesStore imagesStore = settings.getImagesStore();
+            ProfilerSettings.ImagesStore imagesStore = settings.getImagesStore();
 
             if (imagesStore.isEnabled()) {
                 BufferedImage bufferedImage = ImageIO.read(new URL(url));
@@ -118,10 +117,10 @@ public final class BridgenetMetricsProvider {
                     Files.createDirectories(path);
                 }
 
-                String imageFileName = getImageFileName(metric, chartType);
+                String imageFileName = getImageFileName(profiler, chartType);
                 ImageIO.write(bufferedImage, DEFAULT_IMAGE_FORMAT, path.resolve(imageFileName).toFile());
 
-                log.info("The §7\"{}\" §rmetric illustration was successfully saved to the directory as §e{}", metric.getName(), imageFileName);
+                log.info("The §7\"{}\" §rmetric illustration was successfully saved to the directory as §e{}", profiler.getName(), imageFileName);
             }
         } catch (IOException exception) {
             log.error("§4An error occurred when trying to save an illustration of a metric", exception);
@@ -132,10 +131,10 @@ public final class BridgenetMetricsProvider {
      * Сгенерировать и получить наименование файла, который будет
      * содержать сохраненную иллюстрацию метрики.
      *
-     * @param metric - метрика, от которой была сгенерирована иллюстрация.
+     * @param profiler - метрика, от которой была сгенерирована иллюстрация.
      */
-    private String getImageFileName(Metric metric, ChartType chartType) {
-        return String.format("%s_%s_%s.%s", metric.getName().replace(" ", "_"), chartType.name(),
+    private String getImageFileName(Profiler profiler, ChartType chartType) {
+        return String.format("%s_%s_%s.%s", profiler.getName().replace(" ", "_"), chartType.name(),
                 ThreadLocalRandom.current().nextInt(), DEFAULT_IMAGE_FORMAT);
     }
 }

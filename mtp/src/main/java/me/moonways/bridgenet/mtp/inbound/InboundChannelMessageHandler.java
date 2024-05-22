@@ -8,8 +8,8 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.util.ExceptionallyConsumer;
-import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
-import me.moonways.bridgenet.metrics.MetricType;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
+import me.moonways.bridgenet.profiler.ProfilerType;
 import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.mtp.channel.ChannelDirection;
@@ -32,7 +32,7 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
     private final List<ChannelInboundHandler> childrenHandlers;
 
     @Inject
-    private BridgenetMetricsLogger bridgenetMetricsLogger;
+    private BridgenetDataLogger bridgenetDataLogger;
     @Inject
     private BridgenetNetworkController networkController;
     @Inject
@@ -59,7 +59,7 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
         callChildrenHandlers(child -> child.channelActive(ctx));
 
         eventService.fireEvent(new ChannelOpenedEvent(ctx, toInboundChannel(ctx)));
-        bridgenetMetricsLogger.logNetworkConnectionOpened(MetricType.MTP_CONNECTIONS);
+        bridgenetDataLogger.logNetworkConnectionOpened(ProfilerType.MTP_CONNECTIONS);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
         callChildrenHandlers(child -> child.channelInactive(ctx));
 
         eventService.fireEvent(new ChannelDownstreamEvent(ctx, toInboundChannel(ctx)));
-        bridgenetMetricsLogger.logNetworkConnectionClosed(MetricType.MTP_CONNECTIONS);
+        bridgenetDataLogger.logNetworkConnectionClosed(ProfilerType.MTP_CONNECTIONS);
     }
 
     @Override

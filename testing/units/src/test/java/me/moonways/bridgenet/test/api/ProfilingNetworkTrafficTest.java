@@ -2,8 +2,8 @@ package me.moonways.bridgenet.test.api;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
-import me.moonways.bridgenet.metrics.MetricType;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
+import me.moonways.bridgenet.profiler.ProfilerType;
 import me.moonways.bridgenet.test.data.junit.assertion.DataAssert;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import org.junit.Test;
@@ -14,32 +14,32 @@ import org.junit.runner.RunWith;
 public class ProfilingNetworkTrafficTest {
 
     @Inject
-    private BridgenetMetricsLogger bridgenetMetricsLogger;
+    private BridgenetDataLogger bridgenetDataLogger;
 
     @Test
     public void test_requestIllustration() {
         logNetworkConnections();
 
-        String illustrationURL = bridgenetMetricsLogger.requestIllustrationURL(MetricType.MTP_CONNECTIONS);
+        String illustrationURL = bridgenetDataLogger.requestIllustrationURL(ProfilerType.MTP_CONNECTIONS);
         log.debug("Completed metric illustration url: {} [click]", illustrationURL);
 
         DataAssert.assertIllustrationUrl(illustrationURL);
     }
 
     private void logNetworkConnections() {
-        MetricType metricType = MetricType.MTP_CONNECTIONS;
+        ProfilerType profilerType = ProfilerType.MTP_CONNECTIONS;
 
         // 3 open
-        bridgenetMetricsLogger.logNetworkConnectionOpened(metricType);
-        bridgenetMetricsLogger.logNetworkConnectionOpened(metricType);
-        bridgenetMetricsLogger.logNetworkConnectionOpened(metricType);
+        bridgenetDataLogger.logNetworkConnectionOpened(profilerType);
+        bridgenetDataLogger.logNetworkConnectionOpened(profilerType);
+        bridgenetDataLogger.logNetworkConnectionOpened(profilerType);
 
         // 2 close
-        bridgenetMetricsLogger.logNetworkConnectionClosed(metricType);
-        bridgenetMetricsLogger.logNetworkConnectionClosed(metricType);
+        bridgenetDataLogger.logNetworkConnectionClosed(profilerType);
+        bridgenetDataLogger.logNetworkConnectionClosed(profilerType);
 
         // 1 open
-        bridgenetMetricsLogger.logNetworkConnectionOpened(metricType);
+        bridgenetDataLogger.logNetworkConnectionOpened(profilerType);
 
         // result = [1, 2, 3, 2, 1, 2]
     }

@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.metrics.quickchart;
+package me.moonways.bridgenet.profiler.quickchart;
 
 import lombok.experimental.StandardException;
 

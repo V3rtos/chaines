@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.metrics.quickchart.dto;
+package me.moonways.bridgenet.profiler.quickchart.dto;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Builder;

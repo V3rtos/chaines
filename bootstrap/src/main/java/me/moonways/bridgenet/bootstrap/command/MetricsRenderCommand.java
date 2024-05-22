@@ -8,7 +8,7 @@ import me.moonways.bridgenet.api.command.annotation.MentorExecutor;
 import me.moonways.bridgenet.api.command.option.CommandParameterOnlyConsoleUse;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.bootstrap.command.util.MetricRenderer;
-import me.moonways.bridgenet.metrics.MetricType;
+import me.moonways.bridgenet.profiler.ProfilerType;
 
 @Alias("metric")
 @Command("metrics")
@@ -20,8 +20,8 @@ public class MetricsRenderCommand {
 
     @MentorExecutor
     public void defaultCommand(CommandSession session) {
-        for (MetricType metricType : MetricType.values()) {
-            renderer.sendRenderedMetricURL(metricType, session.getSender());
+        for (ProfilerType profilerType : ProfilerType.values()) {
+            renderer.sendRenderedMetricURL(profilerType, session.getSender());
         }
     }
 }

@@ -7,7 +7,7 @@ import me.moonways.bridgenet.api.util.autorun.persistence.Runnable;
 import me.moonways.bridgenet.api.util.autorun.persistence.RunningPeriod;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 import me.moonways.bridgenet.api.util.pair.Pair;
-import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +19,7 @@ public class GarbageCollectorRunner {
     private long freeBefore = Runtime.getRuntime().freeMemory();
 
     @Inject
-    private BridgenetMetricsLogger bridgenetMetricsLogger;
+    private BridgenetDataLogger bridgenetDataLogger;
 
     @Runnable
     public void run() {
@@ -28,9 +28,9 @@ public class GarbageCollectorRunner {
         //log.debug("The memory used was automatically cleared by the Garbage Collector system: {}{}",
         //        getModifierColor(freeMemoryPair), freeMemoryPair);
 
-        bridgenetMetricsLogger.logSystemMemoryFree();
-        bridgenetMetricsLogger.logSystemMemoryTotal();
-        bridgenetMetricsLogger.logSystemMemoryUsed();
+        bridgenetDataLogger.logSystemMemoryFree();
+        bridgenetDataLogger.logSystemMemoryTotal();
+        bridgenetDataLogger.logSystemMemoryUsed();
     }
 
     private Pair<Long, Long> clearMemory() {

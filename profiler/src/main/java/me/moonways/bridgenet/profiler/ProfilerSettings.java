@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.metrics.settings;
+package me.moonways.bridgenet.profiler;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public final class MetricsSettings {
+public final class ProfilerSettings {
 
     private final ImagesStore imagesStore;
     private final ImageDimensions dimensions;

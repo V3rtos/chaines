@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.metrics.chart;
+package me.moonways.bridgenet.profiler.chart;
 
 public enum ChartType {
 

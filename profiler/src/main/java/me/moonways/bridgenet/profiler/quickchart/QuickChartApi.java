@@ -1,10 +1,10 @@
-package me.moonways.bridgenet.metrics.quickchart;
+package me.moonways.bridgenet.profiler.quickchart;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.metrics.quickchart.dto.IllustrationRequest;
-import me.moonways.bridgenet.metrics.quickchart.dto.IllustrationResponse;
+import me.moonways.bridgenet.profiler.quickchart.dto.IllustrationRequest;
+import me.moonways.bridgenet.profiler.quickchart.dto.IllustrationResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;

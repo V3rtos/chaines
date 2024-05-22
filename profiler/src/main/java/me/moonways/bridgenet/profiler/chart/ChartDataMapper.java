@@ -1,9 +1,9 @@
-package me.moonways.bridgenet.metrics.chart;
+package me.moonways.bridgenet.profiler.chart;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.metrics.Metric;
-import me.moonways.bridgenet.metrics.MetricValue;
-import me.moonways.bridgenet.metrics.quickchart.dto.Dataset;
+import me.moonways.bridgenet.profiler.Profiler;
+import me.moonways.bridgenet.profiler.TimedValue;
+import me.moonways.bridgenet.profiler.quickchart.dto.Dataset;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class ChartDataMapper {
 
     private final ChartType chartType;
-    private final Metric metric;
+    private final Profiler profiler;
 
     /**
      * Сгенерировать и получить наименование типа графика,
@@ -59,7 +59,7 @@ public class ChartDataMapper {
         return Collections.singletonList(
                 Dataset.builder()
                         .data(getLabels().stream()
-                                .map(metric::get)
+                                .map(profiler::get)
                                 .collect(Collectors.toList()))
                         .build()
         );
@@ -72,7 +72,7 @@ public class ChartDataMapper {
     private List<Dataset> getDefaultDatasets() {
         Map<String, Dataset> datasets = new HashMap<>();
 
-        for (MetricValue value : metric.getValues()) {
+        for (TimedValue value : profiler.getValues()) {
             String label = value.getLabel();
 
             Dataset dataset = datasets.computeIfAbsent(label.toLowerCase(),
@@ -97,8 +97,8 @@ public class ChartDataMapper {
      * отображаться на иллюстрации и передаваться в запрос QuickChart.
      */
     public List<String> getLabels() {
-        Stream<String> stringStream = metric.getValues().stream()
-                .map(MetricValue::getLabel);
+        Stream<String> stringStream = profiler.getValues().stream()
+                .map(TimedValue::getLabel);
 
         if (chartType == ChartType.POLAR_AREA) {
             stringStream = stringStream.distinct();
