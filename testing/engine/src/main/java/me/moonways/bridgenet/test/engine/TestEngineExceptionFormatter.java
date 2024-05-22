@@ -1,5 +1,7 @@
 package me.moonways.bridgenet.test.engine;
 
+import me.moonways.bridgenet.test.data.TestConst;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +75,7 @@ public class TestEngineExceptionFormatter {
         exception = getFirstCause(exception);
 
         String stacktracePattern = readPatternFile();
-        String duplicatedElementsLines = getDuplicatedElementsLines(true, exception, stacktracePattern);
+        String duplicatedElementsLines = getDuplicatedElementsLines(TestConst.Exceptions.FILTER_BY_PACKAGE, exception, stacktracePattern);
 
         String currentExceptionMessage = replaceExceptionPlaceholders(exception,
                 stacktracePattern.replace(findElementLinePattern(stacktracePattern), duplicatedElementsLines));

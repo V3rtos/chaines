@@ -54,7 +54,7 @@ Component message = serviceModel.message(language, MessageTypes.GREETING_ON_JOIN
 
 Examples: `player_languages` (`me.moonways.endpoint.language.EntityLanguage`)
 
-| player_id                            | lang_id         |
-|--------------------------------------|-----------------|
-| 756d7e30-d173-4c85-8827-67aad3c258aa | bridgenet.test  |
-| 04d15ffd-066e-4332-96ad-64670b7c56dd | leveling.max.30 |
+| player_id                            | lang_id                               |
+|--------------------------------------|---------------------------------------|
+| 756d7e30-d173-4c85-8827-67aad3c258aa | 9cfefed8-fb94-37ba-a5cd-519d7d2bb5d7  |
+| 04d15ffd-066e-4332-96ad-64670b7c56dd | a78c5bf6-9b40-3464-b954-ef76815c6fa0  |

@@ -28,16 +28,13 @@ public class JsonTypeAdapter implements ParameterTypeAdapter {
 
     @Override
     public boolean canSerialize(EntityParametersDescriptor.ParameterUnit unit) {
-        return Objects.equals(unit.getType(), Object.class);
+        return true;
     }
 
     @Override
     public boolean canDeserialize(EntityParametersDescriptor.ParameterUnit unit) {
         String string = unit.getValue().toString();
-
-        return Objects.equals(String.class, unit.getType())
-                && string.startsWith(JSON_BEGIN)
-                && string.endsWith(JSON_END);
+        return string.startsWith(JSON_BEGIN) && string.endsWith(JSON_END);
     }
 
     @Override

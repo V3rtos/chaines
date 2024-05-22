@@ -12,15 +12,9 @@ import java.util.List;
 @Log4j2
 public class ExampleConnector extends BridgenetConnector {
 
-    public static final DeviceDescription DEVICE_DESCRIPTION = DeviceDescription.builder()
-            .name("Test-01")
-            .host("127.0.0.1")
-            .port(25565)
-            .build();
-
     @Override
     protected DeviceDescription createDescription() {
-        return DEVICE_DESCRIPTION;
+        return TestConst.Connector.DEVICE_DESC;
     }
 
     @Override
@@ -36,7 +30,7 @@ public class ExampleConnector extends BridgenetConnector {
 
     public Handshake.Result retryHandshakeExchanging() {
         BridgenetServerSync bridgenet = getBridgenetServerSync();
-        return bridgenet.exportDeviceHandshake(DEVICE_DESCRIPTION);
+        return bridgenet.exportDeviceHandshake(createDescription());
     }
 
     public List<String> lookupBridgenetRegisteredComamndsList() {

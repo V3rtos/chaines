@@ -68,7 +68,7 @@ public class NetworkMessageHandlerList {
         subscribers.sort(SORTING);
 
         int handlingCount = 0;
-        for (MessageSubscriberState subscriber : subscribers) {
+        for (MessageSubscriberState subscriber : new ArrayList<>(subscribers)) {
             Method method = subscriber.getMethod();
 
             if (method.getParameterCount() != 1) {
@@ -91,13 +91,14 @@ public class NetworkMessageHandlerList {
                     continue;
                 }
 
+                String handlerClassName = subscriber.getSource().getClass().getSimpleName();
+
+                log.info("Received message §3{} §rredirected to §2{}", messageClass, handlerClassName);
+
                 method.setAccessible(true);
                 method.invoke(subscriber.getSource(), value);
 
                 handlingCount++;
-
-                String handlerClassName = subscriber.getSource().getClass().getSimpleName();
-                log.info("Received message §3{} §rhandling redirected to §2{}", messageClass, handlerClassName);
             }
             catch (Throwable exception) {
                 if (isNotClassCastException(exception)) {

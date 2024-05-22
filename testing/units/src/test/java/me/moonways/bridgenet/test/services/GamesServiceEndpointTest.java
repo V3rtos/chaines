@@ -80,18 +80,10 @@ public class GamesServiceEndpointTest {
         assertNull(gamesServiceModel.getGame(subj.getGameId()));
     }
 
-    private Handshake newHandshakeMessage(@SuppressWarnings("SameParameterValue") String name) {
-        Properties properties = new Properties();
-        properties.setProperty("server.name", name);
-        properties.setProperty("server.address.host", "127.0.0.1");
-        properties.setProperty("server.address.port", "9005");
-        return new Handshake(Handshake.Type.SERVER, properties);
-    }
-
     private Handshake.Result sendHandshakeMessage() {
         BridgenetNetworkChannel channel = exampleNetworkConnection.getChannel();
 
-        Handshake message = newHandshakeMessage("Test-1");
+        Handshake message = new Handshake(Handshake.Type.SERVER, TestConst.Game.SERVER_DESC.toProperties());
         CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class, message);
         try {
             return future.join();

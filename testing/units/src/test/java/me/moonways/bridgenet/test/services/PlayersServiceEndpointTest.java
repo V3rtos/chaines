@@ -1,12 +1,13 @@
 package me.moonways.bridgenet.test.services;
 
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.model.players.OfflinePlayer;
+import me.moonways.bridgenet.model.players.Player;
+import me.moonways.bridgenet.model.players.service.PlayerStore;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
-import me.moonways.bridgenet.model.players.connection.PlayerConnection;
-import me.moonways.bridgenet.model.players.leveling.PlayerLeveling;
+import me.moonways.bridgenet.model.players.service.PlayerLeveling;
 import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
@@ -14,9 +15,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.rmi.RemoteException;
-import java.util.UUID;
+import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @RunWith(ModernTestEngineRunner.class)
 @TestModules(RmiServicesModule.class)
@@ -26,29 +27,42 @@ public class PlayersServiceEndpointTest {
     private PlayersServiceModel serviceModel;
 
     @Test
-    @TestOrdered(0)
-    public void test_successPlayerAdd() throws RemoteException {
-        PlayerConnection playerConnection = serviceModel.getPlayerConnection();
-        playerConnection.addConnectedPlayer(
-                new ConnectedEntityPlayer(UUID.randomUUID(), TestConst.Player.NICKNAME, null, null)
-        );
+    @TestOrdered(1)
+    public void test_playersLevelingMath() throws RemoteException {
+        PlayerLeveling playerLeveling = serviceModel.leveling();
 
-        ConnectedEntityPlayer connectedPlayer = playerConnection.getConnectedPlayer(TestConst.Player.NICKNAME);
+        int level2_experience = playerLeveling.totalExperience(2);
 
-        assertEquals(connectedPlayer.getName(), TestConst.Player.NICKNAME);
+        assertEquals(10000, level2_experience);
+        assertEquals(2, playerLeveling.toLevel(level2_experience));
+        assertEquals(2, playerLeveling.toLevel(level2_experience + 1000));
+        assertEquals(12500, playerLeveling.experienceToNextLevel(2));
+        assertEquals(0, playerLeveling.experiencePercentToNextLevel(level2_experience + 5000));
     }
 
     @Test
-    @TestOrdered(1)
-    public void test_successPlayerLeveling() throws RemoteException {
-        PlayerLeveling playerLeveling = serviceModel.getPlayerLeveling();
+    @TestOrdered(2)
+    public void test_onlinePlayer() throws RemoteException {
+        PlayerStore store = serviceModel.store();
+        Optional<Player> player = store.get(TestConst.Player.NICKNAME);
 
-        int secondLevelExp = playerLeveling.calculateTotalExperience(2);
+        assertTrue(player.isPresent());
+    }
 
-        assertEquals(10000, secondLevelExp);
-        assertEquals(2, playerLeveling.calculateLevel(secondLevelExp));
-        assertEquals(2, playerLeveling.calculateLevel(secondLevelExp + 1000));
-        assertEquals(12500, playerLeveling.calculateExperienceToNextLevel(2));
-        assertEquals(0, playerLeveling.calculateExperiencePercentToNextLevel(secondLevelExp + 5000));
+    @Test
+    @TestOrdered(3)
+    public void test_offlinePlayer() throws RemoteException {
+        PlayerStore store = serviceModel.store();
+        OfflinePlayer offlinePlayer = store.getOffline(TestConst.Player.NICKNAME);
+
+        assertTrue(offlinePlayer.isOnline());
+
+        assertTrue(offlinePlayer.getGroup().isDefault());
+        assertTrue(offlinePlayer.getPermissions().isEmpty());
+
+        assertEquals(offlinePlayer.getId(), TestConst.Player.ID);
+
+        assertEquals(1, offlinePlayer.getLevel());
+        assertEquals(0, offlinePlayer.getTotalExperience());
     }
 }

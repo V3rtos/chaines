@@ -1,6 +1,6 @@
-package me.moonways.bridgenet.model.players.util;
+package me.moonways.bridgenet.model.util;
 
-import me.moonways.bridgenet.model.players.EntityPlayer;
+import me.moonways.bridgenet.model.players.Player;
 
 import java.rmi.RemoteException;
 import java.util.Optional;
@@ -24,16 +24,16 @@ public class PlayerIdMap<V> extends ConcurrentHashMap<UUID, V> {
         return Optional.ofNullable(super.get(playerId));
     }
 
-    public synchronized Optional<V> get(EntityPlayer player) throws RemoteException {
-        return get(player.getUniqueId());
+    public synchronized Optional<V> get(Player player) throws RemoteException {
+        return get(player.getId());
     }
 
     public synchronized V getOrDefault(UUID playerId, Supplier<V> def) {
         return get(playerId).orElseGet(def);
     }
 
-    public synchronized V getOrDefault(EntityPlayer player, Supplier<V> def) throws RemoteException {
-        return getOrDefault(player.getUniqueId(), def);
+    public synchronized V getOrDefault(Player player, Supplier<V> def) throws RemoteException {
+        return getOrDefault(player.getId(), def);
     }
 
     public synchronized V getOrPut(UUID playerId, Supplier<V> factory) {
@@ -49,7 +49,11 @@ public class PlayerIdMap<V> extends ConcurrentHashMap<UUID, V> {
         return optional.get();
     }
 
-    public synchronized V getOrPut(EntityPlayer player, Supplier<V> factory) throws RemoteException {
-        return getOrPut(player.getUniqueId(), factory);
+    public synchronized V getOrPut(Player player, Supplier<V> factory) throws RemoteException {
+        return getOrPut(player.getId(), factory);
+    }
+
+    public synchronized V remove(Player player) throws RemoteException {
+        return remove(player.getId());
     }
 }

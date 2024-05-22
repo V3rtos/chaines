@@ -7,6 +7,7 @@ import me.moonways.bridgenet.jdbc.entity.EntityID;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,7 +78,8 @@ public class EntityReadAndWriteUtil {
         Object instance = ReflectionUtils.createInstance(entity.getRootClass());
 
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
-            Optional<String> fieldNameOptional = EntityParameterNameUtil.fromGetter(parameterUnit.findGetter(entity.getRootClass()));
+            Method getter = parameterUnit.findGetter(entity.getRootClass());
+            Optional<String> fieldNameOptional = EntityParameterNameUtil.fromGetter(getter);
 
             fieldNameOptional.ifPresent(name ->
                     ReflectionUtils.setField(instance, name, parameterUnit.getValue()));

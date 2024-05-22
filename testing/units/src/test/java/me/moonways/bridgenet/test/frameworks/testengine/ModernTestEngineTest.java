@@ -5,7 +5,6 @@ import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.DatabasesModule;
 import me.moonways.bridgenet.test.engine.persistance.*;
 import me.moonways.bridgenet.test.frameworks.database.entity.EntityRepositoryInsertEntityTest;
 import org.junit.Test;
