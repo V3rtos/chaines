@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.model.service.permissions.group;
 
-import me.moonways.bridgenet.api.util.minecraft.ChatColor;
+import me.moonways.bridgenet.api.minecraft.ChatColor;
 import me.moonways.bridgenet.model.service.permissions.TemporalState;
 
 import java.time.Duration;

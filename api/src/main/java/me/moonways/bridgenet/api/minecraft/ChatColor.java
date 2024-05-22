@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.util.minecraft;
+package me.moonways.bridgenet.api.minecraft;
 
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;

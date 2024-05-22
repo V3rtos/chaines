@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.util.autorun;
+package me.moonways.bridgenet.api.autorun;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

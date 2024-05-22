@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.util.autorun.persistence;
+package me.moonways.bridgenet.api.autorun.persistence;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

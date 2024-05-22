@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.util.autorun;
+package me.moonways.bridgenet.api.autorun;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
@@ -10,9 +10,9 @@ import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationP
 import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.scheduler.ScheduledTime;
 import me.moonways.bridgenet.api.scheduler.Scheduler;
-import me.moonways.bridgenet.api.util.autorun.persistence.AutoRunner;
-import me.moonways.bridgenet.api.util.autorun.persistence.Runnable;
-import me.moonways.bridgenet.api.util.autorun.persistence.RunningPeriod;
+import me.moonways.bridgenet.api.autorun.persistence.AutoRunner;
+import me.moonways.bridgenet.api.autorun.persistence.Runnable;
+import me.moonways.bridgenet.api.autorun.persistence.RunningPeriod;
 import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 
 import java.lang.reflect.Method;

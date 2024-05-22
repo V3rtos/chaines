@@ -3,7 +3,7 @@ package me.moonways.bridgenet.api.util.thread;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.util.minecraft.ChatColor;
+import me.moonways.bridgenet.api.minecraft.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

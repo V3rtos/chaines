@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.model.service.settings;
 
 import lombok.*;
-import me.moonways.bridgenet.api.util.minecraft.ChatColor;
+import me.moonways.bridgenet.api.minecraft.ChatColor;
 
 import java.util.Objects;
 import java.util.Optional;

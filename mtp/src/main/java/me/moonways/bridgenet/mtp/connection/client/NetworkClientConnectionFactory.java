@@ -8,7 +8,7 @@ import io.netty.util.AttributeKey;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.util.HiddenRuntimeException;
+import me.moonways.bridgenet.api.HiddenRuntimeException;
 import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.mtp.channel.ChannelDirection;

@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.util.autorun.persistence;
+package me.moonways.bridgenet.api.autorun.persistence;
 
 import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 

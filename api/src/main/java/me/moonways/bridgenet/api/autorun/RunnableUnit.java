@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.api.util.autorun;
+package me.moonways.bridgenet.api.autorun;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

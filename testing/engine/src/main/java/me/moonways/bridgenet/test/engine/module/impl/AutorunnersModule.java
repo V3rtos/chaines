@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.test.engine.module.impl;
 
-import me.moonways.bridgenet.api.util.autorun.ScheduledRunnersService;
+import me.moonways.bridgenet.api.autorun.ScheduledRunnersService;
 import me.moonways.bridgenet.test.engine.module.TestEngineModuleAdapter;
 import me.moonways.bridgenet.test.engine.module.TestModuleBeans;
 

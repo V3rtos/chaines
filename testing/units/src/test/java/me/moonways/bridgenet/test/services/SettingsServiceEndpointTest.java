@@ -2,7 +2,7 @@ package me.moonways.bridgenet.test.services;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.util.minecraft.ChatColor;
+import me.moonways.bridgenet.api.minecraft.ChatColor;
 import me.moonways.bridgenet.model.service.settings.PlayerSettingsServiceModel;
 import me.moonways.bridgenet.model.service.settings.Setting;
 import me.moonways.bridgenet.model.service.settings.SettingID;
