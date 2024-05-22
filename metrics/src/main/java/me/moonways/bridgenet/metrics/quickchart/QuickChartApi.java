@@ -53,8 +53,7 @@ public final class QuickChartApi {
 
             HttpEntity responseEntity = httpClient.execute(createHttpPost(json)).getEntity();
             return EntityUtils.toString(responseEntity);
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             throw new QuickChartApiException(exception);
         }
     }

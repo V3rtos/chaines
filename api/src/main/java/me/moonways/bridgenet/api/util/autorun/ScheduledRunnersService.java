@@ -70,8 +70,7 @@ public class ScheduledRunnersService {
 
                     if (periodUnitAnnotation != null) {
                         period = ScheduledTime.of(periodUnitAnnotation.period(), periodUnitAnnotation.unit());
-                    }
-                    else if (periodAnnotation != null) {
+                    } else if (periodAnnotation != null) {
                         period = ScheduledTime.of(periodAnnotation.period(), periodAnnotation.unit());
                     }
 

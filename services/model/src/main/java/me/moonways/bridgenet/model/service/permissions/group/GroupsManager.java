@@ -56,7 +56,6 @@ public interface GroupsManager extends Remote {
      * Получить группу по идентификатору.
      *
      * @param groupId - идентификатор группы.
-     *
      * @return - содержащий группу, если она найдена, иначе пусто.
      */
     Optional<PermissionGroup> getGroup(int groupId) throws RemoteException;
@@ -65,7 +64,6 @@ public interface GroupsManager extends Remote {
      * Получить группу по имени.
      *
      * @param groupName - имя группы.
-     *
      * @return - содержащий группу, если она найдена, иначе пусто.
      */
     Optional<PermissionGroup> getGroup(String groupName) throws RemoteException;
@@ -74,7 +72,6 @@ public interface GroupsManager extends Remote {
      * Получить группу игрока по его имени.
      *
      * @param playerName - имя игрока.
-     *
      * @return - содержащий группу игрока, если она найдена, иначе пусто.
      */
     Optional<PermissionGroup> getPlayerGroup(String playerName) throws RemoteException;
@@ -83,7 +80,6 @@ public interface GroupsManager extends Remote {
      * Получить группу игрока по его идентификатору.
      *
      * @param playerId - идентификатор игрока.
-     *
      * @return - содержащий группу игрока, если она найдена, иначе пусто.
      */
     Optional<PermissionGroup> getPlayerGroup(UUID playerId) throws RemoteException;
@@ -92,8 +88,7 @@ public interface GroupsManager extends Remote {
      * Установить группу для игрока по его имени.
      *
      * @param playerName - имя игрока.
-     * @param group - выдаваемая группа.
-     *
+     * @param group      - выдаваемая группа.
      * @return - содержащий объект события обновления группы игрока, если установка прошла успешно, иначе пусто.
      */
     Optional<PlayerGroupUpdateEvent> setPlayerGroup(String playerName, PermissionGroup group) throws RemoteException;
@@ -102,8 +97,7 @@ public interface GroupsManager extends Remote {
      * Установить группу для игрока по его идентификатору.
      *
      * @param playerId - идентификатор игрока.
-     * @param group - выдаваемая группа.
-     *
+     * @param group    - выдаваемая группа.
      * @return - содержащий объект события обновления группы игрока, если установка прошла успешно, иначе пусто.
      */
     Optional<PlayerGroupUpdateEvent> setPlayerGroup(UUID playerId, PermissionGroup group) throws RemoteException;
@@ -115,60 +109,70 @@ public interface GroupsManager extends Remote {
 
     /**
      * Проверить, является ли игрок группой по умолчанию.
+     *
      * @param playerName - имя игрока.
      */
     boolean isDefault(String playerName) throws RemoteException;
 
     /**
      * Проверить, является ли игрок группой по умолчанию.
+     *
      * @param playerId - идентификатор игрока.
      */
     boolean isDefault(UUID playerId) throws RemoteException;
 
     /**
      * Проверить, имеет ли игрок пожертвования.
+     *
      * @param playerName - имя игрока.
      */
     boolean isDonated(String playerName) throws RemoteException;
 
     /**
      * Проверить, имеет ли игрок пожертвования.
+     *
      * @param playerId - идентификатор игрока.
      */
     boolean isDonated(UUID playerId) throws RemoteException;
 
     /**
      * Проверить, является ли игрок персональной группой.
+     *
      * @param playerName - имя игрока.
      */
     boolean isPersonal(String playerName) throws RemoteException;
 
     /**
      * Проверить, является ли игрок персональной группой.
+     *
      * @param playerId - идентификатор игрока.
      */
     boolean isPersonal(UUID playerId) throws RemoteException;
 
     /**
      * Проверить, является ли игрок технической персональной группой.
+     *
      * @param playerName - имя игрока.
      */
     boolean isTechPersonal(String playerName) throws RemoteException;
 
     /**
      * Проверить, является ли игрок технической персональной группой.
+     *
      * @param playerId - идентификатор игрока.
      */
     boolean isTechPersonal(UUID playerId) throws RemoteException;
 
     /**
      * Проверить, является ли игрок группой владельцев.
+     *
      * @param playerName - имя игрока.
      */
     boolean isOwner(String playerName) throws RemoteException;
 
     /**
      * Проверить, является ли игрок группой владельцев.
+     *
      * @param playerId - идентификатор игрока.
      */
     boolean isOwner(UUID playerId) throws RemoteException;

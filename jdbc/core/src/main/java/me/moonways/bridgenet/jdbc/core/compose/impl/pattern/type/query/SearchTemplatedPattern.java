@@ -1,17 +1,16 @@
 package me.moonways.bridgenet.jdbc.core.compose.impl.pattern.type.query;
 
+import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.AbstractPattern;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.PatternCollectionConfigurator;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.PatternCollections;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.verification.VerificationContext;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.verification.VerificationResult;
+import me.moonways.bridgenet.jdbc.core.compose.template.SearchTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedGroups;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedMerges;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedPredicates;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedSubjects;
-import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
-import me.moonways.bridgenet.jdbc.core.compose.template.SearchTemplate;
-import me.moonways.bridgenet.jdbc.core.compose.template.completed.*;
 import org.jetbrains.annotations.NotNull;
 
 public class SearchTemplatedPattern extends AbstractPattern implements SearchTemplate {

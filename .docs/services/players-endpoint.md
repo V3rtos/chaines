@@ -12,6 +12,7 @@ Players - Внутриигровой сервис удаленного дост�
 <br>интерфейс `me.moonways.bridgenet.model.players.PlayersServiceModel`:
 
 ```java
+
 @Inject
 private PlayersServiceModel serviceModel;
 ```
@@ -46,6 +47,7 @@ Optional<OfflinePlayer> offlinePlayer = store.getOffline("bridgenet_user");
 <br>под имплементаций эндпоинта:
 
 ```xml
+
 <service>
     <!-- RMI Protocol service bind port -->
     <bindPort>7003</bindPort>
@@ -76,7 +78,7 @@ Examples: `player_namespaces` (`me.moonways.endpoint.players.database.EntityName
 
 Examples: `players` (`me.moonways.endpoint.players.database.EntityPlayer`)
 
-| namespace | description                                                                                                                                                                                                |
-|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| namespace | description                                                                                                                                                                                         |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 1         | {"namespace":{"uuid":"756d7e30-d173-4c85-8827-67aad3c258aa","name":"itzstonlex"},"lastLoggedProxyId":"1d13b8eb-9489-4ac5-8218-9d72ab926cd5","lastLoggedTime":1716395677477,"totalExperience":0}     |
 | 2         | {"namespace":{"uuid":"04d15ffd-066e-4332-96ad-64670b7c56dd","name":"bridgenet_user"},"lastLoggedProxyId":"1d13b8eb-9489-4ac5-8218-9d72ab926cd5","lastLoggedTime":1716395755504,"totalExperience":0} |

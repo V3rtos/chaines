@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public final class GuiServiceEndpoint extends EndpointRemoteObject implements GuiServiceModel {
 
     private static final long serialVersionUID = -698118002154484440L;
-    
+
     private final Cache<UUID, GuiStub> guisCache =
             CacheBuilder.newBuilder()
                     .expireAfterAccess(1, TimeUnit.HOURS)

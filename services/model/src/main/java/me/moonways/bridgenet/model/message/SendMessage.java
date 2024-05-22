@@ -21,7 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor(onConstructor_ = @Inject)
 public class SendMessage {
 
-    public enum ChatType { CHAT, ACTION_BAR }
+    public enum ChatType {CHAT, ACTION_BAR}
 
     @ByteTransfer(provider = TransferUuidProvider.class)
     private UUID playerId;

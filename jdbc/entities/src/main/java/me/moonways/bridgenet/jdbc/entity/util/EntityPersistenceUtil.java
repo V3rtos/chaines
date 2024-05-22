@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.jdbc.entity.util;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.UtilityClass;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;

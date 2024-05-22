@@ -3,13 +3,13 @@ package me.moonways.endpoint.games.handler;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.event.EventHandle;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.model.event.ServerDisconnectEvent;
 import me.moonways.bridgenet.model.message.DeleteGame;
 import me.moonways.bridgenet.model.service.games.ActiveGame;
 import me.moonways.bridgenet.model.service.games.Game;
 import me.moonways.bridgenet.model.service.games.GameServer;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.model.service.servers.ServerInfo;
-import me.moonways.bridgenet.model.event.ServerDisconnectEvent;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.endpoint.games.GamesContainer;
 

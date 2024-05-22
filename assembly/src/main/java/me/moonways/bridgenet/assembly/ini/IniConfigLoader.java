@@ -5,7 +5,6 @@ import me.moonways.bridgenet.assembly.ini.type.IniGroup;
 import me.moonways.bridgenet.assembly.ini.type.IniProperty;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.List;
@@ -20,8 +19,7 @@ public final class IniConfigLoader {
         }
         try {
             return load(new FileInputStream(file));
-        }
-        catch (FileNotFoundException exception) {
+        } catch (FileNotFoundException exception) {
             throw new BridgenetAssemblyException(exception);
         }
     }
@@ -41,8 +39,7 @@ public final class IniConfigLoader {
                     .stream()
                     .map(groupName -> new IniGroup(groupName, loadProperties(ini, groupName)))
                     .collect(Collectors.toSet());
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             throw new BridgenetAssemblyException(exception);
         }
     }

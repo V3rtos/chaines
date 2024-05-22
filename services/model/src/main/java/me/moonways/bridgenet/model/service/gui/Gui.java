@@ -35,8 +35,8 @@ public interface Gui extends Remote {
     /**
      * Установить элемент в указанный слот GUI с указанным слушателем событий кликов.
      *
-     * @param slot - Слот GUI, в который нужно установить элемент.
-     * @param itemStack - Элемент ItemStack для установки.
+     * @param slot          - Слот GUI, в который нужно установить элемент.
+     * @param itemStack     - Элемент ItemStack для установки.
      * @param clickListener - Слушатель событий кликов для элемента.
      */
     void setItem(GuiSlot slot, ItemStack itemStack, ItemClickListener clickListener) throws RemoteException;
@@ -44,7 +44,7 @@ public interface Gui extends Remote {
     /**
      * Установить элемент в указанный слот GUI.
      *
-     * @param slot - Слот GUI, в который нужно установить элемент.
+     * @param slot      - Слот GUI, в который нужно установить элемент.
      * @param itemStack - Элемент ItemStack для установки.
      */
     void setItem(GuiSlot slot, ItemStack itemStack) throws RemoteException;
@@ -66,7 +66,7 @@ public interface Gui extends Remote {
     /**
      * Добавить слушателя событий кликов для указанного слота GUI.
      *
-     * @param slot - Слот GUI, для которого нужно добавить слушателя событий кликов.
+     * @param slot     - Слот GUI, для которого нужно добавить слушателя событий кликов.
      * @param listener - Слушатель событий кликов для указанного слота GUI.
      */
     void addClickListener(GuiSlot slot, ItemClickListener listener) throws RemoteException;

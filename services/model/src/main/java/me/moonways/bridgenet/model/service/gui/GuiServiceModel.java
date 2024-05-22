@@ -56,7 +56,7 @@ public interface GuiServiceModel extends RemoteService {
     /**
      * Вызвать событие клика в указанном GUI с заданным событием клика.
      *
-     * @param gui - GUI, в котором произошло событие клика.
+     * @param gui   - GUI, в котором произошло событие клика.
      * @param event - Событие клика, которое нужно обработать.
      */
     void fireClickAction(Gui gui, GuiItemClickEvent event) throws RemoteException;

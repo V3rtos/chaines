@@ -3,10 +3,10 @@ package me.moonways.endpoint.settings;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.util.PlayerIdMap;
 import me.moonways.bridgenet.model.service.settings.PlayerSettingsServiceModel;
 import me.moonways.bridgenet.model.service.settings.Setting;
 import me.moonways.bridgenet.model.service.settings.SettingID;
+import me.moonways.bridgenet.model.util.PlayerIdMap;
 import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
 import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 

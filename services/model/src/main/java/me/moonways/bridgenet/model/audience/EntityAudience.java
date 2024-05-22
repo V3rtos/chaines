@@ -68,12 +68,14 @@ public interface EntityAudience {
 
     /**
      * Проверка на наличие конкретного права у отправителя.
+     *
      * @param permission - право доступа
      */
     boolean hasPermission(@NotNull Permission permission) throws RemoteException;
 
     /**
      * Проверка на наличие конкретного права у отправителя.
+     *
      * @param permissionName - название права доступа
      */
     @Deprecated

@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.model.service.gui.item.entries.enchantment;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import me.moonways.bridgenet.model.service.gui.item.entries.ItemsEntryable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

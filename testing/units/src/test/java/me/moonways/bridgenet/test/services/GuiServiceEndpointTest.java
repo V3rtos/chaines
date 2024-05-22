@@ -2,11 +2,11 @@ package me.moonways.bridgenet.test.services;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.model.event.GuiItemClickEvent;
 import me.moonways.bridgenet.model.service.gui.Gui;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiServiceModel;
 import me.moonways.bridgenet.model.service.gui.GuiType;
-import me.moonways.bridgenet.model.event.GuiItemClickEvent;
 import me.moonways.bridgenet.model.service.gui.item.ItemStack;
 import me.moonways.bridgenet.model.service.gui.item.entries.material.Material;
 import me.moonways.bridgenet.model.service.gui.item.entries.material.MaterialEntry;
@@ -83,7 +83,7 @@ public class GuiServiceEndpointTest {
     }
 
     @Test
-    public void test_createGuiWithItems() throws RemoteException{
+    public void test_createGuiWithItems() throws RemoteException {
         Gui gui = serviceModel.createGui(TestConst.Inventory.TYPE);
         gui.setItem(TestConst.Items.SLOT,
                 ItemStack.create()

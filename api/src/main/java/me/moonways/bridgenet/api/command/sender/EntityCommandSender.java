@@ -11,6 +11,7 @@ public interface EntityCommandSender {
 
     /**
      * Отправить отправителю сообщение.
+     *
      * @param message - сообщение.
      */
     void sendMessage(@Nullable String message);
@@ -18,13 +19,14 @@ public interface EntityCommandSender {
     /**
      * Отправить отправителю форматированное сообщение.
      *
-     * @param message - сообщение.
+     * @param message      - сообщение.
      * @param replacements - параметры для вызова String#format()
      */
     void sendMessage(@NotNull String message, @Nullable Object... replacements);
 
     /**
      * Проверка на наличие конкретного права у отправителя.
+     *
      * @param permission - право
      */
     boolean hasPermission(@NotNull String permission);

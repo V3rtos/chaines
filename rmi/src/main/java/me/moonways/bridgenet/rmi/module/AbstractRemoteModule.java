@@ -8,8 +8,8 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.rmi.service.RemoteServiceException;
 import me.moonways.bridgenet.rmi.service.ServiceInfo;
 import me.moonways.bridgenet.rmi.xml.XMLServiceModuleDescriptor;
-import me.moonways.bridgenet.rmi.xml.XMLServicesConfigDescriptor;
 import me.moonways.bridgenet.rmi.xml.XMLServiceModulePropertyDescriptor;
+import me.moonways.bridgenet.rmi.xml.XMLServicesConfigDescriptor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -54,8 +54,7 @@ public abstract class AbstractRemoteModule<Configuration extends ModuleConfigura
 
                 propertyField.setAccessible(true);
                 propertyField.set(config, property.getValue());
-            }
-            catch (IllegalAccessException | NoSuchFieldException exception) {
+            } catch (IllegalAccessException | NoSuchFieldException exception) {
                 log.error(new RemoteServiceException(exception));
             }
         }
@@ -66,8 +65,8 @@ public abstract class AbstractRemoteModule<Configuration extends ModuleConfigura
     private <T extends ModuleConfiguration> T createEmptyInstance(Class<T> cls) {
         try {
             return cls.getConstructor().newInstance();
-        }
-        catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException exception) {
             log.error(new RemoteServiceException(exception));
             return null;
         }

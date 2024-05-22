@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.test.api;
 
-import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
 import me.moonways.bridgenet.api.command.CommandExecutor;
+import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
 import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;

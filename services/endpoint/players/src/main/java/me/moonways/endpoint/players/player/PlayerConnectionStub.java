@@ -1,8 +1,8 @@
 package me.moonways.endpoint.players.player;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.model.service.players.OfflinePlayer;
 import me.moonways.bridgenet.model.event.PlayerPostRedirectEvent;
+import me.moonways.bridgenet.model.service.players.OfflinePlayer;
 import me.moonways.bridgenet.model.service.players.component.PlayerConnection;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
 import org.jetbrains.annotations.NotNull;

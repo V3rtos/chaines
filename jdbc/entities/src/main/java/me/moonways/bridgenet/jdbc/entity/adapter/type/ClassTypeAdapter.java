@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.jdbc.entity.adapter.type;
 
 import lombok.SneakyThrows;
-import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 import me.moonways.bridgenet.jdbc.entity.adapter.ParameterTypeAdapter;
+import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 
 import java.util.Objects;
 
@@ -24,7 +24,7 @@ public class ClassTypeAdapter implements ParameterTypeAdapter {
 
     @Override
     public Object serialize(EntityParametersDescriptor.ParameterUnit unit) {
-        return ((Class<?>)unit.getValue()).getName();
+        return ((Class<?>) unit.getValue()).getName();
     }
 
     @SneakyThrows

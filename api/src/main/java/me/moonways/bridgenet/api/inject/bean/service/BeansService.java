@@ -119,7 +119,7 @@ public final class BeansService {
 
         BeanFactoryProviders.DEFAULT = Optional.ofNullable(defaultBeanFactory)
                 .map(BeanFactoryProviders::valueOf)
-                        .orElse(BeanFactoryProviders.CONSTRUCTOR);
+                .orElse(BeanFactoryProviders.CONSTRUCTOR);
 
         for (BeanFactoryProviders provider : BeanFactoryProviders.values()) {
             inject(provider.getImpl().get());
@@ -155,6 +155,7 @@ public final class BeansService {
 
     /**
      * Вызывать обработку типового процессора аннотаций.
+     *
      * @param processor - процессор аннотаций.
      */
     public void processTypeAnnotationProcessor(TypeAnnotationProcessor<?> processor) {
@@ -201,7 +202,7 @@ public final class BeansService {
      * Воспроизвести имитацию сохранения экземпляра
      * объекта как бина.
      *
-     * @param type - класс бина.
+     * @param type   - класс бина.
      * @param object - инстанс бина.
      */
     public void fakeBind(Class<?> type, Object object) {
@@ -224,6 +225,7 @@ public final class BeansService {
 
     /**
      * Воспроизвести имитацию сохранения бина.
+     *
      * @param bean - бин.
      */
     public void fakeBind(Bean bean) {
@@ -237,7 +239,7 @@ public final class BeansService {
     /**
      * Сохранить экземпляр объекта как бин.
      *
-     * @param type - класс бина.
+     * @param type   - класс бина.
      * @param object - инстанс бина.
      */
     public void bind(Class<?> type, Object object) {
@@ -259,6 +261,7 @@ public final class BeansService {
 
     /**
      * Сохранить бин.
+     *
      * @param bean - бин.
      */
     public void bind(Bean bean) {
@@ -334,6 +337,7 @@ public final class BeansService {
 
     /**
      * Удалить бин из кеша.
+     *
      * @param bean - бин.
      */
     public void unbind(Bean bean) {

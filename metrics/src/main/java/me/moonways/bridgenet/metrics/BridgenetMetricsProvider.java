@@ -3,8 +3,8 @@ package me.moonways.bridgenet.metrics;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
-import me.moonways.bridgenet.metrics.chart.ChartType;
 import me.moonways.bridgenet.metrics.chart.ChartDataMapper;
+import me.moonways.bridgenet.metrics.chart.ChartType;
 import me.moonways.bridgenet.metrics.quickchart.QuickChartApi;
 import me.moonways.bridgenet.metrics.quickchart.dto.ChartData;
 import me.moonways.bridgenet.metrics.quickchart.dto.IllustrationRequest;
@@ -31,7 +31,9 @@ public final class BridgenetMetricsProvider {
 
     private final QuickChartApi api = new QuickChartApi();
 
-    private final MetricsSettings settings; {
+    private final MetricsSettings settings;
+
+    {
         settings = ASSEMBLY.readJsonAtEntity(ResourcesTypes.METRICS_SETTINGS_JSON,
                 MetricsSettings.class);
     }
@@ -54,7 +56,6 @@ public final class BridgenetMetricsProvider {
      * временного промежутка.
      *
      * @param metric - метрика, из которой берем данные для генерации иллюстрации.
-     *
      * @return - ссылка на готовую иллюстрацию с рисованными данными метрики.
      */
     public String provideMetricIllustration(ChartType chartType, Metric metric) {
@@ -84,6 +85,7 @@ public final class BridgenetMetricsProvider {
 
     /**
      * Обернуть параметры метрики в общий запрос на иллюстрацию.
+     *
      * @param chart - параметры метрики.
      */
     private IllustrationRequest wrapChartToRequestBody(ChartData chart) {
@@ -102,7 +104,7 @@ public final class BridgenetMetricsProvider {
      * включена возможность сохранения их в файл.
      *
      * @param metric - метрика, от которой была сгенерирована иллюстрация.
-     * @param url - https ссылка на иллюстрацию.
+     * @param url    - https ссылка на иллюстрацию.
      */
     private void storeImage(Metric metric, ChartType chartType, String url) {
         try {
@@ -121,8 +123,7 @@ public final class BridgenetMetricsProvider {
 
                 log.info("The §7\"{}\" §rmetric illustration was successfully saved to the directory as §e{}", metric.getName(), imageFileName);
             }
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             log.error("§4An error occurred when trying to save an illustration of a metric", exception);
         }
     }

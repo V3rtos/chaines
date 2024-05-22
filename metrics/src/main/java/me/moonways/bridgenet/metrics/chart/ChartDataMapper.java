@@ -30,7 +30,7 @@ public class ChartDataMapper {
             int spliteratorIndex = lowerCase.indexOf("_");
             char nextChar = lowerCase.charAt(spliteratorIndex + 1);
 
-            lowerCase = lowerCase.replace("_" + nextChar, ((Character)Character.toUpperCase(nextChar)).toString());
+            lowerCase = lowerCase.replace("_" + nextChar, ((Character) Character.toUpperCase(nextChar)).toString());
         }
         return lowerCase;
     }

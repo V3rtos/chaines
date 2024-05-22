@@ -26,13 +26,16 @@ public class SendCommand {
     @ByteTransfer
     private String label;
 
-    public interface Result { }
+    public interface Result {
+    }
 
     @ClientMessage
     @ServerMessage
-    public static class Success implements Result { }
+    public static class Success implements Result {
+    }
 
     @ClientMessage
     @ServerMessage
-    public static class Failure implements Result { }
+    public static class Failure implements Result {
+    }
 }

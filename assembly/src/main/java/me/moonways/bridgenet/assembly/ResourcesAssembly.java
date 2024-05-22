@@ -67,8 +67,7 @@ public final class ResourcesAssembly {
         try {
             File resourceFile = fileSystem.findAsFile(resourceName);
             return new FileInputStream(resourceFile);
-        }
-        catch (FileNotFoundException exception) {
+        } catch (FileNotFoundException exception) {
             return null;
         }
     }
@@ -95,7 +94,7 @@ public final class ResourcesAssembly {
      * как файла в виде строки.
      *
      * @param resourceName - наименование ресурса.
-     * @param charset - кодировка, в которой воспроизводить чтение.
+     * @param charset      - кодировка, в которой воспроизводить чтение.
      */
     public String readResourceFullContent(String resourceName, Charset charset) {
         return StreamToStringUtils.toStringFull(readResourceStream(resourceName), charset);
@@ -117,8 +116,8 @@ public final class ResourcesAssembly {
      * и типа класса сущности объект.
      *
      * @param resourceName - наименование ресурса.
-     * @param charset - кодировка, в которой воспроизводить чтение.
-     * @param entity - тип сущности, в которую преобразовывать полученный json.
+     * @param charset      - кодировка, в которой воспроизводить чтение.
+     * @param entity       - тип сущности, в которую преобразовывать полученный json.
      */
     public <T> T readJsonAtEntity(String resourceName, Charset charset, Class<T> entity) {
         return GSON.fromJson(readResourceFullContent(resourceName, charset), entity);
@@ -130,7 +129,7 @@ public final class ResourcesAssembly {
      * и типа класса сущности объект.
      *
      * @param resourceName - наименование ресурса.
-     * @param entity - тип сущности, в которую преобразовывать полученный json.
+     * @param entity       - тип сущности, в которую преобразовывать полученный json.
      */
     public <T> T readJsonAtEntity(String resourceName, Class<T> entity) {
         return GSON.fromJson(readResourceFullContent(resourceName), entity);
@@ -142,7 +141,7 @@ public final class ResourcesAssembly {
      * и типа класса сущности объект.
      *
      * @param resourceName - наименование ресурса.
-     * @param entity - тип сущности, в которую преобразовывать полученный XML.
+     * @param entity       - тип сущности, в которую преобразовывать полученный XML.
      */
     public <T extends XmlRootObject> T readXmlAtEntity(String resourceName, Class<T> entity) {
         return xmlJaxbParser.parseToDescriptorByType(readResourceStream(resourceName), entity);

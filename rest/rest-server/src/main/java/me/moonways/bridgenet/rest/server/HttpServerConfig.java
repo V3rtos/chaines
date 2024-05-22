@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.rest.server;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import me.moonways.bridgenet.rest.api.HttpHost;
 import me.moonways.bridgenet.rest.server.controller.HttpContextPattern;
 

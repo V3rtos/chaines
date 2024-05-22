@@ -3,17 +3,20 @@ package me.moonways.bridgenet.rmi.service;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.rmi.endpoint.Endpoint;
 import me.moonways.bridgenet.rmi.endpoint.EndpointController;
-import me.moonways.bridgenet.rmi.module.*;
+import me.moonways.bridgenet.rmi.module.ModuleFactory;
+import me.moonways.bridgenet.rmi.module.ModuleID;
+import me.moonways.bridgenet.rmi.module.RemoteModule;
+import me.moonways.bridgenet.rmi.module.ServiceModulesContainer;
 import me.moonways.bridgenet.rmi.xml.XMLServiceModuleDescriptor;
 import me.moonways.bridgenet.rmi.xml.XMLServicesConfigDescriptor;
 import me.moonways.bridgenet.rmi.xml.XmlServiceInfoDescriptor;
-import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.inject.Inject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -139,8 +142,7 @@ public final class RemoteServicesManagement {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             modelClass = classLoader.loadClass(wrapper.getModelPath());
-        }
-        catch (ClassNotFoundException exception) {
+        } catch (ClassNotFoundException exception) {
             log.error(new RemoteServiceException(exception));
         }
 
@@ -185,10 +187,10 @@ public final class RemoteServicesManagement {
         try {
             RemoteModule<?> module = cls.newInstance();
             moduleID = module.getId();
-        }
-        catch (InstantiationException | IllegalAccessException exception) {
+        } catch (InstantiationException | IllegalAccessException exception) {
             log.error(new RemoteServiceException(exception));
-        };
+        }
+        ;
 
         return moduleID;
     }
@@ -202,8 +204,7 @@ public final class RemoteServicesManagement {
 
             targetClass = classLoader.loadClass(wrapper.getTargetClass());
             configClass = classLoader.loadClass(wrapper.getConfigClass());
-        }
-        catch (ClassNotFoundException exception) {
+        } catch (ClassNotFoundException exception) {
             log.error(new RemoteServiceException(exception));
         }
 
@@ -224,8 +225,7 @@ public final class RemoteServicesManagement {
                 bindMethod.invoke(module, xmlConfiguration, serviceInfo, finalConfigClass);
 
                 return (RemoteModule<?>) module;
-            }
-            catch (InvocationTargetException | InstantiationException | IllegalAccessException exception) {
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException exception) {
                 log.error(new RemoteServiceException(exception));
                 return null;
             }

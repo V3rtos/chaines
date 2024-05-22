@@ -1,13 +1,11 @@
 package me.moonways.bridgenet.api.inject.processor;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationContext;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationResult;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
-import java.util.Properties;
 
 @RequiredArgsConstructor
 public abstract class TypeAnnotationProcessorAdapter<V extends Annotation> implements TypeAnnotationProcessor<V> {

@@ -3,10 +3,8 @@ package me.moonways.bridgenet.jdbc.entity.adapter.type;
 import com.google.gson.Gson;
 import lombok.Builder;
 import lombok.SneakyThrows;
-import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 import me.moonways.bridgenet.jdbc.entity.adapter.ParameterTypeAdapter;
-
-import java.util.Objects;
+import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 
 public class JsonTypeAdapter implements ParameterTypeAdapter {
 

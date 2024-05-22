@@ -8,16 +8,16 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.endpoint.servers.ConnectedServerStub;
 import me.moonways.bridgenet.endpoint.servers.ServersContainer;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
-import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
+import me.moonways.bridgenet.model.event.ServerDisconnectEvent;
+import me.moonways.bridgenet.model.event.ServerHandshakeEvent;
 import me.moonways.bridgenet.model.message.Disconnect;
 import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.model.message.Redirect;
+import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
 import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.model.service.servers.ServerFlag;
 import me.moonways.bridgenet.model.service.servers.ServerInfo;
-import me.moonways.bridgenet.model.event.ServerDisconnectEvent;
-import me.moonways.bridgenet.model.event.ServerHandshakeEvent;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;
 import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
@@ -161,7 +161,7 @@ public class ServersInputMessagesListener {
                 .flags(getServerFlags(properties))
                 .build();
     }
-    
+
     private void doServerDisconnect(Disconnect disconnect) throws RemoteException {
         UUID serverId = disconnect.getUuid();
         ConnectedServerStub server = container.getConnectedServerExact(serverId);

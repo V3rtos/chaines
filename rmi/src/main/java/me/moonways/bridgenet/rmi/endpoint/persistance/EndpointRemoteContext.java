@@ -19,6 +19,7 @@ public final class EndpointRemoteContext {
 
     /**
      * Зарегистрировать терминальную команду в Bridgenet.
+     *
      * @param object - команда.
      */
     public void registerCommand(Object object) {

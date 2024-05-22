@@ -60,7 +60,7 @@ public interface OfflinePlayer extends Remote, EntityAudience {
     int getExperience() throws RemoteException;
 
     /**
-     * Получить количество опыта, необходимое для достижения 
+     * Получить количество опыта, необходимое для достижения
      * следующего уровня офлайн игрока.
      */
     int getExperienceToNextLevel() throws RemoteException;

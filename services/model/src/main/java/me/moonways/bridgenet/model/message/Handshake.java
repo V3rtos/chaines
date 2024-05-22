@@ -21,7 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor(onConstructor_ = @Inject)
 public class Handshake {
-    public enum Type { SERVER, PLAYER }
+    public enum Type {SERVER, PLAYER}
 
     @ByteTransfer(provider = TransferEnumProvider.class)
     private Type type;

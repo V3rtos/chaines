@@ -1,6 +1,9 @@
 package me.moonways.endpoint.players.player;
 
 import lombok.Getter;
+import me.moonways.bridgenet.model.audience.ComponentHolders;
+import me.moonways.bridgenet.model.audience.MessageDirection;
+import me.moonways.bridgenet.model.event.AudienceSendEvent;
 import me.moonways.bridgenet.model.message.SendMessage;
 import me.moonways.bridgenet.model.message.SendTitle;
 import me.moonways.bridgenet.model.service.language.Language;
@@ -12,9 +15,6 @@ import me.moonways.bridgenet.model.service.players.component.statistic.ActivityS
 import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.model.util.Title;
 import me.moonways.bridgenet.model.util.TitleFade;
-import me.moonways.bridgenet.model.audience.ComponentHolders;
-import me.moonways.bridgenet.model.audience.MessageDirection;
-import me.moonways.bridgenet.model.event.AudienceSendEvent;
 import me.moonways.endpoint.players.database.PlayerDescription;
 import net.kyori.adventure.text.Component;
 

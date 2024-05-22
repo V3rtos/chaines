@@ -1,9 +1,9 @@
 package me.moonways.bridgenet.rmi.module.logging;
 
 import me.moonways.bridgenet.rmi.module.AbstractRemoteModule;
-import me.moonways.bridgenet.rmi.service.ServiceInfo;
-import me.moonways.bridgenet.rmi.module.ModuleID;
 import me.moonways.bridgenet.rmi.module.ModuleConst;
+import me.moonways.bridgenet.rmi.module.ModuleID;
+import me.moonways.bridgenet.rmi.service.ServiceInfo;
 
 public class LoggingRemoteModule extends AbstractRemoteModule<LoggingConfig> {
 

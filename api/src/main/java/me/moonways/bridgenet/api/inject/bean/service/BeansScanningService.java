@@ -5,17 +5,17 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.IgnoredRegistry;
 import me.moonways.bridgenet.api.inject.bean.*;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProvider;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.processor.AnnotationProcessorConfig;
+import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.util.pair.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProvider;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
-import me.moonways.bridgenet.api.inject.processor.AnnotationProcessorConfig;
-import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.annotation.Annotation;
@@ -240,7 +240,7 @@ public class BeansScanningService {
      * класса ресурса из процесса сканирования.
      *
      * @param resourceType - полученный класс ресурса.
-     * @param root - инстанс бина.
+     * @param root         - инстанс бина.
      */
     public Bean createBean(Class<?> resourceType, Object root) {
         return createBean(resourceType, ((type) -> root));
@@ -250,7 +250,7 @@ public class BeansScanningService {
      * Создать бин по подобию образа полученного
      * класса ресурса из процесса сканирования.
      *
-     * @param resourceType - полученный класс ресурса.
+     * @param resourceType   - полученный класс ресурса.
      * @param functionOfRoot - функция получения инстанса бина.
      */
     private Bean createBean(Class<?> resourceType, Function<BeanType, Object> functionOfRoot) {
@@ -278,6 +278,7 @@ public class BeansScanningService {
 
     /**
      * Создание основного инстанса бина
+     *
      * @param beanType - тип бина.
      */
     public Object createRoot(BeanType beanType) {
@@ -320,6 +321,7 @@ public class BeansScanningService {
 
     /**
      * Сортировка бинов для дальнейшей инжекции.
+     *
      * @param beans - список всех готовых бинов.
      */
     private List<Bean> sort(List<Bean> beans) {
@@ -369,7 +371,7 @@ public class BeansScanningService {
                         .findFirst()
                         .orElse(null);
 
-                                            // skip self-injection
+                // skip self-injection
                 if (componentBean != null && !componentBean.isSimilar(bean)) {
 
                     for (BeanComponent componentInternalComponent : componentBean.getType().getInjectComponents()) {

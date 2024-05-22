@@ -73,7 +73,7 @@ public class EndpointRunner {
         try (JarFile jarFile = new JarFile(file)) {
             Enumeration<JarEntry> enumeration = jarFile.entries();
 
-            URL[] urls = { new URL(String.format(URL_SPEC_FORMAT, file.getAbsolutePath())) };
+            URL[] urls = {new URL(String.format(URL_SPEC_FORMAT, file.getAbsolutePath()))};
             URLClassLoader classLoader = URLClassLoader.newInstance(urls, RemoteService.class.getClassLoader());
 
             while (enumeration.hasMoreElements()) {
@@ -92,8 +92,7 @@ public class EndpointRunner {
                     return serviceImplementClass;
                 }
             }
-        }
-        catch (IOException | ClassNotFoundException exception) {
+        } catch (IOException | ClassNotFoundException exception) {
             log.error("§4Cannot be find endpoint '{}' implement class: §c{}", endpointName, exception.toString());
         }
 

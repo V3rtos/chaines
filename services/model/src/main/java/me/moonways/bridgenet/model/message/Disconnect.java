@@ -18,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor(onConstructor_ = @Inject)
 public class Disconnect {
-    public enum Type { SERVER, PLAYER }
+    public enum Type {SERVER, PLAYER}
 
     @ByteTransfer(provider = TransferUuidProvider.class)
     private UUID uuid;

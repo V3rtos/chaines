@@ -36,7 +36,9 @@ public final class DatabaseProvider {
                 .id(connectionID)
                 .jdbcWrapper(JdbcWrapper.builder()
                         .connectionID(connectionID)
-                        .exceptionHandler((t, e) -> { throw new BridgenetDatabaseException(e); })
+                        .exceptionHandler((t, e) -> {
+                            throw new BridgenetDatabaseException(e);
+                        })
                         .credentials(credentials)
                         .build())
                 .build();

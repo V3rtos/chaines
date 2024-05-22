@@ -84,8 +84,7 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
             }
 
             return MessageTransfer.decode(buf);
-        }
-        catch (DataFormatException | IOException exception) {
+        } catch (DataFormatException | IOException exception) {
             log.error(new MessageCodecException(exception));
             return null;
         }

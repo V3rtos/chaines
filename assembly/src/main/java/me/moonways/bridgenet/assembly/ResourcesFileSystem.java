@@ -33,11 +33,12 @@ public final class ResourcesFileSystem {
         }
 
         Path result = etcDirectoryPath.resolve(resourceName);
-        return !Files.exists(result) ? findPathWithExclude(resourceName): result;
+        return !Files.exists(result) ? findPathWithExclude(resourceName) : result;
     }
 
     /**
      * Найти путь к файлу или директории в общей папке проекта.
+     *
      * @param resourceName - наименования поискового ресурса.
      */
     public Path findPathAtProject(String resourceName) {

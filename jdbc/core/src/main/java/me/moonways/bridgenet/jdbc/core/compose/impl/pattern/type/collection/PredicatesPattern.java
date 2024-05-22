@@ -1,11 +1,11 @@
 package me.moonways.bridgenet.jdbc.core.compose.impl.pattern.type.collection;
 
 import lombok.*;
-import me.moonways.bridgenet.jdbc.core.compose.template.collection.PredicatesTemplate;
-import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedPredicates;
 import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 import me.moonways.bridgenet.jdbc.core.compose.ConditionBinder;
 import me.moonways.bridgenet.jdbc.core.compose.ConditionMatcher;
+import me.moonways.bridgenet.jdbc.core.compose.template.collection.PredicatesTemplate;
+import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedPredicates;
 
 import java.util.LinkedList;
 

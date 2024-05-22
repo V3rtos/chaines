@@ -64,8 +64,7 @@ public class EventRegistry {
             try {
                 EventInvoker<?> invoker = injectReflectedEventHandle(handler, method);
                 resultSet.add(invoker);
-            }
-            catch (IllegalAccessException exception) {
+            } catch (IllegalAccessException exception) {
                 throw new EventException(exception, "Internal handler registration error - {0}", handler);
             }
         }

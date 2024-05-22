@@ -19,7 +19,7 @@ public interface PlayerSettingsServiceModel extends RemoteService {
      * уникальному идентификатору пользователя.
      *
      * @param playerId - уникальный идентификатор пользователя.
-     * @param id - идентификатор пользовательской настройки.
+     * @param id       - идентификатор пользовательской настройки.
      */
     <T> Setting<T> getSetting(UUID playerId, SettingID<T> id) throws RemoteException;
 
@@ -28,7 +28,7 @@ public interface PlayerSettingsServiceModel extends RemoteService {
      * имени пользователя.
      *
      * @param playerName - имя пользователя.
-     * @param id - идентификатор пользовательской настройки.
+     * @param id         - идентификатор пользовательской настройки.
      */
     <T> Setting<T> getSetting(String playerName, SettingID<T> id) throws RemoteException;
 }

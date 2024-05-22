@@ -1,4 +1,3 @@
-
 package me.moonways.bridgenet.bootstrap.command.util;
 
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;

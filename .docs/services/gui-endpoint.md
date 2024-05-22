@@ -42,10 +42,18 @@ GuiDescription description =
                 .build();
 
 Gui gui = serviceModel.createGui(description);
-gui.setItem(GuiSlot.center(description),
-        ItemStack.create()
-                .name("It`s a diamond!")
-                .material(Materials.DIAMOND));
+gui.
+
+setItem(GuiSlot.center(description),
+        ItemStack.
+
+create()
+                .
+
+name("It`s a diamond!")
+                .
+
+material(Materials.DIAMOND));
 ```
 
 ---
@@ -56,6 +64,7 @@ gui.setItem(GuiSlot.center(description),
 <br>под имплементаций эндпоинта:
 
 ```xml
+
 <service>
     <!-- RMI Protocol service bind port -->
     <bindPort>7001</bindPort>

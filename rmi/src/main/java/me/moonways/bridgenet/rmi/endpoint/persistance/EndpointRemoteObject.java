@@ -69,8 +69,7 @@ public abstract class EndpointRemoteObject extends UnicastRemoteObject {
                         }
                     }
                 }
-            }
-            catch (IllegalAccessException e) {
+            } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         }

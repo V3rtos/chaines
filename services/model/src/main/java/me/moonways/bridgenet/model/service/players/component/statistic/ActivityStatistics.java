@@ -14,7 +14,7 @@ public interface ActivityStatistics extends Remote {
      * Установить значение целочисленной статистики.
      *
      * @param statistic - Статистика, для которой нужно установить значение.
-     * @param value - Значение статистики.
+     * @param value     - Значение статистики.
      */
     void setInt(Statistic statistic, int value) throws RemoteException;
 
@@ -22,7 +22,7 @@ public interface ActivityStatistics extends Remote {
      * Установить значение длинной статистики.
      *
      * @param statistic - Статистика, для которой нужно установить значение.
-     * @param value - Значение статистики.
+     * @param value     - Значение статистики.
      */
     void setLong(Statistic statistic, long value) throws RemoteException;
 

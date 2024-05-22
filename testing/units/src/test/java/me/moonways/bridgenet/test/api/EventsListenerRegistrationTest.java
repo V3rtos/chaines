@@ -2,9 +2,9 @@ package me.moonways.bridgenet.test.api;
 
 import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.test.data.ExampleUserEvent;
 import me.moonways.bridgenet.test.data.EntityStatus;
 import me.moonways.bridgenet.test.data.EntityUser;
+import me.moonways.bridgenet.test.data.ExampleUserEvent;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.data.management.ExampleEventListener;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;

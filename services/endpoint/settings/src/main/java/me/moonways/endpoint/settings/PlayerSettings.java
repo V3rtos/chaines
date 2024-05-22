@@ -54,8 +54,8 @@ public class PlayerSettings {
                 = entityRepositoryFactory.fromEntityType(EntitySetting.class);
 
         repository.searchManyIf(
-                repository.newSearchMarker()
-                        .withGet(EntitySetting::getPlayerId, playerID))
+                        repository.newSearchMarker()
+                                .withGet(EntitySetting::getPlayerId, playerID))
                 .forEach(this::loadEntity);
     }
 

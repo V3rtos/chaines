@@ -53,8 +53,7 @@ public class NetworkMessageEncoder extends MessageToByteEncoder<ExportedMessage>
             ByteCompression.write(array, byteBuf);
 
             bridgenetMetricsLogger.logNetworkTrafficBytesWrite(MetricType.MTP_TRAFFIC, byteBuf.writableBytes());
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error(new MessageCodecException(exception));
         }
     }

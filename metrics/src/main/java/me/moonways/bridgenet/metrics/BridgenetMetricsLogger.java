@@ -8,6 +8,7 @@ public class BridgenetMetricsLogger {
     private static final BridgenetMetricsProvider PROVIDER = new BridgenetMetricsProvider();
 
     private final EnumMap<MetricType, Metric> metricsByTypeMap = new EnumMap<>(MetricType.class);
+
     {
         for (MetricType metricType : MetricType.values()) {
             registerMetricType(metricType);
@@ -43,7 +44,7 @@ public class BridgenetMetricsLogger {
     /**
      * Логировать изменение трафика в сети, которая производит чтение байтов.
      *
-     * @param metricType - метрика, в которую логируем значение.
+     * @param metricType    - метрика, в которую логируем значение.
      * @param readableBytes - количество прочтенных байтов в сети.
      */
     public void logNetworkTrafficBytesRead(MetricType metricType, long readableBytes) {
@@ -53,7 +54,7 @@ public class BridgenetMetricsLogger {
     /**
      * Логировать изменение трафика в сети, которая производит запись байтов.
      *
-     * @param metricType - метрика, в которую логируем значение.
+     * @param metricType    - метрика, в которую логируем значение.
      * @param writableBytes - количество записанных байтов в сети.
      */
     public void logNetworkTrafficBytesWrite(MetricType metricType, long writableBytes) {
@@ -62,6 +63,7 @@ public class BridgenetMetricsLogger {
 
     /**
      * Логировать открытие соединения в рамках определенной сети.
+     *
      * @param metricType - метрика, в которую логируем значение.
      */
     public void logNetworkConnectionOpened(MetricType metricType) {
@@ -70,6 +72,7 @@ public class BridgenetMetricsLogger {
 
     /**
      * Логировать закрытие соединения в рамках определенной сети.
+     *
      * @param metricType - метрика, в которую логируем значение.
      */
     public void logNetworkConnectionClosed(MetricType metricType) {
@@ -108,6 +111,7 @@ public class BridgenetMetricsLogger {
 
     /**
      * Запросить ссылку на иллюстрацию графика метрики определенного типа.
+     *
      * @param metricType - тип метрики, иллюстрацию которой мы запрашиваем.
      */
     public String requestIllustrationURL(MetricType metricType) {

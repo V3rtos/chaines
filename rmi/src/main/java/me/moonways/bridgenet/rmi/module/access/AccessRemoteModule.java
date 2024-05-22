@@ -14,7 +14,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
-import java.rmi.*;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 @Log4j2
@@ -60,12 +63,10 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
 
                 log.info("Endpoint '{}' was exported: §f{}", name, stub.getClass().getSimpleName());
                 remoteServicesManagement.registerService(serviceInfo, stub);
-            }
-            catch (RemoteException exception) {
+            } catch (RemoteException exception) {
                 log.error("§4Cannot be export endpoint uri {}: §c{}", uri, exception.toString());
             }
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error("§4Cannot be export an endpoint '{}'", name, exception);
         }
     }
@@ -76,8 +77,7 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
 
             //noinspection unchecked
             return (T) stub;
-        }
-        catch (MalformedURLException | NotBoundException | RemoteException exception) {
+        } catch (MalformedURLException | NotBoundException | RemoteException exception) {
             log.error("§4Cannot be lookup an endpoint uri {}: §c{}", uri, exception.toString());
         }
 

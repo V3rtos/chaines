@@ -6,11 +6,11 @@ import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.entity.EntityRepository;
 import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
+import me.moonways.bridgenet.model.event.PlayerPermissionAddEvent;
+import me.moonways.bridgenet.model.event.PlayerPermissionRemoveEvent;
 import me.moonways.bridgenet.model.service.permissions.TemporalState;
 import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 import me.moonways.bridgenet.model.service.permissions.permission.PermissionsManager;
-import me.moonways.bridgenet.model.event.PlayerPermissionAddEvent;
-import me.moonways.bridgenet.model.event.PlayerPermissionRemoveEvent;
 import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
 import me.moonways.endpoint.permissions.entity.EntityPermission;
 
@@ -46,8 +46,8 @@ public final class PermissionsManagerStub implements PermissionsManager {
     private Set<Permission> findPermissions(UUID playerId) {
         EntityRepository<EntityPermission> repository = repositoryFactory.fromEntityType(EntityPermission.class);
         return repository.searchManyIf(
-                repository.newSearchMarker()
-                        .withGet(EntityPermission::getPlayerId, playerId))
+                        repository.newSearchMarker()
+                                .withGet(EntityPermission::getPlayerId, playerId))
                 .stream()
                 .peek(entityPermission -> {
                     if (entityPermission.isExpired()) {

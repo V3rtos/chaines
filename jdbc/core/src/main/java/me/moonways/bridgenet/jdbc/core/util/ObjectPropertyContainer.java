@@ -22,9 +22,9 @@ public class ObjectPropertyContainer {
 
     private static final ImmutableMultiConsumer<DefaultKeyModifiers, ObjectPropertyContainer> DEFAULT_KEYS_MODIFIERS
             = ImmutableMultiConsumer.<DefaultKeyModifiers, ObjectPropertyContainer>builder()
-                .register(DefaultKeyModifiers.AS_LOWER_CASE, objectPropertyContainer -> objectPropertyContainer.keyModifier = (String::toLowerCase))
-                .register(DefaultKeyModifiers.AS_UPPER_CASE, objectPropertyContainer -> objectPropertyContainer.keyModifier = (String::toUpperCase))
-                .build();
+            .register(DefaultKeyModifiers.AS_LOWER_CASE, objectPropertyContainer -> objectPropertyContainer.keyModifier = (String::toLowerCase))
+            .register(DefaultKeyModifiers.AS_UPPER_CASE, objectPropertyContainer -> objectPropertyContainer.keyModifier = (String::toUpperCase))
+            .build();
 
     public static ObjectPropertyContainer newHashContainer() {
         return new ObjectPropertyContainer(new HashMap<>());

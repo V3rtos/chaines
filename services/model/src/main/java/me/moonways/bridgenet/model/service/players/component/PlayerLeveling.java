@@ -44,7 +44,7 @@ public interface PlayerLeveling extends Remote {
     /**
      * Вычислить общий опыт игрока на основе его уровня и опыта.
      *
-     * @param level - Уровень игрока.
+     * @param level      - Уровень игрока.
      * @param experience - Опыт игрока.
      * @return - Общий опыт игрока.
      */

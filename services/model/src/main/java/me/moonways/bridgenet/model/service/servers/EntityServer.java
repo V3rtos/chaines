@@ -45,6 +45,7 @@ public interface EntityServer extends Remote {
 
     /**
      * Подключить какого-то игрока к текущему серверу.
+     *
      * @param player - игрок, которого подключаем.
      */
     CompletableFuture<Boolean> connectThat(@NotNull Player player) throws RemoteException;

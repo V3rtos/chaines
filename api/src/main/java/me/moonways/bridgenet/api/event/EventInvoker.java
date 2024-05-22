@@ -40,8 +40,7 @@ public class EventInvoker<E extends Event> {
             validateType(event);
 
             methodHandle.invoke(handler, event);
-        }
-        catch (Throwable exception) {
+        } catch (Throwable exception) {
             throw new EventException(exception, "Internal event handle error - {0}", event.getClass());
         }
     }

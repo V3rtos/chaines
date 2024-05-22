@@ -1,10 +1,10 @@
 package me.moonways.bridgenet.test.data;
 
+import me.moonways.bridgenet.api.command.CommandArguments;
 import me.moonways.bridgenet.api.command.CommandSession;
+import me.moonways.bridgenet.api.command.annotation.*;
 import me.moonways.bridgenet.api.command.option.CommandParameterOnlyConsoleUse;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
-import me.moonways.bridgenet.api.command.annotation.*;
-import me.moonways.bridgenet.api.command.CommandArguments;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.util.minecraft.ChatColor;
 import me.moonways.bridgenet.model.service.players.PlayersServiceModel;

@@ -39,8 +39,7 @@ public class EndpointLoader {
         try {
             String jsonContent = String.join("", Files.readAllLines(file.toPath()));
             return gson.fromJson(jsonContent, EndpointConfig.class);
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             log.error("§4Cannot be inject endpoint config of '{}': §c{}", endpointName, exception.toString());
             return null;
         }

@@ -60,12 +60,14 @@ public interface Setting<T> extends Remote {
 
     /**
      * Изменить актуальное значение пользовательской настройки на новое.
+     *
      * @param value - новое значение.
      */
     Setting<T> set(T value) throws RemoteException;
 
     /**
      * Изменить актуальное значение пользовательской настройки на новое.
+     *
      * @param value - новое значение.
      */
     Setting<T> set(Supplier<T> value) throws RemoteException;

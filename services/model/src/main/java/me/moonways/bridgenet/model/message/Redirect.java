@@ -26,7 +26,8 @@ public class Redirect {
     @ByteTransfer(provider = TransferUuidProvider.class)
     private UUID serverKey;
 
-    public interface Result { }
+    public interface Result {
+    }
 
     @Getter
     @ToString

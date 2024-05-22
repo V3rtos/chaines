@@ -20,6 +20,7 @@ public interface GamesServiceModel extends RemoteService {
 
     /**
      * Получить игру по ее названию.
+     *
      * @param name - название игры.
      */
     Game getGame(@NotNull String name) throws RemoteException;
@@ -31,6 +32,7 @@ public interface GamesServiceModel extends RemoteService {
 
     /**
      * Проверить, является ли сервер игровым.
+     *
      * @param server - сервер.
      */
     boolean isGame(@NotNull EntityServer server) throws RemoteException;

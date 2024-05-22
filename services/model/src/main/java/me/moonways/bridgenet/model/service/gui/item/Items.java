@@ -37,7 +37,7 @@ public interface Items extends Remote {
      * Создать ItemStack с указанным материалом и названием.
      *
      * @param material - Материал предмета.
-     * @param name - Название предмета.
+     * @param name     - Название предмета.
      * @return - ItemStack с указанным материалом и названием.
      */
     ItemStack named(Material material, String name) throws RemoteException;
@@ -45,7 +45,7 @@ public interface Items extends Remote {
     /**
      * Создать ItemStack с указанным материалом и прочностью.
      *
-     * @param material - Материал предмета.
+     * @param material   - Материал предмета.
      * @param durability - Прочность предмета.
      * @return - ItemStack с указанным материалом и прочностью.
      */
@@ -54,9 +54,9 @@ public interface Items extends Remote {
     /**
      * Создать ItemStack с указанным материалом, прочностью и количеством.
      *
-     * @param material - Материал предмета.
+     * @param material   - Материал предмета.
      * @param durability - Прочность предмета.
-     * @param amount - Количество предметов в ItemStack.
+     * @param amount     - Количество предметов в ItemStack.
      * @return - ItemStack с указанным материалом, прочностью и количеством.
      */
     ItemStack item(Material material, int durability, int amount) throws RemoteException;

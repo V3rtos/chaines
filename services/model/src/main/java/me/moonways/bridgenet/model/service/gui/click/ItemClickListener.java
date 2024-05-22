@@ -10,6 +10,7 @@ public interface ItemClickListener {
 
     /**
      * Обработать событие клика по элементу GUI.
+     *
      * @param event Событие клика, которое произошло.
      */
     void consume(GuiItemClickEvent event);

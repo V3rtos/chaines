@@ -40,8 +40,7 @@ public class NetworkMessagesService {
 
         if (messageClass.isAnnotationPresent(clientAnnotation)) {
             return clientAnnotation;
-        }
-        else if (messageClass.isAnnotationPresent(serverAnnotation)) {
+        } else if (messageClass.isAnnotationPresent(serverAnnotation)) {
             return serverAnnotation;
         }
 

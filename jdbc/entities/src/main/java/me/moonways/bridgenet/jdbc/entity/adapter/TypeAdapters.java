@@ -23,12 +23,12 @@ public interface TypeAdapters {
      */
     ParameterTypeAdapter[] TYPES =
             {
-            // ---------------- //
+                    // ---------------- //
                     BOOLEAN,
                     ENUMS,
                     UUID,
                     CLASS,
-            // ---------------- //
+                    // ---------------- //
                     SERIALIZATION, // <--- Обязательно должен быть предпоследним.
                     JSON, // <--- Обязательно должен быть последним.
             };

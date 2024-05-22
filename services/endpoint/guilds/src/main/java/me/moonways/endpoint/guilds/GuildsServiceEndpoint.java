@@ -1,7 +1,7 @@
 package me.moonways.endpoint.guilds;
 
-import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.model.service.guilds.GuildsServiceModel;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 
 import java.rmi.RemoteException;
 

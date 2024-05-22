@@ -23,7 +23,8 @@
             <displayName>AutoRunners</displayName>
             <priorityID>4</priorityID>
             <priority>RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.autorun.StartScheduledRunnersServiceHook</executorPath>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.autorun.StartScheduledRunnersServiceHook
+            </executorPath>
         </hook>
         <hook>
             <displayName>Endpoints</displayName>

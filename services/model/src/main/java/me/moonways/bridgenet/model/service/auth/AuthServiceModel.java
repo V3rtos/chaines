@@ -24,7 +24,7 @@ public interface AuthServiceModel extends RemoteService {
      * ошибка входных данных, мы узнаем о ней конкретнее
      * из описания me.moonways.bridgenet.model.auth.AuthorizationResult
      *
-     * @param playerId - идентификатор пользователя.
+     * @param playerId      - идентификатор пользователя.
      * @param inputPassword - пароль от аккаунта, который ввел пользователь в систему.
      */
     AuthorizationResult tryLogin(UUID playerId, String inputPassword) throws RemoteException;
@@ -36,7 +36,7 @@ public interface AuthServiceModel extends RemoteService {
      * ошибка входных данных, мы узнаем о ней конкретнее
      * из описания me.moonways.bridgenet.model.auth.AuthorizationResult
      *
-     * @param playerId - идентификатор пользователя.
+     * @param playerId      - идентификатор пользователя.
      * @param inputPassword - новый пароль аккаунта, который ввел пользователь в систему.
      */
     AuthorizationResult tryRegistration(UUID playerId, String inputPassword) throws RemoteException;
@@ -48,9 +48,9 @@ public interface AuthServiceModel extends RemoteService {
      * ошибка входных данных, мы узнаем о ней конкретнее
      * из описания me.moonways.bridgenet.model.auth.AuthorizationResult
      *
-     * @param playerId - идентификатор пользователя.
+     * @param playerId       - идентификатор пользователя.
      * @param actualPassword - актуальный (текущий) пароль пользователя, введенный пользователем.
-     * @param newPassword - новый (изменяемый) пароль пользователя, введенный пользователем.
+     * @param newPassword    - новый (изменяемый) пароль пользователя, введенный пользователем.
      */
     AuthorizationResult tryPasswordChange(UUID playerId, String actualPassword, String newPassword) throws RemoteException;
 

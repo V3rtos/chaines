@@ -1,6 +1,5 @@
 # BridgeNet / Services / Bus
 
-
 ---
 
 ## MODEL

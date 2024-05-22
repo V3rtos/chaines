@@ -25,7 +25,8 @@ public class SettingStub<T> implements Setting<T> {
     @ToString.Include
     private T value;
 
-    private ExceptionallyConsumer<T> subscriber = ((t) -> {});
+    private ExceptionallyConsumer<T> subscriber = ((t) -> {
+    });
 
     @Override
     public Setting<T> copy() throws RemoteException {

@@ -24,6 +24,7 @@ public class ServerInfo {
 
     /**
      * Проверить наличие установленного флага на сервере.
+     *
      * @param flag - проверяемый флаг.
      */
     public boolean hasFlag(@NotNull ServerFlag flag) {

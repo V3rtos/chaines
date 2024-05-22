@@ -48,6 +48,7 @@ public class BeanComponent extends AnnotatedBeanComponent<Field> {
 
     /**
      * Переустановить значение компонента на новое.
+     *
      * @param value - новое значение компонента.
      */
     public void setValue(Object value) {
