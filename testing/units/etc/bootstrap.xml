@@ -14,21 +14,8 @@
             <executorPath>me.moonways.bridgenet.bootstrap.hook.type.OpenJdbcConnectionHook</executorPath>
         </hook>
         <hook>
-            <displayName>REST</displayName>
-            <priorityID>3</priorityID>
-            <priority>RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.StartRestServerHook</executorPath>
-        </hook>
-        <hook>
-            <displayName>AutoRunners</displayName>
-            <priorityID>4</priorityID>
-            <priority>RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.autorun.StartScheduledRunnersServiceHook
-            </executorPath>
-        </hook>
-        <hook>
             <displayName>Endpoints</displayName>
-            <priorityID>5</priorityID>
+            <priorityID>3</priorityID>
             <priority>RUNNER</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.type.RunRMIEndpointsHook</executorPath>
         </hook>

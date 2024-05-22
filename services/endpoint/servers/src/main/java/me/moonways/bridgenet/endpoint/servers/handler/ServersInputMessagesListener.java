@@ -14,7 +14,6 @@ import me.moonways.bridgenet.model.message.Disconnect;
 import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.model.message.Redirect;
 import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
-import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.model.service.servers.ServerFlag;
 import me.moonways.bridgenet.model.service.servers.ServerInfo;
@@ -42,8 +41,6 @@ public class ServersInputMessagesListener {
     private EventService eventService;
     @Inject
     private PlayersOnServersConnectionService playersOnServersConnectionService;
-    @Inject
-    private PlayersServiceModel playersServiceModel;
 
     private void callServerDisconnectEvent(EntityServer entityServer) {
         eventService.fireEvent(

@@ -4,7 +4,6 @@ import io.netty.channel.ChannelFactory;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.ServerChannel;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.scheduler.Scheduler;
 import me.moonways.bridgenet.model.service.bus.BusServiceModel;
 import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.mtp.channel.ChannelDirection;
@@ -28,8 +27,6 @@ public class BusServiceEndpoint extends EndpointRemoteObject implements BusServi
     private BridgenetNetworkController networkController;
     @Inject
     private InboundChannelOptionsHandler inboundChannelOptionsHandler;
-    @Inject
-    private Scheduler scheduler;
 
     public BusServiceEndpoint() throws RemoteException {
         super();
@@ -37,12 +34,6 @@ public class BusServiceEndpoint extends EndpointRemoteObject implements BusServi
 
     @Override
     protected void construct(EndpointRemoteContext context) {
-        //scheduler.schedule(ScheduledTime.of(3, TimeUnit.SECONDS))
-        //        .follow(task -> register(context));
-        register(context);
-    }
-
-    private void register(EndpointRemoteContext context) {
         networkController.bindMessages();
         networkController.bindMessageListeners();
 

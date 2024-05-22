@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
@@ -28,8 +27,6 @@ public class ScheduledRunnersService {
 
     private static final ScheduledTime DEFAULT_PERIOD = ScheduledTime.ofMillis(100);
 
-    @Inject
-    private BeansService beansService;
     @Inject
     private Scheduler scheduler;
 

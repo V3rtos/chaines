@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.bootstrap.hook.type.autorun;
+package me.moonways.bridgenet.bootstrap.autorun;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
