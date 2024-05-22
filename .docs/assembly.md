@@ -35,7 +35,7 @@ private ResourcesAssembly assembly;
 ```java
 String filename = ResourcesTypes.MTP_SETTINGS_JSON;
 String filename = ResourcesTypes.METRICS_SETTINGS_JSON;
-String filename = ResourcesTypes.RSI_CONFIG_XML;
+String filename = ResourcesTypes.REMOTE_SERVICEX_XML;
 ```
 
 Дальнейший процесс чтения производится при помощи вспомогательных утилит,

@@ -7,8 +7,8 @@ import me.moonways.bridgenet.model.util.PlayerIdMap;
 import me.moonways.bridgenet.model.service.settings.PlayerSettingsServiceModel;
 import me.moonways.bridgenet.model.service.settings.Setting;
 import me.moonways.bridgenet.model.service.settings.SettingID;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 
 import java.rmi.RemoteException;
 import java.util.*;

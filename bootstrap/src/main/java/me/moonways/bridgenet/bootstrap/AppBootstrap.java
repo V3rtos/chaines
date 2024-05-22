@@ -54,7 +54,7 @@ public class AppBootstrap {
         beansService.bind(this);
 
         if (canStartingFull) {
-            beansService.start(BeansService.generateDefaultProperties());
+            beansService.start();
             beansService.inject(hooksContainer);
         }
     }

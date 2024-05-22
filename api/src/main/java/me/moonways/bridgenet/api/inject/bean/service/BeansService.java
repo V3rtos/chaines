@@ -33,23 +33,6 @@ import java.util.stream.Stream;
 @Log4j2
 public final class BeansService {
 
-    public static final String PROPERTY_PACKAGE_NAME = "inject.project.package.name";
-    public static final String PROPERTY_DEFAULT_BEAN_FACTORY = "inject.bean.factory.default";
-
-    /**
-     * Сгенерировать стандартные проперти-конфигурации,
-     * хранящие стандартные ключи и значения для
-     * корректной работы Dependency Injection.
-     */
-    public static Properties generateDefaultProperties() {
-        Properties properties = new Properties();
-
-        properties.setProperty(PROPERTY_PACKAGE_NAME, "me.moonways");
-        properties.setProperty(PROPERTY_DEFAULT_BEAN_FACTORY, "CONSTRUCTOR");
-
-        return properties;
-    }
-
     @Getter
     private final BeansStore store;
     @Getter
@@ -62,8 +45,6 @@ public final class BeansService {
 
     private final Set<Class<?>> initializedAnnotationsSet = Collections.synchronizedSet(new HashSet<>());
     private final Map<Class<?>, Consumer<Object>> onBindingsMap = Collections.synchronizedMap(new HashMap<>());
-
-    private Properties properties;
 
     public BeansService() {
         this.scanner = new BeansScanningService();
@@ -86,6 +67,8 @@ public final class BeansService {
         bind(interceptor);
 
         // other internal Bridgenet module dependencies.
+        onBinding(ResourcesAssembly.class, ResourcesAssembly::overrideSystemProperties);
+
         bind(new ResourcesAssembly());
         bind(new BridgenetMetricsLogger());
     }
@@ -100,14 +83,9 @@ public final class BeansService {
     }
 
     /**
-     * Инициализация проекта и системы Dependency Injection
-     * по указанной проперти-конфигурации.
-     *
-     * @param properties - проперти-конфигурация Dependency Injection.
+     * Инициализация проекта и системы Dependency Injection.
      */
-    public void fakeStart(Properties properties) {
-        this.properties = properties;
-
+    public void fakeStart() {
         log.info("BeansService.fakeStart -> begin;");
 
         bindThis();
@@ -117,14 +95,9 @@ public final class BeansService {
     }
 
     /**
-     * Инициализация проекта и системы Dependency Injection
-     * по указанной проперти-конфигурации.
-     *
-     * @param properties - проперти-конфигурация Dependency Injection.
+     * Инициализация проекта и системы Dependency Injection.
      */
-    public void start(Properties properties) {
-        this.properties = properties;
-
+    public void start() {
         log.info("BeansService.start -> begin;");
 
         bindThis();
@@ -142,7 +115,7 @@ public final class BeansService {
     private void initBeanFactories() {
         log.info("Initialize beans factories & providers...");
 
-        String defaultBeanFactory = properties.getProperty(PROPERTY_DEFAULT_BEAN_FACTORY);
+        String defaultBeanFactory = System.getProperty("beans.factory.default");
 
         BeanFactoryProviders.DEFAULT = Optional.ofNullable(defaultBeanFactory)
                 .map(BeanFactoryProviders::valueOf)
@@ -192,7 +165,7 @@ public final class BeansService {
             private TypeAnnotationProcessor<V> processor;
 
             public void handle() {
-                AnnotationProcessorConfig<V> config = processor.configure(properties);
+                AnnotationProcessorConfig<V> config = processor.configure();
                 Class<V> annotationType = config.getAnnotationType();
 
                 if (annotationType == null) {

@@ -6,8 +6,8 @@ import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
 import me.moonways.bridgenet.model.service.auth.Account;
 import me.moonways.bridgenet.model.service.auth.AuthServiceModel;
 import me.moonways.bridgenet.model.service.auth.AuthorizationResult;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 
 import java.rmi.RemoteException;
 import java.util.Optional;

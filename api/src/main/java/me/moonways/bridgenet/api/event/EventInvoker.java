@@ -4,9 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import me.moonways.bridgenet.api.event.Event;
-import me.moonways.bridgenet.api.event.EventException;
-import me.moonways.bridgenet.api.event.EventPriority;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.invoke.MethodHandle;

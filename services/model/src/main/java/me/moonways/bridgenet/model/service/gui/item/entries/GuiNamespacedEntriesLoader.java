@@ -37,14 +37,19 @@ public final class GuiNamespacedEntriesLoader<T extends ItemsEntry> {
 
         JsonObject jsonObject = jsonElement.getAsJsonObject();
 
+        String instanceName = null;
+
         for (GuiNamespacedEntry<T> entry : entries) {
-            log.debug("Loading namespaced entry §7\"{}\" §rfor §6{}", entry.getNamespace(), entry.getInstance().getClass().getName());
+            if (instanceName == null) {
+                instanceName = entry.getInstance().getClass().getName();
+            }
 
             JsonObject entryJsonObject = jsonObject.getAsJsonObject(entry.getNamespace());
-
             T completed = GSON.fromJson(entryJsonObject.toString(), entryClass);
 
             entry.getInstance().set(completed);
         }
+
+        log.debug("Success loaded §2{} §rnamespaced entries from §6{}", entries.size(), instanceName);
     }
 }

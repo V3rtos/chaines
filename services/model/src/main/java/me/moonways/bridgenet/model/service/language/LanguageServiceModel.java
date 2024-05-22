@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.model.service.language;
 
 import me.moonways.bridgenet.model.event.PlayerLanguageUpdateEvent;
-import me.moonways.bridgenet.rsi.service.RemoteService;
+import me.moonways.bridgenet.rmi.service.RemoteService;
 import net.kyori.adventure.text.Component;
 
 import java.rmi.RemoteException;

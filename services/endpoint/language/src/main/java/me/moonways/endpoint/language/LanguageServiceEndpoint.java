@@ -11,8 +11,8 @@ import me.moonways.bridgenet.assembly.ini.type.IniProperty;
 import me.moonways.bridgenet.model.event.PlayerLanguageUpdateEvent;
 import me.moonways.bridgenet.model.service.language.*;
 import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import net.kyori.adventure.text.Component;
 
 import java.rmi.RemoteException;

@@ -13,9 +13,10 @@ import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Properties;
 
 @Log4j2
-public class ResourcesAssembly {
+public final class ResourcesAssembly {
 
     private static final Gson GSON = new GsonBuilder()
             .setLenient()
@@ -29,6 +30,27 @@ public class ResourcesAssembly {
     private final XmlJaxbParser xmlJaxbParser = new XmlJaxbParser(this);
     @Getter
     private final IniConfigLoader iniConfigLoader = new IniConfigLoader();
+
+    /**
+     * Подгрузить и перезаписать данные в системные properties
+     * из отдельной конфигурации сборки 'config.properties'
+     */
+    public void overrideSystemProperties() {
+        InputStream propertiesStream = readResourceStream(ResourcesTypes.SYSTEM_OVERRIDE_PROPERTIES);
+        Properties properties = new Properties();
+
+        try {
+            properties.load(propertiesStream);
+        } catch (IOException exception) {
+            throw new BridgenetAssemblyException(exception);
+        }
+
+        properties.forEach((propertyName, value) -> {
+
+            log.debug("Override system-property: §7\"{}\" = {}", propertyName, value);
+            System.setProperty(propertyName.toString(), value.toString());
+        });
+    }
 
     /**
      * Найти и прочитать ресурс во всевозможных файловых системах

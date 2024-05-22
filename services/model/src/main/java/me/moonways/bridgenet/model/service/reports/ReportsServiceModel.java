@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.model.service.reports;
 
-import me.moonways.bridgenet.rsi.service.RemoteService;
+import me.moonways.bridgenet.rmi.service.RemoteService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

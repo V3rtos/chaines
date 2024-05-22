@@ -8,17 +8,18 @@ package me.moonways.bridgenet.assembly;
 public final class ResourcesTypes {
 
     // general resources into 'etc' directory.
+    public static final String SYSTEM_OVERRIDE_PROPERTIES = "config.properties";
     public static final String BOOTSTRAP_XML = "bootstrap.xml";
     public static final String JDBC_SETTINGS_JSON = "jdbc_settings.json";
     public static final String METRICS_SETTINGS_JSON = "metrics_settings.json";
     public static final String MTP_SETTINGS_JSON = "mtp_settings.json";
     public static final String REST_SERVER_XML = "rest_server.xml";
-    public static final String RSI_CONFIG_XML = "rsiconfig.xml";
+    public static final String REMOTE_SERVICES_XML = "remote_services.xml";
     public static final String DECORATORS_XML = "decorators.xml";
     public static final String RMI_POLICY = "rmi.policy";
 
     // minecraft data json files.
-    public static final String MINECRAFT_ENCHANTS_JSON = "minecraft_data/items.json";
+    public static final String MINECRAFT_ENCHANTS_JSON = "minecraft_data/enchantments.json";
     public static final String MINECRAFT_ITEMS_JSON = "minecraft_data/items.json";
 
     // class-loader resources with InputStream.

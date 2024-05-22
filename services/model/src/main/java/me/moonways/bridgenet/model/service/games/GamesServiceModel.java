@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.model.service.games;
 
 import me.moonways.bridgenet.model.service.servers.EntityServer;
-import me.moonways.bridgenet.rsi.service.RemoteService;
+import me.moonways.bridgenet.rmi.service.RemoteService;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;

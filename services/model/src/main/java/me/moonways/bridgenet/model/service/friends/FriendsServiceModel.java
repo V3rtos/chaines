@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.model.service.friends;
 
-import me.moonways.bridgenet.rsi.service.RemoteService;
+import me.moonways.bridgenet.rmi.service.RemoteService;
 
 import java.rmi.RemoteException;
 import java.util.UUID;

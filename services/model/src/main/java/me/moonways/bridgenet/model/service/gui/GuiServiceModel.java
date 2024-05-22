@@ -2,7 +2,7 @@ package me.moonways.bridgenet.model.service.gui;
 
 import me.moonways.bridgenet.model.event.GuiItemClickEvent;
 import me.moonways.bridgenet.model.service.gui.item.Items;
-import me.moonways.bridgenet.rsi.service.RemoteService;
+import me.moonways.bridgenet.rmi.service.RemoteService;
 
 import java.rmi.RemoteException;
 import java.util.Optional;

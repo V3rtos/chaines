@@ -5,7 +5,7 @@ import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.event.FriendAddEvent;
 import me.moonways.bridgenet.model.event.FriendRemoveEvent;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.model.service.friends.FriendsList;
 import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
 

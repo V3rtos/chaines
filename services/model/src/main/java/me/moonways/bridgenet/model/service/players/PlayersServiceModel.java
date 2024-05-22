@@ -2,7 +2,7 @@ package me.moonways.bridgenet.model.service.players;
 
 import me.moonways.bridgenet.model.service.players.component.PlayerLeveling;
 import me.moonways.bridgenet.model.service.players.component.PlayerStore;
-import me.moonways.bridgenet.rsi.service.RemoteService;
+import me.moonways.bridgenet.rmi.service.RemoteService;
 
 import java.rmi.RemoteException;
 import java.util.List;

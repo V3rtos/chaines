@@ -22,10 +22,9 @@ public interface TypeAnnotationProcessor<V extends Annotation> {
      * Конфигурация процесса сканирование ресурсов
      * и пакейджей на поиск нужной аннотации.
      *
-     * @param properties - проперти, указанные при запуске BeansService
      * @return - подготовленная конфигурация сканнера.
      */
-    AnnotationProcessorConfig<V> configure(Properties properties);
+    AnnotationProcessorConfig<V> configure();
 
     /**
      * Процесс дополнительной верификации входящих

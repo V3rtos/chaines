@@ -3,7 +3,7 @@ package me.moonways.endpoint.reports;
 import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.event.ReportCreateEvent;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.model.service.reports.ReportsServiceModel;
 import me.moonways.bridgenet.model.service.reports.Report;
 import me.moonways.bridgenet.model.service.reports.ReportReason;

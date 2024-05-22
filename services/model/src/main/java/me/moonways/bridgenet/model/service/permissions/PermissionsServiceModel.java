@@ -2,7 +2,7 @@ package me.moonways.bridgenet.model.service.permissions;
 
 import me.moonways.bridgenet.model.service.permissions.group.GroupsManager;
 import me.moonways.bridgenet.model.service.permissions.permission.PermissionsManager;
-import me.moonways.bridgenet.rsi.service.RemoteService;
+import me.moonways.bridgenet.rmi.service.RemoteService;
 
 import java.rmi.RemoteException;
 

@@ -5,9 +5,9 @@ import me.moonways.bridgenet.api.command.annotation.*;
 import me.moonways.bridgenet.api.command.option.CommandParameterOnlyConsoleUse;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.rsi.endpoint.Endpoint;
-import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
-import me.moonways.bridgenet.rsi.service.ServiceInfo;
+import me.moonways.bridgenet.rmi.endpoint.Endpoint;
+import me.moonways.bridgenet.rmi.service.RemoteServicesManagement;
+import me.moonways.bridgenet.rmi.service.ServiceInfo;
 
 import java.util.List;
 import java.util.Map;

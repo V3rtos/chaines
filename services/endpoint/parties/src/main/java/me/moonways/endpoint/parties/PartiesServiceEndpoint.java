@@ -8,7 +8,7 @@ import me.moonways.bridgenet.model.event.PartyCreateEvent;
 import me.moonways.bridgenet.model.event.PartyRegisterEvent;
 import me.moonways.bridgenet.model.event.PartyUnregisterEvent;
 import me.moonways.bridgenet.model.service.parties.*;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;

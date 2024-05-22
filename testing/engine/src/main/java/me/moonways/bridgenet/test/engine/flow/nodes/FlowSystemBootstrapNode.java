@@ -35,7 +35,7 @@ public class FlowSystemBootstrapNode implements TestFlowNode {
         BootstrapHookContainer hooksContainer = bootstrap.getHooksContainer();
 
         log.debug("Running fake starting process: {}", context);
-        beansService.fakeStart(BeansService.generateDefaultProperties());
+        beansService.fakeStart();
 
         // Create a testing-object instance after fake beans starting.
         Object instance = testingObject.getInstance();

@@ -30,9 +30,9 @@ public abstract class TypeAnnotationProcessorAdapter<V extends Annotation> imple
     }
 
     @Override
-    public AnnotationProcessorConfig<V> configure(Properties properties) {
+    public AnnotationProcessorConfig<V> configure() {
         return AnnotationProcessorConfig.newConfigBuilder(getAnnotationType())
-                .addPackage(properties.getProperty(BeansService.PROPERTY_PACKAGE_NAME))
+                .addPackage(System.getProperty("beans.package"))
                 .build();
     }
 

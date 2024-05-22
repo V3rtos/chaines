@@ -24,7 +24,7 @@
         <!-- Internal Bridgenet dependencies -->
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>rsi</artifactId>
+            <artifactId>rmi</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>

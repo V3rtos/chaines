@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import me.moonways.bridgenet.model.service.players.Player;
 import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.players.database.PlayersRepository;
 import me.moonways.endpoint.players.listener.PlayerMessageListener;
 
