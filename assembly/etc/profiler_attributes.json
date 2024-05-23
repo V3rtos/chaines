@@ -1,0 +1,10 @@
+{
+  "imagesStore": {
+    "folderName": "profiler-logs",
+    "enabled": true
+  },
+  "dimensions": {
+    "width": 1200,
+    "height": 600
+  }
+}

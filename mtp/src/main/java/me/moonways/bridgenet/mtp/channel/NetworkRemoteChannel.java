@@ -25,11 +25,13 @@ import java.util.function.Function;
 @Log4j2
 @RequiredArgsConstructor
 public class NetworkRemoteChannel implements BridgenetNetworkChannel {
-
     private static final long serialVersionUID = -4718332193161413564L;
+
+    public static final String PULLING_STATE_PROPERTY = "pulling_state";
 
     public static final AttributeKey<ChannelDirection> DIRECTION_ATTRIBUTE = AttributeKey.valueOf("direction_attribute");
     public static final Function<ChannelDirection, String> MESSAGE_HANDLE_LOG_MSG = (direction) -> direction == ChannelDirection.TO_SERVER ? "Client[%s] -> Server" : "Server -> Client[%s]";
+
     public static final int DEFAULT_RESPONSE_TIMEOUT = 5000;
 
     @Getter
@@ -74,8 +76,12 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
 
     @Override
     public void pull(@NotNull InboundMessageContext<?> context) {
+        setProperty(PULLING_STATE_PROPERTY, true);
+
         log.info("§9[PULL]: §r{}", context.getMessage());
         networkController.pull(context);
+
+        setProperty(PULLING_STATE_PROPERTY, false);
     }
 
     @Synchronized

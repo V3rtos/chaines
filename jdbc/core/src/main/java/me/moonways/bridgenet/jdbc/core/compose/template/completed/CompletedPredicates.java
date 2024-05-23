@@ -13,7 +13,7 @@ public interface CompletedPredicates {
         CompletedPredicateNode poll();
 
         CombinedStructs.CombinedField field();
-        
+
         ConditionMatcher matcher();
 
         ConditionBinder binder();

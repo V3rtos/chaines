@@ -1,10 +1,8 @@
 package me.moonways.endpoint.friend;
 
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
-import me.moonways.bridgenet.jdbc.dao.EntityAccessCondition;
-import me.moonways.bridgenet.jdbc.dao.EntityDao;
-import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
+import me.moonways.bridgenet.jdbc.entity.EntityRepository;
+import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,39 +11,38 @@ import java.util.stream.Collectors;
 public class FriendsDbRepository {
 
     @Inject
-    private DatabaseProvider provider;
-    @Inject
-    private DatabaseConnection connection;
+    private EntityRepositoryFactory repositoryFactory;
 
-    private EntityDao<FriendPair> friendPairEntityDao;
+    private EntityRepository<EntityFriend> friendPairEntityDao;
 
-    public EntityDao<FriendPair> getDao() {
+    public EntityRepository<EntityFriend> getRepository() {
         if (friendPairEntityDao == null) {
-            friendPairEntityDao = provider.createDao(FriendPair.class, connection);
+            friendPairEntityDao = repositoryFactory.fromEntityType(EntityFriend.class);
         }
         return friendPairEntityDao;
     }
 
     public List<UUID> findFriendsList(UUID playerID) {
-        EntityDao<FriendPair> friendPairDao = getDao();
-        return friendPairDao.findMany(EntityAccessCondition.createMono("player_id", playerID))
+        EntityRepository<EntityFriend> friendsPairRepository = getRepository();
+        return friendsPairRepository.searchManyIf(friendsPairRepository.newSearchMarker()
+                        .withGet(EntityFriend::getPlayerID, playerID))
                 .stream()
-                .map(FriendPair::getFriendID)
+                .map(EntityFriend::getFriendID)
                 .collect(Collectors.toList());
     }
 
-    public void addFriend(FriendPair pair) {
-        EntityDao<FriendPair> friendPairDao = getDao();
-        friendPairDao.insertMany(pair, reverse(pair));
+    public void addFriend(EntityFriend pair) {
+        EntityRepository<EntityFriend> friendsPairRepository = getRepository();
+        friendsPairRepository.insertMany(pair, reverse(pair));
     }
 
-    public void removeFriend(FriendPair pair) {
-        EntityDao<FriendPair> friendPairDao = getDao();
-        friendPairDao.deleteMany(pair, reverse(pair));
+    public void removeFriend(EntityFriend pair) {
+        EntityRepository<EntityFriend> friendsPairRepository = getRepository();
+        friendsPairRepository.deleteMany(pair, reverse(pair));
     }
 
-    private FriendPair reverse(FriendPair pair) {
-        return FriendPair.builder()
+    private EntityFriend reverse(EntityFriend pair) {
+        return EntityFriend.builder()
                 .playerID(pair.getFriendID())
                 .friendID(pair.getPlayerID())
                 .build();

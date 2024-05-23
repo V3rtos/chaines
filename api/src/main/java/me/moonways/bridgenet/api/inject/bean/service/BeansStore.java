@@ -27,8 +27,13 @@ public final class BeansStore {
 
     private final BeansScanningService scanner;
 
+    public Collection<Bean> getTotalBeans() {
+        return Collections.unmodifiableCollection(store.values());
+    }
+
     /**
      * Сохранить подготовленный бин для его дальнейших иженкций.
+     *
      * @param bean - бин.
      */
     public void store(Bean bean) {
@@ -77,7 +82,8 @@ public final class BeansStore {
 
     /**
      * Удалить найденные дублирования относительно целевого бина.
-     * @param target - целевой бин.
+     *
+     * @param target     - целевой бин.
      * @param duplicates - найденные дубликаты.
      */
     private boolean deleteDuplicates(Bean target, DuplicatedBean[] duplicates) {
@@ -95,7 +101,7 @@ public final class BeansStore {
      * Перезаписываем дублированный бин без выявленных дубликатов.
      *
      * @param duplicates - выявленный список дубликатов.
-     * @param bean - бин, который необходимо перезаписать.
+     * @param bean       - бин, который необходимо перезаписать.
      */
     private void restore(Class<?>[] duplicates, Bean bean) {
         BeanType beanType = bean.getType();
@@ -123,6 +129,7 @@ public final class BeansStore {
 
     /**
      * Проверить на наличие сохраненного бина в кеше.
+     *
      * @param bean - бин.
      */
     public boolean isStored(Bean bean) {
@@ -131,6 +138,7 @@ public final class BeansStore {
 
     /**
      * Проверить на наличие сохраненного бина в кеше.
+     *
      * @param resourceType - тип ресурса бина.
      */
     public boolean isStored(Class<?> resourceType) {
@@ -168,7 +176,7 @@ public final class BeansStore {
      * проперти секции, хранящаяся в локальных
      * проперти бина.
      *
-     * @param propertyKey - ключ к секции локального проперти.
+     * @param propertyKey    - ключ к секции локального проперти.
      * @param valuePredicate - проверка значения секции проперти.
      */
     public Stream<Bean> findByProperty(String propertyKey, Predicate<String> valuePredicate) {

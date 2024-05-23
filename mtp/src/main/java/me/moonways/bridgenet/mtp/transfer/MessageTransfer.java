@@ -80,8 +80,7 @@ public final class MessageTransfer {
                 } else {
                     bufField(value, transferProvider, byteBuf);
                 }
-            }
-            catch (IllegalAccessException exception) {
+            } catch (IllegalAccessException exception) {
                 log.error(new MessageTransferException(exception));
                 return;
             }
@@ -123,8 +122,7 @@ public final class MessageTransfer {
 
             field.setAccessible(true);
             field.set(messagePacket, collection);
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error(new MessageTransferException(exception));
         }
     }
@@ -135,8 +133,7 @@ public final class MessageTransfer {
         try {
             field.setAccessible(true);
             field.set(messagePacket, providedObject);
-        }
-        catch (IllegalAccessException exception) {
+        } catch (IllegalAccessException exception) {
             log.error(new MessageTransferException(exception));
         }
     }

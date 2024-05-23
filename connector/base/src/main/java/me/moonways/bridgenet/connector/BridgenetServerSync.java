@@ -4,11 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import me.moonways.bridgenet.connector.description.*;
-import me.moonways.bridgenet.model.bus.message.*;
+import me.moonways.bridgenet.model.message.*;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -21,34 +20,6 @@ public final class BridgenetServerSync {
     private UUID currentDeviceId;
 
     /**
-     * Подготовка конфигурации сообщения о рукопожатии с
-     * единым сервером Bridgenet.
-     *
-     * @param description - описание подключаемого устройства.
-     */
-    private static Properties prepareDeviceHandshakeProperties(DeviceDescription description) {
-        Properties properties = new Properties();
-        properties.setProperty("server.name", description.getName());
-        properties.setProperty("server.address.host", description.getHost());
-        properties.setProperty("server.address.port", Integer.toString(description.getPort()));
-        return properties;
-    }
-
-    /**
-     * Подготовка конфигурации сообщения о рукопожатии
-     * пользователя с единым сервером Bridgenet.
-     *
-     * @param description - описание подключаемого пользователя.
-     */
-    private static Properties prepareUserHandshakeProperties(UserDescription description) {
-        Properties properties = new Properties();
-        properties.setProperty("user.name", description.getName());
-        properties.setProperty("user.uuid", description.getUniqueId().toString());
-        properties.setProperty("user.proxy", description.getProxyUuid().toString());
-        return properties;
-    }
-
-    /**
      * Выполнить обмен данными с единым сервером Bridgenet при
      * помощи рукопожатия и получить в результате уникальный идентификатор
      * текущего устройства.
@@ -57,8 +28,7 @@ public final class BridgenetServerSync {
      */
     public Handshake.Result exportDeviceHandshake(DeviceDescription description) {
         CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class,
-                new Handshake(Handshake.Type.SERVER,
-                        prepareDeviceHandshakeProperties(description)));
+                new Handshake(Handshake.Type.SERVER, description.toProperties()));
 
         Handshake.Result result = future.join();
         result.onSuccess(() -> currentDeviceId = result.getKey());
@@ -84,6 +54,7 @@ public final class BridgenetServerSync {
 
     /**
      * Экспортировать обновление данных одной из активных игр.
+     *
      * @param description - описание подключаемой игры.
      */
     public void exportGameUpdate(GameStateDescription description) {
@@ -100,8 +71,7 @@ public final class BridgenetServerSync {
      * на него.
      *
      * @param description - описание пользователя.
-     * @param label - введенная пользователем строка команды.
-     *
+     * @param label       - введенная пользователем строка команды.
      * @return - возвращает TRUE если команда была успешно исполнена.
      */
     public boolean exportCommandSend(UserDescription description, String label) {
@@ -133,6 +103,7 @@ public final class BridgenetServerSync {
 
     /**
      * Отправить сообщение об отсоединении пользователя.
+     *
      * @param description - описание подключаемого пользователя.
      */
     public void exportUserDisconnect(UserDescription description) {
@@ -151,8 +122,7 @@ public final class BridgenetServerSync {
      */
     public boolean exportUserHandshake(UserDescription description) {
         CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class,
-                new Handshake(Handshake.Type.PLAYER,
-                        prepareUserHandshakeProperties(description)));
+                new Handshake(Handshake.Type.PLAYER, description.toProperties()));
 
         Handshake.Result result = future.join();
 
@@ -166,7 +136,7 @@ public final class BridgenetServerSync {
      *
      * @param chatType - тип чата, в котором отрисовать сообщение пользователю
      * @param playerId - идентификатор активного пользователя.
-     * @param message - текстовое сообщение
+     * @param message  - текстовое сообщение
      */
     public void exportUserMessageSend(SendMessage.ChatType chatType, UUID playerId, String message) {
         channel.send(new SendMessage(playerId, message, chatType));
@@ -178,7 +148,6 @@ public final class BridgenetServerSync {
      *
      * @param playerId - идентификатор переподключаемого игрока.
      * @param serverId - идентификатор устройства, на который переподключать.
-     *
      * @return - возвращает TRUE в случае удачной попытки переподключения.
      */
     public boolean exportUserRedirectWithResult(UUID playerId, UUID serverId) {
@@ -205,7 +174,6 @@ public final class BridgenetServerSync {
      * текущий подключенный сервер на сеть единого сервера Bridgenet.
      *
      * @param playerId - идентификатор переподключаемого игрока.
-     *
      * @return - возвращает TRUE в случае удачной попытки переподключения.
      */
     public boolean exportUserRedirectToHereWithResult(UUID playerId) {
@@ -231,7 +199,7 @@ public final class BridgenetServerSync {
      * Экспортировать отправку текстового сообщения пользователю
      * на весь экран через сеть единого сервера Bridgenet.
      *
-     * @param playerId - идентификатор активного пользователя.
+     * @param playerId    - идентификатор активного пользователя.
      * @param description - описание дополнительных параметров сообщения.
      */
     public void exportUserTitleSend(UUID playerId, TitleDescription description) {

@@ -13,6 +13,15 @@
     <modules>
         <module>api</module>
         <module>bootstrap</module>
+        <module>services</module>
+        <module>assembly</module>
+        <module>jdbc</module>
+        <module>rmi</module>
+        <module>profiler</module>
+        <module>mtp</module>
+        <module>connector</module>
+        <module>rest</module>
+        <module>testing</module>
     </modules>
 
     <properties>

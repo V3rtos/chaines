@@ -1,9 +1,9 @@
 package me.moonways.bridgenet.mtp.message.response;
 
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.util.autorun.persistence.AutoRunner;
-import me.moonways.bridgenet.api.util.autorun.persistence.Runnable;
-import me.moonways.bridgenet.api.util.autorun.persistence.RunningPeriod;
+import me.moonways.bridgenet.api.autorun.persistence.AutoRunner;
+import me.moonways.bridgenet.api.autorun.persistence.Runnable;
+import me.moonways.bridgenet.api.autorun.persistence.RunningPeriod;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,6 +16,8 @@ public class ResponsibleMessageCleanUpRunner {
 
     @Runnable
     public void run() {
-        service.cleanUp();
+        if (service != null) {
+            service.cleanUp();
+        }
     }
 }

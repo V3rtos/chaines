@@ -1,14 +1,14 @@
 package me.moonways.bridgenet.jdbc.core.compose.impl.pattern;
 
 import lombok.*;
+import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
+import me.moonways.bridgenet.jdbc.core.ResponseStream;
 import me.moonways.bridgenet.jdbc.core.TransactionIsolation;
+import me.moonways.bridgenet.jdbc.core.compose.TemplatedQuery;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.verification.VerificationContext;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.verification.VerificationResult;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedQuery;
-import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
-import me.moonways.bridgenet.jdbc.core.ResponseStream;
 import me.moonways.bridgenet.jdbc.core.compose.transform.PatternToQueryTransformer;
-import me.moonways.bridgenet.jdbc.core.compose.TemplatedQuery;
 import me.moonways.bridgenet.jdbc.core.util.result.Result;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ public abstract class AbstractPattern
 
     private static final String PATTERN_FILES_RESOURCES_FOLDER = "/patterns/";
     private static final String PATTERN_FILE_SUFFIX = ".pattern";
-    
+
     private final PatternCollections totals;
 
     private String cachedNativeSql;

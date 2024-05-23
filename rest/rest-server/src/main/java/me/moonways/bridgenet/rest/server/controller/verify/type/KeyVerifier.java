@@ -3,9 +3,9 @@ package me.moonways.bridgenet.rest.server.controller.verify.type;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.rest.api.HttpHeader;
 import me.moonways.bridgenet.rest.api.StandardHeaders;
-import me.moonways.bridgenet.rest.server.controller.verify.VerificationConfig;
 import me.moonways.bridgenet.rest.server.HttpServerConfig;
 import me.moonways.bridgenet.rest.server.controller.verify.HttpHeaderVerifier;
+import me.moonways.bridgenet.rest.server.controller.verify.VerificationConfig;
 import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor

@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.model.games.GameStatus;
+import me.moonways.bridgenet.model.service.games.GameStatus;
 
 @Getter
 @Builder(toBuilder = true)

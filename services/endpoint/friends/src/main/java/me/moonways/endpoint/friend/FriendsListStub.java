@@ -1,10 +1,13 @@
 package me.moonways.endpoint.friend;
 
 import lombok.ToString;
+import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
-import me.moonways.bridgenet.model.friends.FriendsList;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.event.FriendAddEvent;
+import me.moonways.bridgenet.model.event.FriendRemoveEvent;
+import me.moonways.bridgenet.model.service.friends.FriendsList;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 
 import java.rmi.RemoteException;
 import java.util.Set;
@@ -25,6 +28,8 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
 
     @Inject
     private PlayersServiceModel playersModel;
+    @Inject
+    private EventService eventService;
 
     public FriendsListStub(UUID playerUUID, FriendsDbRepository repository, Set<UUID> uuids) throws RemoteException {
         super();
@@ -34,37 +39,51 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
     }
 
     @Override
-    public boolean addFriend(UUID uuid) {
+    public boolean addFriend(UUID uuid) throws RemoteException {
         boolean add = uuids.add(uuid);
         if (add) {
-            repository.addFriend(FriendPair.builder()
+            repository.addFriend(EntityFriend.builder()
                     .playerID(playerUUID)
                     .friendID(uuid)
                     .build());
+
+            eventService.fireEvent(
+                    FriendAddEvent.builder()
+                            .updatedFriendsList(this)
+                            .player(playersModel.store().getOffline(playerUUID))
+                            .friend(playersModel.store().getOffline(uuid))
+                            .build());
         }
         return add;
     }
 
     @Override
     public boolean addFriend(String name) throws RemoteException {
-        return addFriend(playersModel.findPlayerId(name));
+        return addFriend(playersModel.store().idByName(name));
     }
 
     @Override
-    public boolean removeFriend(UUID uuid) {
+    public boolean removeFriend(UUID uuid) throws RemoteException {
         boolean add = uuids.remove(uuid);
         if (add) {
-            repository.removeFriend(FriendPair.builder()
+            repository.removeFriend(EntityFriend.builder()
                     .playerID(playerUUID)
                     .friendID(uuid)
                     .build());
+
+            eventService.fireEvent(
+                    FriendRemoveEvent.builder()
+                            .updatedFriendsList(this)
+                            .player(playersModel.store().getOffline(playerUUID))
+                            .friend(playersModel.store().getOffline(uuid))
+                            .build());
         }
         return add;
     }
 
     @Override
     public boolean removeFriend(String name) throws RemoteException {
-        return removeFriend(playersModel.findPlayerId(name));
+        return removeFriend(playersModel.store().idByName(name));
     }
 
     @Override
@@ -74,7 +93,7 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
 
     @Override
     public boolean hasFriend(String name) throws RemoteException {
-        return hasFriend(playersModel.findPlayerId(name));
+        return hasFriend(playersModel.store().idByName(name));
     }
 
     @Override
@@ -86,7 +105,7 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
     public Set<String> getFriendsNames() {
         return uuids.stream().map(uuid -> {
                     try {
-                        return playersModel.findPlayerName(uuid);
+                        return playersModel.store().nameById(uuid);
                     } catch (RemoteException exception) {
                         throw new RuntimeException(exception);
                     }

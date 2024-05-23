@@ -43,8 +43,7 @@ public class BridgenetCommandsExporter {
      * на него.
      *
      * @param player - игрок, который исполняет команду
-     * @param label - введенная игроком строка команды.
-     *
+     * @param label  - введенная игроком строка команды.
      * @return - возвращает TRUE если команда была успешно исполнена.
      */
     public boolean exportCommand(Player player, String label) {

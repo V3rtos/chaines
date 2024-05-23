@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.api.inject.bean.service;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanComponent;
@@ -13,12 +14,13 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationContext;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationResult;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
-import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.OverridenProperty;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
-import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -32,33 +34,19 @@ import java.util.stream.Stream;
 @Log4j2
 public final class BeansService {
 
-    public static final String PROPERTY_PACKAGE_NAME = "inject.project.package.name";
-    public static final String PROPERTY_DEFAULT_BEAN_FACTORY = "inject.bean.factory.default";
-
-    /**
-     * Сгенерировать стандартные проперти-конфигурации,
-     * хранящие стандартные ключи и значения для
-     * корректной работы Dependency Injection.
-     */
-    public static Properties generateDefaultProperties() {
-        Properties properties = new Properties();
-
-        properties.setProperty(PROPERTY_PACKAGE_NAME, "me.moonways");
-        properties.setProperty(PROPERTY_DEFAULT_BEAN_FACTORY, "CONSTRUCTOR");
-
-        return properties;
-    }
-
+    @Getter
     private final BeansStore store;
+    @Getter
     private final BeansScanningService scanner;
     private final BeansInjectionService injector;
+    @Getter
     private final BeansAnnotationsAwaitService annotationsAwaits;
 
     private final AnnotationInterceptor interceptor = new AnnotationInterceptor();
 
     private final Set<Class<?>> initializedAnnotationsSet = Collections.synchronizedSet(new HashSet<>());
-
-    private Properties properties;
+    private final Map<Class<?>, Consumer<Object>> beansOnBindingsMap = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Class<?>, Runnable> processorsOnBindingsMap = Collections.synchronizedMap(new HashMap<>());
 
     public BeansService() {
         this.scanner = new BeansScanningService();
@@ -81,9 +69,10 @@ public final class BeansService {
         bind(interceptor);
 
         // other internal Bridgenet module dependencies.
-        bind(new XmlJaxbParser());
+        onBinding(ResourcesAssembly.class, ResourcesAssembly::overrideSystemProperties);
+
         bind(new ResourcesAssembly());
-        bind(new BridgenetMetricsLogger());
+        bind(new BridgenetDataLogger());
     }
 
     /**
@@ -96,20 +85,27 @@ public final class BeansService {
     }
 
     /**
-     * Инициализация проекта и системы Dependency Injection
-     * по указанной проперти-конфигурации.
-     *
-     * @param properties - проперти-конфигурация Dependency Injection.
+     * Инициализация проекта и системы Dependency Injection.
      */
-    public void start(Properties properties) {
-        this.properties = properties;
+    public void fakeStart() {
+        log.info("BeansService.fakeStart -> begin;");
 
+        bindThis();
+        initBeanFactories();
+
+        log.info("BeansService.fakeStart -> end;");
+    }
+
+    /**
+     * Инициализация проекта и системы Dependency Injection.
+     */
+    public void start() {
         log.info("BeansService.start -> begin;");
 
         bindThis();
-
         initBeanFactories();
-        processTypeAnnotationProcessors();
+
+        scanAllAnnotationProcessors();
 
         log.info("BeansService.start -> end;");
     }
@@ -121,11 +117,9 @@ public final class BeansService {
     private void initBeanFactories() {
         log.info("Initialize beans factories & providers...");
 
-        String defaultBeanFactory = properties.getProperty(PROPERTY_DEFAULT_BEAN_FACTORY);
-
-        BeanFactoryProviders.DEFAULT = Optional.ofNullable(defaultBeanFactory)
+        BeanFactoryProviders.DEFAULT = Optional.ofNullable(OverridenProperty.BEANS_FACTORY_DEFAULT.get())
                 .map(BeanFactoryProviders::valueOf)
-                        .orElse(BeanFactoryProviders.CONSTRUCTOR);
+                .orElse(BeanFactoryProviders.CONSTRUCTOR);
 
         for (BeanFactoryProviders provider : BeanFactoryProviders.values()) {
             inject(provider.getImpl().get());
@@ -139,19 +133,29 @@ public final class BeansService {
      * подходящих под параметры процессора. Следующим шагом проводим дополнительную
      * верификацию обнаруженного бина и передаем его в обработку процессору аннотации.
      */
-    private void processTypeAnnotationProcessors() {
-        log.info("Processing all type annotations processors...");
-        List<TypeAnnotationProcessor<?>> typeAnnotationProcessors = scanner.scanTypeAnnotationProcessors();
+    public void scanAnnotationProcessors(List<TypeAnnotationProcessor<?>> inboundProcessors) {
+        log.info("Processing inbound list of TypeAnnotationProcessor`s...");
+        log.info("Founded §3{} §rannotation-processors", inboundProcessors.size());
 
-        log.info("Founded §3{} §rtype annotations processors", typeAnnotationProcessors.size());
-
-        for (TypeAnnotationProcessor<?> processor : typeAnnotationProcessors) {
+        for (TypeAnnotationProcessor<?> processor : inboundProcessors) {
             processTypeAnnotationProcessor(processor);
         }
     }
 
     /**
+     * Обрабатываем типовые процессоры аннотаций:
+     * Сканируем проект, ищем все доступные процессоры, затем конфигурируем
+     * и сканируем по полученной конфигурации проект еще раз на поиск бинов,
+     * подходящих под параметры процессора. Следующим шагом проводим дополнительную
+     * верификацию обнаруженного бина и передаем его в обработку процессору аннотации.
+     */
+    private void scanAllAnnotationProcessors() {
+        scanAnnotationProcessors(scanner.scanAnnotationProcessors());
+    }
+
+    /**
      * Вызывать обработку типового процессора аннотаций.
+     *
      * @param processor - процессор аннотаций.
      */
     public void processTypeAnnotationProcessor(TypeAnnotationProcessor<?> processor) {
@@ -162,22 +166,29 @@ public final class BeansService {
             private TypeAnnotationProcessor<V> processor;
 
             public void handle() {
-                AnnotationProcessorConfig<V> config = processor.configure(properties);
+                AnnotationProcessorConfig<V> config = processor.configure();
                 Class<V> annotationType = config.getAnnotationType();
 
                 if (annotationType == null) {
                     return;
                 }
 
-                log.info("Processing type annotation processor of §2@{}", annotationType.getName());
+                log.info("Processing TypeAnnotationProcessor implement - §2@{}", annotationType.getName());
 
                 initializedAnnotationsSet.add(annotationType);
                 scanner.scanBeans(config).forEach(bean -> processBean(config, bean));
 
                 annotationsAwaits.flushQueue(annotationType);
+
+                Runnable onBinding = processorsOnBindingsMap.remove(annotationType);
+                if (onBinding != null) {
+                    onBinding.run();
+                }
             }
 
             public void processBean(AnnotationProcessorConfig<V> config, Bean bean) {
+                annotationsAwaits.needsAwaits(bean);
+
                 AnnotationVerificationContext<V> verification = new AnnotationVerificationContext<>(
                         config.getAnnotationType(), bean, config);
 
@@ -198,7 +209,7 @@ public final class BeansService {
      * Воспроизвести имитацию сохранения экземпляра
      * объекта как бина.
      *
-     * @param type - класс бина.
+     * @param type   - класс бина.
      * @param object - инстанс бина.
      */
     public void fakeBind(Class<?> type, Object object) {
@@ -221,6 +232,7 @@ public final class BeansService {
 
     /**
      * Воспроизвести имитацию сохранения бина.
+     *
      * @param bean - бин.
      */
     public void fakeBind(Bean bean) {
@@ -234,7 +246,7 @@ public final class BeansService {
     /**
      * Сохранить экземпляр объекта как бин.
      *
-     * @param type - класс бина.
+     * @param type   - класс бина.
      * @param object - инстанс бина.
      */
     public void bind(Class<?> type, Object object) {
@@ -256,6 +268,7 @@ public final class BeansService {
 
     /**
      * Сохранить бин.
+     *
      * @param bean - бин.
      */
     public void bind(Bean bean) {
@@ -287,6 +300,11 @@ public final class BeansService {
         // call @PostConstruct functions.
         List<BeanMethod> postConstructFunctions = bean.getType().getPostConstructFunctions();
         postConstructFunctions.forEach(BeanMethod::invoke);
+
+        // call post-binding consumers.
+        Bean finalBean = bean;
+        Optional.ofNullable(beansOnBindingsMap.remove(bean.getType().getRoot()))
+                .ifPresent(consumer -> consumer.accept(finalBean.getRoot()));
     }
 
     /**
@@ -326,6 +344,7 @@ public final class BeansService {
 
     /**
      * Удалить бин из кеша.
+     *
      * @param bean - бин.
      */
     public void unbind(Bean bean) {
@@ -342,5 +361,70 @@ public final class BeansService {
      */
     public void inject(Object object) {
         injector.injectComponents(object);
+    }
+
+    /**
+     * Получить проинициализированный бин по одному
+     * из его основных классов.
+     *
+     * @param cls - регистрационный класс бина.
+     */
+    public Optional<Bean> get(Class<?> cls) {
+        return store.find(cls);
+    }
+
+    /**
+     * Получить проинициализированный бин по одному
+     * из его основных классов.
+     *
+     * @param cls - регистрационный класс бина.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> Optional<T> getInstance(Class<T> cls) {
+        return get(cls).map(bean -> (T) bean.getRoot());
+    }
+
+    /**
+     * Потребляет указанный процесс, при определении забиндиного
+     * типа бина.
+     *
+     * @param type      - тип бина, который ожидается для этого процесса.
+     * @param onBinding - процесс, вызываемый после биндинга.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> void onBinding(Class<T> type, Consumer<T> onBinding) {
+        Consumer<Object> consumer = beansOnBindingsMap.get(type);
+        Consumer<Object> cast = (Consumer<Object>) onBinding;
+
+        if (consumer == null) {
+            consumer = cast;
+        } else {
+            consumer = consumer.andThen(cast);
+        }
+
+        beansOnBindingsMap.put(type, consumer);
+    }
+
+    /**
+     * Потребляет указанный процесс, при определении забиндиного
+     * типа процессора аннотаций.
+     *
+     * @param type      - тип процессора аннотаций, который ожидается для этого процесса.
+     * @param onBinding - процесс, вызываемый после биндинга.
+     */
+    public void onBinding(Class<? extends Annotation> type, Runnable onBinding) {
+        Runnable runnable = processorsOnBindingsMap.get(type);
+
+        if (runnable == null) {
+            runnable = onBinding;
+        } else {
+            Runnable finalRunnable = runnable;
+            runnable = () -> {
+                finalRunnable.run();
+                onBinding.run();
+            };
+        }
+
+        processorsOnBindingsMap.put(type, runnable);
     }
 }

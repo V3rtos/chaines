@@ -8,15 +8,15 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.endpoint.servers.ConnectedServerStub;
 import me.moonways.bridgenet.endpoint.servers.ServersContainer;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
-import me.moonways.bridgenet.model.bus.message.Disconnect;
-import me.moonways.bridgenet.model.bus.message.Handshake;
-import me.moonways.bridgenet.model.bus.message.Redirect;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.servers.EntityServer;
-import me.moonways.bridgenet.model.servers.ServerFlag;
-import me.moonways.bridgenet.model.servers.ServerInfo;
-import me.moonways.bridgenet.model.servers.event.ServerDisconnectEvent;
-import me.moonways.bridgenet.model.servers.event.ServerHandshakeEvent;
+import me.moonways.bridgenet.model.event.ServerDisconnectEvent;
+import me.moonways.bridgenet.model.event.ServerHandshakeEvent;
+import me.moonways.bridgenet.model.message.Disconnect;
+import me.moonways.bridgenet.model.message.Handshake;
+import me.moonways.bridgenet.model.message.Redirect;
+import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
+import me.moonways.bridgenet.model.service.servers.ServerFlag;
+import me.moonways.bridgenet.model.service.servers.ServerInfo;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;
 import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
@@ -41,17 +41,21 @@ public class ServersInputMessagesListener {
     private EventService eventService;
     @Inject
     private PlayersOnServersConnectionService playersOnServersConnectionService;
-    @Inject
-    private PlayersServiceModel playersServiceModel;
 
     private void callServerDisconnectEvent(EntityServer entityServer) {
-        ServerDisconnectEvent event = new ServerDisconnectEvent(ServerDisconnectEvent.DownstreamType.DISCONNECT_MESSAGE, entityServer);
-        eventService.fireEvent(event);
+        eventService.fireEvent(
+                ServerDisconnectEvent.builder()
+                        .server(entityServer)
+                        .downstreamType(ServerDisconnectEvent.DownstreamType.DISCONNECT_REQUEST)
+                        .build());
     }
 
     private void callServerHandshakeEvent(Handshake handshake, EntityServer entityServer) {
-        ServerHandshakeEvent event = new ServerHandshakeEvent(handshake, entityServer);
-        eventService.fireEvent(event);
+        eventService.fireEvent(
+                ServerHandshakeEvent.builder()
+                        .handshake(handshake)
+                        .server(entityServer)
+                        .build());
     }
 
     @SubscribeMessage
@@ -102,6 +106,8 @@ public class ServersInputMessagesListener {
 
         if (serverId == null) {
             ConnectedServerStub server = createServer(input, serverInfo);
+            beansService.inject(server);
+
             serverId = container.registerServer(server);
 
             doSuccessRegister(serverId, server);
@@ -143,16 +149,16 @@ public class ServersInputMessagesListener {
 
     private ServerInfo toServerInfo(Properties properties) {
         InetSocketAddress address = new InetSocketAddress(
-                properties.getProperty("server.address.host"),
-                Integer.parseInt(properties.getProperty("server.address.port")));
+                properties.getProperty(HandshakePropertiesConst.SERVER_ADDRESS_HOST),
+                Integer.parseInt(properties.getProperty(HandshakePropertiesConst.SERVER_ADDRESS_PORT)));
 
         return ServerInfo.builder()
                 .address(address)
-                .name(properties.getProperty("server.name"))
+                .name(properties.getProperty(HandshakePropertiesConst.SERVER_NAME))
                 .flags(getServerFlags(properties))
                 .build();
     }
-    
+
     private void doServerDisconnect(Disconnect disconnect) throws RemoteException {
         UUID serverId = disconnect.getUuid();
         ConnectedServerStub server = container.getConnectedServerExact(serverId);

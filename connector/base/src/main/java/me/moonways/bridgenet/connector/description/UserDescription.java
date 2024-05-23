@@ -4,7 +4,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
 
+import java.util.Properties;
 import java.util.UUID;
 
 @Getter
@@ -14,6 +16,17 @@ import java.util.UUID;
 public class UserDescription {
 
     private final String name;
-    private final UUID proxyUuid;
+
+    private final UUID proxyId;
     private final UUID uniqueId;
+
+    public Properties toProperties() {
+        Properties properties = new Properties();
+
+        properties.setProperty(HandshakePropertiesConst.USER_NAME, getName());
+        properties.setProperty(HandshakePropertiesConst.USER_UUID, getUniqueId().toString());
+        properties.setProperty(HandshakePropertiesConst.USER_PROXY_ID, getProxyId().toString());
+
+        return properties;
+    }
 }

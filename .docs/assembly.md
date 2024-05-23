@@ -1,6 +1,6 @@
 # BridgeNet / Assembly
 
-Assembly - Вложенный модуль системы Bridgenet, отвечающий за обработку 
+Assembly - Вложенный модуль системы Bridgenet, отвечающий за обработку
 <br>унифицированных ресурсов и конфигураций для сборки проекта.
 
 ---
@@ -24,7 +24,9 @@ Assembly - Вложенный модуль системы Bridgenet, отвеч�
 
 Для того чтобы использовать ресурсы системы Bridgenet, необходимо
 <br>проинжектить основной сервис этого модуля:
+
 ```java
+
 @Inject
 private ResourcesAssembly assembly;
 ```
@@ -32,10 +34,13 @@ private ResourcesAssembly assembly;
 <br>После чего из этого сервиса мы сможем получить данные для чтения этих самых ресурсов.
 <br>Общий список доступных ресурсов хранится в виде констант в классе `me.moonways.bridgenet.assembly.ResourcesTypes`,
 оттуда мы можем получить наименование нужного нам ресурса:
+
 ```java
-String filename = ResourcesTypes.MTP_SETTINGS_JSON;
-String filename = ResourcesTypes.METRICS_SETTINGS_JSON;
-String filename = ResourcesTypes.RSI_CONFIG_XML;
+String systemOverridePropertiesName = ResourcesTypes.SYSTEM_OVERRIDE_PROPERTIES;
+String profilerAttributesJsonName = ResourcesTypes.PROFILER_ATTRIBUTES_JSON;
+String remoteServicesXmlName = ResourcesTypes.REMOTE_SERVICEX_XML;
+
+// etc.
 ```
 
 Дальнейший процесс чтения производится при помощи вспомогательных утилит,
@@ -46,12 +51,15 @@ public String readResourceContent(String resourceName) {
     return StreamToStringUtils.toStringFull(assembly.readResourceStream(resourceName), charset);
 }
 ```
+
 ```java
-String json = this.readResourceContent(ResourcesTypes.METRICS_SETTINGS_JSON);
+String json = readResourceContent(ResourcesTypes.PROFILER_ATTRIBUTES_JSON);
 ```
+
 или напрямую из основного сервиса `ResourcesAssembly`:
+
 ```java
-String json = assembly.readResourceFullContent(ResourcesTypes.METRICS_SETTINGS_JSON);
+String json = assembly.readResourceFullContent(ResourcesTypes.PROFILER_ATTRIBUTES_JSON);
 ```
 
 ---

@@ -2,11 +2,11 @@ package me.moonways.bridgenet.bootstrap.hook.type.console;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.command.CommandExecutor;
 import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
+import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
-import me.moonways.bridgenet.api.command.CommandExecutor;
-import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
 
 @Log4j2
@@ -39,8 +39,7 @@ public class BridgenetConsole extends SimpleTerminalConsole {
 
         try {
             commandExecutor.execute(consoleSender, commandLine);
-        }
-        catch (CommandExecutionException exception) {
+        } catch (CommandExecutionException exception) {
             log.warn("§6That command is not found: §e{}", exception.toString());
         }
     }

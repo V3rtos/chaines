@@ -3,13 +3,11 @@ package me.moonways.bridgenet.jdbc.core.compose.impl.pattern;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
-import me.moonways.bridgenet.jdbc.core.compose.impl.collection.PatternCollection;
-import me.moonways.bridgenet.jdbc.core.compose.impl.collection.WrappedPatternCollection;
-import me.moonways.bridgenet.jdbc.core.compose.impl.collection.element.*;
-import me.moonways.bridgenet.jdbc.core.compose.template.completed.*;
 import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 import me.moonways.bridgenet.jdbc.core.compose.MergeDirection;
 import me.moonways.bridgenet.jdbc.core.compose.SubjectFunction;
+import me.moonways.bridgenet.jdbc.core.compose.impl.collection.PatternCollection;
+import me.moonways.bridgenet.jdbc.core.compose.impl.collection.WrappedPatternCollection;
 import me.moonways.bridgenet.jdbc.core.compose.impl.collection.element.*;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.*;
 
@@ -179,6 +177,16 @@ public class PatternCollectionConfigurator {
         for (var field : fields) {
             collection.add(MAPPER.mapFull(field));
         }
+
+        push(collection);
+        return this;
+    }
+
+    public PatternCollectionConfigurator pushPrimaryKey(CombinedStructs.CombinedStyledParameter parameter) {
+        validateCollectionsType(CompletedGroups.class);
+
+        var collection = WrappedPatternCollection.multiplied();
+        collection.add(MAPPER.mapNamed(CombinedStructs.field(parameter.getName(), null)));
 
         push(collection);
         return this;

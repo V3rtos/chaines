@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<bootstrap>
+    <hooks>
+        <hook>
+            <displayName>GoogleJsonLib</displayName>
+            <priorityID>1</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.BindGsonLibraryHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>OpenJdbcConnection</displayName>
+            <priorityID>2</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.OpenJdbcConnectionHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>Endpoints</displayName>
+            <priorityID>3</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.RunRMIEndpointsHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>CloseJdbcConnection</displayName>
+            <priority>SHUTDOWN</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.CloseJdbcConnectionHook</executorPath>
+        </hook>
+    </hooks>
+</bootstrap>

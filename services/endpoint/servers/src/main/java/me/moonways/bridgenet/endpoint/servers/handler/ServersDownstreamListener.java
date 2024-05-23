@@ -6,8 +6,8 @@ import me.moonways.bridgenet.api.event.EventHandle;
 import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.endpoint.servers.ServersContainer;
-import me.moonways.bridgenet.model.servers.EntityServer;
-import me.moonways.bridgenet.model.servers.event.ServerDisconnectEvent;
+import me.moonways.bridgenet.model.event.ServerDisconnectEvent;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.mtp.event.ChannelDownstreamEvent;
 
@@ -24,8 +24,11 @@ public class ServersDownstreamListener {
     private EventService eventService;
 
     private void callServerDisconnectEvent(EntityServer entityServer) {
-        ServerDisconnectEvent event = new ServerDisconnectEvent(ServerDisconnectEvent.DownstreamType.DOWNSTREAM, entityServer);
-        eventService.fireEvent(event);
+        eventService.fireEvent(
+                ServerDisconnectEvent.builder()
+                        .downstreamType(ServerDisconnectEvent.DownstreamType.DOWNSTREAM)
+                        .server(entityServer)
+                        .build());
     }
 
     @EventHandle

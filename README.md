@@ -30,20 +30,21 @@ built on layer-services architecture.
 <br>жизнедеятельности системы.
 <br>В указанных ниже документациях можно разобрать каждый их них подробнее:
 
-* [Bridgenet Bootstrap](.docs/bootstrap.md)
-* [Bridgenet Assembly](.docs/assembly.md)
-* [Application Programming Interface (API)](.docs/api.md):
-    * [API / Automatically Runnable](.docs/api/autorun-api.md)
-    * [API / Commands](.docs/api/commands-api.md)
-    * [API / Events](.docs/api/events-api.md)
-    * [API / Injector](.docs/api/inject-api.md)
-    * [API / Instances Proxy](.docs/api/proxy-api.md)
-    * [API / Schedulers](.docs/api/scheduler-api.md)
-* [Bridgenet Connector](.docs/connector.md)
-* [Database](.docs/jdbc.md)
-* [Bridgenet Metrics Logger](.docs/metrics.md)
-* [TCP MTP](.docs/mtp.md)
-* [HTTP REST](.docs/rest.md)
+* [Bootstrap](.docs/bootstrap.md)
+* [Assembly](.docs/assembly.md)
+* [API Modules](.docs/api.md):
+    * [API / Delayed Runnable`s](.docs/api/autorun-api.md)
+    * [API / User Command`s](.docs/api/commands-api.md)
+    * [API / Event`s Subscribing](.docs/api/events-api.md)
+    * [API / Dependency Injection](.docs/api/inject-api.md)
+    * [API / Method Intercepting](.docs/api/proxy-api.md)
+    * [API / Scheduling Task`s](.docs/api/scheduler-api.md)
+* [Connector`s](.docs/connector.md)
+* [Testing Engine](.docs/test-engine.md)
+* [Database Engine](.docs/jdbc.md)
+* [Profiler](.docs/profiler)
+* [General Protocol](.docs/mtp.md)
+* [Rest API](.docs/rest.md)
 * [Services and Endpoints](.docs/services.md)
     * [ENDPOINT / AUTH](.docs/services/auth-endpoint.md)
     * [ENDPOINT / BUS](.docs/services/bus-endpoint.md)
@@ -51,11 +52,13 @@ built on layer-services architecture.
     * [ENDPOINT / GAMES](.docs/services/games-endpoint.md)
     * [ENDPOINT / GUI](.docs/services/gui-endpoint.md)
     * [ENDPOINT / GUILDS](.docs/services/guilds-endpoint.md)
+    * [ENDPOINT / LANGUAGE](.docs/services/language-endpoint.md)
     * [ENDPOINT / PARTIES](.docs/services/parties-endpoint.md)
+    * [ENDPOINT / PERMISSIONS](.docs/services/permissions-endpoint.md)
     * [ENDPOINT / PLAYERS](.docs/services/players-endpoint.md)
     * [ENDPOINT / REPORTS](.docs/services/reports-endpoint.md)
     * [ENDPOINT / SERVERS](.docs/services/servers-endpoint.md)
-* [Bridgenet Test-Engine](.docs/test-engine.md)
+    * [ENDPOINT / SETTINGS](.docs/services/settings-endpoint.md)
 
 ---
 
@@ -74,8 +77,8 @@ built on layer-services architecture.
 $ ./bridgenet endpoints
 ```
 
-- Данная команда выполняет полную компиляцию, конфигурацию и 
-последующую сборку всех сервисов и их эндпоинтов.
+- Данная команда выполняет полную компиляцию, конфигурацию и
+  последующую сборку всех сервисов и их эндпоинтов.
 
 ---
 
@@ -86,6 +89,7 @@ $ ./bridgenet assemblyEndpoints
 - Данная команда выполняет конфигурацию скомпилированных сервисов в сборке.
 
 ---
+
 ```shell
 $ ./bridgenet jar
 ```
@@ -105,7 +109,7 @@ $ ./bridgenet build
 ## Сборка системы
 
 После выполнения скриптов и команд, информация к которым предоставлена выше -<br>
-в локальном проекте должна будет создасться папка `.build`<br>
+в локальном проекте должна будет создаться папка `.build`<br>
 <br>
 На актуальный момент написания документации полное содержимое выглядит следующим образом:
 
@@ -121,12 +125,12 @@ $ ./bridgenet build
 который содержит статический `main(String[] args)` метод:<br>
 `me.moonways.bridgenet.bootstrap.AppStarter`
 
-Для тестирования отдельных систем и подсистем был реализован 
-модуль `test-engine`
+Для тестирования отдельных систем и подсистем был реализован
+модуль `testing`, разбитый на несколько модулей:
 
-Его основной код содержит базовую реализацию интеграции Bridgenet-сервера 
-в запуск юнит-тестов, а каждый юнит-тест отдельно запускает 
-локальную сборку Bridgenet-сервера.
-
----
+- **Test-Data**: Сборка модельных компонентов, вспомогательных тестированию - константы, базовые реализации абстракций,
+  и прочее...
+- **Test-Engine**: Фреймворк, базирующийся на кастомном раннере JUnit, вспомогающий к автоматизации процессов
+  тестирования относительно системы Bridgenet.
+- **Test-Units**: Юнит-тесты
 

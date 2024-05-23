@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 @RequiredArgsConstructor
 public final class ResourcesFileSystem {
 
-    private static final String EXCLUDE_DIRECTORY_NAME = (File.separator + "test-engine");
+    private static final String EXCLUDE_DIRECTORY_NAME = (File.separator + "testing" + File.separator + "units");
     private static final String ETC_DIRECTORY_PREFIX = "etc";
 
     private final ResourcesAssembly assembly;
@@ -25,13 +25,32 @@ public final class ResourcesFileSystem {
      * @param resourceName - наименование ресурса.
      */
     private Path findPath(String resourceName) {
+        resourceName = resourceName.replace("/", File.separator);
         Path etcDirectoryPath = Paths.get("assembly", ETC_DIRECTORY_PREFIX);
+
         if (!Files.exists(etcDirectoryPath)) {
             etcDirectoryPath = Paths.get(ETC_DIRECTORY_PREFIX);
         }
 
         Path result = etcDirectoryPath.resolve(resourceName);
-        return !Files.exists(result) ? findPathWithExclude(resourceName): result;
+        return !Files.exists(result) ? findPathWithExclude(resourceName) : result;
+    }
+
+    /**
+     * Найти путь к файлу или директории в общей папке проекта.
+     *
+     * @param resourceName - наименования поискового ресурса.
+     */
+    public Path findPathAtProject(String resourceName) {
+        resourceName = resourceName.replace("/", File.separator);
+        String rootPathname = Paths.get("").toAbsolutePath().toString();
+
+        if (rootPathname.contains(EXCLUDE_DIRECTORY_NAME)) {
+            rootPathname = rootPathname.replace(EXCLUDE_DIRECTORY_NAME, "");
+        }
+
+        String absolutePathname = rootPathname + File.separator + resourceName;
+        return new File(absolutePathname).toPath();
     }
 
     /**
@@ -44,6 +63,7 @@ public final class ResourcesFileSystem {
      * @param resourceName - наименование ресурса.
      */
     private Path findPathWithExclude(String resourceName) {
+        resourceName = resourceName.replace("/", File.separator);
         String rootPathname = Paths.get("").toAbsolutePath().toString();
 
         if (rootPathname.contains(EXCLUDE_DIRECTORY_NAME)) {
@@ -73,7 +93,7 @@ public final class ResourcesFileSystem {
             try {
                 Files.copy(assembly.readResourceStream(resourceName), path);
             } catch (IOException exception) {
-                log.error("§4Couldn't copy resource {} to 'etc' directory", resourceName);
+                log.error("§4Couldn't copy resource \"{}\" to '{}' directory", resourceName, path);
             }
         }
     }
@@ -87,7 +107,7 @@ public final class ResourcesFileSystem {
     public File findAsFile(String resourceName) {
         Path path = findPath(resourceName);
         if (!Files.exists(path)) {
-            log.warn("§6Couldn't find resource {} in 'etc' directory", resourceName);
+            log.warn("§6Couldn't find resource \"{}\" in '{}' directory", resourceName, path);
         }
         return path.toFile();
     }

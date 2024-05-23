@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,6 +38,14 @@ public class AnnotationProcessorConfig<V extends Annotation> {
                 packages = new HashSet<>();
             }
             packages.add(packageName);
+            return this;
+        }
+
+        public Builder<V> addPackages(String... packageNames) {
+            if (packages == null) {
+                packages = new HashSet<>();
+            }
+            packages.addAll(Arrays.asList(packageNames));
             return this;
         }
 
