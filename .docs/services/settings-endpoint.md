@@ -11,6 +11,7 @@ Settings - Внутриигровой сервис удаленного дост
 <br>интерфейс `me.moonways.bridgenet.model.settings.PlayerSettingsServiceModel`:
 
 ```java
+
 @Inject
 private PlayerSettingsServiceModel serviceModel;
 ```
@@ -20,7 +21,7 @@ private PlayerSettingsServiceModel serviceModel;
 ```java
 package me.moonways.bridgenet.model.settings;
 
-import me.moonways.bridgenet.rsi.service.RemoteService;
+import me.moonways.bridgenet.rmi.service.RemoteService;
 
 import java.rmi.RemoteException;
 import java.util.Collection;
@@ -62,6 +63,7 @@ public interface PlayerSettingsServiceModel extends RemoteService {
 <br>под имплементаций эндпоинта:
 
 ```xml
+
 <service>
     <!-- RMI Protocol service bind port -->
     <bindPort>7010</bindPort>
@@ -73,16 +75,15 @@ public interface PlayerSettingsServiceModel extends RemoteService {
 ```
 
 - Реализация эндпоинта лежит в модуле `endpoints/settings`;
-- Имплементацией основного модельного интерфейса сервиса 
+- Имплементацией основного модельного интерфейса сервиса
   <br>является `me.moonways.endpoint.settings.PlayerSettingsServiceEndpoint`;
 
-Реализация использует фреймворк базы данных от Bridgenet. 
+Реализация использует фреймворк базы данных от Bridgenet.
 <br>Наименование используемых таблиц и сущностей
 
 Examples: `players_settings` (`me.moonways.endpoint.settings.EntitySetting`)
 
-
-| player_id                            | setting_id                           | setting_value                                                                        |
-|--------------------------------------|--------------------------------------|--------------------------------------------------------------------------------------|
-| 3c517d88-8b6f-445b-915c-b47af5140e76 | dc725c4f-93e7-30c5-8db3-d2cf7899657c | {"source":true,"classname":"java.lang.Boolean"}                                      |
-| 3c517d88-8b6f-445b-915c-b47af5140e76 | 891cd11e-a327-3b37-9b77-5581c0567b31 | {"source":"GREEN","classname":"me.moonways.bridgenet.api.util.minecraft.ChatColor"}  |
+| player_id                            | setting_id                           | setting_value                                                                       |
+|--------------------------------------|--------------------------------------|-------------------------------------------------------------------------------------|
+| 3c517d88-8b6f-445b-915c-b47af5140e76 | dc725c4f-93e7-30c5-8db3-d2cf7899657c | {"source":true,"classname":"java.lang.Boolean"}                                     |
+| 3c517d88-8b6f-445b-915c-b47af5140e76 | 891cd11e-a327-3b37-9b77-5581c0567b31 | {"source":"GREEN","classname":"me.moonways.bridgenet.api.util.minecraft.ChatColor"} |

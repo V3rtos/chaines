@@ -42,6 +42,7 @@ public final class ResponsibleMessageService {
 
     /**
      * Ожидается ли ответ указанного типа сообщения.
+     *
      * @param responseType - класс ожидаемого сообщения.
      */
     public boolean isWaiting(@NotNull Class<?> responseType) {
@@ -53,7 +54,7 @@ public final class ResponsibleMessageService {
     /**
      * Поставить указанный тип сообщения респонса в ожидание.
      *
-     * @param future - исполняемый процесс при получении респонса.
+     * @param future       - исполняемый процесс при получении респонса.
      * @param responseType - ожидаемый тип сообщения.
      */
     public void await(int timeout, @NotNull CompletableFuture<?> future, @NotNull Class<?> responseType) {

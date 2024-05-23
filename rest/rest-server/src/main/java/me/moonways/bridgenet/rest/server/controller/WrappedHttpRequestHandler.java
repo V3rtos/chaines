@@ -3,12 +3,12 @@ package me.moonways.bridgenet.rest.server.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
-import me.moonways.bridgenet.metrics.MetricType;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
+import me.moonways.bridgenet.profiler.ProfilerType;
+import me.moonways.bridgenet.rest.server.HttpServerConfig;
 import me.moonways.bridgenet.rest.server.controller.undefined.UndefinedHttpController;
 import me.moonways.bridgenet.rest.server.controller.verify.VerificationConfig;
 import me.moonways.bridgenet.rest.server.controller.verify.VerifyHelper;
-import me.moonways.bridgenet.rest.server.HttpServerConfig;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -39,7 +39,7 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
     private final VerifyHelper verifyHelper;
 
     @Inject
-    private BridgenetMetricsLogger bridgenetMetricsLogger;
+    private BridgenetDataLogger bridgenetDataLogger;
 
     @Override
     public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
@@ -72,8 +72,8 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
                                    HttpRequest httpRequest, HttpResponse httpResponse)
             throws HttpException, IOException {
 
-        bridgenetMetricsLogger.logNetworkConnectionOpened(MetricType.HTTP_REST);
-        bridgenetMetricsLogger.logNetworkTrafficBytesRead(MetricType.HTTP_REST, httpResponse.getEntity().getContentLength());
+        bridgenetDataLogger.logConnectionOpen(ProfilerType.HTTP_REST);
+        bridgenetDataLogger.logReadsCount(ProfilerType.HTTP_REST, httpResponse.getEntity().getContentLength());
 
         controller.process(httpRequest, verificationConfig);
 
@@ -81,9 +81,9 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
         controller.processCallback(httpResponse, verificationConfig);
 
         if (httpResponse.getEntity().getContentLength() > 0) {
-            bridgenetMetricsLogger.logNetworkTrafficBytesRead(MetricType.HTTP_REST, httpResponse.getEntity().getContentLength());
+            bridgenetDataLogger.logReadsCount(ProfilerType.HTTP_REST, httpResponse.getEntity().getContentLength());
         }
-        bridgenetMetricsLogger.logNetworkConnectionClosed(MetricType.HTTP_REST);
+        bridgenetDataLogger.logConnectionClose(ProfilerType.HTTP_REST);
     }
 
     private HttpController findController(String method, String uri) {

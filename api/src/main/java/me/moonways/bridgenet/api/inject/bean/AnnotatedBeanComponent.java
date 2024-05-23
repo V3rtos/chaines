@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.api.inject.bean;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -21,6 +24,7 @@ public abstract class AnnotatedBeanComponent<V extends AnnotatedElement> {
 
     /**
      * Получить аннотацию из компонента бина по ее типу.
+     *
      * @param annotationType - тип аннотации, которую ищем.
      */
     public <T extends Annotation> Optional<T> getAnnotation(Class<T> annotationType) {
@@ -29,6 +33,7 @@ public abstract class AnnotatedBeanComponent<V extends AnnotatedElement> {
 
     /**
      * Проверить на наличие аннотации у компонента по ее типу.
+     *
      * @param annotationType - тип аннотации, которую ищем.
      */
     public boolean isAnnotated(Class<? extends Annotation> annotationType) {

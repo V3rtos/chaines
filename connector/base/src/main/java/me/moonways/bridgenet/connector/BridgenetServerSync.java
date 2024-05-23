@@ -4,12 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import me.moonways.bridgenet.connector.description.*;
-import me.moonways.bridgenet.model.bus.HandshakePropertiesConst;
-import me.moonways.bridgenet.model.bus.message.*;
+import me.moonways.bridgenet.model.message.*;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -56,6 +54,7 @@ public final class BridgenetServerSync {
 
     /**
      * Экспортировать обновление данных одной из активных игр.
+     *
      * @param description - описание подключаемой игры.
      */
     public void exportGameUpdate(GameStateDescription description) {
@@ -72,8 +71,7 @@ public final class BridgenetServerSync {
      * на него.
      *
      * @param description - описание пользователя.
-     * @param label - введенная пользователем строка команды.
-     *
+     * @param label       - введенная пользователем строка команды.
      * @return - возвращает TRUE если команда была успешно исполнена.
      */
     public boolean exportCommandSend(UserDescription description, String label) {
@@ -105,6 +103,7 @@ public final class BridgenetServerSync {
 
     /**
      * Отправить сообщение об отсоединении пользователя.
+     *
      * @param description - описание подключаемого пользователя.
      */
     public void exportUserDisconnect(UserDescription description) {
@@ -137,7 +136,7 @@ public final class BridgenetServerSync {
      *
      * @param chatType - тип чата, в котором отрисовать сообщение пользователю
      * @param playerId - идентификатор активного пользователя.
-     * @param message - текстовое сообщение
+     * @param message  - текстовое сообщение
      */
     public void exportUserMessageSend(SendMessage.ChatType chatType, UUID playerId, String message) {
         channel.send(new SendMessage(playerId, message, chatType));
@@ -149,7 +148,6 @@ public final class BridgenetServerSync {
      *
      * @param playerId - идентификатор переподключаемого игрока.
      * @param serverId - идентификатор устройства, на который переподключать.
-     *
      * @return - возвращает TRUE в случае удачной попытки переподключения.
      */
     public boolean exportUserRedirectWithResult(UUID playerId, UUID serverId) {
@@ -176,7 +174,6 @@ public final class BridgenetServerSync {
      * текущий подключенный сервер на сеть единого сервера Bridgenet.
      *
      * @param playerId - идентификатор переподключаемого игрока.
-     *
      * @return - возвращает TRUE в случае удачной попытки переподключения.
      */
     public boolean exportUserRedirectToHereWithResult(UUID playerId) {
@@ -202,7 +199,7 @@ public final class BridgenetServerSync {
      * Экспортировать отправку текстового сообщения пользователю
      * на весь экран через сеть единого сервера Bridgenet.
      *
-     * @param playerId - идентификатор активного пользователя.
+     * @param playerId    - идентификатор активного пользователя.
      * @param description - описание дополнительных параметров сообщения.
      */
     public void exportUserTitleSend(UUID playerId, TitleDescription description) {

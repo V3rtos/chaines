@@ -2,15 +2,15 @@ package me.moonways.bridgenet.jdbc.core.compose.impl.pattern.type.query;
 
 import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
+import me.moonways.bridgenet.jdbc.core.compose.StorageType;
 import me.moonways.bridgenet.jdbc.core.compose.impl.collection.element.Encoding;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.AbstractPattern;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.PatternCollectionConfigurator;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.PatternCollections;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.verification.VerificationContext;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.verification.VerificationResult;
-import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedSignature;
-import me.moonways.bridgenet.jdbc.core.compose.StorageType;
 import me.moonways.bridgenet.jdbc.core.compose.template.CreationTemplate;
+import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedSignature;
 import org.jetbrains.annotations.NotNull;
 
 public class CreationTemplatedPattern extends AbstractPattern implements CreationTemplate {

@@ -1,10 +1,11 @@
 package me.moonways.bridgenet.api.inject.decorator.persistence.handler;
 
+import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.decorator.DecoratedMethodHandler;
+import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
+
 import java.util.Map;
 import java.util.WeakHashMap;
-import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
-import me.moonways.bridgenet.api.inject.decorator.DecoratedMethodHandler;
 
 @Log4j2
 public class SingletonMethodHandler implements DecoratedMethodHandler {

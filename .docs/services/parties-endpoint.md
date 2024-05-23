@@ -1,6 +1,5 @@
 # BridgeNet / Services / Parties
 
-
 ---
 
 ## MODEL

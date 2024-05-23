@@ -106,8 +106,7 @@ public class QueryTransformationOps {
                 }
 
                 return index + add;
-            }
-            else if (ch == '@') {
+            } else if (ch == '@') {
                 skips += 2;
             }
         }
@@ -281,8 +280,7 @@ public class QueryTransformationOps {
             try {
                 field.setAccessible(true);
                 value = field.get(element);
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 value = null;
             }
 

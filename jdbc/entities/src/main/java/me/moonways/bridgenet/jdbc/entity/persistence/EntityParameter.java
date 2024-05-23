@@ -15,5 +15,5 @@ public @interface EntityParameter {
 
     String id() default "";
 
-    ParameterAddon[] indexes() default { };
+    ParameterAddon[] indexes() default {};
 }

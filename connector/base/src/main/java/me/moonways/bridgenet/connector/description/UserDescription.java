@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.model.bus.HandshakePropertiesConst;
+import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
 
 import java.util.Properties;
 import java.util.UUID;

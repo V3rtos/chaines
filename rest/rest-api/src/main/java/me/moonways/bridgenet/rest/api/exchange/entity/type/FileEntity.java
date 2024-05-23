@@ -3,9 +3,9 @@ package me.moonways.bridgenet.rest.api.exchange.entity.type;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import me.moonways.bridgenet.rest.api.exception.RestEntityException;
 import me.moonways.bridgenet.rest.api.exchange.entity.EntityWriter;
 import me.moonways.bridgenet.rest.api.exchange.entity.ExchangeableEntity;
-import me.moonways.bridgenet.rest.api.exception.RestEntityException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
@@ -43,8 +43,7 @@ public class FileEntity implements ExchangeableEntity {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             Files.copy(content.toPath(), outputStream);
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             throw new RestEntityException(exception);
         }
 

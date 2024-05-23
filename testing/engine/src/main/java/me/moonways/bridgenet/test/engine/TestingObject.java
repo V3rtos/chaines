@@ -94,8 +94,7 @@ public class TestingObject extends TestingElement {
             if (postSleepingDurationMs > 0) {
                 Thread.sleep(postSleepingDurationMs);
             }
-        }
-        catch (Throwable exception) {
+        } catch (Throwable exception) {
             handleException(context, exception);
             junitNotifier.fireTestFailure(new EmptyTraceFailure(description));
         }

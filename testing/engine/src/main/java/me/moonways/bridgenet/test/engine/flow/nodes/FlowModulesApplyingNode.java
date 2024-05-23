@@ -15,7 +15,8 @@ import me.moonways.bridgenet.test.engine.module.impl.AllModules;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Log4j2

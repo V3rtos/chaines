@@ -6,8 +6,8 @@ import lombok.ToString;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
-import me.moonways.bridgenet.model.permissions.TemporalState;
-import me.moonways.bridgenet.model.permissions.group.PermissionGroup;
+import me.moonways.bridgenet.model.service.permissions.TemporalState;
+import me.moonways.bridgenet.model.service.permissions.group.PermissionGroup;
 
 import java.util.UUID;
 

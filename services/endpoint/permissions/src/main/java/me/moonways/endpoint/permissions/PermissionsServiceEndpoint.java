@@ -1,10 +1,10 @@
 package me.moonways.endpoint.permissions;
 
-import me.moonways.bridgenet.model.permissions.PermissionsServiceModel;
-import me.moonways.bridgenet.model.permissions.group.GroupsManager;
-import me.moonways.bridgenet.model.permissions.permission.PermissionsManager;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.model.service.permissions.PermissionsServiceModel;
+import me.moonways.bridgenet.model.service.permissions.group.GroupsManager;
+import me.moonways.bridgenet.model.service.permissions.permission.PermissionsManager;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.permissions.manager.GroupsManagerStub;
 import me.moonways.endpoint.permissions.manager.PermissionsManagerStub;
 

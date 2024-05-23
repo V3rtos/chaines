@@ -10,7 +10,7 @@ public class EmptyTraceFailure extends Failure {
     /**
      * Constructs a <code>Failure</code> with the given description and exception.
      *
-     * @param description     a {@link Description} of the test that failed
+     * @param description a {@link Description} of the test that failed
      */
     public EmptyTraceFailure(Description description) {
         super(description, new RuntimeException());

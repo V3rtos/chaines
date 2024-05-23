@@ -3,12 +3,12 @@ package me.moonways.endpoint.gui;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import me.moonways.bridgenet.model.gui.Gui;
-import me.moonways.bridgenet.model.gui.GuiDescription;
-import me.moonways.bridgenet.model.gui.GuiSlot;
-import me.moonways.bridgenet.model.gui.click.ItemClickEvent;
-import me.moonways.bridgenet.model.gui.click.ItemClickListener;
-import me.moonways.bridgenet.model.gui.item.ItemStack;
+import me.moonways.bridgenet.model.service.gui.Gui;
+import me.moonways.bridgenet.model.service.gui.GuiDescription;
+import me.moonways.bridgenet.model.service.gui.GuiSlot;
+import me.moonways.bridgenet.model.event.GuiItemClickEvent;
+import me.moonways.bridgenet.model.service.gui.click.ItemClickListener;
+import me.moonways.bridgenet.model.service.gui.item.ItemStack;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -53,7 +53,7 @@ public class GuiStub implements Gui {
         clickListenersMap.remove(slot);
     }
 
-    public void fireClick(ItemClickEvent event) {
+    public void fireClick(GuiItemClickEvent event) {
         clickListenersMap.values()
                 .stream()
                 .flatMap(Collection::stream)

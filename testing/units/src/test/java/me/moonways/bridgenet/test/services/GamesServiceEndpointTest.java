@@ -1,15 +1,17 @@
 package me.moonways.bridgenet.test.services;
 
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.model.bus.message.CreateGame;
-import me.moonways.bridgenet.model.bus.message.DeleteGame;
-import me.moonways.bridgenet.model.bus.message.Handshake;
-import me.moonways.bridgenet.model.bus.message.UpdateGame;
-import me.moonways.bridgenet.model.games.*;
+import me.moonways.bridgenet.model.message.CreateGame;
+import me.moonways.bridgenet.model.message.DeleteGame;
+import me.moonways.bridgenet.model.message.Handshake;
+import me.moonways.bridgenet.model.message.UpdateGame;
+import me.moonways.bridgenet.model.service.games.Game;
+import me.moonways.bridgenet.model.service.games.GameStatus;
+import me.moonways.bridgenet.model.service.games.GamesServiceModel;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.test.data.TestConst;
-import me.moonways.bridgenet.test.data.management.ExampleNetworkConnection;
 import me.moonways.bridgenet.test.data.junit.assertion.ServicesAssert;
+import me.moonways.bridgenet.test.data.management.ExampleNetworkConnection;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
@@ -18,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.rmi.RemoteException;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;

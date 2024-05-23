@@ -6,8 +6,8 @@ import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.PatternCollectionCon
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.PatternCollections;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.verification.VerificationContext;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.verification.VerificationResult;
-import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedPredicates;
 import me.moonways.bridgenet.jdbc.core.compose.template.DeletionTemplate;
+import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedPredicates;
 import org.jetbrains.annotations.NotNull;
 
 public class DeletionTemplatedPattern extends AbstractPattern implements DeletionTemplate {

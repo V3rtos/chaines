@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.rest.api.HttpHost;
-import me.moonways.bridgenet.rest.api.exchange.entity.EntityWriter;
-import me.moonways.bridgenet.rest.api.exchange.entity.ExchangeableEntity;
 import me.moonways.bridgenet.rest.api.exception.RestClientException;
 import me.moonways.bridgenet.rest.api.exception.RestEntityException;
+import me.moonways.bridgenet.rest.api.exchange.entity.EntityWriter;
+import me.moonways.bridgenet.rest.api.exchange.entity.ExchangeableEntity;
 import me.moonways.bridgenet.rest.api.exchange.message.RestMessageType;
 import me.moonways.bridgenet.rest.api.exchange.response.RestResponse;
 import me.moonways.bridgenet.rest.api.exchange.response.RestResponseBuilder;
@@ -40,8 +40,7 @@ public class HttpChannel {
 
             activeConnection = openConnection(url, host.isUseSSL());
             initOptions(activeConnection);
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             log.error(new RestClientException(exception));
         }
     }
@@ -52,10 +51,8 @@ public class HttpChannel {
             URLConnection urlConnection = url.openConnection();
             if (useSSL) {
                 https = (HttpsURLConnection) urlConnection;
-            }
-            else return (HttpURLConnection) urlConnection;
-        }
-        catch (IOException exception) {
+            } else return (HttpURLConnection) urlConnection;
+        } catch (IOException exception) {
             log.error(new RestClientException(exception));
         }
 
@@ -72,8 +69,7 @@ public class HttpChannel {
         try {
             Certificate[] serverCertificates = https.getServerCertificates();
             // todo
-        }
-        catch (SSLPeerUnverifiedException exception) {
+        } catch (SSLPeerUnverifiedException exception) {
             log.error(new RestClientException(exception));
         }
     }
@@ -86,8 +82,7 @@ public class HttpChannel {
     public void setType(RestMessageType messageType) {
         try {
             activeConnection.setRequestMethod(messageType.name());
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             log.error(new RestEntityException(exception));
         }
     }
@@ -102,8 +97,7 @@ public class HttpChannel {
 
             OutputStream outputStream = activeConnection.getOutputStream();
             outputStream.write(byteArray);
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error(new RestEntityException(exception));
         }
     }
@@ -112,8 +106,7 @@ public class HttpChannel {
     public void sendRequest() {
         try {
             activeConnection.getOutputStream().flush();
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             log.error(new RestEntityException(exception));
         }
     }
@@ -134,8 +127,7 @@ public class HttpChannel {
                     .setStatusCode(responseCode)
                     .setMethod(activeConnection.getRequestMethod())
                     .build();
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             log.error(new RestClientException(exception));
             return null;
         }

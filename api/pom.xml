@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>metrics</artifactId>
+            <artifactId>profiler</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>

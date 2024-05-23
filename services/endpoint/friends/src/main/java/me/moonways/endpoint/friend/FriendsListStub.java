@@ -1,10 +1,13 @@
 package me.moonways.endpoint.friend;
 
 import lombok.ToString;
+import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
-import me.moonways.bridgenet.model.friends.FriendsList;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.event.FriendAddEvent;
+import me.moonways.bridgenet.model.event.FriendRemoveEvent;
+import me.moonways.bridgenet.model.service.friends.FriendsList;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 
 import java.rmi.RemoteException;
 import java.util.Set;
@@ -25,6 +28,8 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
 
     @Inject
     private PlayersServiceModel playersModel;
+    @Inject
+    private EventService eventService;
 
     public FriendsListStub(UUID playerUUID, FriendsDbRepository repository, Set<UUID> uuids) throws RemoteException {
         super();
@@ -34,13 +39,20 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
     }
 
     @Override
-    public boolean addFriend(UUID uuid) {
+    public boolean addFriend(UUID uuid) throws RemoteException {
         boolean add = uuids.add(uuid);
         if (add) {
             repository.addFriend(EntityFriend.builder()
                     .playerID(playerUUID)
                     .friendID(uuid)
                     .build());
+
+            eventService.fireEvent(
+                    FriendAddEvent.builder()
+                            .updatedFriendsList(this)
+                            .player(playersModel.store().getOffline(playerUUID))
+                            .friend(playersModel.store().getOffline(uuid))
+                            .build());
         }
         return add;
     }
@@ -51,13 +63,20 @@ public class FriendsListStub extends EndpointRemoteObject implements FriendsList
     }
 
     @Override
-    public boolean removeFriend(UUID uuid) {
+    public boolean removeFriend(UUID uuid) throws RemoteException {
         boolean add = uuids.remove(uuid);
         if (add) {
             repository.removeFriend(EntityFriend.builder()
                     .playerID(playerUUID)
                     .friendID(uuid)
                     .build());
+
+            eventService.fireEvent(
+                    FriendRemoveEvent.builder()
+                            .updatedFriendsList(this)
+                            .player(playersModel.store().getOffline(playerUUID))
+                            .friend(playersModel.store().getOffline(uuid))
+                            .build());
         }
         return add;
     }

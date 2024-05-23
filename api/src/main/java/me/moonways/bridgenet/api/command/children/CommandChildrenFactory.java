@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.command.children;
 
-import me.moonways.bridgenet.api.command.children.definition.CommandMentorChild;
 import me.moonways.bridgenet.api.command.children.definition.CommandMatchingChild;
+import me.moonways.bridgenet.api.command.children.definition.CommandMentorChild;
 import me.moonways.bridgenet.api.command.children.definition.CommandProducerChild;
 
 import java.lang.reflect.Method;

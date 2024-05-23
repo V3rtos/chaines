@@ -6,11 +6,11 @@ import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.entity.EntityRepository;
 import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
-import me.moonways.bridgenet.model.permissions.group.GroupTypes;
-import me.moonways.bridgenet.model.permissions.group.GroupsManager;
-import me.moonways.bridgenet.model.permissions.group.PermissionGroup;
-import me.moonways.bridgenet.model.permissions.group.PlayerGroupUpdateEvent;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.event.PlayerGroupUpdateEvent;
+import me.moonways.bridgenet.model.service.permissions.group.GroupTypes;
+import me.moonways.bridgenet.model.service.permissions.group.GroupsManager;
+import me.moonways.bridgenet.model.service.permissions.group.PermissionGroup;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
 import me.moonways.endpoint.permissions.PermissionsEndpointException;
 import me.moonways.endpoint.permissions.entity.EntityGroup;
 
@@ -47,8 +47,8 @@ public final class GroupsManagerStub implements GroupsManager {
     private Optional<PermissionGroup> findPlayerGroup(UUID playerId) {
         EntityRepository<EntityGroup> repository = repositoryFactory.fromEntityType(EntityGroup.class);
         return repository.searchIf(
-                repository.newSearchMarker()
-                        .withGet(EntityGroup::getPlayerId, playerId))
+                        repository.newSearchMarker()
+                                .withGet(EntityGroup::getPlayerId, playerId))
                 .flatMap(entityGroup ->
                         entityGroup.isExpired() ? getGroup(entityGroup.getGroupId()) : Optional.empty());
     }

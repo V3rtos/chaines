@@ -27,8 +27,7 @@ public class SerializableTypeAdapter implements ParameterTypeAdapter {
             objectOutputStream.writeObject(unit.getValue());
 
             return byteArrayOutputStream.toByteArray();
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             throw new DatabaseEntityException(exception);
         }
     }
@@ -39,8 +38,7 @@ public class SerializableTypeAdapter implements ParameterTypeAdapter {
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
             return objectInputStream.readObject();
-        }
-        catch (ClassNotFoundException | IOException exception) {
+        } catch (ClassNotFoundException | IOException exception) {
             throw new DatabaseEntityException(exception);
         }
     }

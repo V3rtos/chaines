@@ -6,7 +6,6 @@ import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerific
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationResult;
 
 import java.lang.annotation.Annotation;
-import java.util.Properties;
 
 /**
  * Внутренний процессор аннотаций относительно бинов,
@@ -22,10 +21,9 @@ public interface TypeAnnotationProcessor<V extends Annotation> {
      * Конфигурация процесса сканирование ресурсов
      * и пакейджей на поиск нужной аннотации.
      *
-     * @param properties - проперти, указанные при запуске BeansService
      * @return - подготовленная конфигурация сканнера.
      */
-    AnnotationProcessorConfig<V> configure(Properties properties);
+    AnnotationProcessorConfig<V> configure();
 
     /**
      * Процесс дополнительной верификации входящих
@@ -41,7 +39,7 @@ public interface TypeAnnotationProcessor<V extends Annotation> {
      * Процесс применения обнаруженного бина в системе.
      *
      * @param service - сервис управления бинами.
-     * @param bean - обнаруженный бин.
+     * @param bean    - обнаруженный бин.
      */
     void processBean(BeansService service, Bean bean);
 }

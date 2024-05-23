@@ -68,7 +68,6 @@ public class BeansInjectionService {
      * указанного компонента бина.
      *
      * @param component - компонент бина, которому производим self-injection.
-     *
      * @return - true, если удалось воспроизвести, и false если не удалось.
      */
     public boolean tryInjectSelf(BeanComponent component) {

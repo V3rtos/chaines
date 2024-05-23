@@ -30,8 +30,8 @@ public final class PlayersRepository {
 
     public Optional<EntityPlayer> get(UUID id) {
         return namespacesRepository.searchIf(
-                namespacesRepository.newSearchMarker()
-                        .withGet(EntityNamespace::getUuid, id))
+                        namespacesRepository.newSearchMarker()
+                                .withGet(EntityNamespace::getUuid, id))
                 .flatMap(this::toEntityPlayer);
     }
 

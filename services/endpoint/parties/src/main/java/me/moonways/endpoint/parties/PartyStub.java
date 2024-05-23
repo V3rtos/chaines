@@ -3,10 +3,10 @@ package me.moonways.endpoint.parties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
-import me.moonways.bridgenet.model.parties.Party;
-import me.moonways.bridgenet.model.parties.PartyMembersContainer;
-import me.moonways.bridgenet.model.parties.PartyOwner;
+import me.moonways.bridgenet.model.service.parties.Party;
+import me.moonways.bridgenet.model.service.parties.PartyMembersContainer;
+import me.moonways.bridgenet.model.service.parties.PartyOwner;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;

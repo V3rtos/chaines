@@ -2,11 +2,11 @@ package me.moonways.bridgenet.jdbc.core;
 
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.jdbc.core.observer.DatabaseObserver;
 import me.moonways.bridgenet.jdbc.core.util.result.Result;
 import me.moonways.bridgenet.jdbc.core.wrap.JdbcWrapper;
 import me.moonways.bridgenet.jdbc.core.wrap.ResponseProvider;
 import me.moonways.bridgenet.jdbc.core.wrap.ResultWrapper;
-import me.moonways.bridgenet.jdbc.core.observer.DatabaseObserver;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;

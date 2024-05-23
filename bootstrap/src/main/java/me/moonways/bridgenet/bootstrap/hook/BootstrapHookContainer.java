@@ -69,8 +69,7 @@ public final class BootstrapHookContainer {
             prioririesByHooksTypesMap.put(hookCls, priority);
 
             return hookCls.newInstance();
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error("§4Cannot be parse hook '{}' from xml", displayName, exception);
         }
 

@@ -3,13 +3,13 @@ package me.moonways.endpoint.gui;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.Getter;
-import me.moonways.bridgenet.model.gui.Gui;
-import me.moonways.bridgenet.model.gui.GuiDescription;
-import me.moonways.bridgenet.model.gui.GuiType;
-import me.moonways.bridgenet.model.gui.click.ItemClickEvent;
-import me.moonways.bridgenet.model.gui.item.Items;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
-import me.moonways.bridgenet.model.gui.GuiServiceModel;
+import me.moonways.bridgenet.model.service.gui.Gui;
+import me.moonways.bridgenet.model.service.gui.GuiDescription;
+import me.moonways.bridgenet.model.service.gui.GuiType;
+import me.moonways.bridgenet.model.event.GuiItemClickEvent;
+import me.moonways.bridgenet.model.service.gui.item.Items;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.model.service.gui.GuiServiceModel;
 
 import java.rmi.RemoteException;
 import java.util.Optional;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public final class GuiServiceEndpoint extends EndpointRemoteObject implements GuiServiceModel {
 
     private static final long serialVersionUID = -698118002154484440L;
-    
+
     private final Cache<UUID, GuiStub> guisCache =
             CacheBuilder.newBuilder()
                     .expireAfterAccess(1, TimeUnit.HOURS)
@@ -57,7 +57,7 @@ public final class GuiServiceEndpoint extends EndpointRemoteObject implements Gu
     }
 
     @Override
-    public void fireClickAction(UUID guiId, ItemClickEvent event) throws RemoteException {
+    public void fireClickAction(UUID guiId, GuiItemClickEvent event) throws RemoteException {
         guisCache.cleanUp();
 
         GuiStub guiStub = guisCache.getIfPresent(guiId);
@@ -68,7 +68,7 @@ public final class GuiServiceEndpoint extends EndpointRemoteObject implements Gu
     }
 
     @Override
-    public void fireClickAction(Gui gui, ItemClickEvent event) throws RemoteException {
+    public void fireClickAction(Gui gui, GuiItemClickEvent event) throws RemoteException {
         fireClickAction(gui.getId(), event);
     }
 }
