@@ -30,20 +30,21 @@ built on layer-services architecture.
 <br>жизнедеятельности системы.
 <br>В указанных ниже документациях можно разобрать каждый их них подробнее:
 
-* [Bridgenet Bootstrap](.docs/bootstrap.md)
-* [Bridgenet Assembly](.docs/assembly.md)
-* [Application Programming Interface (API)](.docs/api.md):
-    * [API / Automatically Runnable](.docs/api/autorun-api.md)
-    * [API / Commands](.docs/api/commands-api.md)
-    * [API / Events](.docs/api/events-api.md)
-    * [API / Injector](.docs/api/inject-api.md)
-    * [API / Instances Proxy](.docs/api/proxy-api.md)
-    * [API / Schedulers](.docs/api/scheduler-api.md)
-* [Bridgenet Connector](.docs/connector.md)
-* [Database](.docs/jdbc.md)
-* [Bridgenet Metrics Logger](.docs/metrics.md)
-* [TCP MTP](.docs/mtp.md)
-* [HTTP REST](.docs/rest.md)
+* [Bootstrap](.docs/bootstrap.md)
+* [Assembly](.docs/assembly.md)
+* [API Modules](.docs/api.md):
+    * [API / Delayed Runnable`s](.docs/api/autorun-api.md)
+    * [API / User Command`s](.docs/api/commands-api.md)
+    * [API / Event`s Subscribing](.docs/api/events-api.md)
+    * [API / Dependency Injection](.docs/api/inject-api.md)
+    * [API / Method Intercepting](.docs/api/proxy-api.md)
+    * [API / Scheduling Task`s](.docs/api/scheduler-api.md)
+* [Connector`s](.docs/connector.md)
+* [Testing Engine](.docs/test-engine.md)
+* [Database Engine](.docs/jdbc.md)
+* [Profiler](.docs/profiler)
+* [General Protocol](.docs/mtp.md)
+* [Rest API](.docs/rest.md)
 * [Services and Endpoints](.docs/services.md)
     * [ENDPOINT / AUTH](.docs/services/auth-endpoint.md)
     * [ENDPOINT / BUS](.docs/services/bus-endpoint.md)
@@ -58,7 +59,6 @@ built on layer-services architecture.
     * [ENDPOINT / REPORTS](.docs/services/reports-endpoint.md)
     * [ENDPOINT / SERVERS](.docs/services/servers-endpoint.md)
     * [ENDPOINT / SETTINGS](.docs/services/settings-endpoint.md)
-* [Bridgenet Test-Engine](.docs/test-engine.md)
 
 ---
 
