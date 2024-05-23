@@ -14,6 +14,7 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationContext;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationResult;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
+import me.moonways.bridgenet.assembly.OverridenProperty;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.profiler.BridgenetDataLogger;
 
@@ -115,9 +116,7 @@ public final class BeansService {
     private void initBeanFactories() {
         log.info("Initialize beans factories & providers...");
 
-        String defaultBeanFactory = System.getProperty("beans.factory.default");
-
-        BeanFactoryProviders.DEFAULT = Optional.ofNullable(defaultBeanFactory)
+        BeanFactoryProviders.DEFAULT = Optional.ofNullable(OverridenProperty.BEANS_FACTORY_DEFAULT.get())
                 .map(BeanFactoryProviders::valueOf)
                 .orElse(BeanFactoryProviders.CONSTRUCTOR);
 

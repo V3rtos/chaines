@@ -47,7 +47,7 @@ public final class ResourcesAssembly {
 
         properties.forEach((propertyName, value) -> {
 
-            log.debug("Override system-property: §7\"{}\" = {}", propertyName, value);
+            log.debug("Override system-property: §7'{}' = \"{}\"", propertyName, value);
             System.setProperty(propertyName.toString(), value.toString());
         });
     }

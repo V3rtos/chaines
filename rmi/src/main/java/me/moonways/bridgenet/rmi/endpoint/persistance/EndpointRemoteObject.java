@@ -6,6 +6,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
+import me.moonways.bridgenet.assembly.OverridenProperty;
 
 import java.lang.reflect.Field;
 import java.rmi.RemoteException;
@@ -61,7 +62,7 @@ public abstract class EndpointRemoteObject extends UnicastRemoteObject {
                     if (beansStore.isStored(type)) {
                         continue;
                     }
-                    if (type.getPackage().getName().startsWith("me.moonways")) {
+                    if (type.getPackage().getName().startsWith(OverridenProperty.BEANS_PACKAGE.get())) {
                         if (type.isAssignableFrom(Autobind.class)) {
                             beansService.bind(value);
                         } else {
