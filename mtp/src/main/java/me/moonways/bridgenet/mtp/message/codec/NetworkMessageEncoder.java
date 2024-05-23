@@ -20,7 +20,6 @@ import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 @Log4j2
 @RequiredArgsConstructor
 public class NetworkMessageEncoder extends MessageToByteEncoder<ExportedMessage> {
-
     private final NetworkJsonConfiguration configuration;
 
     @Inject
@@ -29,8 +28,7 @@ public class NetworkMessageEncoder extends MessageToByteEncoder<ExportedMessage>
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, ExportedMessage exportedMessage, ByteBuf byteBuf) {
         if (exportedMessage == null || exportedMessage.getMessage() == null || exportedMessage.getWrapper() == null) {
-            log.error("", new MessageCodecException("Not encoded " + exportedMessage));
-            return;
+            throw new MessageCodecException("Can`t encode " + exportedMessage);
         }
 
         WrappedNetworkMessage wrapper = exportedMessage.getWrapper();
@@ -52,9 +50,9 @@ public class NetworkMessageEncoder extends MessageToByteEncoder<ExportedMessage>
             byte[] array = ByteCodec.readBytesArray(buffer);
             ByteCompression.write(array, byteBuf);
 
-            bridgenetDataLogger.logNetworkTrafficBytesWrite(ProfilerType.MTP_TRAFFIC, byteBuf.writableBytes());
+            bridgenetDataLogger.logWritesCount(ProfilerType.MTP_TRAFFIC, byteBuf.writableBytes());
         } catch (Exception exception) {
-            log.error(new MessageCodecException(exception));
+            throw new MessageCodecException(exception);
         }
     }
 }

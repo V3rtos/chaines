@@ -6,6 +6,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.mtp.transfer.MessageTransferException;
 import me.moonways.bridgenet.profiler.BridgenetDataLogger;
 import me.moonways.bridgenet.profiler.ProfilerType;
 import me.moonways.bridgenet.mtp.config.NetworkJsonConfiguration;
@@ -38,31 +39,31 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
         try {
             int readableBytes = byteBuf.readableBytes();
             if (readableBytes == 0) {
-                log.error(new MessageNotFoundException("Get empty packet from decoder"));
-                return;
+                throw new MessageNotFoundException("Get empty packet from decoder");
             }
 
-            bridgenetDataLogger.logNetworkTrafficBytesRead(ProfilerType.MTP_TRAFFIC, readableBytes);
+            bridgenetDataLogger.logReadsCount(ProfilerType.MTP_TRAFFIC, readableBytes);
 
             int messageId = byteBuf.readInt();
-            ExportedMessage message = decodeMessage(messageId, byteBuf);
+            ExportedMessage message = decodeMessage(messageId, byteBuf, channelHandlerContext);
 
             if (message != null) {
                 list.add(message);
             }
         } catch (IndexOutOfBoundsException exception) {
-            caughtBytesReadException(byteBuf, exception);
+            NetworkCodecDumps.dump(channelHandlerContext, byteBuf);
+            throw new MessageTransferException(exception);
         } finally {
             byteBuf.skipBytes(byteBuf.readableBytes());
         }
     }
 
-    private ExportedMessage decodeMessage(int messageId, ByteBuf byteBuf) {
+    private ExportedMessage decodeMessage(int messageId, ByteBuf byteBuf, ChannelHandlerContext channelHandlerContext) {
         WrappedNetworkMessage wrapper = registry.lookupWrapperByID(messageId);
 
         if (wrapper == null) {
-            log.error(new MessageNotFoundException("Decoded message (ID: " + messageId + ") is`nt registered"));
-            return null;
+            NetworkCodecDumps.dump(channelHandlerContext, byteBuf);
+            throw new MessageNotFoundException("Decoded message (ID: " + messageId + ") is`nt registered");
         }
 
         MessageTransfer messageTransfer = createTransfer(byteBuf, wrapper);
@@ -85,8 +86,7 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
 
             return MessageTransfer.decode(buf);
         } catch (DataFormatException | IOException exception) {
-            log.error(new MessageCodecException(exception));
-            return null;
+            throw new MessageCodecException(exception);
         }
     }
 

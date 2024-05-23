@@ -11,7 +11,7 @@ public class BridgenetDataLogger {
 
     {
         for (ProfilerType profilerType : ProfilerType.values()) {
-            registerMetricType(profilerType);
+            register(profilerType);
         }
     }
 
@@ -21,24 +21,24 @@ public class BridgenetDataLogger {
      * Логировать актуальное значение свободной памяти в системе
      * (измеряется в МБ).
      */
-    public void logSystemMemoryFree() {
-        doPut(ProfilerType.MEMORY, "Free (MB)", Runtime.getRuntime().freeMemory() / 1024 / 1024);
+    public void logRuntimeMemoryFree() {
+        logPut(ProfilerType.MEMORY, "Free (MB)", Runtime.getRuntime().freeMemory() / 1024 / 1024);
     }
 
     /**
      * Логировать актуальное значение общего количества памяти в системе
      * (измеряется в МБ).
      */
-    public void logSystemMemoryTotal() {
-        doPut(ProfilerType.MEMORY, "Total (MB)", Runtime.getRuntime().totalMemory() / 1024 / 1024);
+    public void logRuntimeMemoryTotal() {
+        logPut(ProfilerType.MEMORY, "Total (MB)", Runtime.getRuntime().totalMemory() / 1024 / 1024);
     }
 
     /**
      * Логировать актуальное значение используемой памяти в системе
      * (измеряется в МБ).
      */
-    public void logSystemMemoryUsed() {
-        doPut(ProfilerType.MEMORY, "Used (MB)", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024);
+    public void logRuntimeMemoryUsed() {
+        logPut(ProfilerType.MEMORY, "Used (MB)", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024);
     }
 
     /**
@@ -47,8 +47,8 @@ public class BridgenetDataLogger {
      * @param profilerType    - метрика, в которую логируем значение.
      * @param readableBytes - количество прочтенных байтов в сети.
      */
-    public void logNetworkTrafficBytesRead(ProfilerType profilerType, long readableBytes) {
-        doPut(profilerType, "Reads", readableBytes);
+    public void logReadsCount(ProfilerType profilerType, long readableBytes) {
+        logPut(profilerType, "Reads", readableBytes);
     }
 
     /**
@@ -57,8 +57,8 @@ public class BridgenetDataLogger {
      * @param profilerType    - метрика, в которую логируем значение.
      * @param writableBytes - количество записанных байтов в сети.
      */
-    public void logNetworkTrafficBytesWrite(ProfilerType profilerType, long writableBytes) {
-        doPut(profilerType, "Writes", writableBytes);
+    public void logWritesCount(ProfilerType profilerType, long writableBytes) {
+        logPut(profilerType, "Writes", writableBytes);
     }
 
     /**
@@ -66,8 +66,8 @@ public class BridgenetDataLogger {
      *
      * @param profilerType - метрика, в которую логируем значение.
      */
-    public void logNetworkConnectionOpened(ProfilerType profilerType) {
-        doAddAndPut(profilerType, "Connections", 1);
+    public void logConnectionOpen(ProfilerType profilerType) {
+        logAddAndPut(profilerType, "Connections", 1);
     }
 
     /**
@@ -75,36 +75,36 @@ public class BridgenetDataLogger {
      *
      * @param profilerType - метрика, в которую логируем значение.
      */
-    public void logNetworkConnectionClosed(ProfilerType profilerType) {
-        doSubtractAndPut(profilerType, "Connections", 1);
+    public void logConnectionClose(ProfilerType profilerType) {
+        logSubtractAndPut(profilerType, "Connections", 1);
     }
 
     /**
      * Логировать число успешно исполненных SQL запросов.
      */
-    public void logDatabaseSuccessQuery() {
-        doAddAndPut(ProfilerType.JDBC_QUERIES, "Completed", 1);
+    public void logJdbcQueryCompleted() {
+        logAddAndPut(ProfilerType.JDBC_QUERIES, "Completed", 1);
     }
 
     /**
      * Логировать число провальных SQL запросов.
      */
-    public void logDatabaseFailureQuery() {
-        doAddAndPut(ProfilerType.JDBC_QUERIES, "Failure", 1);
+    public void logJdbcQueryFailed() {
+        logAddAndPut(ProfilerType.JDBC_QUERIES, "Failure", 1);
     }
 
     /**
      * Логировать число отмененных SQL запросов.
      */
-    public void logDatabaseRollbackQuery() {
-        doAddAndPut(ProfilerType.JDBC_QUERIES, "Rollback", 1);
+    public void logTransactionRollback() {
+        logAddAndPut(ProfilerType.JDBC_QUERIES, "Rollback", 1);
     }
 
     /**
      * Логировать число открытых когда-либо транзакций.
      */
-    public void logDatabaseTransaction() {
-        doAddAndPut(ProfilerType.JDBC_QUERIES, "Transaction", 1);
+    public void logTransactionOpen() {
+        logAddAndPut(ProfilerType.JDBC_QUERIES, "Transaction", 1);
     }
 
 // ======================================================== // METRICS LOGGING FUNCTIONS // ======================================================== //
@@ -114,20 +114,20 @@ public class BridgenetDataLogger {
      *
      * @param profilerType - тип метрики, иллюстрацию которой мы запрашиваем.
      */
-    public String requestIllustrationURL(ProfilerType profilerType) {
-        Profiler profiler = getMetric(profilerType);
+    public String renderProfilerChart(ProfilerType profilerType) {
+        Profiler profiler = getProfiler(profilerType);
         return PROVIDER.provideMetricIllustration(profilerType.getDefaultChartType(), profiler);
     }
 
 // ================================================================================================================================================= //
 
 
-    private void registerMetricType(ProfilerType profilerType) {
+    private void register(ProfilerType profilerType) {
         Profiler profiler = PROVIDER.createMetric(profilerType.getDisplayName());
         metricsByTypeMap.put(profilerType, profiler);
     }
 
-    private Profiler getMetric(ProfilerType profilerType) {
+    private Profiler getProfiler(ProfilerType profilerType) {
         Profiler profiler = metricsByTypeMap.get(profilerType);
         if (profiler == null) {
             throw new IllegalStateException("Metric " + profilerType + " is not registered");
@@ -135,18 +135,18 @@ public class BridgenetDataLogger {
         return profiler;
     }
 
-    private void doPut(ProfilerType profilerType, String label, long value) {
-        Profiler profiler = getMetric(profilerType);
+    private void logPut(ProfilerType profilerType, String label, long value) {
+        Profiler profiler = getProfiler(profilerType);
         profiler.put(label, value);
     }
 
-    private void doAddAndPut(ProfilerType profilerType, String label, long value) {
-        Profiler profiler = getMetric(profilerType);
+    private void logAddAndPut(ProfilerType profilerType, String label, long value) {
+        Profiler profiler = getProfiler(profilerType);
         profiler.add(label, value);
     }
 
-    private void doSubtractAndPut(ProfilerType profilerType, String label, long value) {
-        Profiler profiler = getMetric(profilerType);
+    private void logSubtractAndPut(ProfilerType profilerType, String label, long value) {
+        Profiler profiler = getProfiler(profilerType);
         profiler.subtract(label, value);
     }
 }

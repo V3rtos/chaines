@@ -20,7 +20,7 @@ public class ProfilingDatabaseQueriesTest {
     public void test_requestIllustration() {
         logDatabaseQueries();
 
-        String illustrationURL = bridgenetDataLogger.requestIllustrationURL(ProfilerType.JDBC_QUERIES);
+        String illustrationURL = bridgenetDataLogger.renderProfilerChart(ProfilerType.JDBC_QUERIES);
         log.debug("Completed metric illustration url: {} [click]", illustrationURL);
 
         DataAssert.assertIllustrationUrl(illustrationURL);
@@ -28,29 +28,29 @@ public class ProfilingDatabaseQueriesTest {
 
     private void logDatabaseQueries() {
         // 2 success
-        bridgenetDataLogger.logDatabaseSuccessQuery();
-        bridgenetDataLogger.logDatabaseSuccessQuery();
+        bridgenetDataLogger.logJdbcQueryCompleted();
+        bridgenetDataLogger.logJdbcQueryCompleted();
 
         // 1 failure
-        bridgenetDataLogger.logDatabaseFailureQuery();
+        bridgenetDataLogger.logJdbcQueryFailed();
 
         // 4 success
-        bridgenetDataLogger.logDatabaseSuccessQuery();
-        bridgenetDataLogger.logDatabaseSuccessQuery();
-        bridgenetDataLogger.logDatabaseSuccessQuery();
-        bridgenetDataLogger.logDatabaseSuccessQuery();
+        bridgenetDataLogger.logJdbcQueryCompleted();
+        bridgenetDataLogger.logJdbcQueryCompleted();
+        bridgenetDataLogger.logJdbcQueryCompleted();
+        bridgenetDataLogger.logJdbcQueryCompleted();
 
         // 1 rollback
-        bridgenetDataLogger.logDatabaseRollbackQuery();
+        bridgenetDataLogger.logTransactionRollback();
 
         // 3 failure
-        bridgenetDataLogger.logDatabaseFailureQuery();
-        bridgenetDataLogger.logDatabaseFailureQuery();
-        bridgenetDataLogger.logDatabaseFailureQuery();
+        bridgenetDataLogger.logJdbcQueryFailed();
+        bridgenetDataLogger.logJdbcQueryFailed();
+        bridgenetDataLogger.logJdbcQueryFailed();
 
         // 2 transaction
-        bridgenetDataLogger.logDatabaseTransaction();
-        bridgenetDataLogger.logDatabaseTransaction();
+        bridgenetDataLogger.logTransactionOpen();
+        bridgenetDataLogger.logTransactionOpen();
 
         // result = [success=[1, 2, 3, 4, 5, 6], failure=[1, 2, 3, 4], rollback=[1], transaction=[1, 2]]
     }

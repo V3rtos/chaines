@@ -70,22 +70,22 @@ public class OpenJdbcConnectionHook extends BootstrapHook {
 
             @Override
             protected void observe(DbRequestCompletedEvent event) {
-                bridgenetDataLogger.logDatabaseSuccessQuery();
+                bridgenetDataLogger.logJdbcQueryCompleted();
             }
 
             @Override
             protected void observe(DbRequestFailureEvent event) {
-                bridgenetDataLogger.logDatabaseFailureQuery();
+                bridgenetDataLogger.logJdbcQueryFailed();
             }
 
             @Override
             protected void observe(DbTransactionOpenEvent event) {
-                bridgenetDataLogger.logDatabaseTransaction();
+                bridgenetDataLogger.logTransactionOpen();
             }
 
             @Override
             protected void observe(DbTransactionRollbackEvent event) {
-                bridgenetDataLogger.logDatabaseRollbackQuery();
+                bridgenetDataLogger.logTransactionRollback();
             }
         });
     }

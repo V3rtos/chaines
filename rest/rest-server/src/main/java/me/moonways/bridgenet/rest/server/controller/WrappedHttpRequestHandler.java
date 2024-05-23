@@ -72,8 +72,8 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
                                    HttpRequest httpRequest, HttpResponse httpResponse)
             throws HttpException, IOException {
 
-        bridgenetDataLogger.logNetworkConnectionOpened(ProfilerType.HTTP_REST);
-        bridgenetDataLogger.logNetworkTrafficBytesRead(ProfilerType.HTTP_REST, httpResponse.getEntity().getContentLength());
+        bridgenetDataLogger.logConnectionOpen(ProfilerType.HTTP_REST);
+        bridgenetDataLogger.logReadsCount(ProfilerType.HTTP_REST, httpResponse.getEntity().getContentLength());
 
         controller.process(httpRequest, verificationConfig);
 
@@ -81,9 +81,9 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
         controller.processCallback(httpResponse, verificationConfig);
 
         if (httpResponse.getEntity().getContentLength() > 0) {
-            bridgenetDataLogger.logNetworkTrafficBytesRead(ProfilerType.HTTP_REST, httpResponse.getEntity().getContentLength());
+            bridgenetDataLogger.logReadsCount(ProfilerType.HTTP_REST, httpResponse.getEntity().getContentLength());
         }
-        bridgenetDataLogger.logNetworkConnectionClosed(ProfilerType.HTTP_REST);
+        bridgenetDataLogger.logConnectionClose(ProfilerType.HTTP_REST);
     }
 
     private HttpController findController(String method, String uri) {

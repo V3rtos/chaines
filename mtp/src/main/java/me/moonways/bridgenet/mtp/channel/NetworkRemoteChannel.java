@@ -25,7 +25,6 @@ import java.util.function.Function;
 @Log4j2
 @RequiredArgsConstructor
 public class NetworkRemoteChannel implements BridgenetNetworkChannel {
-
     private static final long serialVersionUID = -4718332193161413564L;
 
     public static final String PULLING_STATE_PROPERTY = "pulling_state";

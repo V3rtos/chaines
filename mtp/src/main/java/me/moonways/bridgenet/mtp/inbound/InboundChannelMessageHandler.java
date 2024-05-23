@@ -59,7 +59,7 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
         callChildrenHandlers(child -> child.channelActive(ctx));
 
         eventService.fireEvent(new ChannelOpenedEvent(ctx, toInboundChannel(ctx)));
-        bridgenetDataLogger.logNetworkConnectionOpened(ProfilerType.MTP_CONNECTIONS);
+        bridgenetDataLogger.logConnectionOpen(ProfilerType.MTP_CONNECTIONS);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
         callChildrenHandlers(child -> child.channelInactive(ctx));
 
         eventService.fireEvent(new ChannelDownstreamEvent(ctx, toInboundChannel(ctx)));
-        bridgenetDataLogger.logNetworkConnectionClosed(ProfilerType.MTP_CONNECTIONS);
+        bridgenetDataLogger.logConnectionClose(ProfilerType.MTP_CONNECTIONS);
     }
 
     @Override

@@ -38,6 +38,9 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
                     .build();
 
     @Inject
+    private LanguageDisplayNameMapper languageDisplayNameMapper;
+
+    @Inject
     private EventService eventService;
     @Inject
     private ResourcesAssembly assembly;
@@ -72,7 +75,10 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
                             .build();
 
             registeredLanguagesMap.put(language.getId(), registeredLanguage);
-            log.info("Registered language type §6{} §rfrom resource §6/{}", language.getName(), resourceName);
+
+            log.info("Registered language type §6{} §7(short={}) §rfrom resource §6/{}",
+                    languageDisplayNameMapper.getDisplayName(language),
+                    language.getName().toUpperCase(), resourceName);
         }
     }
 

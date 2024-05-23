@@ -20,7 +20,7 @@ public class ProfilingNetworkTrafficTest {
     public void test_requestIllustration() {
         logNetworkConnections();
 
-        String illustrationURL = bridgenetDataLogger.requestIllustrationURL(ProfilerType.MTP_CONNECTIONS);
+        String illustrationURL = bridgenetDataLogger.renderProfilerChart(ProfilerType.MTP_CONNECTIONS);
         log.debug("Completed metric illustration url: {} [click]", illustrationURL);
 
         DataAssert.assertIllustrationUrl(illustrationURL);
@@ -30,16 +30,16 @@ public class ProfilingNetworkTrafficTest {
         ProfilerType profilerType = ProfilerType.MTP_CONNECTIONS;
 
         // 3 open
-        bridgenetDataLogger.logNetworkConnectionOpened(profilerType);
-        bridgenetDataLogger.logNetworkConnectionOpened(profilerType);
-        bridgenetDataLogger.logNetworkConnectionOpened(profilerType);
+        bridgenetDataLogger.logConnectionOpen(profilerType);
+        bridgenetDataLogger.logConnectionOpen(profilerType);
+        bridgenetDataLogger.logConnectionOpen(profilerType);
 
         // 2 close
-        bridgenetDataLogger.logNetworkConnectionClosed(profilerType);
-        bridgenetDataLogger.logNetworkConnectionClosed(profilerType);
+        bridgenetDataLogger.logConnectionClose(profilerType);
+        bridgenetDataLogger.logConnectionClose(profilerType);
 
         // 1 open
-        bridgenetDataLogger.logNetworkConnectionOpened(profilerType);
+        bridgenetDataLogger.logConnectionOpen(profilerType);
 
         // result = [1, 2, 3, 2, 1, 2]
     }
