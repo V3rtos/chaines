@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.api.event.subscribe;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import me.moonways.bridgenet.api.event.Event;
 import me.moonways.bridgenet.api.event.EventException;
 import org.jetbrains.annotations.NotNull;

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.event.cancellation.Cancellable;
 import org.jetbrains.annotations.NotNull;
 
-import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
@@ -58,9 +57,9 @@ public final class EventExecutor {
         return result;
     }
 
-    private  <E extends Event> void fireEventNaturally(E event, EventFuture<E> eventFuture) {
+    private <E extends Event> void fireEventNaturally(E event, EventFuture<E> eventFuture) {
         eventRegistry.findInvokersByPriority(event.getClass())
-                        .forEach(invoker -> invoker.invoke(event));
+                .forEach(invoker -> invoker.invoke(event));
 
         eventFuture.complete(event);
     }

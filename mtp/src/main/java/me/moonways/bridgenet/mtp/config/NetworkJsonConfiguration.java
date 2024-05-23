@@ -17,7 +17,7 @@ public final class NetworkJsonConfiguration extends AbstractJsonConfig<NetworkSe
     private MessageEncryption encryption;
 
     public NetworkJsonConfiguration() {
-        super(NetworkSettingsDescriptor.class, ResourcesTypes.MTP_SETTINGS_JSON);
+        super(NetworkSettingsDescriptor.class, ResourcesTypes.MTP_CONFIG_JSON);
     }
 
     @Override

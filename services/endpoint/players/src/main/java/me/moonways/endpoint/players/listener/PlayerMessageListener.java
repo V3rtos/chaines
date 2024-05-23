@@ -2,14 +2,12 @@ package me.moonways.endpoint.players.listener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.model.bus.message.Disconnect;
-import me.moonways.bridgenet.model.bus.message.Handshake;
-import me.moonways.bridgenet.model.players.Player;
+import me.moonways.bridgenet.model.message.Disconnect;
+import me.moonways.bridgenet.model.message.Handshake;
+import me.moonways.bridgenet.model.service.players.Player;
 import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
 import me.moonways.endpoint.players.PlayerStoreStub;
-import me.moonways.endpoint.players.player.PlayerStub;
 
 import java.rmi.RemoteException;
 

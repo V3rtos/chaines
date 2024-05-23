@@ -2,7 +2,8 @@ package me.moonways.bridgenet.test.frameworks.database.compose;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.jdbc.core.compose.*;
+import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
+import me.moonways.bridgenet.jdbc.core.compose.StorageType;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.module.impl.DatabasesModule;

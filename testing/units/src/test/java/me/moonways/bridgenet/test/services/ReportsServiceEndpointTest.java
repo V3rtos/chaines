@@ -1,11 +1,11 @@
 package me.moonways.bridgenet.test.services;
 
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.model.service.reports.Report;
+import me.moonways.bridgenet.model.service.reports.ReportReason;
+import me.moonways.bridgenet.model.service.reports.ReportsServiceModel;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.model.reports.ReportsServiceModel;
-import me.moonways.bridgenet.model.reports.Report;
-import me.moonways.bridgenet.model.reports.ReportReason;
 import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import org.junit.Test;

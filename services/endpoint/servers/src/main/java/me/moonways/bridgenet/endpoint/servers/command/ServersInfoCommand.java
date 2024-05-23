@@ -5,12 +5,11 @@ import me.moonways.bridgenet.api.command.annotation.*;
 import me.moonways.bridgenet.api.command.option.CommandParameterOnlyConsoleUse;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.util.minecraft.ChatColor;
-import me.moonways.bridgenet.model.servers.EntityServer;
-import me.moonways.bridgenet.model.servers.ServersServiceModel;
+import me.moonways.bridgenet.api.minecraft.ChatColor;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
+import me.moonways.bridgenet.model.service.servers.ServersServiceModel;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

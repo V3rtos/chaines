@@ -3,8 +3,8 @@ package me.moonways.bridgenet.test.data.management;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.mtp.connection.client.NetworkClientConnectionFactory;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
+import me.moonways.bridgenet.mtp.connection.client.NetworkClientConnectionFactory;
 
 @Autobind
 public class ExampleNetworkConnection {

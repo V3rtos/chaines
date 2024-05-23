@@ -16,15 +16,15 @@ import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.mtp.connection.client.BridgenetNetworkClientHandler;
 import me.moonways.bridgenet.mtp.connection.client.NetworkClientConnectionFactory;
-import me.moonways.bridgenet.rsi.module.access.AccessConfig;
-import me.moonways.bridgenet.rsi.module.access.AccessRemoteModule;
-import me.moonways.bridgenet.rsi.service.RemoteService;
-import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
-import me.moonways.bridgenet.rsi.service.ServiceInfo;
-import me.moonways.bridgenet.rsi.xml.XMLServiceModuleDescriptor;
-import me.moonways.bridgenet.rsi.xml.XMLServiceModulePropertyDescriptor;
-import me.moonways.bridgenet.rsi.xml.XMLServicesConfigDescriptor;
-import me.moonways.bridgenet.rsi.xml.XmlServiceInfoDescriptor;
+import me.moonways.bridgenet.rmi.module.access.AccessConfig;
+import me.moonways.bridgenet.rmi.module.access.AccessRemoteModule;
+import me.moonways.bridgenet.rmi.service.RemoteService;
+import me.moonways.bridgenet.rmi.service.RemoteServicesManagement;
+import me.moonways.bridgenet.rmi.service.ServiceInfo;
+import me.moonways.bridgenet.rmi.xml.XMLServiceModuleDescriptor;
+import me.moonways.bridgenet.rmi.xml.XMLServiceModulePropertyDescriptor;
+import me.moonways.bridgenet.rmi.xml.XMLServicesConfigDescriptor;
+import me.moonways.bridgenet.rmi.xml.XmlServiceInfoDescriptor;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -49,7 +49,7 @@ public final class ConnectorEngine {
     public BeansService bindAll() {
         beansService = new BeansService();
 
-        beansService.start(BeansService.generateDefaultProperties());
+        beansService.start();
 
         beansService.bind(new Properties());
         beansService.bind(new GsonBuilder().setLenient().create());
@@ -77,7 +77,7 @@ public final class ConnectorEngine {
     }
 
     private BridgenetJdbcProvider.JdbcSettingsConfig readSettings() {
-        return assembly.readJsonAtEntity(ResourcesTypes.JDBC_SETTINGS_JSON,
+        return assembly.readJsonAtEntity(ResourcesTypes.JDBC_JSON,
                 StandardCharsets.UTF_8,
                 BridgenetJdbcProvider.JdbcSettingsConfig.class);
     }

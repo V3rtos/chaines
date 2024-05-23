@@ -59,12 +59,11 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
         method.setAccessible(true);
 
         try {
-            method.invoke(bean.getRoot(), args);
-
             if (isBefore() || isAfter()) {
-                log.info("Invoked bean construct-function of §2" + method);
+                log.info("Executing bean function: §2{}", method);
             }
 
+            method.invoke(bean.getRoot(), args);
         } catch (IllegalAccessException | InvocationTargetException exception) {
             throw new BeanException(exception);
         }

@@ -2,15 +2,15 @@ package me.moonways.bridgenet.test.data;
 
 import me.moonways.bridgenet.connector.description.DeviceDescription;
 import me.moonways.bridgenet.connector.description.UserDescription;
-import me.moonways.bridgenet.model.gui.GuiDescription;
-import me.moonways.bridgenet.model.gui.GuiSlot;
-import me.moonways.bridgenet.model.gui.GuiType;
-import me.moonways.bridgenet.model.gui.click.ClickType;
-import me.moonways.bridgenet.model.gui.item.entries.material.Material;
-import me.moonways.bridgenet.model.gui.item.types.Materials;
-import me.moonways.bridgenet.model.language.Language;
-import me.moonways.bridgenet.model.language.Message;
-import me.moonways.bridgenet.model.permissions.permission.Permission;
+import me.moonways.bridgenet.model.service.gui.GuiDescription;
+import me.moonways.bridgenet.model.service.gui.GuiSlot;
+import me.moonways.bridgenet.model.service.gui.GuiType;
+import me.moonways.bridgenet.model.service.gui.click.ClickType;
+import me.moonways.bridgenet.model.service.gui.item.entries.material.Material;
+import me.moonways.bridgenet.model.service.gui.item.types.Materials;
+import me.moonways.bridgenet.model.service.language.Language;
+import me.moonways.bridgenet.model.service.language.Message;
+import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -20,6 +20,11 @@ public final class TestConst {
     public static final class Exceptions {
         // Printing stacktrace elements only with packages of Bridgenet if this value is TRUE.
         public static final boolean FILTER_BY_PACKAGE = Boolean.TRUE;
+    }
+
+    public static final class Auth {
+        public static final String ACTUAL_PASSWORD = "123qweasdzxc";
+        public static final String NEW_PASSWORD = "cxzdsaewq321";
     }
 
     public static final class Game {

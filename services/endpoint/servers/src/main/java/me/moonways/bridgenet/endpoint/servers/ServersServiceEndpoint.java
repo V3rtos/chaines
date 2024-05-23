@@ -4,11 +4,11 @@ import me.moonways.bridgenet.endpoint.servers.command.ServersInfoCommand;
 import me.moonways.bridgenet.endpoint.servers.handler.ServersDownstreamListener;
 import me.moonways.bridgenet.endpoint.servers.handler.ServersInputMessagesListener;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
-import me.moonways.bridgenet.model.servers.EntityServer;
-import me.moonways.bridgenet.model.servers.ServerFlag;
-import me.moonways.bridgenet.model.servers.ServersServiceModel;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
+import me.moonways.bridgenet.model.service.servers.ServerFlag;
+import me.moonways.bridgenet.model.service.servers.ServersServiceModel;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;

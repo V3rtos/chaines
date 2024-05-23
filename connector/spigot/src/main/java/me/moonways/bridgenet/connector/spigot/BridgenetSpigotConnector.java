@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.connector.BridgenetConnector;
-import me.moonways.bridgenet.connector.description.DeviceDescription;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
-import me.moonways.bridgenet.model.bus.message.Handshake;
+import me.moonways.bridgenet.connector.description.DeviceDescription;
+import me.moonways.bridgenet.model.message.Handshake;
 import org.bukkit.Bukkit;
 
 @RequiredArgsConstructor

@@ -6,12 +6,12 @@ import lombok.Setter;
 import lombok.ToString;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
-import me.moonways.bridgenet.model.bus.message.Redirect;
-import me.moonways.bridgenet.model.players.Player;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.players.service.PlayerStore;
-import me.moonways.bridgenet.model.servers.EntityServer;
-import me.moonways.bridgenet.model.servers.ServerInfo;
+import me.moonways.bridgenet.model.message.Redirect;
+import me.moonways.bridgenet.model.service.players.Player;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.service.players.component.PlayerStore;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
+import me.moonways.bridgenet.model.service.servers.ServerInfo;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import org.jetbrains.annotations.NotNull;
 

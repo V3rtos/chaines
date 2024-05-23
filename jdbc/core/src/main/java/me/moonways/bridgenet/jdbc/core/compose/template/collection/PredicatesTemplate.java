@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.jdbc.core.compose.template.collection;
 
-import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedPredicates;
-import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 import me.moonways.bridgenet.jdbc.core.Combinable;
+import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
+import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedPredicates;
 
 public interface PredicatesTemplate extends Combinable<CompletedPredicates> {
 

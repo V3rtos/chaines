@@ -7,8 +7,8 @@ import lombok.ToString;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.entity.EntityRepository;
 import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
-import me.moonways.bridgenet.model.settings.Setting;
-import me.moonways.bridgenet.model.settings.SettingID;
+import me.moonways.bridgenet.model.service.settings.Setting;
+import me.moonways.bridgenet.model.service.settings.SettingID;
 
 import java.rmi.RemoteException;
 import java.util.Map;
@@ -54,8 +54,8 @@ public class PlayerSettings {
                 = entityRepositoryFactory.fromEntityType(EntitySetting.class);
 
         repository.searchManyIf(
-                repository.newSearchMarker()
-                        .withGet(EntitySetting::getPlayerId, playerID))
+                        repository.newSearchMarker()
+                                .withGet(EntitySetting::getPlayerId, playerID))
                 .forEach(this::loadEntity);
     }
 

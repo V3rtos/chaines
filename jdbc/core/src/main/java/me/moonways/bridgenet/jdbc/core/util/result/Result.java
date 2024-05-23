@@ -39,6 +39,7 @@ public class Result<T> {
     private boolean exclusive;
 
     private Consumer<T> transitionConsumer;
+
     public synchronized T get() {
         return val;
     }
@@ -86,8 +87,7 @@ public class Result<T> {
         Result<R> result;
         if (val == null) {
             result = ofEmpty();
-        }
-        else {
+        } else {
             R mappedInstance = function.apply(val);
             result = of(mappedInstance);
         }

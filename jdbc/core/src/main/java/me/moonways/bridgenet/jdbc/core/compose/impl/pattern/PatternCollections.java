@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.jdbc.core.compose.impl.pattern;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import me.moonways.bridgenet.jdbc.core.compose.impl.collection.PatternCollection;
 import me.moonways.bridgenet.jdbc.core.util.ObjectPropertyContainer;
 
@@ -17,7 +20,7 @@ public class PatternCollections {
 
     private final ObjectPropertyContainer collectionsContainer
             = ObjectPropertyContainer.newWeakContainer()
-                .setDefaultKeyModifier(ObjectPropertyContainer.DefaultKeyModifiers.AS_LOWER_CASE);
+            .setDefaultKeyModifier(ObjectPropertyContainer.DefaultKeyModifiers.AS_LOWER_CASE);
 
     public void add(String collectionName, PatternCollection<?> collection) {
         collectionsContainer.setProperty(collectionName, collection);

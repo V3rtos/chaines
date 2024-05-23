@@ -1,7 +1,7 @@
 package me.moonways.endpoint.players.player;
 
-import me.moonways.bridgenet.model.players.service.statistic.ActivityStatistics;
-import me.moonways.bridgenet.model.players.service.statistic.Statistic;
+import me.moonways.bridgenet.model.service.players.component.statistic.ActivityStatistics;
+import me.moonways.bridgenet.model.service.players.component.statistic.Statistic;
 
 import java.rmi.RemoteException;
 import java.util.EnumMap;

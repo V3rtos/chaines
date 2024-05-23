@@ -2,8 +2,8 @@ package me.moonways.endpoint.games.stub;
 
 import lombok.Builder;
 import lombok.Getter;
-import me.moonways.bridgenet.model.games.GameState;
-import me.moonways.bridgenet.model.games.GameStatus;
+import me.moonways.bridgenet.model.service.games.GameState;
+import me.moonways.bridgenet.model.service.games.GameStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;

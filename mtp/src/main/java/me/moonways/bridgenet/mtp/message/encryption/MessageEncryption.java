@@ -40,8 +40,7 @@ public final class MessageEncryption {
 
             publicKey = pair.getPublic();
             privateKey = pair.getPrivate();
-        }
-        catch (NoSuchAlgorithmException exception) {
+        } catch (NoSuchAlgorithmException exception) {
             log.error("§4Cannot be generate private-key: §c{}", exception.toString());
         }
     }
@@ -54,8 +53,7 @@ public final class MessageEncryption {
             KeyFactory keyFactory = KeyFactory.getInstance(GENERATION_ALGORITHM);
 
             return keyFactory.generatePrivate(encodedKeySpec);
-        }
-        catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
             log.error("§4Cannot be generate private-key: §c{}", exception.toString());
         }
 
@@ -63,7 +61,7 @@ public final class MessageEncryption {
     }
 
     private PublicKey generatePublicKey(String key) {
-        try{
+        try {
             byte[] byteKey = BASE64_DECODER.decode(key.getBytes());
 
             X509EncodedKeySpec encodedKeySpec = new X509EncodedKeySpec(byteKey);
@@ -115,8 +113,7 @@ public final class MessageEncryption {
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
             return Unpooled.buffer().writeBytes(cipher.doFinal(ByteCodec.readBytesArray(byteBuf)));
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error("§4Cannot be decode encrypted message: §c{}", exception.toString());
         }
 
@@ -129,8 +126,7 @@ public final class MessageEncryption {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
             return Unpooled.buffer().writeBytes(cipher.doFinal(ByteCodec.readBytesArray(byteBuf)));
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error("§4Cannot be encode message with encryption: §c{}", exception.toString());
         }
 

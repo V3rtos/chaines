@@ -4,9 +4,9 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookContainer;
+import me.moonways.bridgenet.test.engine.TestingObject;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
 import me.moonways.bridgenet.test.engine.flow.TestFlowNode;
-import me.moonways.bridgenet.test.engine.TestingObject;
 
 @Log4j2
 public class FlowSystemBootstrapNode implements TestFlowNode {
@@ -35,7 +35,7 @@ public class FlowSystemBootstrapNode implements TestFlowNode {
         BootstrapHookContainer hooksContainer = bootstrap.getHooksContainer();
 
         log.debug("Running fake starting process: {}", context);
-        beansService.fakeStart(BeansService.generateDefaultProperties());
+        beansService.fakeStart();
 
         // Create a testing-object instance after fake beans starting.
         Object instance = testingObject.getInstance();

@@ -6,12 +6,12 @@ import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.entity.EntityRepository;
 import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
-import me.moonways.bridgenet.model.permissions.TemporalState;
-import me.moonways.bridgenet.model.permissions.permission.Permission;
-import me.moonways.bridgenet.model.permissions.permission.PermissionsManager;
-import me.moonways.bridgenet.model.permissions.permission.PlayerPermissionPutEvent;
-import me.moonways.bridgenet.model.permissions.permission.PlayerPermissionRemoveEvent;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.event.PlayerPermissionAddEvent;
+import me.moonways.bridgenet.model.event.PlayerPermissionRemoveEvent;
+import me.moonways.bridgenet.model.service.permissions.TemporalState;
+import me.moonways.bridgenet.model.service.permissions.permission.Permission;
+import me.moonways.bridgenet.model.service.permissions.permission.PermissionsManager;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
 import me.moonways.endpoint.permissions.entity.EntityPermission;
 
 import java.rmi.RemoteException;
@@ -46,8 +46,8 @@ public final class PermissionsManagerStub implements PermissionsManager {
     private Set<Permission> findPermissions(UUID playerId) {
         EntityRepository<EntityPermission> repository = repositoryFactory.fromEntityType(EntityPermission.class);
         return repository.searchManyIf(
-                repository.newSearchMarker()
-                        .withGet(EntityPermission::getPlayerId, playerId))
+                        repository.newSearchMarker()
+                                .withGet(EntityPermission::getPlayerId, playerId))
                 .stream()
                 .peek(entityPermission -> {
                     if (entityPermission.isExpired()) {
@@ -95,12 +95,12 @@ public final class PermissionsManagerStub implements PermissionsManager {
     }
 
     @Override
-    public Optional<PlayerPermissionPutEvent> addPermission(String playerName, Permission permission) throws RemoteException {
+    public Optional<PlayerPermissionAddEvent> addPermission(String playerName, Permission permission) throws RemoteException {
         return addPermission(playersServiceModel.store().idByName(playerName), permission);
     }
 
     @Override
-    public Optional<PlayerPermissionPutEvent> addPermission(UUID playerId, Permission permission) throws RemoteException {
+    public Optional<PlayerPermissionAddEvent> addPermission(UUID playerId, Permission permission) throws RemoteException {
         if (hasPermission(playerId, permission)) {
             return Optional.empty();
         }
@@ -110,8 +110,8 @@ public final class PermissionsManagerStub implements PermissionsManager {
 
         insertPermission(playerId, permission);
 
-        PlayerPermissionPutEvent event =
-                PlayerPermissionPutEvent.builder()
+        PlayerPermissionAddEvent event =
+                PlayerPermissionAddEvent.builder()
                         .playerId(playerId)
                         .permission(permission)
                         .build();
@@ -121,12 +121,12 @@ public final class PermissionsManagerStub implements PermissionsManager {
     }
 
     @Override
-    public Optional<PlayerPermissionPutEvent> addPermission(String playerName, String permissionName) throws RemoteException {
+    public Optional<PlayerPermissionAddEvent> addPermission(String playerName, String permissionName) throws RemoteException {
         return addPermission(playerName, Permission.named(permissionName));
     }
 
     @Override
-    public Optional<PlayerPermissionPutEvent> addPermission(UUID playerId, String permissionName) throws RemoteException {
+    public Optional<PlayerPermissionAddEvent> addPermission(UUID playerId, String permissionName) throws RemoteException {
         return addPermission(playerId, Permission.named(permissionName));
     }
 

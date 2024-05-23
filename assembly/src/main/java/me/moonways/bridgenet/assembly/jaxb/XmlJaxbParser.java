@@ -22,8 +22,7 @@ public final class XmlJaxbParser {
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
             return (X) unmarshaller.unmarshal(inputStream);
-        }
-        catch (JAXBException exception) {
+        } catch (JAXBException exception) {
             log.error("§4Cannot be parse root element from {}: §c{}", cls.getName(), exception.toString());
         }
 

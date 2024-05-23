@@ -4,11 +4,11 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.Getter;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.model.friends.FriendsList;
-import me.moonways.bridgenet.model.friends.FriendsServiceModel;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.model.service.friends.FriendsList;
+import me.moonways.bridgenet.model.service.friends.FriendsServiceModel;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.friend.event.FriendActivityListener;
 
 import java.rmi.RemoteException;

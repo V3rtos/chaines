@@ -5,12 +5,12 @@ import me.moonways.bridgenet.api.proxy.MethodHandler;
 import me.moonways.bridgenet.api.proxy.MethodInterceptor;
 import me.moonways.bridgenet.api.proxy.MethodPriority;
 import me.moonways.bridgenet.api.proxy.ProxiedMethod;
-import me.moonways.bridgenet.rest.client.repository.RestRepositoryHelper;
-import me.moonways.bridgenet.rest.client.repository.persistence.mapping.*;
 import me.moonways.bridgenet.rest.api.exchange.message.RestMessageBuilder;
 import me.moonways.bridgenet.rest.api.exchange.message.RestMessageType;
 import me.moonways.bridgenet.rest.api.exchange.response.RestResponse;
+import me.moonways.bridgenet.rest.client.repository.RestRepositoryHelper;
 import me.moonways.bridgenet.rest.client.repository.persistence.header.RestHeaders;
+import me.moonways.bridgenet.rest.client.repository.persistence.mapping.*;
 import me.moonways.bridgenet.rest.client.repository.persistence.param.RestAttribute;
 
 import java.lang.reflect.Parameter;

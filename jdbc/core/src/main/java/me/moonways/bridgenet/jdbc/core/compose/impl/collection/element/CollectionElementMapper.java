@@ -6,7 +6,6 @@ import me.moonways.bridgenet.jdbc.core.compose.MergeDirection;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.core.compose.SubjectFunction;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedPredicates;
-import me.moonways.bridgenet.jdbc.core.compose.*;
 
 import java.util.Collections;
 import java.util.stream.Collectors;

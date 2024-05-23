@@ -4,22 +4,18 @@ import io.netty.channel.ChannelFactory;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.ServerChannel;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.scheduler.ScheduledTime;
-import me.moonways.bridgenet.api.scheduler.Scheduler;
-import me.moonways.bridgenet.model.bus.BusServiceModel;
+import me.moonways.bridgenet.model.service.bus.BusServiceModel;
 import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.mtp.channel.ChannelDirection;
 import me.moonways.bridgenet.mtp.config.NetworkJsonConfiguration;
 import me.moonways.bridgenet.mtp.connection.BridgenetNetworkConnectionFactory;
 import me.moonways.bridgenet.mtp.connection.NetworkBootstrapFactory;
 import me.moonways.bridgenet.mtp.inbound.InboundChannelOptionsHandler;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.bus.handler.GetCommandsMessageHandler;
 
 import java.rmi.RemoteException;
-import java.util.concurrent.TimeUnit;
 
 public class BusServiceEndpoint extends EndpointRemoteObject implements BusServiceModel {
 
@@ -31,8 +27,6 @@ public class BusServiceEndpoint extends EndpointRemoteObject implements BusServi
     private BridgenetNetworkController networkController;
     @Inject
     private InboundChannelOptionsHandler inboundChannelOptionsHandler;
-    @Inject
-    private Scheduler scheduler;
 
     public BusServiceEndpoint() throws RemoteException {
         super();
@@ -40,12 +34,6 @@ public class BusServiceEndpoint extends EndpointRemoteObject implements BusServi
 
     @Override
     protected void construct(EndpointRemoteContext context) {
-        //scheduler.schedule(ScheduledTime.of(3, TimeUnit.SECONDS))
-        //        .follow(task -> register(context));
-        register(context);
-    }
-
-    private void register(EndpointRemoteContext context) {
         networkController.bindMessages();
         networkController.bindMessageListeners();
 

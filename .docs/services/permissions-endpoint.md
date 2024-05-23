@@ -11,6 +11,7 @@ Permissions - Внутриигровой сервис удаленного до�
 <br>интерфейс `me.moonways.bridgenet.model.permissions.PermissionsServiceModel`:
 
 ```java
+
 @Inject
 private PermissionsServiceModel serviceModel;
 ```
@@ -22,6 +23,7 @@ private PermissionsServiceModel serviceModel;
 ```java
 PermissionsManager permissions = serviceModel.getPermissions();
 ```
+
 ```java
 GroupsManager groups = serviceModel.getGroups();
 ```
@@ -34,6 +36,7 @@ GroupsManager groups = serviceModel.getGroups();
 <br>под имплементаций эндпоинта:
 
 ```xml
+
 <service>
     <!-- RMI Protocol service bind port -->
     <bindPort>7011</bindPort>
@@ -45,20 +48,20 @@ GroupsManager groups = serviceModel.getGroups();
 ```
 
 - Реализация эндпоинта лежит в модуле `endpoints/permissions`;
-- Имплементацией основного модельного интерфейса сервиса 
+- Имплементацией основного модельного интерфейса сервиса
   <br>является `me.moonways.endpoint.permissions.PermissionsServiceEndpoint`;
 
-Реализация использует фреймворк базы данных от Bridgenet. 
+Реализация использует фреймворк базы данных от Bridgenet.
 <br>Наименование используемых таблиц и сущностей
 
 <br>
 
 Examples: `player_permissions` (`me.moonways.endpoint.permissions.entity.EntityPermission`)
 
-| player_id                            | permission        | expired_in    |
-|--------------------------------------|-------------------|---------------|
-| 756d7e30-d173-4c85-8827-67aad3c258aa | bridgenet.test    | 1715952719209 |
-| 04d15ffd-066e-4332-96ad-64670b7c56dd | leveling.max.30   | 0             |
+| player_id                            | permission      | expired_in    |
+|--------------------------------------|-----------------|---------------|
+| 756d7e30-d173-4c85-8827-67aad3c258aa | bridgenet.test  | 1715952719209 |
+| 04d15ffd-066e-4332-96ad-64670b7c56dd | leveling.max.30 | 0             |
 
 <br>
 

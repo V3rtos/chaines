@@ -6,8 +6,8 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
-import me.moonways.bridgenet.metrics.MetricType;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
+import me.moonways.bridgenet.profiler.ProfilerType;
 import me.moonways.bridgenet.mtp.config.NetworkJsonConfiguration;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.WrappedNetworkMessage;
@@ -20,17 +20,15 @@ import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 @Log4j2
 @RequiredArgsConstructor
 public class NetworkMessageEncoder extends MessageToByteEncoder<ExportedMessage> {
-
     private final NetworkJsonConfiguration configuration;
 
     @Inject
-    private BridgenetMetricsLogger bridgenetMetricsLogger;
+    private BridgenetDataLogger bridgenetDataLogger;
 
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, ExportedMessage exportedMessage, ByteBuf byteBuf) {
         if (exportedMessage == null || exportedMessage.getMessage() == null || exportedMessage.getWrapper() == null) {
-            log.error("", new MessageCodecException("Not encoded " + exportedMessage));
-            return;
+            throw new MessageCodecException("Can`t encode " + exportedMessage);
         }
 
         WrappedNetworkMessage wrapper = exportedMessage.getWrapper();
@@ -52,10 +50,9 @@ public class NetworkMessageEncoder extends MessageToByteEncoder<ExportedMessage>
             byte[] array = ByteCodec.readBytesArray(buffer);
             ByteCompression.write(array, byteBuf);
 
-            bridgenetMetricsLogger.logNetworkTrafficBytesWrite(MetricType.MTP_TRAFFIC, byteBuf.writableBytes());
-        }
-        catch (Exception exception) {
-            log.error(new MessageCodecException(exception));
+            bridgenetDataLogger.logWritesCount(ProfilerType.MTP_TRAFFIC, byteBuf.writableBytes());
+        } catch (Exception exception) {
+            throw new MessageCodecException(exception);
         }
     }
 }

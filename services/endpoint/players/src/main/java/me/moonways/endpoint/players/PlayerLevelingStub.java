@@ -1,6 +1,6 @@
 package me.moonways.endpoint.players;
 
-import me.moonways.bridgenet.model.players.service.PlayerLeveling;
+import me.moonways.bridgenet.model.service.players.component.PlayerLeveling;
 
 public final class PlayerLevelingStub implements PlayerLeveling {
 

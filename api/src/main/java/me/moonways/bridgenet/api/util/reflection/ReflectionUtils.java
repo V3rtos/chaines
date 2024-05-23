@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 public class ReflectionUtils {
 
     private static final Unsafe UNSAFE;
+
     static {
         try {
             Field unsafeInstanceField = Unsafe.class.getDeclaredField("theUnsafe");
@@ -31,8 +32,7 @@ public class ReflectionUtils {
             privateMethod.setAccessible(true);
 
             return privateMethod.invoke(instance, args);
-        }
-        catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             throw new BridgenetReflectionException(exception);
         }
     }
@@ -55,8 +55,7 @@ public class ReflectionUtils {
 
             field.setAccessible(true);
             field.set(instance, value);
-        }
-        catch (NoSuchFieldException | IllegalAccessException exception) {
+        } catch (NoSuchFieldException | IllegalAccessException exception) {
             throw new BridgenetReflectionException(exception);
         }
     }

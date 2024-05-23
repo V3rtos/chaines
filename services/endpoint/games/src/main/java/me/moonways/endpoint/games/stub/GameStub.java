@@ -2,9 +2,9 @@ package me.moonways.endpoint.games.stub;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.model.games.ActiveGame;
-import me.moonways.bridgenet.model.games.Game;
-import me.moonways.bridgenet.model.games.GameServer;
+import me.moonways.bridgenet.model.service.games.ActiveGame;
+import me.moonways.bridgenet.model.service.games.Game;
+import me.moonways.bridgenet.model.service.games.GameServer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;

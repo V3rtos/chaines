@@ -13,12 +13,14 @@ public interface CommandParameterMatcher {
     /**
      * Условие, при котором отрабатывает обработка
      * данной верификации.
+     *
      * @param session - сессия команды, в которой вызвана верификация
      */
     boolean matches(@NotNull CommandSession session);
 
     /**
      * Что будет происходить, если условие верификации прошло корректно.
+     *
      * @param session - сессия команды
      */
     void process(@NotNull CommandSession session);

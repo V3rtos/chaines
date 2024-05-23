@@ -17,8 +17,10 @@ public enum ChannelDirection {
 
     public ChannelDirection reverse() {
         switch (this) {
-            case TO_CLIENT: return TO_SERVER;
-            case TO_SERVER: return TO_CLIENT;
+            case TO_CLIENT:
+                return TO_SERVER;
+            case TO_SERVER:
+                return TO_CLIENT;
         }
         return null;
     }

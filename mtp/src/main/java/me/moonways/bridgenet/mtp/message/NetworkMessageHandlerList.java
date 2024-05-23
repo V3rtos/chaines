@@ -99,8 +99,7 @@ public class NetworkMessageHandlerList {
                 method.invoke(subscriber.getSource(), value);
 
                 handlingCount++;
-            }
-            catch (Throwable exception) {
+            } catch (Throwable exception) {
                 if (isNotClassCastException(exception)) {
                     throw new MessageHandleException(exception);
                 }

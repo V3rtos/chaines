@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.connector.description.ActiveGameDescription;
 import me.moonways.bridgenet.connector.description.GameDescription;
 import me.moonways.bridgenet.connector.description.GameStateDescription;
-import me.moonways.bridgenet.model.bus.message.CreateGame;
-import me.moonways.bridgenet.model.games.GameStatus;
+import me.moonways.bridgenet.model.message.CreateGame;
+import me.moonways.bridgenet.model.service.games.GameStatus;
 
 import java.util.function.Function;
 

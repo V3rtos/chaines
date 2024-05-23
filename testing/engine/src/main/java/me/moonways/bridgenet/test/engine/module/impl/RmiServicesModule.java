@@ -2,11 +2,11 @@ package me.moonways.bridgenet.test.engine.module.impl;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.model.bus.message.Handshake;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.servers.ServersServiceModel;
+import me.moonways.bridgenet.model.message.Handshake;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.service.servers.ServersServiceModel;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
-import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
+import me.moonways.bridgenet.rmi.service.RemoteServicesManagement;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
 import me.moonways.bridgenet.test.engine.module.TestEngineModuleAdapter;

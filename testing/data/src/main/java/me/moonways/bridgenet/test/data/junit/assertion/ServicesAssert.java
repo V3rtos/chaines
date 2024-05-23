@@ -1,12 +1,12 @@
 package me.moonways.bridgenet.test.data.junit.assertion;
 
 import lombok.experimental.UtilityClass;
-import me.moonways.bridgenet.model.bus.message.CreateGame;
-import me.moonways.bridgenet.model.games.ActiveGame;
-import me.moonways.bridgenet.model.games.Game;
-import me.moonways.bridgenet.model.games.GameState;
-import me.moonways.bridgenet.model.games.GameStatus;
-import me.moonways.bridgenet.model.language.Language;
+import me.moonways.bridgenet.model.message.CreateGame;
+import me.moonways.bridgenet.model.service.games.ActiveGame;
+import me.moonways.bridgenet.model.service.games.Game;
+import me.moonways.bridgenet.model.service.games.GameState;
+import me.moonways.bridgenet.model.service.games.GameStatus;
+import me.moonways.bridgenet.model.service.language.Language;
 import me.moonways.bridgenet.test.data.TestConst;
 import org.junit.Assert;
 

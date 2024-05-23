@@ -36,7 +36,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -74,8 +75,7 @@ public class WrappedHttpServer {
         try {
             httpServer.start();
             log.info("HttpServer was success started and listening on §6{}", config.getHost());
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             exceptionHandler.log(exception);
         }
     }
@@ -209,8 +209,7 @@ public class WrappedHttpServer {
         try {
             Class<?> aClass = Class.forName(classpath);
             return (T) UNSAFE_FACTORY.create(aClass);
-        }
-        catch (ClassNotFoundException exception) {
+        } catch (ClassNotFoundException exception) {
             exceptionHandler.log(exception);
         }
 

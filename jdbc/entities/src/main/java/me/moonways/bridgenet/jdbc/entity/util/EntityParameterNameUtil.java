@@ -34,8 +34,7 @@ public class EntityParameterNameUtil {
         }
         if ((methodName.startsWith("get") || methodName.startsWith("has")) && methodName.charAt(3) == Character.toUpperCase(methodName.charAt(3))) {
             methodName = methodName.substring(3);
-        }
-        else if (methodName.startsWith("is") && methodName.charAt(2) == Character.toUpperCase(methodName.charAt(2))) {
+        } else if (methodName.startsWith("is") && methodName.charAt(2) == Character.toUpperCase(methodName.charAt(2))) {
             methodName = methodName.substring(2);
         }
         return methodName.equalsIgnoreCase(expected);

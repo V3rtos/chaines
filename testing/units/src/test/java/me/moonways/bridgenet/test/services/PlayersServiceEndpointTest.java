@@ -1,13 +1,13 @@
 package me.moonways.bridgenet.test.services;
 
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.model.players.OfflinePlayer;
-import me.moonways.bridgenet.model.players.Player;
-import me.moonways.bridgenet.model.players.service.PlayerStore;
+import me.moonways.bridgenet.model.service.players.OfflinePlayer;
+import me.moonways.bridgenet.model.service.players.Player;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.service.players.component.PlayerLeveling;
+import me.moonways.bridgenet.model.service.players.component.PlayerStore;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.players.service.PlayerLeveling;
 import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
@@ -17,7 +17,8 @@ import org.junit.runner.RunWith;
 import java.rmi.RemoteException;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(ModernTestEngineRunner.class)
 @TestModules(RmiServicesModule.class)

@@ -1,6 +1,5 @@
 # BridgeNet / Services / Auth
 
-
 ---
 
 ## MODEL
