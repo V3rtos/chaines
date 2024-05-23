@@ -13,7 +13,6 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.util.pair.Pair;
-import org.apache.logging.log4j.message.Message;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
