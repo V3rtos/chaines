@@ -61,7 +61,8 @@ public final class BeansService {
     private final AnnotationInterceptor interceptor = new AnnotationInterceptor();
 
     private final Set<Class<?>> initializedAnnotationsSet = Collections.synchronizedSet(new HashSet<>());
-    private final Map<Class<?>, Consumer<Object>> onBindingsMap = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Class<?>, Consumer<Object>> beansOnBindingsMap = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Class<?>, Runnable> processorsOnBindingsMap = Collections.synchronizedMap(new HashMap<>());
 
     private Properties properties;
 
@@ -205,9 +206,16 @@ public final class BeansService {
                 scanner.scanBeans(config).forEach(bean -> processBean(config, bean));
 
                 annotationsAwaits.flushQueue(annotationType);
+
+                Runnable onBinding = processorsOnBindingsMap.remove(annotationType);
+                if (onBinding != null) {
+                    onBinding.run();
+                }
             }
 
             public void processBean(AnnotationProcessorConfig<V> config, Bean bean) {
+                annotationsAwaits.needsAwaits(bean);
+
                 AnnotationVerificationContext<V> verification = new AnnotationVerificationContext<>(
                         config.getAnnotationType(), bean, config);
 
@@ -320,7 +328,7 @@ public final class BeansService {
 
         // call post-binding consumers.
         Bean finalBean = bean;
-        Optional.ofNullable(onBindingsMap.remove(bean.getType().getRoot()))
+        Optional.ofNullable(beansOnBindingsMap.remove(bean.getType().getRoot()))
                 .ifPresent(consumer -> consumer.accept(finalBean.getRoot()));
     }
 
@@ -401,12 +409,46 @@ public final class BeansService {
     }
 
     /**
-     * Потребляет указанный процесс, при определении забиндиного типа
-     * бина.
+     * Потребляет указанный процесс, при определении забиндиного
+     * типа бина.
      *
-     * @param type - тип бина, который ожидается для этого процесса.
+     * @param type      - тип бина, который ожидается для этого процесса.
+     * @param onBinding - процесс, вызываемый после биндинга.
      */
-    public <T> void onBinding(Class<T> type, Consumer<T> consumer) {
-        onBindingsMap.put(type, (Consumer<Object>) consumer);
+    @SuppressWarnings("unchecked")
+    public <T> void onBinding(Class<T> type, Consumer<T> onBinding) {
+        Consumer<Object> consumer = beansOnBindingsMap.get(type);
+        Consumer<Object> cast = (Consumer<Object>) onBinding;
+
+        if (consumer == null) {
+            consumer = cast;
+        } else {
+            consumer = consumer.andThen(cast);
+        }
+
+        beansOnBindingsMap.put(type, consumer);
+    }
+
+    /**
+     * Потребляет указанный процесс, при определении забиндиного
+     * типа процессора аннотаций.
+     *
+     * @param type      - тип процессора аннотаций, который ожидается для этого процесса.
+     * @param onBinding - процесс, вызываемый после биндинга.
+     */
+    public void onBinding(Class<? extends Annotation> type, Runnable onBinding) {
+        Runnable runnable = processorsOnBindingsMap.get(type);
+
+        if (runnable == null) {
+            runnable = onBinding;
+        } else {
+            Runnable finalRunnable = runnable;
+            runnable = () -> {
+                finalRunnable.run();
+                onBinding.run();
+            };
+        }
+
+        processorsOnBindingsMap.put(type, runnable);
     }
 }
