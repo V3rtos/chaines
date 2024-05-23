@@ -5,6 +5,7 @@ import me.moonways.bridgenet.model.service.auth.Account;
 import me.moonways.bridgenet.model.service.auth.AuthServiceModel;
 import me.moonways.bridgenet.model.service.auth.AuthenticationSession;
 import me.moonways.bridgenet.model.service.auth.AuthorizationResult;
+import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
@@ -14,7 +15,6 @@ import org.junit.runner.RunWith;
 
 import java.rmi.RemoteException;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -22,23 +22,18 @@ import static org.junit.Assert.*;
 @TestModules(RmiServicesModule.class)
 public class AuthServiceEndpointTest {
 
-    private static final String ACTUAL_PASSWORD = "123qweasdzxc";
-    private static final String NEW_PASSWORD = "cxzdsaewq321";
-
-    private static final UUID PLAYER_ID = UUID.randomUUID();
-
     @Inject
     private AuthServiceModel serviceModel;
 
     @Test
     @TestOrdered(0)
     public void test_accountRegistration() throws RemoteException {
-        assertFalse(serviceModel.findAccountById(PLAYER_ID).isPresent());
+        assertFalse(serviceModel.findAccountById(TestConst.Player.ID).isPresent());
 
-        AuthorizationResult resultSuccess = serviceModel.tryRegistration(PLAYER_ID, ACTUAL_PASSWORD);
-        AuthorizationResult resultAlreadyRegistered = serviceModel.tryRegistration(PLAYER_ID, ACTUAL_PASSWORD);
+        AuthorizationResult resultSuccess = serviceModel.tryRegistration(TestConst.Player.ID, TestConst.Auth.ACTUAL_PASSWORD);
+        AuthorizationResult resultAlreadyRegistered = serviceModel.tryRegistration(TestConst.Player.ID, TestConst.Auth.ACTUAL_PASSWORD);
 
-        assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
+        assertTrue(serviceModel.findAccountById(TestConst.Player.ID).isPresent());
         assertEquals(resultSuccess, AuthorizationResult.SUCCESS);
         assertEquals(resultAlreadyRegistered, AuthorizationResult.FAILURE__ALREADY_REGISTERED);
     }
@@ -46,7 +41,7 @@ public class AuthServiceEndpointTest {
     @Test
     @TestOrdered(1)
     public void test_accountSession() throws RemoteException {
-        Optional<Account> accountById = serviceModel.findAccountById(PLAYER_ID);
+        Optional<Account> accountById = serviceModel.findAccountById(TestConst.Player.ID);
         assertTrue(accountById.isPresent());
 
         Account account = accountById.get();
@@ -63,10 +58,10 @@ public class AuthServiceEndpointTest {
     @Test
     @TestOrdered(2)
     public void test_accountLogout() throws RemoteException {
-        assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
+        assertTrue(serviceModel.findAccountById(TestConst.Player.ID).isPresent());
 
-        AuthorizationResult resultSuccess = serviceModel.tryLogOut(PLAYER_ID);
-        AuthorizationResult resultNotLogged = serviceModel.tryLogOut(PLAYER_ID);
+        AuthorizationResult resultSuccess = serviceModel.tryLogOut(TestConst.Player.ID);
+        AuthorizationResult resultNotLogged = serviceModel.tryLogOut(TestConst.Player.ID);
 
         assertEquals(resultSuccess, AuthorizationResult.SUCCESS);
         assertEquals(resultNotLogged, AuthorizationResult.FAILURE__NOT_LOGGED);
@@ -75,10 +70,10 @@ public class AuthServiceEndpointTest {
     @Test
     @TestOrdered(3)
     public void test_accountLogging() throws RemoteException {
-        assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
+        assertTrue(serviceModel.findAccountById(TestConst.Player.ID).isPresent());
 
-        AuthorizationResult resultSuccess = serviceModel.tryLogin(PLAYER_ID, ACTUAL_PASSWORD);
-        AuthorizationResult resultAlreadyLogged = serviceModel.tryLogin(PLAYER_ID, ACTUAL_PASSWORD);
+        AuthorizationResult resultSuccess = serviceModel.tryLogin(TestConst.Player.ID, TestConst.Auth.ACTUAL_PASSWORD);
+        AuthorizationResult resultAlreadyLogged = serviceModel.tryLogin(TestConst.Player.ID, TestConst.Auth.ACTUAL_PASSWORD);
 
         assertEquals(resultSuccess, AuthorizationResult.SUCCESS);
         assertEquals(resultAlreadyLogged, AuthorizationResult.FAILURE__ALREADY_LOGGED);
@@ -87,11 +82,11 @@ public class AuthServiceEndpointTest {
     @Test
     @TestOrdered(4)
     public void test_accountPasswordChange() throws RemoteException {
-        assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
+        assertTrue(serviceModel.findAccountById(TestConst.Player.ID).isPresent());
 
-        AuthorizationResult resultUncorrectedPassword = serviceModel.tryPasswordChange(PLAYER_ID, NEW_PASSWORD, ACTUAL_PASSWORD);
-        AuthorizationResult resultSimilarPreviousPassword = serviceModel.tryPasswordChange(PLAYER_ID, ACTUAL_PASSWORD, ACTUAL_PASSWORD);
-        AuthorizationResult resultSuccess = serviceModel.tryPasswordChange(PLAYER_ID, ACTUAL_PASSWORD, NEW_PASSWORD);
+        AuthorizationResult resultUncorrectedPassword = serviceModel.tryPasswordChange(TestConst.Player.ID, TestConst.Auth.NEW_PASSWORD, TestConst.Auth.ACTUAL_PASSWORD);
+        AuthorizationResult resultSimilarPreviousPassword = serviceModel.tryPasswordChange(TestConst.Player.ID, TestConst.Auth.ACTUAL_PASSWORD, TestConst.Auth.ACTUAL_PASSWORD);
+        AuthorizationResult resultSuccess = serviceModel.tryPasswordChange(TestConst.Player.ID, TestConst.Auth.ACTUAL_PASSWORD, TestConst.Auth.NEW_PASSWORD);
 
         assertEquals(resultUncorrectedPassword, AuthorizationResult.FAILURE__UNCORRECTED_PASSWORD);
         assertEquals(resultSimilarPreviousPassword, AuthorizationResult.FAILURE__SIMILAR_PREVIOUS_PASSWORDS);
@@ -101,10 +96,10 @@ public class AuthServiceEndpointTest {
     @Test
     @TestOrdered(5)
     public void test_accountDelete() throws RemoteException {
-        assertTrue(serviceModel.findAccountById(PLAYER_ID).isPresent());
+        assertTrue(serviceModel.findAccountById(TestConst.Player.ID).isPresent());
 
-        AuthorizationResult resultSuccess = serviceModel.tryAccountDelete(PLAYER_ID);
-        AuthorizationResult resultNotFound = serviceModel.tryAccountDelete(PLAYER_ID);
+        AuthorizationResult resultSuccess = serviceModel.tryAccountDelete(TestConst.Player.ID);
+        AuthorizationResult resultNotFound = serviceModel.tryAccountDelete(TestConst.Player.ID);
 
         assertEquals(resultSuccess, AuthorizationResult.SUCCESS);
         assertEquals(resultNotFound, AuthorizationResult.FAILURE__ACCOUNT_NOT_FOUND);

@@ -22,6 +22,11 @@ public final class TestConst {
         public static final boolean FILTER_BY_PACKAGE = Boolean.TRUE;
     }
 
+    public static final class Auth {
+        public static final String ACTUAL_PASSWORD = "123qweasdzxc";
+        public static final String NEW_PASSWORD = "cxzdsaewq321";
+    }
+
     public static final class Game {
         public static final String NAME = "Developing Game";
         public static final String MAP = "IDE with opened Bridgenet project";
