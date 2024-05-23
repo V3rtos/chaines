@@ -113,7 +113,7 @@ public final class GroupsManagerStub implements GroupsManager {
 
     @Override
     public Optional<PermissionGroup> getPlayerGroup(String playerName) throws RemoteException {
-        return getPlayerGroup(playersServiceModel.findPlayerId(playerName));
+        return getPlayerGroup(playersServiceModel.store().idByName(playerName));
     }
 
     @Override
@@ -132,7 +132,7 @@ public final class GroupsManagerStub implements GroupsManager {
 
     @Override
     public Optional<PlayerGroupUpdateEvent> setPlayerGroup(String playerName, PermissionGroup group) throws RemoteException {
-        UUID playerId = playersServiceModel.findPlayerId(playerName);
+        UUID playerId = playersServiceModel.store().idByName(playerName);
         return setPlayerGroup(playerId, group);
     }
 

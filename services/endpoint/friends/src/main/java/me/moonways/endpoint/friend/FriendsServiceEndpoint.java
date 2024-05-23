@@ -70,8 +70,7 @@ public final class FriendsServiceEndpoint extends EndpointRemoteObject implement
 
     @Override
     public FriendsList getFriends(String playerName) throws RemoteException {
-        UUID playerId = playersServiceModel.findPlayerId(playerName);
+        UUID playerId = playersServiceModel.store().idByName(playerName);
         return getFriends(playerId);
     }
-
 }

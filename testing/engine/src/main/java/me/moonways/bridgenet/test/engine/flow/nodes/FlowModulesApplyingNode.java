@@ -49,6 +49,13 @@ public class FlowModulesApplyingNode implements TestFlowNode {
                         .collect(Collectors.joining(", ")));
 
         beans.forEach(bean -> processBeanBinding(beansService, bean));
+
+        log.debug("Installing §2{} §rimplemented modules...", instancesList.size());
+        instancesList.forEach(testEngineModule -> {
+
+            beansService.inject(testEngineModule);
+            testEngineModule.onInstall(context);
+        });
     }
 
     private List<Bean> createBeansList(BeansService beansService, List<TestEngineModule> instancesList) {
@@ -79,6 +86,7 @@ public class FlowModulesApplyingNode implements TestFlowNode {
             beansService.scanAnnotationProcessors(typeAnnotationProcessors);
             beans = new ArrayList<>(beansService.getStore().getTotalBeans());
         }
+
         return beans;
     }
 

@@ -14,8 +14,6 @@ public class EndpointController {
 
     @Inject
     private BeansService beansService;
-    @Inject
-    private RemoteServicesManagement remoteServicesManagement;
 
     private List<Endpoint> endpointsList;
 

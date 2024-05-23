@@ -86,6 +86,14 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
         IniConfig messagesConfig = registeredLanguage.getMessagesConfig();
         String messageKey = message.getKey();
 
+        if (messageKey == null) {
+            return findTranslatedMessage(language, MessageTypes.UNKNOWN_MESSAGE_TYPE)
+                    .map(s -> s.replace(Message.PLACEHOLDER_MSG_KEY, "null"));
+        }
+        if (messageKey.isEmpty()) {
+            return Optional.of(messageKey);
+        }
+
         String[] split = messageKey.split("\\.");
         return Optional.of(
                 messagesConfig.readProperty(split[0], split[1])
@@ -156,7 +164,7 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
 
     @Override
     public Language getPlayerLang(String playerName) throws RemoteException {
-        return getPlayerLang(playersServiceModel.findPlayerId(playerName));
+        return getPlayerLang(playersServiceModel.store().idByName(playerName));
     }
 
     @Override
@@ -182,6 +190,6 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
 
     @Override
     public Optional<PlayerLanguageUpdateEvent> setPlayerLang(String playerName, Language language) throws RemoteException {
-        return setPlayerLang(playersServiceModel.findPlayerId(playerName), language);
+        return setPlayerLang(playersServiceModel.store().idByName(playerName), language);
     }
 }

@@ -78,7 +78,7 @@ public final class PermissionsManagerStub implements PermissionsManager {
 
     @Override
     public Set<Permission> getActivePermissions(String playerName) throws RemoteException {
-        return getActivePermissions(playersServiceModel.findPlayerId(playerName));
+        return getActivePermissions(playersServiceModel.store().idByName(playerName));
     }
 
     @Override
@@ -96,7 +96,7 @@ public final class PermissionsManagerStub implements PermissionsManager {
 
     @Override
     public Optional<PlayerPermissionPutEvent> addPermission(String playerName, Permission permission) throws RemoteException {
-        return addPermission(playersServiceModel.findPlayerId(playerName), permission);
+        return addPermission(playersServiceModel.store().idByName(playerName), permission);
     }
 
     @Override
@@ -132,7 +132,7 @@ public final class PermissionsManagerStub implements PermissionsManager {
 
     @Override
     public Optional<PlayerPermissionRemoveEvent> removePermission(String playerName, Permission permission) throws RemoteException {
-        return removePermission(playersServiceModel.findPlayerId(playerName), permission);
+        return removePermission(playersServiceModel.store().idByName(playerName), permission);
     }
 
     @Override
@@ -168,7 +168,7 @@ public final class PermissionsManagerStub implements PermissionsManager {
 
     @Override
     public void clearPermissions(String playerName) throws RemoteException {
-        clearPermissions(playersServiceModel.findPlayerId(playerName));
+        clearPermissions(playersServiceModel.store().idByName(playerName));
     }
 
     @Override

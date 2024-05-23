@@ -40,15 +40,18 @@ public class BusServiceEndpoint extends EndpointRemoteObject implements BusServi
 
     @Override
     protected void construct(EndpointRemoteContext context) {
-        scheduler.schedule(ScheduledTime.of(3, TimeUnit.SECONDS))
-                .follow(task -> {
-                    networkController.bindMessages();
-                    networkController.bindMessageListeners();
+        //scheduler.schedule(ScheduledTime.of(3, TimeUnit.SECONDS))
+        //        .follow(task -> register(context));
+        register(context);
+    }
 
-                    bindServer();
+    private void register(EndpointRemoteContext context) {
+        networkController.bindMessages();
+        networkController.bindMessageListeners();
 
-                    context.registerMessageListener(new GetCommandsMessageHandler());
-                });
+        bindServer();
+
+        context.registerMessageListener(new GetCommandsMessageHandler());
     }
 
     private void bindServer() {
