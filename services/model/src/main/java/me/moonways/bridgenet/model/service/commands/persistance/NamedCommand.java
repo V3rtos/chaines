@@ -1,13 +1,13 @@
-package me.moonways.bridgenet.model.commands.persistance;
+package me.moonways.bridgenet.model.service.commands.persistance;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Description {
+public @interface NamedCommand {
 
-    String value();
+    String[] value();
 }

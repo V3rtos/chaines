@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.model.commands;
+package me.moonways.bridgenet.model.service.commands;
 
 import me.moonways.bridgenet.model.players.OfflinePlayer;
 import me.moonways.bridgenet.model.util.audience.EntityAudience;

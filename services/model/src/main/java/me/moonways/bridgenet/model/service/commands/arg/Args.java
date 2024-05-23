@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.model.commands.arg;
+package me.moonways.bridgenet.model.service.commands.arg;
 
 import lombok.Builder;
 import lombok.Getter;

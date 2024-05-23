@@ -34,7 +34,6 @@ built on layer-services architecture.
 * [Assembly](.docs/assembly.md)
 * [API Modules](.docs/api.md):
     * [API / Delayed Runnable`s](.docs/api/autorun-api.md)
-    * [API / User Command`s](.docs/api/commands-api.md)
     * [API / Event`s Subscribing](.docs/api/events-api.md)
     * [API / Dependency Injection](.docs/api/inject-api.md)
     * [API / Method Intercepting](.docs/api/proxy-api.md)
@@ -48,6 +47,7 @@ built on layer-services architecture.
 * [Services and Endpoints](.docs/services.md)
     * [ENDPOINT / AUTH](.docs/services/auth-endpoint.md)
     * [ENDPOINT / BUS](.docs/services/bus-endpoint.md)
+    * [ENDPOINT / COMMANDS](.docs/services/commands-endpoint.md)
     * [ENDPOINT / FRIENDS](.docs/services/friends-endpoint.md)
     * [ENDPOINT / GAMES](.docs/services/games-endpoint.md)
     * [ENDPOINT / GUI](.docs/services/gui-endpoint.md)

@@ -1,6 +1,4 @@
-package me.moonways.bridgenet.model.commands.persistance;
-
-import me.moonways.bridgenet.api.modern_command.CommandElementType;
+package me.moonways.bridgenet.model.service.commands.persistance;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CommandElement {
+public @interface Aliases {
 
-    CommandElementType value();
+    String[] value();
 }

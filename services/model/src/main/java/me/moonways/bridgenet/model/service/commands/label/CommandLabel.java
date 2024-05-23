@@ -1,6 +1,6 @@
-package me.moonways.bridgenet.model.commands.label;
+package me.moonways.bridgenet.model.service.commands.label;
 
-import me.moonways.bridgenet.model.commands.arg.Args;
+import me.moonways.bridgenet.model.service.commands.arg.Args;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

@@ -1,8 +1,8 @@
-package me.moonways.bridgenet.model.commands;
+package me.moonways.bridgenet.model.service.commands;
 
 import lombok.Builder;
 import lombok.Getter;
-import me.moonways.bridgenet.model.commands.label.CommandLabel;
+import me.moonways.bridgenet.model.service.commands.label.CommandLabel;
 import me.moonways.bridgenet.model.players.Player;
 import me.moonways.bridgenet.model.util.audience.EntityAudience;
 

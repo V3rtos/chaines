@@ -28,6 +28,7 @@
         <module>reports</module>
         <module>servers</module>
         <module>settings</module>
+        <module>commands</module>
     </modules>
 
     <dependencies>

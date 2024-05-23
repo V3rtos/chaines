@@ -1,13 +1,13 @@
-package me.moonways.bridgenet.model.commands.persistance;
+package me.moonways.bridgenet.model.service.commands.persistance;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NamedCommand {
+public @interface Cooldown {
 
-    String[] value();
+    long value();
 }
