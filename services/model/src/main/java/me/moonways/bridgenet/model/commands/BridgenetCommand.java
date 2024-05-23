@@ -1,41 +1,48 @@
 package me.moonways.bridgenet.model.commands;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import me.moonways.bridgenet.model.commands.arguments.ArgumentsContext;
+
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Getter
-@ToString
-@RequiredArgsConstructor
-public abstract class BridgenetCommand implements Command {
+@Builder
+public class BridgenetCommand {
 
-    protected static CommandResult FAILED =
-            CommandResult.builder()
-                    .type(CommandResult.Type.FAILED)
-                    .build();
-    protected static CommandResult CONFIRMED =
-            CommandResult.builder()
-                    .type(CommandResult.Type.CONFIRMED)
-                    .build();
+    private final UUID id;
+    private final CommandConfiguration configuration;
 
-    private final CommandDescription description;
+    private final List<BridgenetCommand> subCommands;
 
-    @Override
-    public void prepare(ArgumentsContext argumentsContext) {
-        // override me.
-
-        for (int i = 0; i < argumentsContext.count(); i++) {
-            argumentsContext.setName(i, Integer.toString(i));
-        }
+    public BridgenetCommand getSubCommand(String name) {
+        return subCommands.stream()
+                .filter(element -> {
+                    try {
+                        return element.getConfiguration().getName().equalsIgnoreCase(name);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList())
+                .stream()
+                .findFirst().orElse(null);
     }
 
-    @Override
-    public CommandResult run(CommandSessionContext context) {
-        // override me.
-        return CommandResult.builder()
-                .type(CommandResult.Type.FAILED)
-                .failThrowableSuppler(() -> new UnsupportedOperationException("no execution logic"))
-                .build();
+    public boolean hasSubCommand(String name) {
+        return (long) (int) subCommands.stream()
+                .filter(element -> {
+                    try {
+                        return element.getConfiguration().getName().equalsIgnoreCase(name);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).count() > 0;
+    }
+
+    public boolean isEmptySubCommand() {
+        return subCommands.isEmpty();
     }
 }
