@@ -8,10 +8,11 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ini.IniConfig;
 import me.moonways.bridgenet.assembly.ini.type.IniProperty;
-import me.moonways.bridgenet.model.language.*;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteContext;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.model.event.PlayerLanguageUpdateEvent;
+import me.moonways.bridgenet.model.service.language.*;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import net.kyori.adventure.text.Component;
 
 import java.rmi.RemoteException;
@@ -35,6 +36,9 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
             CacheBuilder.newBuilder()
                     .expireAfterAccess(5, TimeUnit.HOURS)
                     .build();
+
+    @Inject
+    private LanguageDisplayNameMapper languageDisplayNameMapper;
 
     @Inject
     private EventService eventService;
@@ -71,7 +75,10 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
                             .build();
 
             registeredLanguagesMap.put(language.getId(), registeredLanguage);
-            log.info("Registered language type §6{} §rfrom resource §6/{}", language.getName(), resourceName);
+
+            log.info("Registered language type §6{} §7(short={}) §rfrom resource §6/{}",
+                    languageDisplayNameMapper.getDisplayName(language),
+                    language.getName().toUpperCase(), resourceName);
         }
     }
 

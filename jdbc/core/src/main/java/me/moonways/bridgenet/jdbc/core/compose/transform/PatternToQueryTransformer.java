@@ -75,7 +75,9 @@ public final class PatternToQueryTransformer {
                                 value -> value.substring(1),
                                 value -> createStatements(value, statementsTexts.get(value)),
 
-                                (u, v) -> { throw new RuntimeException(); },
+                                (u, v) -> {
+                                    throw new RuntimeException();
+                                },
                                 () -> new TreeMap<>(
                                         Comparator.comparingInt(key -> statementsTexts.get("$" + key).length()))
                         )
@@ -92,8 +94,7 @@ public final class PatternToQueryTransformer {
         String correctlyFullPattern = fullPattern;
         if (correctlyFullPattern.startsWith("@") && !correctlyFullPattern.endsWith("\"")) {
             correctlyFullPattern += "\"";
-        }
-        else {
+        } else {
             correctlyFullPattern = String.format("\"%s\"", fullPattern);
         }
 
@@ -101,9 +102,9 @@ public final class PatternToQueryTransformer {
 
         TransformStatements.Builder statementBuilder
                 = TransformStatements.builder()
-                    .condition(condition)
-                    .full(QueryTransformationOps.fixEndsCorners(correctlyFullPattern))
-                    .corrected(statementsArray[0]);
+                .condition(condition)
+                .full(QueryTransformationOps.fixEndsCorners(correctlyFullPattern))
+                .corrected(statementsArray[0]);
 
         if (statementsArray.length == 1) {
             return statementBuilder

@@ -1,13 +1,13 @@
 package me.moonways.bridgenet.api.inject.decorator.config;
 
-import java.util.List;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 @Getter
 @ToString
@@ -24,14 +24,14 @@ public class XMLMethodHandlerDescriptor {
     private String handlerClassname;
 
     @Setter(onMethod_ = {
-        @XmlElementWrapper(name = "conflicts"),
-        @XmlElement(name = "input")
+            @XmlElementWrapper(name = "conflicts"),
+            @XmlElement(name = "input")
     })
     private List<XMLInputDescriptor> conflicts;
 
     @Setter(onMethod_ = {
-        @XmlElementWrapper(name = "inherits"),
-        @XmlElement(name = "input")
+            @XmlElementWrapper(name = "inherits"),
+            @XmlElement(name = "input")
     })
     private List<XMLInputDescriptor> inherits;
 }

@@ -1,9 +1,9 @@
 package me.moonways.endpoint.gui;
 
-import me.moonways.bridgenet.model.gui.item.ItemStack;
-import me.moonways.bridgenet.model.gui.item.Items;
-import me.moonways.bridgenet.model.gui.item.entries.material.Material;
-import me.moonways.bridgenet.model.gui.item.types.Materials;
+import me.moonways.bridgenet.model.service.gui.item.ItemStack;
+import me.moonways.bridgenet.model.service.gui.item.Items;
+import me.moonways.bridgenet.model.service.gui.item.entries.material.Material;
+import me.moonways.bridgenet.model.service.gui.item.types.Materials;
 
 import java.rmi.RemoteException;
 

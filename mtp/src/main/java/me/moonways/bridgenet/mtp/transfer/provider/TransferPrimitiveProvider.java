@@ -66,28 +66,22 @@ public class TransferPrimitiveProvider implements TransferProvider {
         if (isBoolean(type)) {
             buf.writeBoolean((Boolean) object);
             return;
-        }
-        else if (isAssignableFrom(int.class, type)) {
+        } else if (isAssignableFrom(int.class, type)) {
             buf.writeInt((Integer) object);
             return;
-        }
-        else if (isAssignableFrom(long.class, type)) {
+        } else if (isAssignableFrom(long.class, type)) {
             buf.writeLong((Long) object);
             return;
-        }
-        else if (isAssignableFrom(double.class, type)) {
+        } else if (isAssignableFrom(double.class, type)) {
             buf.writeDouble((Double) object);
             return;
-        }
-        else if (isAssignableFrom(float.class, type)) {
+        } else if (isAssignableFrom(float.class, type)) {
             buf.writeFloat((Float) object);
             return;
-        }
-        else if (isAssignableFrom(byte.class, type)) {
+        } else if (isAssignableFrom(byte.class, type)) {
             buf.writeByte((Byte) object);
             return;
-        }
-        else if (isAssignableFrom(short.class, type)) {
+        } else if (isAssignableFrom(short.class, type)) {
             buf.writeShort((Short) object);
             return;
         }

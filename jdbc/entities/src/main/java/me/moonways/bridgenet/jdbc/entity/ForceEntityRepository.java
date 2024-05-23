@@ -121,7 +121,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
             if (searchMarker.getExpectationMap() == null || searchMarker.getExpectationMap().isEmpty()) {
                 parameterUnits.forEach(parameterUnit ->
-                                searchMarker.with(parameterUnit.getId(), parameterUnit.getValue()));
+                        searchMarker.with(parameterUnit.getId(), parameterUnit.getValue()));
             }
 
             doDelete(entityDescriptor, searchMarker);

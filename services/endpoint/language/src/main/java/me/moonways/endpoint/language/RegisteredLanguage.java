@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import me.moonways.bridgenet.assembly.ini.IniConfig;
-import me.moonways.bridgenet.model.language.Language;
+import me.moonways.bridgenet.model.service.language.Language;
 
 @Getter
 @Builder

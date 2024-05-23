@@ -1,10 +1,10 @@
 package me.moonways.endpoint.players.player;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.model.players.OfflinePlayer;
-import me.moonways.bridgenet.model.players.event.PlayerRedirectEvent;
-import me.moonways.bridgenet.model.players.service.PlayerConnection;
-import me.moonways.bridgenet.model.servers.EntityServer;
+import me.moonways.bridgenet.model.event.PlayerPostRedirectEvent;
+import me.moonways.bridgenet.model.service.players.OfflinePlayer;
+import me.moonways.bridgenet.model.service.players.component.PlayerConnection;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;
@@ -17,12 +17,12 @@ public final class PlayerConnectionStub implements PlayerConnection {
     private final OfflinePlayer player;
 
     @Override
-    public CompletableFuture<PlayerRedirectEvent> connect(@NotNull EntityServer server) throws RemoteException {
+    public CompletableFuture<PlayerPostRedirectEvent> connect(@NotNull EntityServer server) throws RemoteException {
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public CompletableFuture<PlayerRedirectEvent> connect(@NotNull UUID serverID) throws RemoteException {
+    public CompletableFuture<PlayerPostRedirectEvent> connect(@NotNull UUID serverID) throws RemoteException {
         return CompletableFuture.completedFuture(null);
     }
 

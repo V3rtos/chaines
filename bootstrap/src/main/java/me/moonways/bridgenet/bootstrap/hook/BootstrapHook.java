@@ -16,8 +16,7 @@ public abstract class BootstrapHook {
         try {
             process(bootstrap);
             log.debug("Hook: §7{} <-> end;", namespace);
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error("§4Aborted bootstrap hook execution '{}' caused by {}", namespace, exception.toString(), exception);
         }
     }

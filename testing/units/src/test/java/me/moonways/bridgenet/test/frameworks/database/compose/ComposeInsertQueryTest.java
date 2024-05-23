@@ -20,7 +20,7 @@ public class ComposeInsertQueryTest {
 
     @Inject
     private DatabaseComposer composer;
-    
+
     @Test
     public void test_composeQuery() {
         String composedQuery = composer.useInsertionPattern()

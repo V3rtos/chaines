@@ -17,6 +17,7 @@ public final class ByteCodec {
     private static final int DEFAULT_OBJ_BUFFER_SIZE = 512;
 
     private final static Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_MAP = new HashMap<>();
+
     static {
         PRIMITIVE_TO_WRAPPER_MAP.put(boolean.class, Boolean.class);
         PRIMITIVE_TO_WRAPPER_MAP.put(byte.class, Byte.class);

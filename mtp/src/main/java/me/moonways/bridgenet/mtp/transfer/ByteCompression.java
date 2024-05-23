@@ -3,7 +3,6 @@ package me.moonways.bridgenet.mtp.transfer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.experimental.UtilityClass;
-import lombok.extern.log4j.Log4j2;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,7 +10,6 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-@Log4j2
 @UtilityClass
 public class ByteCompression {
 

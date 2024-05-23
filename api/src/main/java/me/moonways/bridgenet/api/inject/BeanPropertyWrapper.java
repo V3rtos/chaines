@@ -41,6 +41,7 @@ public final class BeanPropertyWrapper {
 
     /**
      * Установить новое значение в проперти
+     *
      * @param value - новое значение
      */
     public void set(@NotNull Object value) {

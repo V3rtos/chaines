@@ -15,5 +15,5 @@ public @interface EntityExternalParameter {
 
     String id() default "";
 
-    ParameterAddon[] indexes() default { };
+    ParameterAddon[] indexes() default {};
 }

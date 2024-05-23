@@ -14,6 +14,9 @@ public interface ExceptionallyConsumer<T> {
 
     default ExceptionallyConsumer<T> andThen(ExceptionallyConsumer<? super T> after) {
         Objects.requireNonNull(after);
-        return (T t) -> { accept(t); after.accept(t); };
+        return (T t) -> {
+            accept(t);
+            after.accept(t);
+        };
     }
 }

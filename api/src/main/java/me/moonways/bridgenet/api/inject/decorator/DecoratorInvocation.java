@@ -1,11 +1,12 @@
 package me.moonways.bridgenet.api.inject.decorator;
 
-import java.util.function.Supplier;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Delegate;
 import me.moonways.bridgenet.api.proxy.ProxiedMethod;
+
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class DecoratorInvocation {

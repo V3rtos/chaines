@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.connector.BridgenetConnector;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
 import me.moonways.bridgenet.connector.description.DeviceDescription;
-import me.moonways.bridgenet.model.bus.message.Handshake;
+import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 
 import java.util.List;

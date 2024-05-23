@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.jdbc.core.compose.impl.pattern.type.collection;
 
+import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 import me.moonways.bridgenet.jdbc.core.compose.template.collection.MergesTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedMerges;
-import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 
 import java.util.ArrayList;
 import java.util.List;

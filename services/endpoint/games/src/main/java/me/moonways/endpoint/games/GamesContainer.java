@@ -1,7 +1,7 @@
 package me.moonways.endpoint.games;
 
 import lombok.Synchronized;
-import me.moonways.bridgenet.model.games.Game;
+import me.moonways.bridgenet.model.service.games.Game;
 import me.moonways.endpoint.games.stub.GameStub;
 
 import java.util.*;

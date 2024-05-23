@@ -2,10 +2,10 @@ package me.moonways.bridgenet.test.services;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.util.minecraft.ChatColor;
-import me.moonways.bridgenet.model.settings.PlayerSettingsServiceModel;
-import me.moonways.bridgenet.model.settings.Setting;
-import me.moonways.bridgenet.model.settings.SettingID;
+import me.moonways.bridgenet.api.minecraft.ChatColor;
+import me.moonways.bridgenet.model.service.settings.PlayerSettingsServiceModel;
+import me.moonways.bridgenet.model.service.settings.Setting;
+import me.moonways.bridgenet.model.service.settings.SettingID;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;

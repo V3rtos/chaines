@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 @Log4j2
 @RunWith(ModernTestEngineRunner.class)

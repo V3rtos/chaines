@@ -46,6 +46,7 @@ public interface ParameterTypeAdapter {
      * Получить класс, в который сериализует данный адаптер.
      */
     Class<?> getOutputSerializationType();
+
     /**
      * Получить класс, в который десериализует данный адаптер.
      */

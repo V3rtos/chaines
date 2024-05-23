@@ -14,7 +14,6 @@ import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
@@ -39,13 +38,17 @@ public final class CommandExecutor {
     private CommandRegistry registry;
     @Inject
     private AnnotationInterceptor interceptor;
+    @Inject
+    private BeansService beansService;
 
     @GetTypeAnnotationProcessor
     private TypeAnnotationProcessorResult<Object> commandsResult;
 
     @PostConstruct
     private void init() {
-        commandsResult.toList().forEach(registry::registerCommand);
+        beansService.onBinding(Command.class, () -> {
+            commandsResult.toList().forEach(registry::registerCommand);
+        });
     }
 
     public void execute(@NotNull EntityCommandSender sender, @NotNull String label) throws CommandExecutionException {
@@ -99,7 +102,13 @@ public final class CommandExecutor {
         String permission = producerChild.getPermission();
 
         if (permission == null || matchesPermission(sender, permission)) {
-            CommandDescriptor descriptor = new CommandDescriptor(producerChild.getName(), producerChild.getPermission(), producerChild.getUsage(), producerChild.getDescription(), producerChild.getAliases());
+            CommandDescriptor descriptor = new CommandDescriptor(
+                    producerChild.getName(),
+                    producerChild.getPermission(),
+                    producerChild.getUsage(),
+                    producerChild.getDescription(),
+                    producerChild.getAliases());
+
             CommandSession childSession = factory.createSession(descriptor, wrapper.getHelpMessageView(), sender, factory.copyArgumentsOfRange(args));
 
             invokeMethod(childSession, wrapper.getSource(), producerChild.getMethod());
@@ -126,8 +135,9 @@ public final class CommandExecutor {
 
         boolean hasPermission = sender.hasPermission(permission);
 
-        if (!hasPermission)
+        if (!hasPermission) {
             sender.sendMessage("§cYou do not have permission to execute this command");
+        }
 
         return hasPermission;
     }

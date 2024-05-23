@@ -1,20 +1,20 @@
 package me.moonways.endpoint.players.player;
 
 import lombok.Getter;
-import me.moonways.bridgenet.model.bus.message.SendMessage;
-import me.moonways.bridgenet.model.bus.message.SendTitle;
-import me.moonways.bridgenet.model.language.Language;
-import me.moonways.bridgenet.model.language.Message;
-import me.moonways.bridgenet.model.players.Player;
-import me.moonways.bridgenet.model.players.service.PlayerConnection;
-import me.moonways.bridgenet.model.players.service.PlayerStore;
-import me.moonways.bridgenet.model.players.service.statistic.ActivityStatistics;
-import me.moonways.bridgenet.model.servers.EntityServer;
+import me.moonways.bridgenet.model.audience.ComponentHolders;
+import me.moonways.bridgenet.model.audience.MessageDirection;
+import me.moonways.bridgenet.model.event.AudienceSendEvent;
+import me.moonways.bridgenet.model.message.SendMessage;
+import me.moonways.bridgenet.model.message.SendTitle;
+import me.moonways.bridgenet.model.service.language.Language;
+import me.moonways.bridgenet.model.service.language.Message;
+import me.moonways.bridgenet.model.service.players.Player;
+import me.moonways.bridgenet.model.service.players.component.PlayerConnection;
+import me.moonways.bridgenet.model.service.players.component.PlayerStore;
+import me.moonways.bridgenet.model.service.players.component.statistic.ActivityStatistics;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.model.util.Title;
 import me.moonways.bridgenet.model.util.TitleFade;
-import me.moonways.bridgenet.model.util.audience.ComponentHolders;
-import me.moonways.bridgenet.model.util.audience.MessageDirection;
-import me.moonways.bridgenet.model.util.audience.event.AudienceSendEvent;
 import me.moonways.endpoint.players.database.PlayerDescription;
 import net.kyori.adventure.text.Component;
 

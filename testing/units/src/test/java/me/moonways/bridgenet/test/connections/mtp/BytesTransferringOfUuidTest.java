@@ -2,7 +2,10 @@ package me.moonways.bridgenet.test.connections.mtp;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;

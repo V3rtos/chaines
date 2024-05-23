@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.util.thread.Threads;
+import me.moonways.bridgenet.assembly.OverridenProperty;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookContainer;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookPriority;
@@ -54,9 +55,13 @@ public class AppBootstrap {
         beansService.bind(this);
 
         if (canStartingFull) {
-            beansService.start(BeansService.generateDefaultProperties());
+            beansService.start();
             beansService.inject(hooksContainer);
         }
+
+        log.info("Bootstrap was started System: §7'{}' §rversion §7{}§r.",
+                OverridenProperty.SYSTEM_NAME.get(),
+                OverridenProperty.SYSTEM_VERSION.get());
     }
 
     public void start(String[] args) {

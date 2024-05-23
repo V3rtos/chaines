@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.mtp.connection.client.BridgenetNetworkClientHandler;
-import me.moonways.bridgenet.rsi.service.RemoteServicesManagement;
+import me.moonways.bridgenet.rmi.service.RemoteServicesManagement;
 
 import java.util.concurrent.CompletableFuture;
 

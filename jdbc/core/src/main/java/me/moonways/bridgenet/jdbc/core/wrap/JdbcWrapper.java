@@ -133,8 +133,7 @@ public class JdbcWrapper {
                     result.completeIntent(() -> {
                         try {
                             return resultLookup.get(new PreparedQuerySession(statement, supportsGeneratedKeys));
-                        }
-                        catch (SQLException exception) {
+                        } catch (SQLException exception) {
                             observe(new DbRequestFailureEvent(System.currentTimeMillis(), connectionID, sql));
                             exceptionHandler.uncaughtException(thread, exception);
                             return null;
@@ -224,8 +223,7 @@ public class JdbcWrapper {
                     try {
                         jdbc.rollback();
                         observe(new DbTransactionRollbackEvent(System.currentTimeMillis(), connectionID));
-                    }
-                    catch (SQLException e) {
+                    } catch (SQLException e) {
                         exception.addSuppressed(e);
                     }
                     exceptionHandler.uncaughtException(thread, exception);
@@ -238,8 +236,7 @@ public class JdbcWrapper {
     private Pair<PreparedStatement, Boolean> tryStatementPrepareWithGeneratedKeys(String sql) throws SQLException {
         try {
             return Pair.immutable(jdbc.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS), true);
-        }
-        catch (Exception ignored) {
+        } catch (Exception ignored) {
             return Pair.immutable(jdbc.prepareStatement(sql, Statement.NO_GENERATED_KEYS), false);
         }
     }

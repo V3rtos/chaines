@@ -24,6 +24,7 @@ public interface BridgenetNetworkChannel extends Serializable {
 
     /**
      * Получить кешированное значение аттрибута.
+     *
      * @param key - ключ аттрибута.
      */
     <T> Optional<T> getProperty(@NotNull String key);
@@ -31,25 +32,28 @@ public interface BridgenetNetworkChannel extends Serializable {
     /**
      * Установить значение аттрибута.
      *
-     * @param key - ключ аттрибута.
+     * @param key   - ключ аттрибута.
      * @param value - значение аттрибута.
      */
     void setProperty(@NotNull String key, @Nullable Object value);
 
     /**
      * Отправить сообщение на подключенный канал.
+     *
      * @param message - отправляемое сообщение.
      */
     void send(@NotNull Object message);
 
     /**
      * Пробросить сообщение внутри сети.
+     *
      * @param message - отправляемое сообщение.
      */
     void pull(@NotNull Object message);
 
     /**
      * Пробросить сообщение внутри сети.
+     *
      * @param context - контекст отправляемого сообщения.
      */
     void pull(@NotNull InboundMessageContext<?> context);
@@ -64,7 +68,7 @@ public interface BridgenetNetworkChannel extends Serializable {
      * с ожиданием ответа.
      *
      * @param responseType - тип ожидаемого ответа.
-     * @param message - отправляемое сообщение.
+     * @param message      - отправляемое сообщение.
      */
     <R> CompletableFuture<R> sendAwait(@NotNull Class<R> responseType, @NotNull Object message);
 
@@ -72,9 +76,9 @@ public interface BridgenetNetworkChannel extends Serializable {
      * Отправить сообщение на подключенный канал
      * с ожиданием ответа.
      *
-     * @param timeout - таймаут ожидания сообщения
+     * @param timeout      - таймаут ожидания сообщения
      * @param responseType - тип ожидаемого ответа.
-     * @param message - отправляемое сообщение.
+     * @param message      - отправляемое сообщение.
      */
     <R> CompletableFuture<R> sendAwait(int timeout, @NotNull Class<R> responseType, @NotNull Object message);
 }

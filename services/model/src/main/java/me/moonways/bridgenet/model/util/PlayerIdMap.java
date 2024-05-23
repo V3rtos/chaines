@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.model.util;
 
-import me.moonways.bridgenet.model.players.Player;
+import me.moonways.bridgenet.model.service.players.Player;
 
 import java.rmi.RemoteException;
 import java.util.Optional;

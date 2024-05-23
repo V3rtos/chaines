@@ -1,15 +1,20 @@
 package me.moonways.endpoint.reports;
 
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
-import me.moonways.bridgenet.model.reports.ReportsServiceModel;
-import me.moonways.bridgenet.model.reports.Report;
-import me.moonways.bridgenet.model.reports.ReportReason;
-import me.moonways.bridgenet.model.reports.ReportedPlayer;
+import me.moonways.bridgenet.api.event.EventService;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.model.event.ReportCreateEvent;
+import me.moonways.bridgenet.model.service.reports.Report;
+import me.moonways.bridgenet.model.service.reports.ReportReason;
+import me.moonways.bridgenet.model.service.reports.ReportedPlayer;
+import me.moonways.bridgenet.model.service.reports.ReportsServiceModel;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public final class ReportsServiceEndpoint extends EndpointRemoteObject implements ReportsServiceModel {
@@ -17,6 +22,9 @@ public final class ReportsServiceEndpoint extends EndpointRemoteObject implement
     private static final long serialVersionUID = 8862521493276490323L;
 
     private final List<ReportedPlayer> reportedPlayersList = new ArrayList<>();
+
+    @Inject
+    private EventService eventService;
 
     public ReportsServiceEndpoint() throws RemoteException {
         super();
@@ -57,6 +65,11 @@ public final class ReportsServiceEndpoint extends EndpointRemoteObject implement
 
             ReportedPlayer reportedPlayer = getReportedPlayer(report);
             reportedPlayer.addReport(report);
+
+            eventService.fireEvent(
+                    ReportCreateEvent.builder()
+                            .report(report)
+                            .build());
 
             return report;
         } catch (RemoteException e) {

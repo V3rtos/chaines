@@ -26,8 +26,8 @@ public class IniConfig {
         final Optional<IniGroup> IniGroup = readGroup(group);
         return IniGroup
                 .flatMap(value -> Stream.of(value.getProperties())
-                .filter(property -> property.getKey().equals(field))
-                .findFirst());
+                        .filter(property -> property.getKey().equals(field))
+                        .findFirst());
     }
 
     public String readString(@NotNull String group, @NotNull String field, @Nullable String def) {

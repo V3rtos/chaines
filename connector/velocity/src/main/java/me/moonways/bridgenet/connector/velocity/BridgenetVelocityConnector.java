@@ -12,13 +12,13 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.connector.BridgenetConnector;
 import me.moonways.bridgenet.connector.BridgenetServerSync;
-import me.moonways.bridgenet.connector.description.DeviceDescription;
 import me.moonways.bridgenet.connector.cloudnet.CloudnetWrapper;
-import me.moonways.bridgenet.model.bus.message.Handshake;
+import me.moonways.bridgenet.connector.description.DeviceDescription;
+import me.moonways.bridgenet.model.message.Handshake;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-@Plugin(id = "velocity-connector", name = "BridgeNetSync", version = "1.0", authors =  {"GitCoder", "lyx"})
+@Plugin(id = "velocity-connector", name = "BridgeNetSync", version = "1.0", authors = {"GitCoder", "lyx"})
 public class BridgenetVelocityConnector extends BridgenetConnector {
 
     @Inject
