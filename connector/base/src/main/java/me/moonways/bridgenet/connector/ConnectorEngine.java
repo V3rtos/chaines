@@ -77,7 +77,7 @@ public final class ConnectorEngine {
     }
 
     private BridgenetJdbcProvider.JdbcSettingsConfig readSettings() {
-        return assembly.readJsonAtEntity(ResourcesTypes.JDBC_SETTINGS_JSON,
+        return assembly.readJsonAtEntity(ResourcesTypes.JDBC_JSON,
                 StandardCharsets.UTF_8,
                 BridgenetJdbcProvider.JdbcSettingsConfig.class);
     }

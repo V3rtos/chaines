@@ -36,9 +36,11 @@ private ResourcesAssembly assembly;
 оттуда мы можем получить наименование нужного нам ресурса:
 
 ```java
-String filename = ResourcesTypes.MTP_SETTINGS_JSON;
-String filename = ResourcesTypes.METRICS_SETTINGS_JSON;
-String filename = ResourcesTypes.REMOTE_SERVICEX_XML;
+String systemOverridePropertiesName = ResourcesTypes.SYSTEM_OVERRIDE_PROPERTIES;
+String profilerAttributesJsonName = ResourcesTypes.PROFILER_ATTRIBUTES_JSON;
+String remoteServicesXmlName = ResourcesTypes.REMOTE_SERVICEX_XML;
+
+// etc.
 ```
 
 Дальнейший процесс чтения производится при помощи вспомогательных утилит,
@@ -51,13 +53,13 @@ public String readResourceContent(String resourceName) {
 ```
 
 ```java
-String json = readResourceContent(ResourcesTypes.METRICS_SETTINGS_JSON);
+String json = readResourceContent(ResourcesTypes.PROFILER_ATTRIBUTES_JSON);
 ```
 
 или напрямую из основного сервиса `ResourcesAssembly`:
 
 ```java
-String json = assembly.readResourceFullContent(ResourcesTypes.METRICS_SETTINGS_JSON);
+String json = assembly.readResourceFullContent(ResourcesTypes.PROFILER_ATTRIBUTES_JSON);
 ```
 
 ---

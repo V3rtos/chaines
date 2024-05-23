@@ -24,7 +24,7 @@ public class ResourcesAssemblyTest {
 
     @Test
     public void test_readAnyGlobalConfig() {
-        String jdbcSettingsJsonContent = assembly.readResourceFullContent(ResourcesTypes.JDBC_SETTINGS_JSON);
+        String jdbcSettingsJsonContent = assembly.readResourceFullContent(ResourcesTypes.JDBC_JSON);
 
         log.debug(jdbcSettingsJsonContent);
 
@@ -33,7 +33,7 @@ public class ResourcesAssemblyTest {
 
     @Test
     public void test_readAnyGlobalConfigAsJson() {
-        BridgenetJdbcProvider.JdbcSettingsConfig jdbcSettingsConfig = assembly.readJsonAtEntity(ResourcesTypes.JDBC_SETTINGS_JSON,
+        BridgenetJdbcProvider.JdbcSettingsConfig jdbcSettingsConfig = assembly.readJsonAtEntity(ResourcesTypes.JDBC_JSON,
                 BridgenetJdbcProvider.JdbcSettingsConfig.class);
 
         log.debug(jdbcSettingsConfig);
@@ -46,7 +46,7 @@ public class ResourcesAssemblyTest {
     public void test_findAnyConfigFile() {
         ResourcesFileSystem fileSystem = assembly.getFileSystem();
 
-        Path absolutePath = fileSystem.findAsFile(ResourcesTypes.JDBC_SETTINGS_JSON)
+        Path absolutePath = fileSystem.findAsFile(ResourcesTypes.JDBC_JSON)
                 .toPath();
 
         log.debug(absolutePath);

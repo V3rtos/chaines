@@ -33,7 +33,7 @@ public final class ProfilerProvider {
     private final ProfilerSettings settings;
 
     {
-        settings = ASSEMBLY.readJsonAtEntity(ResourcesTypes.METRICS_SETTINGS_JSON,
+        settings = ASSEMBLY.readJsonAtEntity(ResourcesTypes.PROFILER_ATTRIBUTES_JSON,
                 ProfilerSettings.class);
     }
 

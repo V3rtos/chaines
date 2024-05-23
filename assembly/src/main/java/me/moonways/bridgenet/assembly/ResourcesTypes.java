@@ -10,9 +10,9 @@ public final class ResourcesTypes {
     // general resources into 'etc' directory.
     public static final String SYSTEM_OVERRIDE_PROPERTIES = "config.properties";
     public static final String BOOTSTRAP_XML = "bootstrap.xml";
-    public static final String JDBC_SETTINGS_JSON = "jdbc_settings.json";
-    public static final String METRICS_SETTINGS_JSON = "metrics_settings.json";
-    public static final String MTP_SETTINGS_JSON = "mtp_settings.json";
+    public static final String JDBC_JSON = "jdbc.json";
+    public static final String PROFILER_ATTRIBUTES_JSON = "profiler_attributes.json";
+    public static final String MTP_CONFIG_JSON = "mtpconfig.json";
     public static final String REST_SERVER_XML = "rest_server.xml";
     public static final String REMOTE_SERVICES_XML = "remote_services.xml";
     public static final String DECORATORS_XML = "decorators.xml";

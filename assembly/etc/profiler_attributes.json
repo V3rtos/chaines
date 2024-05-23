@@ -1,6 +1,6 @@
 {
   "imagesStore": {
-    "folderName": "metrics_images",
+    "folderName": "profiler-logs",
     "enabled": true
   },
   "dimensions": {

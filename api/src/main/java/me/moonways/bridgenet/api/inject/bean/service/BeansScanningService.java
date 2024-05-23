@@ -13,6 +13,7 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.util.pair.Pair;
+import org.apache.logging.log4j.message.Message;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -40,15 +41,19 @@ public class BeansScanningService {
             return;
         }
 
+        // Preparing org.reflections.Reflections for project scanning.
         ConfigurationBuilder configuration = ConfigurationBuilder.build(new SubTypesScanner(false));
         configuration.setParallel(true);
         configuration.setExpandSuperTypes(false);
 
         Reflections reflections = new Reflections(configuration);
 
+        // Running scanner with resources caching.
+        log.info("Processing search all project resources & classes...");
+
         Set<Class<?>> classSet = reflections.getSubTypesOf(Object.class);
 
-        log.debug("Scanning result is §e{} §rresources", classSet.size());
+        log.info("Scanning result is §e{} §rresources", classSet.size());
         allResourcesSet.addAll(classSet);
     }
 

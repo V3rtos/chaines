@@ -10,10 +10,13 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.bootstrap.command.util.MetricRenderer;
 import me.moonways.bridgenet.profiler.ProfilerType;
 
+@Alias("profiler")
+@Alias("profiling")
 @Alias("metric")
-@Command("metrics")
+@Alias("metrics")
+@Command("profilers")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
-public class MetricsRenderCommand {
+public class CommandRenderProfiling {
 
     @Inject
     private MetricRenderer renderer;
