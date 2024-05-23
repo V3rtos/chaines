@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
 
 @Getter
 @ToString
@@ -27,4 +28,9 @@ public abstract class TestEngineModuleAdapter implements TestEngineModule {
     }
 
     private final TestModuleBeans beans;
+
+    @Override
+    public void onInstall(TestFlowContext context) {
+        // override me.
+    }
 }

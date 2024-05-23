@@ -19,6 +19,7 @@ import me.moonways.bridgenet.metrics.BridgenetMetricsLogger;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -60,6 +61,7 @@ public final class BeansService {
     private final AnnotationInterceptor interceptor = new AnnotationInterceptor();
 
     private final Set<Class<?>> initializedAnnotationsSet = Collections.synchronizedSet(new HashSet<>());
+    private final Map<Class<?>, Consumer<Object>> onBindingsMap = Collections.synchronizedMap(new HashMap<>());
 
     private Properties properties;
 
@@ -315,6 +317,11 @@ public final class BeansService {
         // call @PostConstruct functions.
         List<BeanMethod> postConstructFunctions = bean.getType().getPostConstructFunctions();
         postConstructFunctions.forEach(BeanMethod::invoke);
+
+        // call post-binding consumers.
+        Bean finalBean = bean;
+        Optional.ofNullable(onBindingsMap.remove(bean.getType().getRoot()))
+                .ifPresent(consumer -> consumer.accept(finalBean.getRoot()));
     }
 
     /**
@@ -391,5 +398,15 @@ public final class BeansService {
     @SuppressWarnings("unchecked")
     public <T> Optional<T> getInstance(Class<T> cls) {
         return get(cls).map(bean -> (T) bean.getRoot());
+    }
+
+    /**
+     * Потребляет указанный процесс, при определении забиндиного типа
+     * бина.
+     *
+     * @param type - тип бина, который ожидается для этого процесса.
+     */
+    public <T> void onBinding(Class<T> type, Consumer<T> consumer) {
+        onBindingsMap.put(type, (Consumer<Object>) consumer);
     }
 }

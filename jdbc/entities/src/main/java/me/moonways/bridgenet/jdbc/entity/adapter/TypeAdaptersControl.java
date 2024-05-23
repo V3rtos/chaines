@@ -29,7 +29,7 @@ public final class TypeAdaptersControl {
 
     public void trySerializeValues(EntityDescriptor entityDescriptor) {
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entityDescriptor.getParameters().getParameterUnits()) {
-            if (ParameterType.fromJavaType(parameterUnit.getType()) != null) {
+            if (parameterUnit.isExternal() || ParameterType.fromJavaType(parameterUnit.getType()) != null) {
                 continue;
             }
 
@@ -71,22 +71,23 @@ public final class TypeAdaptersControl {
             return searchElement;
         }
 
-        Class<?> type = parameterUnitOptional.get().getType();
+        EntityParametersDescriptor.ParameterUnit parameterUnit = parameterUnitOptional.get();
+        Class<?> type = parameterUnit.getType();
 
         if (ParameterType.fromJavaType(type) != null) {
             return searchElement;
         }
 
-        EntityParametersDescriptor.ParameterUnit parameterUnit =
+        EntityParametersDescriptor.ParameterUnit wrapped =
                 EntityParametersDescriptor.ParameterUnit.builder()
                         .id(id)
                         .value(searchElement.getExpectation())
-                        .type(type)
+                        .type(parameterUnit.isExternal() ? type : Object.class)
                         .build();
 
-        serializeUnit(parameterUnit);
+        serializeUnit(wrapped);
         return SearchElement.builder()
-                .expectation(parameterUnit.getValue())
+                .expectation(wrapped.getValue())
                 .binder(searchElement.getBinder())
                 .matcher(searchElement.getMatcher())
                 .build();

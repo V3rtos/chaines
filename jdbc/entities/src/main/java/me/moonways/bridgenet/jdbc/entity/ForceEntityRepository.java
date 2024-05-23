@@ -16,6 +16,7 @@ import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 import me.moonways.bridgenet.jdbc.entity.util.EntityPersistenceUtil;
 import me.moonways.bridgenet.jdbc.entity.util.EntityReadAndWriteUtil;
+import me.moonways.bridgenet.jdbc.entity.util.search.SearchElement;
 import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
 
 import java.util.*;
@@ -38,11 +39,15 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
     private final TypeAdaptersControl typeAdaptersControl = new TypeAdaptersControl();
 
-    private void doDelete(SearchMarker<T> searchMarker) {
-        EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entityClass);
+    private void doDelete(EntityDescriptor entityDescriptor, SearchMarker<T> searchMarker) {
+        checkExternalsBefore(entityDescriptor, searchMarker);
+        typeAdaptersControl.trySerializeValues(entityDescriptor);
 
-        searchMarker.getExpectationMap().forEach((name, searchElement) ->
-                searchMarker.with(name, typeAdaptersControl.trySerializeSearchElement(name, entityDescriptor, searchElement)));
+        searchMarker.getExpectationMap().forEach((name, searchElement) -> {
+
+            SearchElement<?> serializedSearchElement = typeAdaptersControl.trySerializeSearchElement(name, entityDescriptor, searchElement);
+            searchMarker.with(name, serializedSearchElement);
+        });
 
         EntityOperationComposer.EntityComposedOperation operation =
                 new EntityOperationComposer(composer)
@@ -56,6 +61,9 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
     private <V> List<V> doSearch(SearchMarker<V> searchMarker) {
         EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entityClass);
+        checkExternalsBefore(entityDescriptor);
+        checkExternalsBefore(entityDescriptor, searchMarker);
+
         typeAdaptersControl.trySerializeValues(entityDescriptor);
 
         EntityOperationComposer.EntityComposedOperation operation =
@@ -65,13 +73,13 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         return connection.ofTransactionalGet(() -> callAndCollect(operation));
     }
 
-    private EntityID doInsert(EntityDescriptor descriptor) {
-        checkExternalsBeforeInsert(descriptor);
-        typeAdaptersControl.trySerializeValues(descriptor);
+    private EntityID doInsert(EntityDescriptor entityDescriptor) {
+        checkExternalsBefore(entityDescriptor);
+        typeAdaptersControl.trySerializeValues(entityDescriptor);
 
         EntityOperationComposer.EntityComposedOperation operation =
                 new EntityOperationComposer(composer)
-                        .composeInsert(descriptor);
+                        .composeInsert(entityDescriptor);
 
         return connection.ofTransactionalGet(() -> callAndGetEntityId(operation));
     }
@@ -99,7 +107,9 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         Optional<EntityParametersDescriptor.ParameterUnit> idUnitOptional = parameters.findIdUnit();
 
         if (idUnitOptional.isPresent()) {
-            deleteIf(newSearchMarker().with(idUnitOptional.get().getId(), entityDescriptor.getId().getId()));
+            doDelete(entityDescriptor,
+                    newSearchMarker()
+                            .with(idUnitOptional.get().getId(), entityDescriptor.getId().getId()));
         } else {
             SearchMarker<T> searchMarker = newSearchMarker();
             List<EntityParametersDescriptor.ParameterUnit> parameterUnits = parameters.getParameterUnits();
@@ -114,7 +124,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                                 searchMarker.with(parameterUnit.getId(), parameterUnit.getValue()));
             }
 
-            deleteIf(searchMarker);
+            doDelete(entityDescriptor, searchMarker);
         }
     }
 
@@ -144,7 +154,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     @Override
     public void deleteIf(SearchMarker<T> searchMarker) {
         log.debug("deleteIf({})", searchMarker);
-        doDelete(searchMarker);
+        doDelete(EntityReadAndWriteUtil.read(entityClass), searchMarker);
     }
 
     @Override
@@ -248,6 +258,8 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         for (CompletedQuery completedQuery : operation.getQueries()) {
             completedQuery.call(connection);
         }
+
+        log.debug("Operation result: <NO RETURN CONTENT>");
     }
 
     private <V> List<V> callAndCollect(EntityOperationComposer.EntityComposedOperation operation) {
@@ -261,7 +273,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                 for (ResponseRow responseRow : result.get()) {
                     EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
 
-                    checkExternalsAfterSearch(entityDescriptor);
+                    checkExternalsAfter(entityDescriptor);
                     typeAdaptersControl.tryDeserializeValues(entityDescriptor);
 
                     Object entity = EntityReadAndWriteUtil.write(entityDescriptor);
@@ -272,6 +284,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
             }
         }
 
+        log.debug("Operation result: {}", entitisList.toString());
         return entitisList;
     }
 
@@ -292,15 +305,20 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
             }
         }
 
+        log.debug("Operation result: {}", entityId);
         return entityId;
     }
 
-    private void checkExternalsBeforeInsert(EntityDescriptor entity) {
+    private void checkExternalsBefore(EntityDescriptor entity) {
         List<EntityParametersDescriptor.ParameterUnit> externalUnits = entity.getParameters().getExternalUnits();
 
         if (!externalUnits.isEmpty()) {
             for (EntityParametersDescriptor.ParameterUnit externalUnit : externalUnits) {
                 Object externalEntityObject = externalUnit.getValue();
+
+                if (externalEntityObject instanceof Number) {
+                    continue;
+                }
 
                 if (externalEntityObject != null) {
                     EntityID externalEntityID = doInsert(EntityReadAndWriteUtil.read(externalEntityObject));
@@ -314,11 +332,44 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         }
     }
 
-    private void checkExternalsAfterSearch(EntityDescriptor entity) {
+    private void checkExternalsBefore(EntityDescriptor descriptor, SearchMarker<?> searchMarker) {
+        searchMarker.getExpectationMap().forEach((name, searchElement) -> {
+            Optional<EntityParametersDescriptor.ParameterUnit> parameterUnitOptional
+                    = descriptor.getParameters().find(name);
+
+            parameterUnitOptional
+                    .filter(EntityParametersDescriptor.ParameterUnit::isExternal)
+                    .ifPresent(externalUnit -> {
+
+                        if (searchElement.getExpectation() instanceof Number) {
+                            return;
+                        }
+
+                        Object externalEntityObject = externalUnit.getValue();
+
+                        if (externalEntityObject instanceof Number) {
+                            searchMarker.with(name, externalEntityObject);
+                            return;
+                        }
+
+                        if (externalEntityObject == null) {
+                            externalUnit.setValue(EntityID.NOT_FOUND.getId());
+                        }
+
+                        externalUnit.setType(int.class);
+
+                        searchMarker.with(name, externalUnit.getValue());
+                    });
+        });
+    }
+
+    private void checkExternalsAfter(EntityDescriptor entity) {
         for (EntityParametersDescriptor.ParameterUnit externalUnit : entity.getParameters().getExternalUnits()) {
 
             Object externalEntity = researchExternalUnitValue(externalUnit);
+
             externalUnit.setValue(externalEntity);
+            externalUnit.setType(externalEntity.getClass());
         }
     }
 

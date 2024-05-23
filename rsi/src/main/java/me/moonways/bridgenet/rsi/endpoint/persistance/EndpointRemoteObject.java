@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.rsi.endpoint.persistance;
 
+import lombok.SneakyThrows;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
@@ -24,6 +25,7 @@ public abstract class EndpointRemoteObject extends UnicastRemoteObject {
         super();
     }
 
+    @SneakyThrows
     @PostConstruct
     private void internal_postConstruct() {
         beansService.inject(endpointContext);
@@ -32,7 +34,7 @@ public abstract class EndpointRemoteObject extends UnicastRemoteObject {
         injectInternal();
     }
 
-    protected void construct(EndpointRemoteContext context) {
+    protected void construct(EndpointRemoteContext context) throws Throwable {
         // override me.
     }
 

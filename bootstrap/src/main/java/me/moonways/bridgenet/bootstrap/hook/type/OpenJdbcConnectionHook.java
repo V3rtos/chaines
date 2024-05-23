@@ -37,7 +37,10 @@ public class OpenJdbcConnectionHook extends BootstrapHook {
             BridgenetJdbcProvider bridgenetJdbcProvider = new BridgenetJdbcProvider(databaseProvider);
             bridgenetJdbcProvider.initConnection(jdbcSettingsConfig);
 
-            handleDatabaseEventsForMetric(bridgenetJdbcProvider.getDatabaseConnection());
+            DatabaseConnection databaseConnection = bridgenetJdbcProvider.getDatabaseConnection();
+            databaseConnection.call("SET MODE MySQL;");
+
+            handleDatabaseEventsForMetric(databaseConnection);
 
             bindAllBeans(bridgenetJdbcProvider);
         }

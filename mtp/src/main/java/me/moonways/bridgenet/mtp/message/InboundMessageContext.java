@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
+import me.moonways.bridgenet.mtp.channel.NetworkRemoteChannel;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -21,6 +22,10 @@ public class InboundMessageContext<V> implements Serializable {
     private final Long timestamp;
 
     public void callback(@NotNull Object message) {
-        channel.send(message);
+        if (channel.<Boolean>getProperty(NetworkRemoteChannel.PULLING_STATE_PROPERTY).orElse(false)) {
+            channel.pull(message);
+        } else {
+            channel.send(message);
+        }
     }
 }

@@ -9,7 +9,6 @@ import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
 
 import java.util.UUID;
 
-@Getter
 @ToString
 @RequiredArgsConstructor
 @Entity(name = "player_languages")

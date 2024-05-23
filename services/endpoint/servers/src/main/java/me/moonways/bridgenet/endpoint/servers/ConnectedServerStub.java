@@ -7,9 +7,9 @@ import lombok.ToString;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
 import me.moonways.bridgenet.model.bus.message.Redirect;
+import me.moonways.bridgenet.model.players.Player;
 import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
-import me.moonways.bridgenet.model.players.connection.PlayerConnection;
+import me.moonways.bridgenet.model.players.service.PlayerStore;
 import me.moonways.bridgenet.model.servers.EntityServer;
 import me.moonways.bridgenet.model.servers.ServerInfo;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
@@ -50,8 +50,8 @@ public class ConnectedServerStub implements EntityServer {
     }
 
     @Override
-    public CompletableFuture<Boolean> connectThat(@NotNull ConnectedEntityPlayer player) throws RemoteException {
-        Redirect message = new Redirect(player.getUniqueId(), uniqueId);
+    public CompletableFuture<Boolean> connectThat(@NotNull Player player) throws RemoteException {
+        Redirect message = new Redirect(player.getId(), uniqueId);
 
         CompletableFuture<Redirect.Result> resultFuture
                 = channel.sendAwait(Redirect.Result.class, message);
@@ -60,13 +60,13 @@ public class ConnectedServerStub implements EntityServer {
     }
 
     @Override
-    public Collection<ConnectedEntityPlayer> getConnectedPlayers() throws RemoteException {
-        PlayerConnection playerConnection = playersServiceModel.getPlayerConnection();
+    public Collection<Player> getConnectedPlayers() throws RemoteException {
+        PlayerStore store = playersServiceModel.store();
         return playersOnServersConnectionService.getPlayersOnServerByKey(uniqueId)
                 .stream()
                 .map(uuid -> {
                     try {
-                        return playerConnection.getConnectedPlayer(uuid);
+                        return store.get(uuid).get();
                     } catch (RemoteException exception) {
                         throw new ServersEndpointException(exception);
                     }

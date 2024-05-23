@@ -19,9 +19,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.RMISecurityManager;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Getter
 @Log4j2
 @Autobind
 public final class RemoteServicesManagement {
@@ -29,11 +29,17 @@ public final class RemoteServicesManagement {
     @Getter
     private XMLServicesConfigDescriptor xmlConfiguration;
 
+    @Getter
     private final Map<String, ServiceInfo> servicesInfos = Collections.synchronizedMap(new HashMap<>());
+    @Getter
     private final Map<ServiceInfo, RemoteService> servicesImplements = Collections.synchronizedMap(new HashMap<>());
+    @Getter
+    private final Map<Class<?>, Consumer<? extends RemoteService>> subscriptionsOnRegitstrationMap = Collections.synchronizedMap(new HashMap<>());
 
+    @Getter
     private final Map<ModuleID, ModuleFactory> modulesFactories = Collections.synchronizedMap(new HashMap<>());
 
+    @Getter
     private final Map<ServiceInfo, ServiceModulesContainer> modulesContainerMap = Collections.synchronizedMap(new HashMap<>());
 
     @Inject
@@ -41,12 +47,17 @@ public final class RemoteServicesManagement {
     @Inject
     private ResourcesAssembly assembly;
 
+    @Getter
     private final EndpointController endpointController = new EndpointController();
 
     @PostConstruct
     void init() {
         injectSecurityPolicy();
         beansService.inject(endpointController);
+    }
+
+    public <T extends RemoteService> void subscribeOnExported(Class<T> serviceClass, Consumer<T> consumer) {
+        subscriptionsOnRegitstrationMap.put(serviceClass, consumer);
     }
 
     @SuppressWarnings("deprecation")
@@ -159,9 +170,18 @@ public final class RemoteServicesManagement {
 
     public void registerService(ServiceInfo serviceInfo, RemoteService remoteService) {
         beansService.inject(remoteService);
-
-        log.info("Service {} was registered", serviceInfo.getName());
         servicesImplements.put(serviceInfo, remoteService);
+
+        Class<? extends RemoteService> serviceClass = remoteService.getClass();
+
+        subscriptionsOnRegitstrationMap.keySet()
+                .stream()
+                .filter(cls -> serviceClass.isAssignableFrom(cls) || cls.isAssignableFrom(serviceClass))
+                .forEach(modelClass -> {
+
+                    Consumer<RemoteService> consumer = (Consumer<RemoteService>) subscriptionsOnRegitstrationMap.get(modelClass);
+                    consumer.accept(remoteService);
+                });
     }
 
     private ModuleID getModuleID(Class<? extends RemoteModule> cls) {
