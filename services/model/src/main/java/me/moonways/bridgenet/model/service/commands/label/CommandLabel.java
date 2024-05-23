@@ -6,6 +6,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Optional;
 
+// itzstonlex: аче зач? label же нам нужен иногда по сути прост как строка и аргументы получить, а дальше и сами можем сделать что нужно)) чекни ArgumentsContext интерфейс мой
 public interface CommandLabel extends Remote {
 
     String getValue() throws RemoteException;

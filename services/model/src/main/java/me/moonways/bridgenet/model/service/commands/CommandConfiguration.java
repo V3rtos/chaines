@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.model.service.commands;
 
-import me.moonways.bridgenet.model.players.OfflinePlayer;
-import me.moonways.bridgenet.model.util.audience.EntityAudience;
+import me.moonways.bridgenet.model.audience.EntityAudience;
+import me.moonways.bridgenet.model.service.players.OfflinePlayer;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -29,10 +29,6 @@ public interface CommandConfiguration extends Remote {
     boolean isOnlyConsole() throws RemoteException;
 
     boolean isOnlyUser() throws RemoteException;
-
-    boolean isOnlyUser(String name) throws RemoteException;
-
-    boolean isOnlyUser(OfflinePlayer offlinePlayer) throws RemoteException;
 
     boolean isOnlyBoth() throws RemoteException;
 

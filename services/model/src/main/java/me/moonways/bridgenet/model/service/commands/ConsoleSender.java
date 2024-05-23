@@ -2,11 +2,11 @@ package me.moonways.bridgenet.model.service.commands;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.model.language.Message;
-import me.moonways.bridgenet.model.permissions.permission.Permission;
-import me.moonways.bridgenet.model.util.audience.ComponentHolders;
-import me.moonways.bridgenet.model.util.audience.EntityAudience;
-import me.moonways.bridgenet.model.util.audience.event.AudienceSendEvent;
+import me.moonways.bridgenet.model.audience.ComponentHolders;
+import me.moonways.bridgenet.model.audience.EntityAudience;
+import me.moonways.bridgenet.model.event.AudienceSendEvent;
+import me.moonways.bridgenet.model.service.language.Message;
+import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

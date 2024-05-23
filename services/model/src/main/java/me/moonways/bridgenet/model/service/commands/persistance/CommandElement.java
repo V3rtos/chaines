@@ -1,7 +1,5 @@
 package me.moonways.bridgenet.model.service.commands.persistance;
 
-import me.moonways.bridgenet.api.modern_command.CommandElementType;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
