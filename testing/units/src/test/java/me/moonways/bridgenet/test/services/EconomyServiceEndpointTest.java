@@ -1,16 +1,18 @@
 package me.moonways.bridgenet.test.services;
 
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.model.economy.credit.EconomyCreditManager;
-import me.moonways.bridgenet.model.economy.currency.Currency;
-import me.moonways.bridgenet.model.economy.currency.EconomyCurrencyManager;
-import me.moonways.bridgenet.model.economy.EconomyServiceModel;
-import me.moonways.bridgenet.model.economy.currency.bank.BankTransaction;
-import me.moonways.bridgenet.model.economy.deposit.ActiveDeposit;
-import me.moonways.bridgenet.model.economy.deposit.DepositOperation;
-import me.moonways.bridgenet.model.economy.deposit.EconomyDepositManager;
-import me.moonways.bridgenet.test.engine.BridgenetJUnitTestRunner;
-import me.moonways.bridgenet.test.engine.persistance.Order;
+import me.moonways.bridgenet.model.service.economy.EconomyServiceModel;
+import me.moonways.bridgenet.model.service.economy.credit.EconomyCreditManager;
+import me.moonways.bridgenet.model.service.economy.currency.Currency;
+import me.moonways.bridgenet.model.service.economy.currency.EconomyCurrencyManager;
+import me.moonways.bridgenet.model.service.economy.currency.bank.BankTransaction;
+import me.moonways.bridgenet.model.service.economy.deposit.ActiveDeposit;
+import me.moonways.bridgenet.model.service.economy.deposit.DepositOperation;
+import me.moonways.bridgenet.model.service.economy.deposit.EconomyDepositManager;
+import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
+import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
+import me.moonways.bridgenet.test.engine.persistance.TestModules;
+import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,7 +22,8 @@ import java.util.UUID;
 
 import static junit.framework.TestCase.assertEquals;
 
-@RunWith(BridgenetJUnitTestRunner.class)
+@RunWith(ModernTestEngineRunner.class)
+@TestModules(RmiServicesModule.class)
 public class EconomyServiceEndpointTest {
 
     private static final UUID PLAYER_ID = UUID.randomUUID();
@@ -45,7 +48,7 @@ public class EconomyServiceEndpointTest {
     }
 
     @Test
-    @Order(0)
+    @TestOrdered(1)
     public void test_bankExecuteCharge() throws RemoteException {
         EconomyCurrencyManager currencyManager = serviceModel.getCurrencyManager(PLAYER_ID, CURRENCY);
 
@@ -55,7 +58,7 @@ public class EconomyServiceEndpointTest {
     }
 
     @Test
-    @Order(1)
+    @TestOrdered(2)
     public void test_bankExecutePay() throws RemoteException {
         EconomyCurrencyManager currencyManager = serviceModel.getCurrencyManager(PLAYER_ID, CURRENCY);
 
@@ -65,7 +68,7 @@ public class EconomyServiceEndpointTest {
     }
 
     @Test
-    @Order(2)
+    @TestOrdered(3)
     public void test_bankExecuteTransfer() throws RemoteException {
         EconomyCurrencyManager currencyManager = serviceModel.getCurrencyManager(PLAYER_ID, CURRENCY);
 
@@ -75,7 +78,7 @@ public class EconomyServiceEndpointTest {
     }
 
     @Test
-    @Order(3)
+    @TestOrdered(4)
     public void test_bankExecuteEcho() throws RemoteException {
         EconomyCurrencyManager currencyManager = serviceModel.getCurrencyManager(PLAYER_ID, CURRENCY);
 
@@ -85,7 +88,7 @@ public class EconomyServiceEndpointTest {
     }
 
     @Test
-    @Order(4)
+    @TestOrdered(5)
     public void test_depositOpen() throws RemoteException {
         EconomyDepositManager depositManager = serviceModel.getDepositManager(PLAYER_ID, CURRENCY);
 
@@ -95,7 +98,7 @@ public class EconomyServiceEndpointTest {
     }
 
     @Test
-    @Order(5)
+    @TestOrdered(6)
     public void test_depositsGet() throws RemoteException {
         EconomyDepositManager depositManager = serviceModel.getDepositManager(PLAYER_ID, CURRENCY);
         Collection<ActiveDeposit> activeDeposits = depositManager.getActiveDeposits(PLAYER_ID);
@@ -104,7 +107,7 @@ public class EconomyServiceEndpointTest {
     }
 
     @Test
-    @Order(6)
+    @TestOrdered(7)
     public void test_depositInvest() throws RemoteException {
         EconomyDepositManager depositManager = serviceModel.getDepositManager(PLAYER_ID, CURRENCY);
         ActiveDeposit deposit = depositManager.getActiveDeposits(PLAYER_ID).stream().findFirst().orElse(null);
@@ -113,7 +116,7 @@ public class EconomyServiceEndpointTest {
     }
 
     @Test
-    @Order(7)
+    @TestOrdered(8)
     public void test_depositWithdraw() throws RemoteException {
         EconomyDepositManager depositManager = serviceModel.getDepositManager(PLAYER_ID, CURRENCY);
         ActiveDeposit deposit = depositManager.getActiveDeposits(PLAYER_ID).stream().findFirst().orElse(null);
@@ -122,7 +125,7 @@ public class EconomyServiceEndpointTest {
     }
 
     @Test
-    @Order(8)
+    @TestOrdered(9)
     public void test_depositClose() throws RemoteException {
         EconomyDepositManager depositManager = serviceModel.getDepositManager(PLAYER_ID, CURRENCY);
         ActiveDeposit deposit = depositManager.getActiveDeposits(PLAYER_ID).stream().findFirst().orElse(null);
@@ -131,7 +134,7 @@ public class EconomyServiceEndpointTest {
     }
 
     @Test
-    @Order(9)
+    @TestOrdered(10)
     public void test_creditGet() throws RemoteException {
         EconomyCreditManager creditManager = serviceModel.getCreditManager(PLAYER_ID, CURRENCY);
     }

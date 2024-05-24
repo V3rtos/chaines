@@ -123,11 +123,11 @@
         </service>
         <service>
             <!-- RMI Protocol service bind port -->
-            <bindPort>7010</bindPort>
+            <bindPort>7013</bindPort>
             <!-- Service direction name -->
             <name>economy</name>
             <!-- Target service class type -->
-            <modelPath>me.moonways.bridgenet.model.economy.EconomyServiceModel</modelPath>
+            <modelPath>me.moonways.bridgenet.model.service.economy.EconomyServiceModel</modelPath>
         </service>
     </services>
 </configuration>

@@ -1,6 +1,6 @@
-package me.moonways.bridgenet.model.economy.credit;
+package me.moonways.bridgenet.model.service.economy.credit;
 
-import me.moonways.bridgenet.model.economy.credit.rating.CreditRatingManager;
+import me.moonways.bridgenet.model.service.economy.credit.rating.CreditRatingManager;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

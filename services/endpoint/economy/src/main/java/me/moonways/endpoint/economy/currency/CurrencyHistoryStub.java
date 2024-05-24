@@ -1,8 +1,7 @@
 package me.moonways.endpoint.economy.currency;
 
-import me.moonways.bridgenet.model.economy.currency.CurrencyOperationHistory;
-import me.moonways.bridgenet.model.economy.currency.CurrencyOperationUnit;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.model.service.economy.currency.CurrencyOperationHistory;
+import me.moonways.bridgenet.model.service.economy.currency.CurrencyOperationUnit;
 
 import java.rmi.RemoteException;
 import java.util.Collection;
@@ -10,12 +9,11 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-public class CurrencyOperationsHistory extends EndpointRemoteObject implements CurrencyOperationHistory {
+public class CurrencyHistoryStub implements CurrencyOperationHistory {
 
     private final UUID playerId;
 
-    public CurrencyOperationsHistory(UUID playerId) throws RemoteException {
-        super();
+    public CurrencyHistoryStub(UUID playerId) {
         this.playerId = playerId;
     }
 

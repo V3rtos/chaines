@@ -1,6 +1,6 @@
-package me.moonways.bridgenet.model.economy.currency;
+package me.moonways.bridgenet.model.service.economy.currency;
 
-import me.moonways.bridgenet.model.economy.currency.bank.BankTransaction;
+import me.moonways.bridgenet.model.service.economy.currency.bank.BankTransaction;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

@@ -1,8 +1,8 @@
-package me.moonways.bridgenet.model.economy.credit;
+package me.moonways.bridgenet.model.service.economy.credit;
 
-import me.moonways.bridgenet.model.economy.credit.payments.CreditScheduledPayments;
-import me.moonways.bridgenet.model.economy.currency.Currency;
-import me.moonways.bridgenet.model.economy.credit.payments.CreditManualPayments;
+import me.moonways.bridgenet.model.service.economy.credit.payments.CreditScheduledPayments;
+import me.moonways.bridgenet.model.service.economy.currency.Currency;
+import me.moonways.bridgenet.model.service.economy.credit.payments.CreditManualPayments;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

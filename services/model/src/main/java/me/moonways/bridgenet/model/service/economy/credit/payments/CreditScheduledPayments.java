@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.model.economy.credit.payments;
+package me.moonways.bridgenet.model.service.economy.credit.payments;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

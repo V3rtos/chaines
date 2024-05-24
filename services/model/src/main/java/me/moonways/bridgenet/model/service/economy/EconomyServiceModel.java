@@ -1,11 +1,11 @@
-package me.moonways.bridgenet.model.economy;
+package me.moonways.bridgenet.model.service.economy;
 
-import me.moonways.bridgenet.model.economy.credit.EconomyCreditManager;
-import me.moonways.bridgenet.model.economy.currency.EconomyCurrencyManager;
-import me.moonways.bridgenet.model.economy.currency.bank.CurrencyBank;
-import me.moonways.bridgenet.model.economy.currency.Currency;
-import me.moonways.bridgenet.model.economy.deposit.EconomyDepositManager;
-import me.moonways.bridgenet.rsi.service.RemoteService;
+import me.moonways.bridgenet.model.service.economy.credit.EconomyCreditManager;
+import me.moonways.bridgenet.model.service.economy.currency.EconomyCurrencyManager;
+import me.moonways.bridgenet.model.service.economy.currency.bank.CurrencyBank;
+import me.moonways.bridgenet.model.service.economy.currency.Currency;
+import me.moonways.bridgenet.model.service.economy.deposit.EconomyDepositManager;
+import me.moonways.bridgenet.rmi.service.RemoteService;
 
 import java.rmi.RemoteException;
 import java.util.UUID;

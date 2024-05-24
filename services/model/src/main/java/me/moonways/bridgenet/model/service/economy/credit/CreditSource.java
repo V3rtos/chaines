@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.model.economy.credit;
+package me.moonways.bridgenet.model.service.economy.credit;
 
 public enum CreditSource {
 

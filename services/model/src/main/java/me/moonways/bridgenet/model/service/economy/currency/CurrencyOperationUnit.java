@@ -1,10 +1,10 @@
-package me.moonways.bridgenet.model.economy.currency;
+package me.moonways.bridgenet.model.service.economy.currency;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.model.economy.currency.bank.BankTransaction;
+import me.moonways.bridgenet.model.service.economy.currency.bank.BankTransaction;
 
 @Getter
 @Builder

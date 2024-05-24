@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.model.economy.deposit;
+package me.moonways.bridgenet.model.service.economy.deposit;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

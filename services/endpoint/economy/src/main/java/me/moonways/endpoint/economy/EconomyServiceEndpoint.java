@@ -3,17 +3,17 @@ package me.moonways.endpoint.economy;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.model.economy.credit.EconomyCreditManager;
-import me.moonways.bridgenet.model.economy.currency.Currency;
-import me.moonways.bridgenet.model.economy.currency.EconomyCurrencyManager;
-import me.moonways.bridgenet.model.economy.EconomyServiceModel;
-import me.moonways.bridgenet.model.economy.currency.bank.CurrencyBank;
-import me.moonways.bridgenet.model.economy.deposit.EconomyDepositManager;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.bridgenet.model.service.economy.credit.EconomyCreditManager;
+import me.moonways.bridgenet.model.service.economy.currency.Currency;
+import me.moonways.bridgenet.model.service.economy.currency.EconomyCurrencyManager;
+import me.moonways.bridgenet.model.service.economy.EconomyServiceModel;
+import me.moonways.bridgenet.model.service.economy.currency.bank.CurrencyBank;
+import me.moonways.bridgenet.model.service.economy.deposit.EconomyDepositManager;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.economy.currency.CurrencyBankStub;
 import me.moonways.endpoint.economy.currency.CurrencyManagerStub;
-import me.moonways.endpoint.economy.db.EconomyCurrencyDbRepository;
+import me.moonways.endpoint.economy.db.PlayersCurrencyRepository;
 
 import java.rmi.RemoteException;
 import java.util.UUID;
@@ -27,7 +27,7 @@ public class EconomyServiceEndpoint extends EndpointRemoteObject implements Econ
                     .expireAfterAccess(1, TimeUnit.HOURS)
                     .build();
 
-    private final EconomyCurrencyDbRepository dbRepository = new EconomyCurrencyDbRepository();
+    private final PlayersCurrencyRepository dbRepository = new PlayersCurrencyRepository();
 
     @Inject
     private PlayersServiceModel playersServiceModel;
@@ -56,7 +56,7 @@ public class EconomyServiceEndpoint extends EndpointRemoteObject implements Econ
 
     @Override
     public EconomyCurrencyManager getCurrencyManager(String playerName, Currency currency) throws RemoteException {
-        UUID playerId = playersServiceModel.findPlayerId(playerName);
+        UUID playerId = playersServiceModel.store().idByName(playerName);
         return getCurrencyManager(playerId, currency);
     }
 

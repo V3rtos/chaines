@@ -1,24 +1,22 @@
 package me.moonways.endpoint.economy.currency;
 
 import lombok.Getter;
-import me.moonways.bridgenet.model.economy.currency.Currency;
-import me.moonways.bridgenet.model.economy.currency.bank.BankTransaction;
-import me.moonways.bridgenet.model.economy.currency.bank.CurrencyBank;
-import me.moonways.bridgenet.rsi.endpoint.persistance.EndpointRemoteObject;
-import me.moonways.endpoint.economy.db.EconomyCurrencyDbRepository;
+import me.moonways.bridgenet.model.service.economy.currency.Currency;
+import me.moonways.bridgenet.model.service.economy.currency.bank.BankTransaction;
+import me.moonways.bridgenet.model.service.economy.currency.bank.CurrencyBank;
+import me.moonways.endpoint.economy.db.PlayersCurrencyRepository;
 
 import java.rmi.RemoteException;
 import java.util.UUID;
 
-public class CurrencyBankStub extends EndpointRemoteObject implements CurrencyBank {
-    private static final long serialVersionUID = -7425948721433814158L;
+public class CurrencyBankStub implements CurrencyBank {
 
     @Getter
     private final Currency currency;
 
-    private final EconomyCurrencyDbRepository dbRepository;
+    private final PlayersCurrencyRepository dbRepository;
 
-    public CurrencyBankStub(Currency currency, EconomyCurrencyDbRepository dbRepository) throws RemoteException {
+    public CurrencyBankStub(Currency currency, PlayersCurrencyRepository dbRepository) throws RemoteException {
         super();
         this.currency = currency;
         this.dbRepository = dbRepository;
@@ -58,8 +56,11 @@ public class CurrencyBankStub extends EndpointRemoteObject implements CurrencyBa
     @Override
     public BankTransaction pay(UUID playerId, int sum) throws RemoteException {
         int value = dbRepository.getValue(playerId, currency);
+
         if (value == -1) {
-            return createTransactionAsNotFound();
+            dbRepository.updateEntity(playerId, currency, 0);
+
+            return pay(playerId, sum);
         }
 
         boolean hasFunds = value >= sum;
@@ -83,8 +84,11 @@ public class CurrencyBankStub extends EndpointRemoteObject implements CurrencyBa
     @Override
     public BankTransaction charge(UUID playerId, int sum) throws RemoteException {
         int value = dbRepository.getValue(playerId, currency);
+
         if (value == -1) {
-            return createTransactionAsNotFound();
+            dbRepository.updateEntity(playerId, currency, 0);
+
+            return charge(playerId, sum);
         }
 
         dbRepository.updateEntity(playerId, currency, value + sum);

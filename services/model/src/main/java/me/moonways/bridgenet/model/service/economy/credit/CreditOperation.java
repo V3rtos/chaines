@@ -1,7 +1,7 @@
-package me.moonways.bridgenet.model.economy.credit;
+package me.moonways.bridgenet.model.service.economy.credit;
 
 import lombok.*;
-import me.moonways.bridgenet.model.economy.currency.bank.BankTransaction;
+import me.moonways.bridgenet.model.service.economy.currency.bank.BankTransaction;
 
 @Getter
 @Builder
