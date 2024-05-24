@@ -1,9 +1,13 @@
 package me.moonways.bridgenet.model.service.players;
 
+import me.moonways.bridgenet.model.service.economy.credit.EconomyCreditManager;
+import me.moonways.bridgenet.model.service.economy.currency.Currency;
+import me.moonways.bridgenet.model.service.economy.currency.EconomyCurrencyManager;
 import me.moonways.bridgenet.model.service.language.Language;
 import me.moonways.bridgenet.model.service.permissions.group.PermissionGroup;
 import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 import me.moonways.bridgenet.model.audience.EntityAudience;
+import me.moonways.bridgenet.model.service.players.component.PlayerEconomy;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -43,6 +47,14 @@ public interface OfflinePlayer extends Remote, EntityAudience {
      * Получить выбранный пользователем тип мирового языка.
      */
     Language getLanguage() throws RemoteException;
+
+    /**
+     * Получить управленческую модель манипулирования над
+     * экономическими данными игрока.
+     *
+     * @param currency - тип валюты, которой необходимо управлять.
+     */
+    PlayerEconomy getEconomy(Currency currency) throws RemoteException;
 
     /**
      * Получить уровень офлайн игрока.

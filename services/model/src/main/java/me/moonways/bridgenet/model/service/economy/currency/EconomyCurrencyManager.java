@@ -15,7 +15,7 @@ import java.util.UUID;
  */
 public interface EconomyCurrencyManager extends Remote {
 
-    CurrencyOperationHistory getHistory();
+    CurrencyOperationHistory getHistory() throws RemoteException;
 
     /**
      * Выполнить запрос "ЭХО", который прослушивает

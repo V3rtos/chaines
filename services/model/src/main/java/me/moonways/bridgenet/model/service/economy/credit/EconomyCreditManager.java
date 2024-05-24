@@ -11,9 +11,9 @@ public interface EconomyCreditManager extends Remote {
 
     CreditRatingManager getRatingManager() throws RemoteException;
 
-    Collection<ActiveCredit> getCredits(UUID playerId) throws RemoteException;
+    Collection<ActiveCredit> getActiveCredits() throws RemoteException;
 
-    CreditOperation executeCreditGet(UUID playerId, CreditSource source, int amount) throws RemoteException;
+    CreditOperation executeCreditGet(int amount, CreditSource source) throws RemoteException;
 
-    CreditOperation executeCreditPayment(UUID creditId, int amount) throws RemoteException;
+    CreditOperation executeCreditPayment(int amount) throws RemoteException;
 }

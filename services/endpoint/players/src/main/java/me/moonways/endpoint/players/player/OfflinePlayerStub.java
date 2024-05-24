@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.audience.ComponentHolders;
 import me.moonways.bridgenet.model.event.AudienceSendEvent;
+import me.moonways.bridgenet.model.service.economy.EconomyServiceModel;
+import me.moonways.bridgenet.model.service.economy.currency.Currency;
 import me.moonways.bridgenet.model.service.language.Language;
 import me.moonways.bridgenet.model.service.language.LanguageServiceModel;
 import me.moonways.bridgenet.model.service.language.Message;
@@ -12,6 +14,7 @@ import me.moonways.bridgenet.model.service.permissions.PermissionsServiceModel;
 import me.moonways.bridgenet.model.service.permissions.group.PermissionGroup;
 import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 import me.moonways.bridgenet.model.service.players.OfflinePlayer;
+import me.moonways.bridgenet.model.service.players.component.PlayerEconomy;
 import me.moonways.endpoint.players.PlayerLevelingStub;
 import me.moonways.endpoint.players.database.PlayerDescription;
 import net.kyori.adventure.text.Component;
@@ -39,6 +42,8 @@ public class OfflinePlayerStub implements OfflinePlayer {
     protected PermissionsServiceModel permissionsServiceModel;
     @Inject
     protected LanguageServiceModel languageServiceModel;
+    @Inject
+    protected EconomyServiceModel economyServiceModel;
 
     @Override
     public Set<Permission> getPermissions() throws RemoteException {
@@ -53,6 +58,14 @@ public class OfflinePlayerStub implements OfflinePlayer {
     @Override
     public Language getLanguage() throws RemoteException {
         return languageServiceModel.getPlayerLang(getId());
+    }
+
+    @Override
+    public PlayerEconomy getEconomy(Currency currency) throws RemoteException {
+        return new PlayerEconomyStub(currency,
+                economyServiceModel.getCurrencyManager(getId(), currency),
+                economyServiceModel.getCreditManager(getId(), currency),
+                economyServiceModel.getDepositManager(getId(), currency));
     }
 
     @Override

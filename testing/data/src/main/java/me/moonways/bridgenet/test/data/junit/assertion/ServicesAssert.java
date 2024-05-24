@@ -2,6 +2,7 @@ package me.moonways.bridgenet.test.data.junit.assertion;
 
 import lombok.experimental.UtilityClass;
 import me.moonways.bridgenet.model.message.CreateGame;
+import me.moonways.bridgenet.model.service.economy.currency.bank.BankTransaction;
 import me.moonways.bridgenet.model.service.games.ActiveGame;
 import me.moonways.bridgenet.model.service.games.Game;
 import me.moonways.bridgenet.model.service.games.GameState;
@@ -11,6 +12,8 @@ import me.moonways.bridgenet.test.data.TestConst;
 import org.junit.Assert;
 
 import java.rmi.RemoteException;
+
+import static junit.framework.TestCase.assertEquals;
 
 @UtilityClass
 public class ServicesAssert {
@@ -38,5 +41,13 @@ public class ServicesAssert {
         Assert.assertNotNull(actual);
         Assert.assertEquals(expect.getId(), actual.getId());
         Assert.assertEquals(expect.getName(), actual.getName());
+    }
+
+    public void assertBankTransaction(BankTransaction transaction, int receivedExpect, int spentExpect, int currentExpect) {
+        assertEquals(BankTransaction.Result.SUCCESS_OPERATION, transaction.getResult());
+        assertEquals(TestConst.Economy.CURRENCY, transaction.getState().getCurrency());
+        assertEquals(receivedExpect, transaction.getState().getReceived());
+        assertEquals(spentExpect, transaction.getState().getSpent());
+        assertEquals(currentExpect, transaction.getState().getCurrent());
     }
 }

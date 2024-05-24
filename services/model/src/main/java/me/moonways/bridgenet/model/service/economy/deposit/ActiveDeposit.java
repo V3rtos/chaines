@@ -16,4 +16,8 @@ public interface ActiveDeposit extends Remote {
     int getTotalAmount() throws RemoteException;
 
     double getStake() throws RemoteException;
+
+    DepositOperation invest(int sum) throws RemoteException;
+
+    DepositOperation withdraw(int sum) throws RemoteException;
 }

@@ -2,6 +2,7 @@ package me.moonways.bridgenet.test.data;
 
 import me.moonways.bridgenet.connector.description.DeviceDescription;
 import me.moonways.bridgenet.connector.description.UserDescription;
+import me.moonways.bridgenet.model.service.economy.currency.Currency;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiSlot;
 import me.moonways.bridgenet.model.service.gui.GuiType;
@@ -67,6 +68,15 @@ public final class TestConst {
                         .host(HOST)
                         .port(PORT)
                         .build();
+    }
+
+    public static final class Economy {
+        public static final Currency CURRENCY = Currency.COINS;
+        public static final int BANK_CHARGE_AMOUNT = 2000;
+        public static final int BANK_PAY_AMOUNT = 100;
+        public static final int BANK_TRANSFER_AMOUNT = 990;
+        public static final int DEPOSIT_INVEST_AMOUNT = 62_000;
+        public static final int DEPOSIT_WITHDRAW_AMOUNT = 20_000;
     }
 
     public static final class Connector {

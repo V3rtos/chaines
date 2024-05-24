@@ -2,14 +2,14 @@ package me.moonways.bridgenet.model.service.economy.deposit;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public interface EconomyDepositManager extends Remote {
 
-    Collection<ActiveDeposit> getActiveDeposits(UUID playerId) throws RemoteException;
+    List<ActiveDeposit> getActiveDeposits() throws RemoteException;
 
-    DepositOperation openDeposit(UUID playerId) throws RemoteException;
+    DepositOperation openDeposit() throws RemoteException;
 
     DepositOperation closeDeposit(UUID depositId) throws RemoteException;
 
