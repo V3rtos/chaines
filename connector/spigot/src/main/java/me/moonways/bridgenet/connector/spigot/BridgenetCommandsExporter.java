@@ -33,7 +33,7 @@ public class BridgenetCommandsExporter {
      * @param label - введенная игроком строка команды.
      */
     public boolean isExportable(String label) {
-        String commandName = label.replaceFirst("\\/", "").split(" ")[0];
+        String commandName = label.replaceFirst("/", "").split(" ")[0];
         return bridgenetCommandAliases.contains(commandName.toLowerCase());
     }
 
