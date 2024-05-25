@@ -6,7 +6,6 @@ import me.moonways.bridgenet.test.data.EntityStatus;
 import me.moonways.bridgenet.test.data.EntityUser;
 import me.moonways.bridgenet.test.data.ExampleUserEvent;
 import me.moonways.bridgenet.test.data.TestConst;
-import me.moonways.bridgenet.test.data.management.ExampleEventListener;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.module.impl.EventsModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
@@ -22,7 +21,6 @@ public class EventsListenerRegistrationTest {
 
     @Test
     public void test_successHandling() {
-        subj.registerHandler(new ExampleEventListener());
         subj.fireEvent(
                 new ExampleUserEvent(
                         EntityUser.builder()

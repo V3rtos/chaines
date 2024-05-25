@@ -187,8 +187,6 @@ public final class BeansService {
             }
 
             public void processBean(AnnotationProcessorConfig<V> config, Bean bean) {
-                annotationsAwaits.needsAwaits(bean);
-
                 AnnotationVerificationContext<V> verification = new AnnotationVerificationContext<>(
                         config.getAnnotationType(), bean, config);
 
@@ -412,7 +410,7 @@ public final class BeansService {
      * @param type      - тип процессора аннотаций, который ожидается для этого процесса.
      * @param onBinding - процесс, вызываемый после биндинга.
      */
-    public void onBinding(Class<? extends Annotation> type, Runnable onBinding) {
+    public void onAnnotationProcessing(Class<? extends Annotation> type, Runnable onBinding) {
         Runnable runnable = processorsOnBindingsMap.get(type);
 
         if (runnable == null) {

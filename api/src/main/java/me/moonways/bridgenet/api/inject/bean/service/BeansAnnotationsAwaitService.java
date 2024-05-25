@@ -104,16 +104,18 @@ public class BeansAnnotationsAwaitService {
         Class<? extends Annotation>[] awaitsAnnotationType = getAwaitsAnnotationsTypes(bean);
         BeanType beanType = bean.getType();
 
-        List<BeanComponent> resultComponents = beanType.getAllComponents().stream()
+        List<BeanComponent> resultComponents = beanType.getAllComponents()
+                .stream()
                 .filter(component -> component.isAnnotated(GetTypeAnnotationProcessor.class))
                 .collect(Collectors.toList());
 
-        if (!resultComponents.isEmpty()) {
-            List<Bean> proceedBeans = new ArrayList<>();
+        System.out.println(bean + " -> " + resultComponents);
 
-            for (Class<? extends Annotation> annotationType : awaitsAnnotationType) {
-                proceedBeans.addAll(store.findByAnnotation(annotationType).collect(Collectors.toList()));
-            }
+        if (!resultComponents.isEmpty()) {
+            List<Bean> proceedBeans =
+                    Arrays.stream(awaitsAnnotationType)
+                            .flatMap(store::findByAnnotation)
+                            .collect(Collectors.toList());
 
             for (BeanComponent component : resultComponents) {
                 Class<?> type = component.getType();
@@ -123,7 +125,11 @@ public class BeansAnnotationsAwaitService {
                 }
 
                 Class<?> genericType = TypeAnnotationProcessorAdapter.getGenericType(0, type);
-                component.setValue(new TypeAnnotationProcessorResult<>(awaitsAnnotationType, genericType, proceedBeans));
+                TypeAnnotationProcessorResult<?> value = new TypeAnnotationProcessorResult<>(awaitsAnnotationType, genericType, proceedBeans);
+
+                System.out.println(value);
+                System.out.println(component.getBean());
+                component.setValue(value);
             }
         }
     }

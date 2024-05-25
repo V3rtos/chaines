@@ -146,8 +146,6 @@ public class BeansScanningService {
     public List<Bean> scanByPackage(String... packageNames) {
         return getResourcesFromPackage(packageNames)
                 .filter(resourceClass -> resourceClass.isAnnotationPresent(Autobind.class))
-                .filter(probablyClass -> Arrays.stream(probablyClass.getDeclaredAnnotations())
-                        .anyMatch(annotation -> annotation.annotationType().isAnnotationPresent(UseTypeAnnotationProcessor.class)))
                 .map(this::createBean)
                 .collect(Collectors.toList());
     }

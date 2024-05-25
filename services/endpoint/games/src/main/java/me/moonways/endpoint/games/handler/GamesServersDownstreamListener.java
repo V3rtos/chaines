@@ -1,7 +1,7 @@
 package me.moonways.endpoint.games.handler;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.event.EventHandle;
+import me.moonways.bridgenet.api.event.SubscribeEvent;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.event.ServerDisconnectEvent;
 import me.moonways.bridgenet.model.message.DeleteGame;
@@ -23,7 +23,7 @@ public class GamesServersDownstreamListener {
     @Inject
     private BridgenetNetworkChannel channel;
 
-    @EventHandle
+    @SubscribeEvent
     public void handle(ServerDisconnectEvent event) throws RemoteException {
         EntityServer server = event.getServer();
 

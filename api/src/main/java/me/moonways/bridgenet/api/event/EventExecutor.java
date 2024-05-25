@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutorService;
 @RequiredArgsConstructor
 public final class EventExecutor {
 
-    private final ExecutorService executorService;
+    private final ExecutorService executor;
 
     private final EventRegistry eventRegistry;
 
@@ -43,7 +43,7 @@ public final class EventExecutor {
         validateNotCancellations(event);
 
         EventFuture<E> eventFuture = createFuture(event, true);
-        executorService.submit(() -> fireEventNaturally(event, eventFuture));
+        executor.submit(() -> fireEventNaturally(event, eventFuture));
 
         return eventFuture;
     }
@@ -67,6 +67,6 @@ public final class EventExecutor {
     private <E extends Event> EventFuture<E> createFuture(E event, boolean isAsync) {
         boolean isCancellable = canCancellations(event);
 
-        return new EventFuture<>(executorService, EventPriority.NORMAL, isAsync, isCancellable);
+        return new EventFuture<>(executor, EventPriority.NORMAL, isAsync, isCancellable);
     }
 }

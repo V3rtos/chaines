@@ -1,15 +1,15 @@
 package me.moonways.endpoint.friend.event;
 
-import me.moonways.bridgenet.api.event.EventHandle;
+import me.moonways.bridgenet.api.event.SubscribeEvent;
 
 public class FriendActivityListener {
 
-    @EventHandle // PlayerJoinEvent
+    @SubscribeEvent // PlayerJoinEvent
     public void handleJoin() {
 
     }
 
-    @EventHandle // PlayerQuitEvent
+    @SubscribeEvent // PlayerQuitEvent
     public void handleQuit() {
 
     }

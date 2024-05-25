@@ -43,7 +43,7 @@ public final class EndpointRemoteContext {
      * @param object - инстанс слушателя.
      */
     public void registerEventListener(Object object) {
-        eventService.registerHandler(object);
+        eventService.registerListener(object);
     }
 
     /**
