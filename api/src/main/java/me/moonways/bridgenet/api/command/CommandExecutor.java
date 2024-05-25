@@ -47,7 +47,6 @@ public final class CommandExecutor {
 
     @PostConstruct
     private void init() {
-        System.out.println(commandsResult);
         commandsResult.toList().forEach(registry::registerCommand);
     }
 

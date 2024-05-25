@@ -169,7 +169,7 @@ public final class RemoteServicesManagement {
 
         Class<? extends RemoteService> serviceClass = remoteService.getClass();
 
-        subscriptionsOnRegitstrationMap.keySet()
+        new HashSet<>(subscriptionsOnRegitstrationMap.keySet())
                 .stream()
                 .filter(cls -> serviceClass.isAssignableFrom(cls) || cls.isAssignableFrom(serviceClass))
                 .forEach(modelClass -> {

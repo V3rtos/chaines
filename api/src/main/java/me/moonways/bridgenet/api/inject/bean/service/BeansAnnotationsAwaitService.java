@@ -109,8 +109,6 @@ public class BeansAnnotationsAwaitService {
                 .filter(component -> component.isAnnotated(GetTypeAnnotationProcessor.class))
                 .collect(Collectors.toList());
 
-        System.out.println(bean + " -> " + resultComponents);
-
         if (!resultComponents.isEmpty()) {
             List<Bean> proceedBeans =
                     Arrays.stream(awaitsAnnotationType)
@@ -127,8 +125,6 @@ public class BeansAnnotationsAwaitService {
                 Class<?> genericType = TypeAnnotationProcessorAdapter.getGenericType(0, type);
                 TypeAnnotationProcessorResult<?> value = new TypeAnnotationProcessorResult<>(awaitsAnnotationType, genericType, proceedBeans);
 
-                System.out.println(value);
-                System.out.println(component.getBean());
                 component.setValue(value);
             }
         }
