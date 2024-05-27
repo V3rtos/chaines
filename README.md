@@ -132,6 +132,8 @@ $ ./bridgenet build
 
 ---
 
+<br>
+
 © MoonWays BridgeNet - 2024
 <br>
 _Никакие права не защищены :(_
