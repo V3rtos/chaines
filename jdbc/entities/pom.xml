@@ -6,7 +6,7 @@
     <parent>
         <groupId>me.moonways.bridgenet</groupId>
         <artifactId>jdbc</artifactId>
-        <version>1.0</version>
+        <version>1.2</version>
     </parent>
 
     <artifactId>jdbc-entities</artifactId>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>jdbc-core</artifactId>
-            <version>1.0</version>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 </project>

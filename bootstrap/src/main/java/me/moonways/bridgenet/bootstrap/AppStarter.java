@@ -13,7 +13,7 @@ public class AppStarter {
     public static void main(String[] args) {
         PreviousLogsCompressor.compressToGzip();
 
-        ExecutorService executorService = Executors.newCachedThreadPool(new DefaultThreadFactory(THREAD_POOL_NAME));
+        ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultThreadFactory(THREAD_POOL_NAME));
         Threads.pull(executorService);
 
         executorService.submit(() -> bootstrap(args));

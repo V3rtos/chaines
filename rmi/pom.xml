@@ -6,7 +6,7 @@
     <parent>
         <groupId>me.moonways.bridgenet</groupId>
         <artifactId>bridgenet</artifactId>
-        <version>1.0</version>
+        <version>1.2</version>
     </parent>
 
     <artifactId>rmi</artifactId>
@@ -23,13 +23,13 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>api</artifactId>
-            <version>1.0</version>
+            <version>1.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>mtp</artifactId>
-            <version>1.0</version>
+            <version>1.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
