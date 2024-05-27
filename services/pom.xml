@@ -22,6 +22,7 @@
     <modules>
         <module>model</module>
         <module>endpoint</module>
+        <module>rsap</module>
     </modules>
 
     <repositories>

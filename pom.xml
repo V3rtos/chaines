@@ -22,6 +22,7 @@
         <module>connector</module>
         <module>rest</module>
         <module>testing</module>
+        <module>services/rsap</module>
     </modules>
 
     <properties>
