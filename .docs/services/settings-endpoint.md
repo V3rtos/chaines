@@ -19,14 +19,6 @@ private PlayerSettingsServiceModel serviceModel;
 ### Интерфейс представляет из себя следующее описание:
 
 ```java
-package me.moonways.bridgenet.model.settings;
-
-import me.moonways.bridgenet.rmi.service.RemoteService;
-
-import java.rmi.RemoteException;
-import java.util.Collection;
-import java.util.UUID;
-
 public interface PlayerSettingsServiceModel extends RemoteService {
 
     /**
