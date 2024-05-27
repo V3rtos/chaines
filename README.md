@@ -3,6 +3,8 @@
 <!--suppress CheckImageSize -->
 <img src=".assets/logo.png" alt="drawing" width="500"/>
 
+---
+
 # BRIDGENET
 
 Protocol connections clouds & manipulations<br>
@@ -113,7 +115,7 @@ $ ./bridgenet build
 <br>
 На актуальный момент написания документации полное содержимое выглядит следующим образом:
 
-<img src=".assets/build_directory_view.png"/>
+<img src=".assets/build_folder.png"/>
 
 Так выглядит полноценная и готовая сборка системы BridgeNet.
 
