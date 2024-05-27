@@ -10,6 +10,7 @@
 
     <artifactId>auth</artifactId>
     <modelVersion>4.0.0</modelVersion>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
