@@ -13,6 +13,7 @@
 
     <artifactId>endpoint</artifactId>
     <packaging>pom</packaging>
+    <version>1.0</version>
 
     <modules>
         <module>auth</module>
