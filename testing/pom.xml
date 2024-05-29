@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>testing</artifactId>
-    <version>${testing.version}</version>
     <packaging>pom</packaging>
 
     <modules>

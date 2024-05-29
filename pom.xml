@@ -38,7 +38,7 @@
         <connector.spigot.version>1.2</connector.spigot.version>
         <connector.velocity.version>1.2</connector.velocity.version>
 
-        <model.version>1.2</model.version>
+        <model.version>1.1</model.version>
         <endpoint.version>1.2</endpoint.version>
         <service.auth.version>1.0</service.auth.version>
         <service.bus.version>1.0</service.bus.version>

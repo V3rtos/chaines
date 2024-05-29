@@ -35,13 +35,16 @@ function configure_all() {
 
 function configure() {
   tmp=$(echo "$1" | cut -d'/' -f 3)
-  echo "$PREF Configure endpoint '$tmp' from $1"
+  echo "$PREF Endpoint detected: '$tmp' from $1"
+    echo "  - Processing assemble of '$tmp'..."
 
   if [ -d "$1" ]; then
-
     apply "$tmp"
     except_code
   fi
+
+  echo "  - Endpoint '$tmp' was success assembled"
+  echo ""
 }
 
 if [[ -z $ENDPOINT_TARGET ]]; then

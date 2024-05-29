@@ -8,7 +8,7 @@ rm -rf "$ENDPOINTS_TARGET_PATH"
 mkdir "$ENDPOINTS_TARGET_PATH"
 
 cd "services/model"
-mvn clean install package -Dmaven.test.skip || exit
+mvn clean package -Dmaven.test.skip || exit
 cd ../../
 
 function compile() {
@@ -27,7 +27,7 @@ function install_endpoint() {
 
   mkdir "$target_path"
   cd "$endpoint_path" || exit
-  mvn clean install
+  mvn clean package
   except_code
 }
 
@@ -54,13 +54,16 @@ function build() {
   tmp=$(echo "$1" | cut -d'/' -f 3)
   if [ "$tmp" != "target" ]; then
 
-    echo "$PREF Found endpoint '$tmp' from $1"
-    echo "$PREF Begin installing and compile..."
+    echo "$PREF Endpoint detected: '$tmp' from $1"
+    echo "  - Processing installation of '$tmp'..."
 
     if [ -d "$1" ]; then
       compile "$tmp"
       except_code
     fi
+
+    echo "  - Endpoint '$tmp' was success installed"
+    echo ""
   fi
 }
 
