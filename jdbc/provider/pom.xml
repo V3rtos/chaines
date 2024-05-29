@@ -16,11 +16,13 @@
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>jdbc-core</artifactId>
             <version>${jdbc.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>jdbc-entities</artifactId>
             <version>${jdbc.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

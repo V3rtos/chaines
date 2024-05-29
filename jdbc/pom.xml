@@ -23,7 +23,7 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>api</artifactId>
-            <version>1.0</version>
+            <version>${api.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

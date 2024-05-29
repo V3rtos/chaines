@@ -16,6 +16,7 @@
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>jdbc-core</artifactId>
             <version>${jdbc.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
