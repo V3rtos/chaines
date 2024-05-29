@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--suppress VulnerableLibrariesLocal -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>me.moonways.bridgenet</groupId>
         <artifactId>services</artifactId>
-        <version>1.2</version>
+        <version>1.0</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
     <artifactId>model</artifactId>
-    <version>1.0</version>
+    <version>1.2</version>
 
     <dependencies>
         <!-- Text components utility -->
@@ -26,13 +25,13 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rmi</artifactId>
-            <version>1.2</version>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>mtp</artifactId>
-            <version>1.2</version>
+            <version>1.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

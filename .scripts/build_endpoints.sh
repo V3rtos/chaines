@@ -27,7 +27,7 @@ function install_endpoint() {
 
   mkdir "$target_path"
   cd "$endpoint_path" || exit
-  mvn clean install package
+  mvn clean compile
   except_code
 }
 

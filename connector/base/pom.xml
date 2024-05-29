@@ -9,21 +9,8 @@
         <version>1.2</version>
     </parent>
 
-    <groupId>me.moonways.bridgenet.connector</groupId>
-    <artifactId>connector-base</artifactId>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <repositories>
-        <repository>
-            <id>cloudnet-releases</id>
-            <url>https://repo.cloudnetservice.eu/repository/releases/</url>
-        </repository>
-    </repositories>
+    <artifactId>base-wrapper</artifactId>
+    <version>1.2</version>
 
     <dependencies>
         <dependency>

@@ -7,8 +7,8 @@ import sun.misc.Unsafe;
 import java.lang.reflect.Field;
 
 public class UnsafeFactory implements BeanFactory {
-    private static final Unsafe UNSAFE;
 
+    private static final Unsafe UNSAFE;
     static {
         try {
             Field unsafeInstanceField = Unsafe.class.getDeclaredField("theUnsafe");

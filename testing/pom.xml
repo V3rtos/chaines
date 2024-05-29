@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--suppress VulnerableLibrariesLocal -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -78,19 +77,19 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>1.2</version>
+            <version>1.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>api</artifactId>
-            <version>1.2</version>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>mtp</artifactId>
-            <version>1.2</version>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -102,7 +101,7 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rmi</artifactId>
-            <version>1.2</version>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -114,18 +113,18 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rest-server</artifactId>
-            <version>1.2</version>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rest-client</artifactId>
-            <version>1.2</version>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>me.moonways.bridgenet.connector</groupId>
-            <artifactId>connector-base</artifactId>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>base-wrapper</artifactId>
             <version>1.2</version>
             <scope>compile</scope>
         </dependency>

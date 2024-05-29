@@ -1,58 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--suppress ALL -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>me.moonways.bridgenet</groupId>
         <artifactId>bridgenet</artifactId>
         <version>1.2</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
     <artifactId>api</artifactId>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <version>1.0</version>
 
     <dependencies>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>assembly</artifactId>
-            <version>1.2</version>
+            <version>1.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>profiler</artifactId>
-            <version>1.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Bytecode manipulations utility dependency -->
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.28.0-GA</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Reflection classpath utility dependency -->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.10.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Google json utility -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.9</version>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
 

@@ -2,15 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>me.moonways.bridgenet</groupId>
         <artifactId>bridgenet</artifactId>
         <version>1.2</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
     <artifactId>jdbc</artifactId>
-
+    <version>1.2</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -19,47 +19,11 @@
         <module>provider</module>
     </modules>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>api</artifactId>
-            <version>1.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Annotations processing utility dependencies -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.26</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>24.0.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Apache logger dependency -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.12.4</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Bytecode manipulations utility dependency -->
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.28.0-GA</version>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

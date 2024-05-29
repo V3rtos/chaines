@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.util.reflection;
 
 import lombok.experimental.UtilityClass;
-import sun.misc.Unsafe;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -11,19 +11,6 @@ import java.util.stream.Stream;
 
 @UtilityClass
 public class ReflectionUtils {
-
-    private static final Unsafe UNSAFE;
-
-    static {
-        try {
-            Field unsafeInstanceField = Unsafe.class.getDeclaredField("theUnsafe");
-            unsafeInstanceField.setAccessible(true);
-
-            UNSAFE = ((Unsafe) unsafeInstanceField.get(null));
-        } catch (Exception exception) {
-            throw new RuntimeException(exception);
-        }
-    }
 
     public Object callMethod(Object instance, String methodName, Class<?>[] params, Object[] args) {
         Class<?> instanceType = instance.getClass();
@@ -71,11 +58,7 @@ public class ReflectionUtils {
     public Object createInstance(Class cls) {
         Object instance = tryConstructInstanceOrNull(cls);
         if (instance == null) {
-            try {
-                return UNSAFE.allocateInstance(cls);
-            } catch (InstantiationException exception) {
-                throw new BridgenetReflectionException(exception);
-            }
+            return BeanFactoryProviders.UNSAFE.getImpl().get().create(cls);
         }
         return instance;
     }

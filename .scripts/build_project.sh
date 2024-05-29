@@ -1,5 +1,5 @@
 #!/bin/bash
-mvn clean install package -N
+mvn clean compile -N
 
 rm -rf "$BUILD_DIR"
 mkdir "$BUILD_DIR"
@@ -15,7 +15,7 @@ function install() {
 }
 
 # shellcheck disable=SC2054
-declare -a modules_array=("assembly" "profiler" "api" "jdbc" "rmi" "mtp" "rest" "services/model" "bootstrap" "connector" "testing")
+declare -a modules_array=("assembly" "profiler" "api" "jdbc" "mtp" "rmi" "rest" "services/model" "bootstrap" "connector" "testing")
 
 # shellcheck disable=SC2128
 for module in "${modules_array[@]}"
