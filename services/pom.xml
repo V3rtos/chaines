@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>services</artifactId>
-    <version>1.0</version>
+    <version>${services.version}</version>
     <packaging>pom</packaging>
 
     <modules>

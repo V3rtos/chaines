@@ -10,36 +10,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mtp</artifactId>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <version>${mtp.version}</version>
 
     <dependencies>
-        <!-- Annotations processing utility dependencies -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.26</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>24.0.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Apache logger dependency -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.12.4</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!-- Netty IO TCP/IP Protocols dependency -->
         <dependency>
             <groupId>io.netty</groupId>
@@ -52,7 +25,7 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>api</artifactId>
-            <version>1.0</version>
+            <version>${api.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

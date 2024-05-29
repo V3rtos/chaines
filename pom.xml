@@ -37,8 +37,9 @@
         <connector.version>1.2</connector.version>
         <connector.base.version>1.2</connector.base.version>
 
+        <services.version>1.2</services.version>
         <model.version>1.2</model.version>
-        <services.version>1.0</services.version>
+        <endpoint.version>1.2</endpoint.version>
         <service.auth.version>1.0</service.auth.version>
         <service.bus.version>1.0</service.bus.version>
         <service.friends.version>1.0</service.friends.version>

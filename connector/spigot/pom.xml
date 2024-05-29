@@ -10,13 +10,13 @@
     </parent>
 
     <artifactId>spigot-wrapper</artifactId>
-    <version>1.2</version>
+    <version>${connector.base.version}</version>
 
     <dependencies>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>base-wrapper</artifactId>
-            <version>1.2</version>
+            <version>${connector.base.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

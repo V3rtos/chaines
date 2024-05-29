@@ -10,7 +10,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>bootstrap</artifactId>
-    <version>1.1</version>
+    <version>${bootstrap.version}</version>
 
     <dependencies>
         <!-- Logging utilities dependencies -->
@@ -31,37 +31,37 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>api</artifactId>
-            <version>1.0</version>
+            <version>${api.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>mtp</artifactId>
-            <version>1.0</version>
+            <version>${mtp.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>jdbc-provider</artifactId>
-            <version>1.2</version>
+            <version>${jdbc.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rmi</artifactId>
-            <version>1.0</version>
+            <version>${rmi.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>model</artifactId>
-            <version>1.2</version>
+            <version>${model.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rest-server</artifactId>
-            <version>1.0</version>
+            <version>${rest.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -69,12 +69,6 @@
     <build>
         <finalName>bridgenet-server</finalName>
         <defaultGoal>clean install package</defaultGoal>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

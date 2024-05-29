@@ -1,5 +1,0 @@
-dependencies {
-    implementation project(':rest-api')
-}
-
-description = 'rest-client'

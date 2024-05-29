@@ -15,12 +15,12 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>jdbc-core</artifactId>
-            <version>1.2</version>
+            <version>${jdbc.version}</version>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>jdbc-entities</artifactId>
-            <version>1.2</version>
+            <version>${jdbc.version}</version>
         </dependency>
     </dependencies>
 </project>

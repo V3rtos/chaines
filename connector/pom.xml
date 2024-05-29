@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>connector</artifactId>
-    <version>1.2</version>
+    <version>${connector.version}</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>mtp</artifactId>
-            <version>1.0</version>
+            <version>${mtp.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

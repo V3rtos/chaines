@@ -7,9 +7,9 @@
     <parent>
         <groupId>me.moonways.bridgenet</groupId>
         <artifactId>endpoint</artifactId>
-        <version>1.0</version>
+        <version>1.2</version>
     </parent>
 
     <artifactId>parties</artifactId>
-    <version>1.0</version>
+    <version>${service.parties.version}</version>
 </project>

@@ -32,100 +32,60 @@
             <version>4.13.2</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Annotations processing utility dependencies -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.26</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>24.0.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Logging utilities dependencies -->
-        <dependency>
-            <groupId>net.minecrell</groupId>
-            <artifactId>terminalconsoleappender</artifactId>
-            <version>1.3.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.12.4</version>
-            <scope>compile</scope>
-        </dependency>
 
         <!-- Internal Bridgenet dependencies -->
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>1.1</version>
+            <version>${bootstrap.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>api</artifactId>
-            <version>1.0</version>
+            <version>${api.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>mtp</artifactId>
-            <version>1.0</version>
+            <version>${mtp.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>jdbc-provider</artifactId>
-            <version>1.2</version>
+            <version>${jdbc.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rmi</artifactId>
-            <version>1.0</version>
+            <version>${rmi.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>model</artifactId>
-            <version>1.2</version>
+            <version>${model.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rest-server</artifactId>
-            <version>1.0</version>
+            <version>${rest.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rest-client</artifactId>
-            <version>1.0</version>
+            <version>${rest.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>base-wrapper</artifactId>
-            <version>1.2</version>
+            <version>${connector.base.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

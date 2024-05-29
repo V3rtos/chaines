@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>base-wrapper</artifactId>
-    <version>1.2</version>
+    <version>${connector.base.version}</version>
 
     <dependencies>
         <dependency>

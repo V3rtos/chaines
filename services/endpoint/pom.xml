@@ -7,10 +7,11 @@
     <parent>
         <groupId>me.moonways.bridgenet</groupId>
         <artifactId>services</artifactId>
-        <version>1.0</version>
+        <version>1.2</version>
     </parent>
 
     <artifactId>endpoint</artifactId>
+    <version>${endpoint.version}</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -34,19 +35,19 @@
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>rmi</artifactId>
-            <version>1.0</version>
+            <version>${rmi.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>model</artifactId>
-            <version>1.2</version>
+            <version>${model.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
             <artifactId>mtp</artifactId>
-            <version>1.0</version>
+            <version>${mtp.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
