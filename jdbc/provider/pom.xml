@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>jdbc-provider</artifactId>
+    <version>${jdbc.version}</version>
 
     <dependencies>
         <dependency>

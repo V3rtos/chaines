@@ -10,4 +10,5 @@
     </parent>
 
     <artifactId>rest-api</artifactId>
+    <version>${rest.version}</version>
 </project>

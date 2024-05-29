@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>jdbc</artifactId>
-    <version>${jdbc.version}</version>
     <packaging>pom</packaging>
 
     <modules>

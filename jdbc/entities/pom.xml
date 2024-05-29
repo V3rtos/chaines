@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>jdbc-entities</artifactId>
+    <version>${jdbc.version}</version>
 
     <dependencies>
         <dependency>

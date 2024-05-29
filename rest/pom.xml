@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>rest</artifactId>
-    <version>${rest.version}</version>
     <packaging>pom</packaging>
 
     <modules>

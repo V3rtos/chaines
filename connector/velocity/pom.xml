@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>velocity-wrapper</artifactId>
-    <version>${connector.base.version}</version>
+    <version>${connector.velocity.version}</version>
 
     <dependencies>
         <dependency>

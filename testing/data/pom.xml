@@ -11,4 +11,5 @@
     </parent>
 
     <artifactId>test-data</artifactId>
+    <version>${testing.version}</version>
 </project>

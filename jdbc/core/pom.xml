@@ -10,4 +10,6 @@
     </parent>
 
     <artifactId>jdbc-core</artifactId>
+    <version>${jdbc.version}</version>
+
 </project>

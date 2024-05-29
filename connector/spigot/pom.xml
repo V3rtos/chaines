@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>spigot-wrapper</artifactId>
-    <version>${connector.base.version}</version>
+    <version>${connector.spigot.version}</version>
 
     <dependencies>
         <dependency>

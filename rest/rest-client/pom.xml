@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>rest-client</artifactId>
+    <version>${rest.version}</version>
 
     <dependencies>
         <dependency>
