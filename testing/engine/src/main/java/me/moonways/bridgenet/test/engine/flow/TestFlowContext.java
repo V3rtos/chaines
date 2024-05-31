@@ -72,7 +72,7 @@ public class TestFlowContext {
     }
 
     public void throwException(Throwable exception) {
-        log.error(EXCEPTION_FORMATTER.formatToString(new TestEngineException(exception)));
+        log.error(EXCEPTION_FORMATTER.formatToString(new TestEngineException(exception.getMessage(), exception)));
     }
 
     public static void sendEngineGreetingMessage() {
@@ -86,6 +86,13 @@ public class TestFlowContext {
         System.out.println();
         System.out.println("\\\\==============-------------------------        >  TEST-ENGINE  <        -------------------------==============//");
         System.out.println("\\\\-----------================----------  :: UNIT IS DOWN BY FATAL ERROR ::  --------================-------------//");
+        System.out.println();
+    }
+
+    public static void sendPassedMessage() {
+        System.out.println();
+        System.out.println("\\\\==============-------------------------        >  TEST-ENGINE  <        -------------------------==============//");
+        System.out.println("\\\\-----------================----------  :: UNIT IS PASSED WAS SUCCESS! ::  --------================-------------//");
         System.out.println();
     }
 }

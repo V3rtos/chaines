@@ -26,6 +26,8 @@ public class ModernTestEngineRunner extends BlockJUnit4ClassRunner {
 
     @Override
     public void run(RunNotifier notifier) {
+        System.setProperty("test.engine.enabled", "true");
+
         TestFlowContext.sendEngineGreetingMessage();
         this.run(notifier, new TestingObject(getTestClass()));
     }

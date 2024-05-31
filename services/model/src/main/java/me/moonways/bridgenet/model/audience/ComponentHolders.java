@@ -16,6 +16,7 @@ import java.util.function.Function;
 public final class ComponentHolders {
 
     private static final String NULL_VALUE = "null";
+    private static final String HOLDER_FORMAT = "${%s}";
 
     public static ComponentHolders begin() {
         return new ComponentHolders();
@@ -25,7 +26,7 @@ public final class ComponentHolders {
 
     public <A extends EntityAudience> ComponentHolders place(@NotNull String holder, @NotNull IndividualObject<A> value) {
         //noinspection unchecked
-        replacements.put(holder.toLowerCase(), (IndividualObject<EntityAudience>) value);
+        replacements.put(holder, (IndividualObject<EntityAudience>) value);
         return this;
     }
 
@@ -41,7 +42,7 @@ public final class ComponentHolders {
         {
             String componentText = stringRef.get();
             stringRef.set(componentText
-                    .replace(s, individualObject.apply(entity).toString()));
+                    .replace(String.format(HOLDER_FORMAT, s), individualObject.apply(entity).toString()));
         });
 
         return Component.text(stringRef.get());

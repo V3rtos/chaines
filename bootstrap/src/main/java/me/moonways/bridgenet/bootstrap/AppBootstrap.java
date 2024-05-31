@@ -48,13 +48,13 @@ public class AppBootstrap {
         log.info("AppBootstrap.processBootstrapHooks() => end;");
     }
 
-    public void startBeansActivity(boolean canStartingFull) {
+    public void startBeansActivity(boolean needsFull) {
         log.info("Starting beans service processing");
 
         beansService.bind(System.getProperties());
         beansService.bind(this);
 
-        if (canStartingFull) {
+        if (needsFull) {
             beansService.start();
             beansService.inject(hooksContainer);
         }

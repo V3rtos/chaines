@@ -115,7 +115,7 @@ public class LanguageServiceEndpointTest {
         String messageText = serviceModel.messageText(language, TestConst.Languages.ANY_UNKNOWN_MESSAGE);
 
         String unknownMessageTypeText = serviceModel.messageText(language, MessageTypes.UNKNOWN_MESSAGE_TYPE)
-                .replace(Message.PLACEHOLDER_MSG_KEY,
+                .replace("${msg.key}",
                         TestConst.Languages.ANY_UNKNOWN_MESSAGE.getKey());
 
         log.debug(messageText);

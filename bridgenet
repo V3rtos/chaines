@@ -4,11 +4,12 @@ source .scripts/utils.sh
 
 exec_help() {
   echo ">> Executable subcommands list:"
-  echo " > -h, --help, help             |  Print this commands information block."
-  echo " > -e, endpoints                |  Build endpoints modules to build. [You can write name of endpoint as 0 parameter]"
-  echo " > -a, assemblyEndpoints        |  Configure services modules before build. [You can write name of endpoint as 0 parameter]"
-  echo " > -j, jar                      |  Build only maintained project modules."
-  echo " > -b, build                    |  Run full build of all modules with endpoints."
+  echo " > -h, --help, help             |  Print this commands information block;"
+  echo " > -e, endpoints                |  Build endpoints modules to build [You can write name of endpoint as 0 parameter];"
+  echo " > -a, assemblyEndpoints        |  Configure services modules before build [You can write name of endpoint as 0 parameter];"
+  echo " > -j, jar                      |  Build only maintained project modules;"
+  echo " > -b, build                    |  Running full build of all modules with endpoints;"
+  echo " > -t, test                     |  Running testing integration-units;"
   echo ""
   echo ">> Commands usage examples: './$APP <subcommand> <parameters>' or 'sh $APP <subcommand> <parameters>'"
 }
@@ -18,19 +19,22 @@ case $1 in
         exec_help
         ;;
     "-a" | "assemblyEndpoints")
-        source .scripts/config_endpoints.sh "$2"
+        source .scripts/services_assemble.sh "$2"
         ;;
     "-e" | "endpoints")
-        source .scripts/build_endpoints.sh "$2"
-        source .scripts/config_endpoints.sh "$2"
+        source .scripts/services_build.sh "$2"
+        source .scripts/services_assemble.sh "$2"
         ;;
     "-j" | "jar")
-        source .scripts/build_project.sh
+        source .scripts/project_build.sh
         ;;
     "-b" | "build")
-        source .scripts/build_project.sh
-        source .scripts/build_endpoints.sh "$2"
-        source .scripts/config_endpoints.sh "$2"
+        source .scripts/project_build.sh
+        source .scripts/services_build.sh "$2"
+        source .scripts/services_assemble.sh "$2"
+        ;;
+    "-t" | "test")
+        source .scripts/project_testing.sh "$2"
         ;;
     *)
         echo "$PREF Unknown command: $1"

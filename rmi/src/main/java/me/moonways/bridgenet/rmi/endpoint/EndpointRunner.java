@@ -3,6 +3,7 @@ package me.moonways.bridgenet.rmi.endpoint;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.rmi.module.ServiceModulesContainer;
 import me.moonways.bridgenet.rmi.module.access.AccessRemoteModule;
 import me.moonways.bridgenet.rmi.service.RemoteService;
@@ -15,10 +16,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -28,6 +27,7 @@ public class EndpointRunner {
     private static final String URL_SPEC_FORMAT = "jar:file:%s!/";
 
     private final Map<Endpoint, Class<?>> servicesImplementsMap = Collections.synchronizedMap(new HashMap<>());
+    private final ExecutorService executor = Threads.newWorkSteelingPool();
 
     @Inject
     private RemoteServicesManagement remoteServicesManagement;
@@ -40,7 +40,11 @@ public class EndpointRunner {
             return;
         }
 
-        bind(endpoint);
+        if (Objects.equals(System.getProperty("test.engine.enabled"), "true")) {
+            bind(endpoint);
+        } else {
+            executor.submit(() -> bind(endpoint));
+        }
     }
 
     @SneakyThrows

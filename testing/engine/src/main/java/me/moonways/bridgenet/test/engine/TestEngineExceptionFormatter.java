@@ -80,8 +80,9 @@ public class TestEngineExceptionFormatter {
         String currentExceptionMessage = replaceExceptionPlaceholders(exception,
                 stacktracePattern.replace(findElementLinePattern(stacktracePattern), duplicatedElementsLines));
 
-        if (exception.getCause() != null) {
-            currentExceptionMessage += formatToString(exception.getCause());
+        Throwable cause = exception.getCause();
+        if (cause != null) {
+            currentExceptionMessage += formatToString(cause);
         }
 
         return currentExceptionMessage;

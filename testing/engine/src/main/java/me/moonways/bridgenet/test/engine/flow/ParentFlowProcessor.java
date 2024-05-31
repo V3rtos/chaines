@@ -19,6 +19,7 @@ public class ParentFlowProcessor implements TestFlowProcessor {
                     new FlowUnitExternalsExecutionNode(),
                     new FlowUnitRunningNode(),
                     new FlowUnitExternalsPostExecutionNode(),
+                    new FlowHookShutdownNode(),
             };
 
     @Override

@@ -24,7 +24,9 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
     private static final long serialVersionUID = -7274752404023780386L;
 
     private static final Language DEFAULT_LANG = LanguageTypes.ENGLISH;
+
     private static final String LANGUAGES_CONFIGS_FORMAT = "lang/%s.ini";
+    public static final String PLACEHOLDER_MSG_KEY = "${msg.key}";
 
     private final Map<UUID, RegisteredLanguage> registeredLanguagesMap
             = new TreeMap<>();
@@ -95,7 +97,7 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
 
         if (messageKey == null) {
             return findTranslatedMessage(language, MessageTypes.UNKNOWN_MESSAGE_TYPE)
-                    .map(s -> s.replace(Message.PLACEHOLDER_MSG_KEY, "null"));
+                    .map(s -> s.replace(PLACEHOLDER_MSG_KEY, "null"));
         }
         if (messageKey.isEmpty()) {
             return Optional.of(messageKey);
@@ -107,7 +109,7 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
                         .map(IniProperty::getAsString)
                         .orElseGet(() -> findTranslatedMessage(language, MessageTypes.UNKNOWN_MESSAGE_TYPE)
                                 .get()
-                                .replace(Message.PLACEHOLDER_MSG_KEY, messageKey)));
+                                .replace(PLACEHOLDER_MSG_KEY, messageKey)));
     }
 
     @Override

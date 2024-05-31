@@ -1,5 +1,5 @@
 #!/bin/bash
-mvn clean package -N
+mvn clean install -N
 
 rm -rf "$BUILD_DIR"
 mkdir "$BUILD_DIR"
@@ -10,7 +10,7 @@ function assembly_resources() {
 }
 
 function install() {
-  mvn clean package -Dmaven.test.skip --file "$1/pom.xml" || exit
+  mvn clean install -Dmaven.test.skip --file "$1/pom.xml" || exit
   except_code
 }
 
