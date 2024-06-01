@@ -21,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public final class GuiNamespacedEntriesLoader<T extends ItemsEntry> {
 
+    private static final JsonParser JSON_PARSER = new JsonParser();
     private static final Gson GSON = new Gson();
 
     private final String resourceName;
@@ -31,7 +32,7 @@ public final class GuiNamespacedEntriesLoader<T extends ItemsEntry> {
 
     public void load(@NotNull List<GuiNamespacedEntry<T>> entries) {
         InputStream inputStream = assembly.readResourceStream(resourceName);
-        JsonElement jsonElement = JsonParser.parseReader(
+        JsonElement jsonElement = JSON_PARSER.parse(
                 new JsonReader(
                         new InputStreamReader(inputStream)));
 

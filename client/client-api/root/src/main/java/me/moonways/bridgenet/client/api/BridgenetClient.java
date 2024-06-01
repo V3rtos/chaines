@@ -7,6 +7,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.client.api.data.ClientDto;
 import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.mtp.BridgenetNetworkController;
@@ -14,10 +15,12 @@ import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.mtp.connection.client.NetworkClientConnectionFactory;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 @Log4j2
 @RequiredArgsConstructor
 public abstract class BridgenetClient {
+    private static final ExecutorService executorService = Threads.newSingleThreadExecutor();
 
     @Inject
     private NetworkClientConnectionFactory clientConnectionFactory;
@@ -46,21 +49,23 @@ public abstract class BridgenetClient {
      * стабильного соединения со всеми сервисами системы Bridgenet.
      */
     public void start() {
-        log.info("***************************** BEGIN BRIDGENET-CONNECTOR INITIALIZATION *****************************");
-        engine.setProperties();
+        executorService.submit(() -> {
 
-        BeansService beansService = engine.bindAll();
+            log.info("***************************** BEGIN BRIDGENET-CONNECTOR INITIALIZATION *****************************");
+            engine.setProperties();
 
-        beansService.bind(bridgenetServerSync);
-        beansService.bind(bridgenetGamesSync);
+            BeansService beansService = engine.bindAll();
 
-        beansService.inject(channelHandler);
+            beansService.bind(bridgenetServerSync);
+            beansService.bind(bridgenetGamesSync);
 
-        beansService.bind(this);
+            beansService.inject(channelHandler);
 
-        log.info("****************************** END BRIDGENET-CONNECTOR INITIALIZATION ******************************");
+            beansService.bind(this);
+            log.info("****************************** END BRIDGENET-CONNECTOR INITIALIZATION ******************************");
 
-        doConnect();
+            doConnect();
+        });
     }
 
     /**

@@ -45,6 +45,12 @@ public class Threads {
         }
     }
 
+    public ExecutorService newSingleThreadExecutor() {
+        ExecutorService executorService = Executors.newSingleThreadExecutor(THREAD_FACTORY);
+        pull(executorService);
+        return executorService;
+    }
+
     public ExecutorService newCachedThreadPool() {
         ExecutorService executorService = Executors.newCachedThreadPool(THREAD_FACTORY);
         pull(executorService);

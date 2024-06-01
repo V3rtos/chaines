@@ -12,7 +12,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.client.api.BridgenetClient;
 import me.moonways.bridgenet.client.api.BridgenetServerSync;
-import me.moonways.bridgenet.client.api.cloudnet.CloudnetWrapper;
+import me.moonways.bridgenet.client.api.cloudnet.CloudNetDistributor;
 import me.moonways.bridgenet.client.api.data.ClientDto;
 import me.moonways.bridgenet.model.message.Handshake;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 public class BridgenetVelocityPlugin extends BridgenetClient {
 
     @Inject
-    private CloudnetWrapper cloudnetWrapper;
+    private CloudNetDistributor cloudNetDistributor;
     @Inject
     private BeansService beansService; // todo - заинжектить плагины, которые будут инициализироваться после коннектора в Velocity.
     @Inject
@@ -54,13 +54,11 @@ public class BridgenetVelocityPlugin extends BridgenetClient {
 
     @Override
     protected ClientDto createClientInfo() {
-        CloudnetWrapper cloudnetWrapper = new CloudnetWrapper();
-        beansService.bind(cloudnetWrapper);
-
+        CloudNetWrapper cloudNetWrapper = cloudNetDistributor.getInstance();
         return ClientDto.builder()
-                .name(cloudnetWrapper.getFullCurrentServiceName())
-                .host(cloudnetWrapper.getCurrentSnapshotHost())
-                .port(cloudnetWrapper.getCurrentSnapshotPort())
+                .name(cloudNetWrapper.getFullCurrentServiceName())
+                .host(cloudNetWrapper.getCurrentSnapshotHost())
+                .port(cloudNetWrapper.getCurrentSnapshotPort())
                 .build();
     }
 

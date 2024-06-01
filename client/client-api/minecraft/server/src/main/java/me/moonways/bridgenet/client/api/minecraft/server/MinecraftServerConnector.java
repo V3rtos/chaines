@@ -5,7 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.client.api.BridgenetClient;
-import me.moonways.bridgenet.client.api.cloudnet.CloudnetWrapper;
+import me.moonways.bridgenet.client.api.cloudnet.CloudNetDistributor;
+import me.moonways.bridgenet.client.api.cloudnet.CloudNetWrapper;
 import me.moonways.bridgenet.client.api.data.ClientDto;
 import me.moonways.bridgenet.model.message.Handshake;
 
@@ -15,18 +16,18 @@ public final class MinecraftServerConnector extends BridgenetClient {
 
     @Inject
     private BeansService beansService;
+    @Inject
+    private CloudNetDistributor cloudNetDistributor;
 
     private final Object plugin;
 
     @Override
     protected ClientDto createClientInfo() {
-        CloudnetWrapper cloudnetWrapper = new CloudnetWrapper();
-        beansService.bind(cloudnetWrapper);
-
+        CloudNetWrapper cloudNetWrapper = cloudNetDistributor.getInstance();
         return ClientDto.builder()
-                .name(cloudnetWrapper.getFullCurrentServiceName())
-                .host(cloudnetWrapper.getCurrentSnapshotHost())
-                .port(cloudnetWrapper.getCurrentSnapshotPort())
+                .name(cloudNetWrapper.getCurrentFullName())
+                .host(cloudNetWrapper.getCurrentSnapshotHost())
+                .port(cloudNetWrapper.getCurrentSnapshotPort())
                 .build();
     }
 
