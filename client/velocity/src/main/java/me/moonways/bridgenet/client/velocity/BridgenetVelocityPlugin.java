@@ -13,6 +13,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.client.api.BridgenetClient;
 import me.moonways.bridgenet.client.api.BridgenetServerSync;
 import me.moonways.bridgenet.client.api.cloudnet.CloudNetDistributor;
+import me.moonways.bridgenet.client.api.cloudnet.CloudNetWrapper;
 import me.moonways.bridgenet.client.api.data.ClientDto;
 import me.moonways.bridgenet.model.message.Handshake;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +57,7 @@ public class BridgenetVelocityPlugin extends BridgenetClient {
     protected ClientDto createClientInfo() {
         CloudNetWrapper cloudNetWrapper = cloudNetDistributor.getInstance();
         return ClientDto.builder()
-                .name(cloudNetWrapper.getFullCurrentServiceName())
+                .name(cloudNetWrapper.getCurrentFullName())
                 .host(cloudNetWrapper.getCurrentSnapshotHost())
                 .port(cloudNetWrapper.getCurrentSnapshotPort())
                 .build();
