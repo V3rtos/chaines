@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.test.connections.mtp;
+package me.moonways.bridgenet.test.connections.client;
 
 import me.moonways.bridgenet.api.command.CommandExecutor;
 import me.moonways.bridgenet.api.command.exception.CommandExecutionException;

@@ -6,6 +6,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Autobind
@@ -28,15 +29,23 @@ public class CloudNetDistributor {
     }
 
     private CloudNetWrapper createCloudnetWrapper() {
-        Wrapper realWrapper = Wrapper.getInstance();
-        CloudNetWrapper instanceImpl;
+        return createRealWrapper()
+                .map(realCloudNetWrapper -> (CloudNetWrapper) realCloudNetWrapper)
+                .orElseGet(FakeCloudNetWrapper::new);
+    }
 
-        if (realWrapper != null) {
-            instanceImpl = new RealCloudNetWrapper(realWrapper);
-        } else {
-            instanceImpl = new FakeCloudNetWrapper();
+    private Optional<RealCloudNetWrapper> createRealWrapper() {
+        try {
+            Class.forName("de.dytanic.cloudnet.wrapper.Wrapper");
+        } catch (ClassNotFoundException e) {
+            return Optional.empty();
         }
 
-        return instanceImpl;
+        Wrapper realWrapper = Wrapper.getInstance();
+        if (realWrapper == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new RealCloudNetWrapper(realWrapper));
     }
 }

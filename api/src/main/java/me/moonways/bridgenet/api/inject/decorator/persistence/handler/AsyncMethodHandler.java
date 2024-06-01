@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class AsyncMethodHandler implements DecoratedMethodHandler {
 
     private static final ExecutorService ASYNC_POOL_EXECUTOR
-            = Threads.newWorkSteelingPool();
+            = Threads.newCachedThreadPool();
 
     @Override
     public Object handleProxyInvocation(DecoratorInvocation invocation) {

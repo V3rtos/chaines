@@ -45,9 +45,9 @@ public class BridgenetNetworkController implements Serializable {
     private TypeAnnotationProcessorResult<Object> messagesResult;
 
     @PostConstruct
-    void init() {
+    private void init() {
         List<Object> messagesList = messagesResult.toList();
-        messagesList.sort(Comparator.comparing(o -> o.getClass().getSimpleName()));
+        messagesList.sort(Comparator.comparing(o -> o.getClass().getName()));
 
         networkMessagesService = new NetworkMessagesService(messagesList);
 
