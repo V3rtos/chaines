@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.test.data;
 
-import me.moonways.bridgenet.connector.description.DeviceDescription;
-import me.moonways.bridgenet.connector.description.UserDescription;
+import me.moonways.bridgenet.client.api.data.ClientDto;
+import me.moonways.bridgenet.client.api.data.UserDto;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiSlot;
 import me.moonways.bridgenet.model.service.gui.GuiType;
@@ -35,8 +35,8 @@ public final class TestConst {
         public static final String SERVER_HOST = "127.0.0.1";
         public static final int SERVER_PORT = 12345;
 
-        public static final DeviceDescription SERVER_DESC =
-                DeviceDescription.builder()
+        public static final ClientDto SERVER_DESC =
+                ClientDto.builder()
                         .name(SERVER_NAME)
                         .host(SERVER_HOST)
                         .port(SERVER_PORT)
@@ -48,8 +48,8 @@ public final class TestConst {
         public static final UUID ID = UUID.randomUUID();
         public static final String NICKNAME = "itzstonlex";
 
-        public static final UserDescription DESC =
-                UserDescription.builder()
+        public static final UserDto DESC =
+                UserDto.builder()
                         .name(NICKNAME)
                         .uniqueId(ID)
                         .proxyId(PROXY_ID)
@@ -61,8 +61,8 @@ public final class TestConst {
         public static final String HOST = "127.0.0.1";
         public static final int PORT = 25565;
 
-        public static final DeviceDescription DESC =
-                DeviceDescription.builder()
+        public static final ClientDto DESC =
+                ClientDto.builder()
                         .name(NAME)
                         .host(HOST)
                         .port(PORT)
@@ -70,8 +70,8 @@ public final class TestConst {
     }
 
     public static final class Connector {
-        public static final DeviceDescription DEVICE_DESC =
-                DeviceDescription.builder()
+        public static final ClientDto CLIENT_INFO =
+                ClientDto.builder()
                         .name("testing-connector")
                         .host(Server.HOST)
                         .port(Server.PORT + 1)

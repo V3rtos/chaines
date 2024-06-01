@@ -77,8 +77,8 @@
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>base-wrapper</artifactId>
-            <version>${connector.base.version}</version>
+            <artifactId>client-api-root</artifactId>
+            <version>${client.api.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

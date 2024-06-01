@@ -39,7 +39,7 @@
     * [API / Dependency Injection](.docs/api/inject-api.md)
     * [API / Method Intercepting](.docs/api/proxy-api.md)
     * [API / Scheduling Task`s](.docs/api/scheduler-api.md)
-* [Connector`s](.docs/connector.md)
+* [Client`s](.docs/clients.md)
 * [Testing Engine](.docs/test-engine.md)
 * [Database Engine](.docs/jdbc.md)
 * [Profiler](.docs/profiler)

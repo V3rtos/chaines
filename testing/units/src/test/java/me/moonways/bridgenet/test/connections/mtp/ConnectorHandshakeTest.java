@@ -5,7 +5,7 @@ import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
 import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.message.Handshake;
-import me.moonways.bridgenet.test.data.ExampleConnector;
+import me.moonways.bridgenet.test.data.ExampleClient;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.module.impl.AllModules;
@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 @TestModules(AllModules.class)
 public class ConnectorHandshakeTest {
 
-    private final ExampleConnector subj = new ExampleConnector();
+    private final ExampleClient subj = new ExampleClient();
 
     @Inject
     private CommandExecutor commandExecutor;
@@ -31,9 +31,9 @@ public class ConnectorHandshakeTest {
     @TestOrdered(1)
     public void test_handshakeSuccess() {
         subj.start();
-        assertNotNull(subj.getCurrentDeviceId());
+        assertNotNull(subj.getCurrentClientId());
 
-        command();
+        testServersCommand();
     }
 
     @Test
@@ -43,10 +43,10 @@ public class ConnectorHandshakeTest {
         assertTrue(result instanceof Handshake.Failure);
     }
 
-    private void command() {
+    private void testServersCommand() {
         try {
             commandExecutor.execute(consoleCommandSender, "servers list");
-            commandExecutor.execute(consoleCommandSender, "servers get " + TestConst.Connector.DEVICE_DESC.getName());
+            commandExecutor.execute(consoleCommandSender, "servers get " + TestConst.Connector.CLIENT_INFO.getName());
         } catch (CommandExecutionException exception) {
             fail(exception.getMessage());
         }

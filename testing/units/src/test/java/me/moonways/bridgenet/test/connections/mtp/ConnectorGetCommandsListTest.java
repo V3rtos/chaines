@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.test.connections.mtp;
 
-import me.moonways.bridgenet.test.data.ExampleConnector;
+import me.moonways.bridgenet.test.data.ExampleClient;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.module.impl.AllModules;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 @TestModules(AllModules.class)
 public class ConnectorGetCommandsListTest {
 
-    private final ExampleConnector subj = new ExampleConnector();
+    private final ExampleClient subj = new ExampleClient();
 
     @Before
     public void setUp() {

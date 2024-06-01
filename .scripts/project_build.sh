@@ -15,7 +15,7 @@ function install() {
 }
 
 # shellcheck disable=SC2054
-declare -a modules_array=("assembly" "profiler" "api" "mtp" "jdbc" "rmi" "rest" "services/model" "bootstrap" "connector" "testing")
+declare -a modules_array=("assembly" "profiler" "api" "mtp" "jdbc" "rmi" "rest" "services/model" "bootstrap" "client" "testing")
 
 # shellcheck disable=SC2128
 for module in "${modules_array[@]}"
