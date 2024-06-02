@@ -57,6 +57,10 @@ public final class PlayerStoreStub implements PlayerStore {
     public Player addOnlinePlayer(Properties properties) throws RemoteException {
         PlayerStub player = createPlayer(properties);
 
+        if (player == null) {
+            return null;
+        }
+
         beansService.inject(player);
 
         idByNamesCache.put(player.getName().toLowerCase(), player.getDescription());
@@ -73,6 +77,10 @@ public final class PlayerStoreStub implements PlayerStore {
 
     public Player removeOnlinePlayer(UUID id) throws RemoteException {
         Player removed = onlinePlayersMap.remove(id);
+
+        if (removed == null) {
+            return null;
+        }
 
         nameByIdsCache.cleanUp();
         idByNamesCache.cleanUp();
@@ -91,6 +99,10 @@ public final class PlayerStoreStub implements PlayerStore {
         String username = properties.getProperty(HandshakePropertiesConst.USER_NAME);
 
         UUID proxyId = UUID.fromString(properties.getProperty(HandshakePropertiesConst.USER_PROXY_ID));
+
+        if (get(uuid).isPresent()) {
+            return null;
+        }
 
         PlayerDescription description;
         if (idByName(username) == null) {

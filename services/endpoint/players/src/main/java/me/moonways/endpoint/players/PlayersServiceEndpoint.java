@@ -7,7 +7,8 @@ import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
 import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
 import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.players.database.PlayersRepository;
-import me.moonways.endpoint.players.listener.PlayerMessageListener;
+import me.moonways.endpoint.players.listener.InboundPlayerCommandListener;
+import me.moonways.endpoint.players.listener.InboundPlayerConnectionListener;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -29,7 +30,8 @@ public final class PlayersServiceEndpoint extends EndpointRemoteObject implement
 
     @Override
     protected void construct(EndpointRemoteContext context) {
-        context.registerMessageListener(new PlayerMessageListener(store));
+        context.registerMessageListener(new InboundPlayerConnectionListener(store));
+        context.registerMessageListener(new InboundPlayerCommandListener(store));
 
         context.bind(new PlayersRepository());
 

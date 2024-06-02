@@ -5,20 +5,17 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.client.api.BridgenetServerSync;
 import me.moonways.bridgenet.client.api.minecraft.server.MinecraftCommandsEngine;
 import me.moonways.bridgenet.client.api.minecraft.server.MinecraftServerConnector;
+import me.moonways.bridgenet.client.spigot.bukkit.event.PlayerCommandsListener;
+import me.moonways.bridgenet.client.spigot.bukkit.event.PlayerConnectionListener;
+import me.moonways.bridgenet.client.spigot.bukkit.event.PluginToBeansListener;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.server.PluginDisableEvent;
-import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
+public final class BridgenetSpigotPlugin extends JavaPlugin {
 
-    private final MinecraftServerConnector minecraftServerConnector = new MinecraftServerConnector(this);
+    private final MinecraftServerConnector connector =
+            new MinecraftServerConnector(this);
 
     @Inject
     private BeansService beansService;
@@ -27,19 +24,23 @@ public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        minecraftServerConnector.start();
+        connector.start();
 
-        commandsEngine.init(minecraftServerConnector);
-
-        bindLoadedPlugins();
+        commandsEngine.init(connector);
 
         Server server = getServer();
-        server.getPluginManager().registerEvents(this, this);
+        beansService.bind(server);
+
+        server.getPluginManager().registerEvents(new PluginToBeansListener(beansService), this);
+        server.getPluginManager().registerEvents(new PlayerCommandsListener(commandsEngine), this);
+        server.getPluginManager().registerEvents(new PlayerConnectionListener(connector.getBridgenetServerSync()), this);
+
+        bindLoadedPlugins();
     }
 
     @Override
     public void onDisable() {
-        BridgenetServerSync bridgenet = minecraftServerConnector.getBridgenetServerSync();
+        BridgenetServerSync bridgenet = connector.getBridgenetServerSync();
         bridgenet.exportClientDisconnect();
     }
 
@@ -48,28 +49,4 @@ public class BridgenetSpigotPlugin extends JavaPlugin implements Listener {
             beansService.bind(plugin);
         }
     }
-
-    // ---------------------------------------------- // LISTENING BUKKIT EVENTS // ---------------------------------------------- //
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void handle(PluginEnableEvent event) {
-        beansService.bind(event.getPlugin());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void handle(PluginDisableEvent event) {
-        beansService.unbind(event.getPlugin());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void handle(PlayerCommandPreprocessEvent event) {
-        Player player = event.getPlayer();
-
-        if (commandsEngine.isExportable(event.getMessage())) {
-            event.setCancelled(
-                    commandsEngine.exportCommand(player.getUniqueId(), event.getMessage()));
-        }
-    }
-
-    // ---------------------------------------------- // LISTENING BUKKIT EVENTS // ---------------------------------------------- //
 }

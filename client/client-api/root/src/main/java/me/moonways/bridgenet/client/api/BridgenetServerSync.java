@@ -26,7 +26,7 @@ public final class BridgenetServerSync {
      *
      * @param description - описание подключаемого устройства.
      */
-    public Handshake.Result exportClientHandshake(ClientDto description) {
+    public synchronized Handshake.Result exportClientHandshake(ClientDto description) {
         CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class,
                 new Handshake(Handshake.Type.SERVER, description.toProperties()));
 
@@ -42,7 +42,7 @@ public final class BridgenetServerSync {
      *
      * @param description - описание подключаемой игры.
      */
-    public CreateGame.Result exportGameCreate(GameDto description) {
+    public synchronized CreateGame.Result exportGameCreate(GameDto description) {
         CompletableFuture<CreateGame.Result> future = channel.sendAwait(CreateGame.Result.class,
                 new CreateGame(
                         description.getName(),
@@ -57,7 +57,7 @@ public final class BridgenetServerSync {
      *
      * @param description - описание подключаемой игры.
      */
-    public void exportGameUpdate(GameStateDto description) {
+    public synchronized void exportGameUpdate(GameStateDto description) {
         ActiveGameDto activeGame = description.getActiveGame();
         channel.send(new UpdateGame(activeGame.getGameId(), activeGame.getActiveId(),
                 description.getStatus(),
@@ -74,7 +74,7 @@ public final class BridgenetServerSync {
      * @param label       - введенная пользователем строка команды.
      * @return - возвращает TRUE если команда была успешно исполнена.
      */
-    public boolean exportCommandSend(UserDto description, String label) {
+    public synchronized boolean exportCommandSend(UserDto description, String label) {
         CompletableFuture<SendCommand.Result> future = channel.sendAwait(SendCommand.Result.class,
                 new SendCommand(description.getUniqueId(), label));
 
@@ -88,14 +88,14 @@ public final class BridgenetServerSync {
      *
      * @param description - описание подключенной и активной игры.
      */
-    public void exportGameDelete(ActiveGameDto description) {
+    public synchronized void exportGameDelete(ActiveGameDto description) {
         channel.send(new DeleteGame(description.getGameId(), description.getActiveId()));
     }
 
     /**
      * Отправить сообщение об отсоединении текущего устройства
      */
-    public void exportClientDisconnect() {
+    public synchronized void exportClientDisconnect() {
         if (currentClientId != null) {
             channel.send(new Disconnect(currentClientId, Disconnect.Type.SERVER));
         }
@@ -106,7 +106,7 @@ public final class BridgenetServerSync {
      *
      * @param description - описание подключаемого пользователя.
      */
-    public void exportUserDisconnect(UserDto description) {
+    public synchronized void exportUserDisconnect(UserDto description) {
         channel.send(new Disconnect(description.getUniqueId(), Disconnect.Type.PLAYER));
     }
 
@@ -120,7 +120,7 @@ public final class BridgenetServerSync {
      * @param description - описание подключаемого пользователя.
      * @return - возвращает TRUE если вернувшийся идентификатор совпадает с пользовательским.
      */
-    public boolean exportUserHandshake(UserDto description) {
+    public synchronized boolean exportUserHandshake(UserDto description) {
         CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class,
                 new Handshake(Handshake.Type.PLAYER, description.toProperties()));
 
@@ -138,7 +138,7 @@ public final class BridgenetServerSync {
      * @param playerId - идентификатор активного пользователя.
      * @param message  - текстовое сообщение
      */
-    public void exportUserMessageSend(SendMessage.ChatType chatType, UUID playerId, String message) {
+    public synchronized void exportUserMessageSend(SendMessage.ChatType chatType, UUID playerId, String message) {
         channel.send(new SendMessage(playerId, message, chatType));
     }
 
@@ -150,7 +150,7 @@ public final class BridgenetServerSync {
      * @param serverId - идентификатор устройства, на который переподключать.
      * @return - возвращает TRUE в случае удачной попытки переподключения.
      */
-    public boolean exportUserRedirectWithResult(UUID playerId, UUID serverId) {
+    public synchronized boolean exportUserRedirectWithResult(UUID playerId, UUID serverId) {
         CompletableFuture<Redirect.Result> future = channel.sendAwait(Redirect.Result.class,
                 new Redirect(playerId, serverId));
 
@@ -165,7 +165,7 @@ public final class BridgenetServerSync {
      * @param playerId - идентификатор переподключаемого игрока.
      * @param serverId - идентификатор устройства, на который переподключать.
      */
-    public void exportUserRedirect(UUID playerId, UUID serverId) {
+    public synchronized void exportUserRedirect(UUID playerId, UUID serverId) {
         channel.send(new Redirect(playerId, serverId));
     }
 
@@ -176,7 +176,7 @@ public final class BridgenetServerSync {
      * @param playerId - идентификатор переподключаемого игрока.
      * @return - возвращает TRUE в случае удачной попытки переподключения.
      */
-    public boolean exportUserRedirectToHereWithResult(UUID playerId) {
+    public synchronized boolean exportUserRedirectToHereWithResult(UUID playerId) {
         if (currentClientId != null) {
             return exportUserRedirectWithResult(playerId, currentClientId);
         }
@@ -189,7 +189,7 @@ public final class BridgenetServerSync {
      *
      * @param playerId - идентификатор переподключаемого игрока.
      */
-    public void exportUserRedirectToHere(UUID playerId) {
+    public synchronized void exportUserRedirectToHere(UUID playerId) {
         if (currentClientId != null) {
             exportUserRedirect(playerId, currentClientId);
         }
@@ -202,7 +202,7 @@ public final class BridgenetServerSync {
      * @param playerId    - идентификатор активного пользователя.
      * @param description - описание дополнительных параметров сообщения.
      */
-    public void exportUserTitleSend(UUID playerId, TitleDto description) {
+    public synchronized void exportUserTitleSend(UUID playerId, TitleDto description) {
         channel.send(new SendTitle(playerId,
                 description.getTitle(),
                 description.getSubtitle(),
@@ -215,7 +215,7 @@ public final class BridgenetServerSync {
      * Запросить у единого сервера Bridgenet список команд,
      * зарегистрированных в нем для возможности исполнения на данном устройстве.
      */
-    public List<String> lookupServerCommandsList() {
+    public synchronized List<String> lookupServerCommandsList() {
         CompletableFuture<GetCommands.Result> future
                 = channel.sendAwait(GetCommands.Result.class, new GetCommands());
 
