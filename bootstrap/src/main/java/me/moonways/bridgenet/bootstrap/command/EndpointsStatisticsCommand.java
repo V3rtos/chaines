@@ -18,7 +18,6 @@ import java.util.Map;
 @Alias("endpoint")
 @Alias("ep")
 @Command("endpoints")
-@CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class EndpointsStatisticsCommand {
 
     @Inject

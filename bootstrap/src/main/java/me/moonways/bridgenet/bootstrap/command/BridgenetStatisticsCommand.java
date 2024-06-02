@@ -19,7 +19,6 @@ import java.util.List;
 @Alias("system")
 @Alias("bn")
 @Command("bridgenet")
-@CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class BridgenetStatisticsCommand {
 
     private static final SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS");
