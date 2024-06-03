@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.mtp.inbound;
 
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -22,6 +23,8 @@ import java.util.function.Consumer;
 @Autobind
 public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
 
+    private static final int MAX_CONTENT_LENGTH = 1048576;
+
     @Setter
     private ChannelDirection channelDirection;
 
@@ -42,6 +45,7 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
 
     private void initCodec(@NotNull ChannelPipeline pipeline) {
         addToPipeline(pipeline, new NetworkMessageDecoder(networkController.getNetworkMessagesService(), configuration));
+        addToPipeline(pipeline, new InboundChannelMessageAggregator(MAX_CONTENT_LENGTH));
         addToPipeline(pipeline, new NetworkMessageEncoder(configuration));
     }
 
@@ -51,8 +55,14 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
     }
 
     private void initOptions(@NotNull ChannelConfig config) {
+        config.setRecvByteBufAllocator(new FixedRecvByteBufAllocator(MAX_CONTENT_LENGTH));
+        config.setAllocator(PooledByteBufAllocator.DEFAULT);
+
         config.setOption(ChannelOption.TCP_NODELAY, true);
-        config.setOption(ChannelOption.IP_TOS, 0x02);
+        config.setOption(ChannelOption.SO_KEEPALIVE, true);
+        config.setOption(ChannelOption.SO_REUSEADDR, true);
+        config.setOption(ChannelOption.SO_RCVBUF, MAX_CONTENT_LENGTH);
+        config.setOption(ChannelOption.SO_SNDBUF, MAX_CONTENT_LENGTH);
     }
 
     private void addToPipeline(ChannelPipeline pipeline, ChannelHandler channelHandler) {
@@ -67,9 +77,9 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
         MessageEncryption encryption = configuration.getEncryption();
         encryption.generateKeys();
 
+        initOptions(channel.config());
         initCodec(channel.pipeline());
         initHandlers(channel.pipeline());
-        initOptions(channel.config());
 
         if (initChannelConsumer != null) {
             initChannelConsumer.accept(channel);
