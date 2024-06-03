@@ -8,5 +8,5 @@ public final class HandshakePropertiesConst {
 
     public static final String USER_NAME = "user.name";
     public static final String USER_UUID = "user.uuid";
-    public static final String USER_PROXY_ID = "user.proxy";
+    public static final String USER_PROXY_ID = "user.proxy.id";
 }

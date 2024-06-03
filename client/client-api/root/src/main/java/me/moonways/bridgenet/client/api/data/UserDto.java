@@ -17,8 +17,8 @@ public class UserDto {
 
     private final String name;
 
-    private final UUID proxyId;
     private final UUID uniqueId;
+    private final UUID proxyId;
 
     public Properties toProperties() {
         Properties properties = new Properties();

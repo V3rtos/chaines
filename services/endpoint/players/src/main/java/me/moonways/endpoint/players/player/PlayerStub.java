@@ -1,6 +1,9 @@
 package me.moonways.endpoint.players.player;
 
+import com.google.gson.Gson;
 import lombok.Getter;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.util.ComponentContentReader;
 import me.moonways.bridgenet.model.audience.ComponentHolders;
 import me.moonways.bridgenet.model.audience.MessageDirection;
 import me.moonways.bridgenet.model.event.AudienceSendEvent;
@@ -9,7 +12,6 @@ import me.moonways.bridgenet.model.message.SendTitle;
 import me.moonways.bridgenet.model.service.language.Language;
 import me.moonways.bridgenet.model.service.language.Message;
 import me.moonways.bridgenet.model.service.players.Player;
-import me.moonways.bridgenet.model.service.players.component.PlayerConnection;
 import me.moonways.bridgenet.model.service.players.component.PlayerStore;
 import me.moonways.bridgenet.model.service.players.component.statistic.ActivityStatistics;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
@@ -17,6 +19,9 @@ import me.moonways.bridgenet.model.util.Title;
 import me.moonways.bridgenet.model.util.TitleFade;
 import me.moonways.endpoint.players.database.PlayerDescription;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.ComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 import java.rmi.RemoteException;
 import java.util.Optional;
@@ -26,9 +31,12 @@ import java.util.UUID;
 public class PlayerStub extends OfflinePlayerStub implements Player {
 
     private final ActivityStatistics statistics;
-    private final PlayerConnection connection;
+    private final PlayerConnectionStub connection;
 
     private final PlayerStore playerStore;
+
+    //@Inject
+    //private Gson gson;
 
     public PlayerStub(UUID id, String name, PlayerDescription description, PlayerStore playerStore) {
         super(id, name, description);
@@ -148,8 +156,8 @@ public class PlayerStub extends OfflinePlayerStub implements Player {
     }
 
     private SendMessage createSendMessage(SendMessage.ChatType chatType, Component message, ComponentHolders holders) {
-        Component holdenComponent = holders.apply(this, message);
-        return new SendMessage(getId(), holdenComponent.toString(), chatType);
+        Component component = holders.apply(this, message);
+        return new SendMessage(getId(), ComponentContentReader.read(component), chatType);
     }
 
     private SendTitle createSendTitle(Title<Component> title, ComponentHolders holders) {
@@ -161,13 +169,13 @@ public class PlayerStub extends OfflinePlayerStub implements Player {
 
         TitleFade fade = Optional.ofNullable(title.getFade()).orElseGet(TitleFade::defaults);
 
-        return new SendTitle(getId(),
-                holders.apply(this, componentTitle).toString(),
-                holders.apply(this, componentSubtitle).toString(),
+        String titleComponentJson = ComponentContentReader.read(holders.apply(this, componentTitle));
+        String subtitleComponentJson = ComponentContentReader.read(holders.apply(this, componentSubtitle));
+
+        return new SendTitle(getId(), titleComponentJson, subtitleComponentJson,
                 fade.getFadeIn(),
                 fade.getStay(),
-                fade.getFadeOut()
-        );
+                fade.getFadeOut());
     }
 
     private boolean writeServerChannel(Object message) throws RemoteException {

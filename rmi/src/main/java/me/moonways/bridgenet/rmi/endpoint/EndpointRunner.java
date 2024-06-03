@@ -27,7 +27,6 @@ public class EndpointRunner {
     private static final String URL_SPEC_FORMAT = "jar:file:%s!/";
 
     private final Map<Endpoint, Class<?>> servicesImplementsMap = Collections.synchronizedMap(new HashMap<>());
-    private final ExecutorService executor = Threads.newWorkSteelingPool();
 
     @Inject
     private RemoteServicesManagement remoteServicesManagement;
@@ -40,11 +39,7 @@ public class EndpointRunner {
             return;
         }
 
-        if (Objects.equals(System.getProperty("test.engine.enabled"), "true")) {
-            bind(endpoint);
-        } else {
-            executor.submit(() -> bind(endpoint));
-        }
+        bind(endpoint);
     }
 
     @SneakyThrows

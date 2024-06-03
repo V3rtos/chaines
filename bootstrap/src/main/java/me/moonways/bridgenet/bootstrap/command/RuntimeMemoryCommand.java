@@ -16,7 +16,6 @@ import java.util.function.Function;
 
 @Alias("mem")
 @Command("memory")
-@CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class RuntimeMemoryCommand {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy в HH:mm:ss.SSS");

@@ -14,12 +14,15 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationContext;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationResult;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.assembly.OverridenProperty;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.profiler.BridgenetDataLogger;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -33,6 +36,8 @@ import java.util.stream.Stream;
  */
 @Log4j2
 public final class BeansService {
+
+    private static final ExecutorService executorService = Threads.newSingleThreadExecutor();
 
     @Getter
     private final BeansStore store;
@@ -88,26 +93,34 @@ public final class BeansService {
      * Инициализация проекта и системы Dependency Injection.
      */
     public void fakeStart() {
-        log.info("BeansService.fakeStart -> begin;");
+        CompletableFuture.runAsync(() -> {
 
-        bindThis();
-        initBeanFactories();
+            log.info("BeansService.fakeStart -> begin;");
 
-        log.info("BeansService.fakeStart -> end;");
+            bindThis();
+            initBeanFactories();
+
+            log.info("BeansService.fakeStart -> end;");
+
+        }, executorService).join();
     }
 
     /**
      * Инициализация проекта и системы Dependency Injection.
      */
     public void start() {
-        log.info("BeansService.start -> begin;");
+        CompletableFuture.runAsync(() -> {
 
-        bindThis();
-        initBeanFactories();
+            log.info("BeansService.start -> begin;");
 
-        scanAllAnnotationProcessors();
+            bindThis();
+            initBeanFactories();
 
-        log.info("BeansService.start -> end;");
+            scanAllAnnotationProcessors();
+
+            log.info("BeansService.start -> end;");
+
+        }, executorService).join();
     }
 
     /**

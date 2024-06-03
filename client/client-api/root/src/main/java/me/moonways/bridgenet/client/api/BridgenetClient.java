@@ -127,6 +127,14 @@ public abstract class BridgenetClient {
     }
 
     /**
+     * Переопределяющаяся функция, вызываемая при разрыве
+     * соединения с единым сервером Bridgenet.
+     */
+    public void onConnectionClosed() {
+        // override me.
+    }
+
+    /**
      * Получить клиентский канал к единому серверу Bridgenet.
      */
     public final BridgenetNetworkChannel getChannel() {
@@ -153,6 +161,7 @@ public abstract class BridgenetClient {
 
         if (channel != null) {
             channelHandler.onDisconnected(channel);
+            onConnectionClosed();
 
             channel.close();
         }

@@ -6,28 +6,30 @@ import me.moonways.bridgenet.api.command.CommandExecutor;
 import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.minecraft.ChatColor;
-import me.moonways.bridgenet.model.message.Disconnect;
-import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.model.message.SendCommand;
-import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
+import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 import me.moonways.bridgenet.model.service.players.Player;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;
 import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
 import me.moonways.endpoint.players.PlayerStoreStub;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.rmi.RemoteException;
 import java.util.Optional;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Log4j2
 @InboundMessageListener
 @RequiredArgsConstructor
 public final class InboundPlayerCommandListener {
+
+    private static final ExecutorService THREAD_EXECUTOR = Executors.newWorkStealingPool();
     private final PlayerStoreStub playerStoreStub;
 
     @Inject
@@ -39,45 +41,74 @@ public final class InboundPlayerCommandListener {
         Optional<Player> playerOptional = playerStoreStub.get(message.getPlayerId());
 
         if (playerOptional.isPresent()) {
-            Player player = playerOptional.get();
+            CompletableFuture<LegacyWrappedPlayerSender> executionFuture = executeCommand(playerOptional.get(),
+                    reformatLabel(message.getLabel()));
 
-            try {
-                commandExecutor.execute(new LegacyWrappedPlayerSender(player), message.getLabel());
-                context.callback(new SendCommand.Success());
-
-            } catch (CommandExecutionException e) {
-                context.callback(new SendCommand.Failure());
-            }
+            executionFuture.whenComplete((legacyWrappedSender, throwable) -> {
+                if (throwable == null) {
+                    context.callback(new SendCommand.Success(message.getPlayerId()));
+                    legacyWrappedSender.flushMessageText();
+                } else {
+                    context.callback(new SendCommand.Failure(message.getPlayerId()));
+                }
+            });
         }
+    }
+
+    private String reformatLabel(String label) {
+        if (label.startsWith("/")) {
+            label = label.substring(1);
+        }
+        return label;
+    }
+
+    private CompletableFuture<LegacyWrappedPlayerSender> executeCommand(Player player, String label) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                LegacyWrappedPlayerSender legacyWrappedSender = new LegacyWrappedPlayerSender(player);
+                commandExecutor.execute(legacyWrappedSender, label);
+
+                return legacyWrappedSender;
+            } catch (CommandExecutionException exception) {
+                throw new RuntimeException(exception);
+            }
+        }, THREAD_EXECUTOR);
     }
 
     // todo - убрать после влития новой системы команд.
     @RequiredArgsConstructor
     private static class LegacyWrappedPlayerSender implements EntityCommandSender {
+
         private final Player player;
+        private TextComponent textComponent = Component.text("");
 
-        @Override
-        public void sendMessage(@Nullable String message) {
-            try {
-                player.sendMessage(message);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+        public synchronized void flushMessageText() {
+            if (!textComponent.content().isEmpty() || textComponent.children().isEmpty()) {
+                try {
+                    player.sendMessage(textComponent);
+                } catch (RemoteException exception) {
+                    throw new RuntimeException(exception);
+                }
             }
         }
 
         @Override
-        public void sendMessage(@NotNull String message, @Nullable Object... replacements) {
-            try {
-                player.sendMessage(String.format(message, replacements));
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+        public synchronized void sendMessage(@Nullable String message) {
+            if (!textComponent.content().isEmpty()) {
+                message = "\n" + message;
             }
+            textComponent = textComponent.content(textComponent.content() + message);
         }
 
         @Override
-        public boolean hasPermission(@NotNull String permission) {
+        public synchronized void sendMessage(@NotNull String message, @Nullable Object... replacements) {
+            sendMessage(String.format(message, replacements));
+        }
+
+        @Override
+        public synchronized boolean hasPermission(@NotNull String permission) {
             try {
-                return player.hasPermission(permission);
+                return player.hasPermission(Permission.named(permission));
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

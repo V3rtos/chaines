@@ -14,6 +14,8 @@ import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
 import me.moonways.bridgenet.model.service.players.OfflinePlayer;
 import me.moonways.bridgenet.model.service.players.Player;
 import me.moonways.bridgenet.model.service.players.component.PlayerStore;
+import me.moonways.bridgenet.model.service.players.component.statistic.ActivityStatistics;
+import me.moonways.bridgenet.model.service.players.component.statistic.Statistic;
 import me.moonways.bridgenet.model.util.PlayerIdMap;
 import me.moonways.endpoint.players.database.EntityNamespace;
 import me.moonways.endpoint.players.database.EntityPlayer;
@@ -61,7 +63,11 @@ public final class PlayerStoreStub implements PlayerStore {
             return null;
         }
 
+        ActivityStatistics statistics = player.getStatistics();
+        statistics.setLong(Statistic.JOINED_TIME_AT, System.currentTimeMillis());
+
         beansService.inject(player);
+        beansService.inject(player.getConnection());
 
         idByNamesCache.put(player.getName().toLowerCase(), player.getDescription());
         nameByIdsCache.put(player.getId(), player.getDescription());

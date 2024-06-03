@@ -29,13 +29,25 @@ public class SendCommand {
     public interface Result {
     }
 
+    @ToString
     @ClientMessage
     @ServerMessage
+    @AllArgsConstructor
+    @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Success implements Result {
+
+        @ByteTransfer(provider = TransferUuidProvider.class)
+        private UUID playerId;
     }
 
+    @ToString
     @ClientMessage
     @ServerMessage
+    @AllArgsConstructor
+    @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Failure implements Result {
+
+        @ByteTransfer(provider = TransferUuidProvider.class)
+        private UUID playerId;
     }
 }

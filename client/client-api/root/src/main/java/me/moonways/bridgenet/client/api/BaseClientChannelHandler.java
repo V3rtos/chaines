@@ -56,6 +56,8 @@ public class BaseClientChannelHandler implements BridgenetNetworkClientHandler {
         connector.getBridgenetServerSync().exportClientDisconnect();
         connector.getEngine().disconnectToEndpoints(remoteServicesManagement);
 
+        connector.onConnectionClosed();
+
         this.channel = null;
     }
 

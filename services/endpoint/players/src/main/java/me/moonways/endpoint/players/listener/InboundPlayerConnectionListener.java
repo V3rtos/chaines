@@ -2,16 +2,23 @@ package me.moonways.endpoint.players.listener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.message.Disconnect;
 import me.moonways.bridgenet.model.message.Handshake;
+import me.moonways.bridgenet.model.message.Redirect;
 import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
 import me.moonways.bridgenet.model.service.players.Player;
+import me.moonways.bridgenet.model.service.players.component.statistic.Statistic;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
+import me.moonways.bridgenet.model.service.servers.ServersServiceModel;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;
 import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.SubscribeMessage;
 import me.moonways.endpoint.players.PlayerStoreStub;
+import me.moonways.endpoint.players.player.PlayerConnectionStub;
 
 import java.rmi.RemoteException;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -21,6 +28,9 @@ import java.util.UUID;
 public final class InboundPlayerConnectionListener {
 
     private final PlayerStoreStub playerStoreStub;
+
+    @Inject
+    private ServersServiceModel serversServiceModel;
 
     @SubscribeMessage
     public void handle(InboundMessageContext<Handshake> context) throws RemoteException {
@@ -39,10 +49,28 @@ public final class InboundPlayerConnectionListener {
 
             if (player != null) {
                 context.callback(new Handshake.Success(UUID.fromString(userUuidProperty)));
+
                 log.info("§6Player({}, '{}') connected to Bridgenet", player.getName(), player.getId());
             } else {
                 context.callback(new Handshake.Failure(UUID.fromString(userUuidProperty)));
             }
+        }
+    }
+
+    @SubscribeMessage
+    public void handle(Redirect redirect) throws RemoteException {
+        Optional<Player> playerOptional = playerStoreStub.get(redirect.getPlayerUUID());
+        Optional<EntityServer> serverOptional = serversServiceModel.getServerExact(redirect.getServerKey());
+
+        if (playerOptional.isPresent() && serverOptional.isPresent()) {
+            EntityServer entityServer = serverOptional.get();
+            PlayerConnectionStub connection = (PlayerConnectionStub) playerOptional.get().getConnection();
+
+            if (!connection.getServerOnJoined().isPresent()) {
+                connection.setServerOnJoined(entityServer);
+            }
+
+            connection.setCurrentServer(entityServer);
         }
     }
 
