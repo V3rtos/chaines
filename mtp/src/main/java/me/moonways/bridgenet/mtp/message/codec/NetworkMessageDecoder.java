@@ -35,7 +35,7 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
     private BridgenetDataLogger bridgenetDataLogger;
 
     @Override
-    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
+    protected synchronized void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
         try {
             int readableBytes = byteBuf.readableBytes();
             if (readableBytes == 0) {
@@ -47,9 +47,8 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
             int messageId = byteBuf.readInt();
             ExportedMessage message = decodeMessage(messageId, byteBuf, channelHandlerContext);
 
-            if (message != null) {
-                list.add(message);
-            }
+            list.add(message);
+
         } catch (IndexOutOfBoundsException exception) {
             NetworkCodecDumps.dump(channelHandlerContext, byteBuf);
             throw new MessageTransferException(exception);
@@ -88,16 +87,5 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
         } catch (DataFormatException | IOException exception) {
             throw new MessageCodecException(exception);
         }
-    }
-
-    private void caughtBytesReadException(ByteBuf byteBuf, Exception exception) {
-        byte[] array = byteBuf.array();
-
-        String asString = new String(array);
-        String asArray = Arrays.toString(array);
-
-        log.error("§4Failed to read {} bytes from an incoming packet of {} bytes: §c{asArray={}, asString=\"{}\"}",
-                byteBuf.readableBytes(), array.length, asArray, asString,
-                new MessageCodecException(exception));
     }
 }

@@ -7,7 +7,7 @@ import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
 import me.moonways.bridgenet.test.engine.flow.TestFlowNode;
 
 @Log4j2
-public class FlowContinuesHooksProcessingNode implements TestFlowNode {
+public class FlowRunningHooksProcessNode implements TestFlowNode {
 
     @Override
     public void execute(TestFlowContext context) {
@@ -20,10 +20,5 @@ public class FlowContinuesHooksProcessingNode implements TestFlowNode {
 
         bootstrap.processBootstrapHooks(BootstrapHookPriority.RUNNER);
         bootstrap.processBootstrapHooks(BootstrapHookPriority.POST_RUNNER);
-
-        log.debug("Add thread-hook of Bridgenet shutdown process");
-
-        Runtime.getRuntime().addShutdownHook(
-                new Thread(bootstrap::shutdown));
     }
 }

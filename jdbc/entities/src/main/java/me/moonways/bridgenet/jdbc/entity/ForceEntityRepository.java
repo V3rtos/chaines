@@ -85,7 +85,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public void delete(Long id) {
+    public synchronized void delete(Long id) {
         log.debug("delete({})", id);
 
         Optional<String> entityIDParameterName = findEntityIDParameterName();
@@ -98,7 +98,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public void delete(T entity) {
+    public synchronized void delete(T entity) {
         log.debug("delete({})", entity);
 
         EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entity);
@@ -129,7 +129,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public void deleteMany(Long... ids) {
+    public synchronized void deleteMany(Long... ids) {
         log.debug("deleteMany({})", Arrays.toString(ids));
 
         connection.ofTransactionalGet(() -> {
@@ -152,13 +152,13 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public void deleteIf(SearchMarker<T> searchMarker) {
+    public synchronized void deleteIf(SearchMarker<T> searchMarker) {
         log.debug("deleteIf({})", searchMarker);
         doDelete(EntityReadAndWriteUtil.read(entityClass), searchMarker);
     }
 
     @Override
-    public void update(T entity, Long id) {
+    public synchronized void update(T entity, Long id) {
         log.debug("update({}, {})", entity, id);
 
         Optional<String> entityIDParameterName = findEntityIDParameterName();
@@ -172,13 +172,13 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public void updateIf(T entity, SearchMarker<T> searchMarker) {
+    public synchronized void updateIf(T entity, SearchMarker<T> searchMarker) {
         log.debug("updateIf({}, {})", entity, searchMarker);
         throw new UnsupportedOperationException("jdbc-core is not supported UPDATE function");
     }
 
     @Override
-    public EntityID insert(T entity) {
+    public synchronized EntityID insert(T entity) {
         log.debug("insert({})", entity);
         return doInsert(EntityReadAndWriteUtil.read(entity));
     }
@@ -195,7 +195,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public Optional<T> search(Long id) {
+    public synchronized Optional<T> search(Long id) {
         log.debug("search({})", id);
 
         Optional<String> entityIDParameterName = findEntityIDParameterName();
@@ -207,7 +207,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public Optional<T> searchIf(SearchMarker<T> searchMarker) {
+    public synchronized Optional<T> searchIf(SearchMarker<T> searchMarker) {
         log.debug("searchIf({})", searchMarker);
         return doSearch(searchMarker.withLimit(1))
                 .stream()
@@ -215,7 +215,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public List<T> searchMany(Long... ids) {
+    public synchronized List<T> searchMany(Long... ids) {
         log.debug("searchMany({})", Arrays.asList(ids));
         return connection.ofTransactionalGet(() ->
                 Stream.of(ids)
@@ -226,31 +226,31 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public List<T> searchManyIf(SearchMarker<T> searchMarker) {
+    public synchronized List<T> searchManyIf(SearchMarker<T> searchMarker) {
         log.debug("searchManyIf({}})", searchMarker);
         return doSearch(searchMarker);
     }
 
     @Override
-    public List<T> searchManyIf(int limit, SearchMarker<T> searchMarker) {
+    public synchronized List<T> searchManyIf(int limit, SearchMarker<T> searchMarker) {
         log.debug("searchManyIf({}, {})", limit, searchMarker);
         return doSearch(searchMarker.withLimit(limit));
     }
 
     @Override
-    public List<T> searchEach(int limit) {
+    public synchronized List<T> searchEach(int limit) {
         log.debug("searchEach({})", limit);
         return doSearch(newSearchMarker().withLimit(limit).with("*", "*"));
     }
 
     @Override
-    public List<T> searchEach() {
+    public synchronized List<T> searchEach() {
         log.debug("searchEach()");
         return doSearch(newSearchMarker().with("*", "*"));
     }
 
     @Override
-    public SearchMarker<T> newSearchMarker() {
+    public synchronized SearchMarker<T> newSearchMarker() {
         return new SearchMarker<>(new SearchMarker.ProxiedParametersFounder<>(entityClass));
     }
 

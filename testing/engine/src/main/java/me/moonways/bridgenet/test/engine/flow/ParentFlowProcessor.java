@@ -14,7 +14,7 @@ public class ParentFlowProcessor implements TestFlowProcessor {
             {
                     new FlowSystemBootstrapNode(),
                     new FlowModulesApplyingNode(),
-                    new FlowContinuesHooksProcessingNode(),
+                    new FlowRunningHooksProcessNode(),
                     new FlowUnitPreparingNode(),
                     new FlowUnitExternalsExecutionNode(),
                     new FlowUnitRunningNode(),

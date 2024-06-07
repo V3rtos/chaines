@@ -37,7 +37,8 @@ import java.util.stream.Stream;
 @Log4j2
 public final class BeansService {
 
-    private static final ExecutorService executorService = Threads.newSingleThreadExecutor();
+    private static final ExecutorService executorService
+            = Threads.newSingleThreadExecutor();
 
     @Getter
     private final BeansStore store;
@@ -61,7 +62,7 @@ public final class BeansService {
     }
 
     /**
-     * Сохранение экземляров внутренних сервисов
+     * Сохранение экземпляров внутренних сервисов
      * реализации Dependency Injection в саму себя же
      * для более гибкого их применения в рамках всего проекта.
      */
@@ -78,15 +79,6 @@ public final class BeansService {
 
         bind(new ResourcesAssembly());
         bind(new BridgenetDataLogger());
-    }
-
-    /**
-     * Проверить маркировки на указанной аннотации как
-     * уже проинициализированной при помощи процессора
-     * аннотаций.
-     */
-    public boolean isAnnotationsInitialized(Class<? extends Annotation>... annotationTypes) {
-        return Stream.of(annotationTypes).allMatch(initializedAnnotationsSet::contains);
     }
 
     /**
@@ -217,6 +209,15 @@ public final class BeansService {
     }
 
     /**
+     * Проверить маркировки на указанной аннотации как
+     * уже проинициализированной при помощи процессора
+     * аннотаций.
+     */
+    public boolean isAnnotationsInitialized(Class<? extends Annotation>... annotationTypes) {
+        return Stream.of(annotationTypes).allMatch(initializedAnnotationsSet::contains);
+    }
+
+    /**
      * Воспроизвести имитацию сохранения экземпляра
      * объекта как бина.
      *
@@ -235,7 +236,7 @@ public final class BeansService {
      * напрямую из объекта, который мы указываем
      * в сигнатуру.
      *
-     * @param object - инстанс бина.
+     * @param object - instance бина.
      */
     public void fakeBind(Object object) {
         fakeBind(object.getClass(), object);
@@ -258,7 +259,7 @@ public final class BeansService {
      * Сохранить экземпляр объекта как бин.
      *
      * @param type   - класс бина.
-     * @param object - инстанс бина.
+     * @param object - instance бина.
      */
     public void bind(Class<?> type, Object object) {
         bind(scanner.createBean(type, object));
@@ -271,7 +272,7 @@ public final class BeansService {
      * напрямую из объекта, который мы указываем
      * в сигнатуру.
      *
-     * @param object - инстанс бина.
+     * @param object - instance бина.
      */
     public void bind(Object object) {
         bind(object.getClass(), object);
@@ -319,7 +320,7 @@ public final class BeansService {
     }
 
     /**
-     * Пересобрать инстанс бина с проксированием
+     * Пересобрать instance бина с проксированием
      * корневого экземпляра.
      *
      * @param bean - бин.
@@ -341,13 +342,13 @@ public final class BeansService {
 
     /**
      * Удалить сохраненный ранее бин из кеша
-     * по его инстансу.
+     * по его instance.
      * <p>
      * Класс бина в данном случае будет браться
      * напрямую из объекта, который мы указываем
      * в сигнатуру.
      *
-     * @param object - инстанс бина.
+     * @param object - instance бина.
      */
     public void unbind(Object object) {
         unbind(object.getClass());

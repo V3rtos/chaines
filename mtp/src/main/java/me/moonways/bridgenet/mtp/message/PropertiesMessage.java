@@ -6,7 +6,9 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
-import me.moonways.bridgenet.mtp.transfer.provider.TransferSerializeProvider;
+import me.moonways.bridgenet.mtp.transfer.provider.TransferPropertiesProvider;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.Properties;
@@ -17,15 +19,17 @@ import java.util.Properties;
 @NoArgsConstructor(onConstructor_ = @Inject)
 public class PropertiesMessage {
 
-    public static PropertiesMessage empty() {
+    @Contract(" -> new")
+    public static @NotNull PropertiesMessage newMessage() {
         return new PropertiesMessage();
     }
 
-    @ByteTransfer(provider = TransferSerializeProvider.class)
+    @ByteTransfer(provider = TransferPropertiesProvider.class)
     private final Properties properties = new Properties();
 
-    public final synchronized void setProperty(Object key, Object value) {
+    public final synchronized PropertiesMessage setProperty(Object key, Object value) {
         properties.put(key, value);
+        return this;
     }
 
     public final synchronized Object getObject(Object key) {

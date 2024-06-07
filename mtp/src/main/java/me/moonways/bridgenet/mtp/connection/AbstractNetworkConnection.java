@@ -5,6 +5,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.mtp.BridgenetChannelException;
 import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
+import me.moonways.bridgenet.mtp.connection.client.BridgenetNetworkClientHandler;
 import me.moonways.bridgenet.mtp.connection.client.NetworkClientReconnectionHandler;
 
 import java.util.concurrent.CompletableFuture;
@@ -81,6 +83,13 @@ public abstract class AbstractNetworkConnection implements BridgenetNetworkConne
 
         channel = prepareChannelSuccess(nettyChannel);
         Threads.hookShutdown(nettyChannel::close);
+
+        AttributeKey<BridgenetNetworkClientHandler> attributeKey = AttributeKey.valueOf(BridgenetNetworkClientHandler.ATTRIBUTE_KEY);
+        Attribute<BridgenetNetworkClientHandler> clientHandlerAttr = nettyChannel.attr(attributeKey);
+
+        if (clientHandlerAttr != null && clientHandlerAttr.get() != null) {
+            clientHandlerAttr.get().onConnected(channel);
+        }
 
         if (future != null) {
             future.complete(channel);

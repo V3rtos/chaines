@@ -39,7 +39,7 @@ public final class EventService {
     }
 
     @NotNull
-    public <E extends Event> EventFuture<E> fireEvent(@NotNull E event) {
+    public synchronized <E extends Event> EventFuture<E> fireEvent(@NotNull E event) {
         beansService.inject(event);
 
         EventFuture<E> eventFuture = eventExecutor.fireEvent(event);

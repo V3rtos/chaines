@@ -42,7 +42,8 @@ public class BeansScanningService {
 
         // Preparing org.reflections.Reflections for project scanning.
         ConfigurationBuilder configuration = ConfigurationBuilder.build(new SubTypesScanner(false));
-        configuration.setParallel(true);
+
+        configuration.setParallel(System.getProperty("test.engine.enabled") == null);
         configuration.setExpandSuperTypes(false);
 
         Reflections reflections = new Reflections(configuration);

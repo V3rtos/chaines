@@ -13,7 +13,6 @@
     <version>${model.version}</version>
 
     <dependencies>
-
         <!-- Internal Bridgenet dependencies -->
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>

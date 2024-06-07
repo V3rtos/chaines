@@ -97,7 +97,7 @@ public class NetworkClientConnectionFactory {
         inboundChannelOptionsHandler.setChannelDirection(ChannelDirection.TO_SERVER);
         inboundChannelOptionsHandler.thenComplete(channel -> {
 
-            Attribute<Object> attr = channel.attr(AttributeKey.valueOf(BridgenetNetworkClientHandler.ATTRIBUTE_KEY));
+            Attribute<BridgenetNetworkClientHandler> attr = channel.attr(AttributeKey.valueOf(BridgenetNetworkClientHandler.ATTRIBUTE_KEY));
             attr.set(networkClientHandler);
         });
 
@@ -128,13 +128,7 @@ public class NetworkClientConnectionFactory {
     private BridgenetNetworkChannel connectAndChannelGet(BridgenetNetworkClientHandler clientChannelHandler) {
         BridgenetNetworkConnection client = createClient(clientChannelHandler);
         try {
-            BridgenetNetworkChannel channel = client.connect().join();
-
-            if (clientChannelHandler != null) {
-                clientChannelHandler.onConnected(channel);
-            }
-
-            return channel;
+            return client.connect().join();
         } catch (CompletionException exception) {
             if (networkController.isAnnotatedConnectException(exception.getCause())) {
                 throw new HiddenRuntimeException();

@@ -62,7 +62,7 @@ public class DatabaseConnection {
         return this;
     }
 
-    public void openTransaction(TransactionIsolation isolation) {
+    public synchronized void openTransaction(TransactionIsolation isolation) {
         if (!jdbcWrapper.isConnected()) {
             jdbcWrapper.reconnect();
         }
@@ -71,11 +71,11 @@ public class DatabaseConnection {
         jdbcWrapper.setTransactionIsolation(isolation);
     }
 
-    public void openTransaction() {
-        openTransaction(TransactionIsolation.SERIALIZABLE);
+    public synchronized void openTransaction() {
+        openTransaction(TransactionIsolation.DEFAULT);
     }
 
-    public void closeTransaction() {
+    public synchronized void closeTransaction() {
         if (jdbcWrapper.isConnected()) {
             jdbcWrapper.setTransactionState(TransactionState.INACTIVE);
         }
@@ -89,7 +89,7 @@ public class DatabaseConnection {
     }
 
     public synchronized <T> T ofTransactionalGet(Supplier<T> transactionSupplier) {
-        return ofTransactionalGet(TransactionIsolation.SERIALIZABLE, transactionSupplier);
+        return ofTransactionalGet(TransactionIsolation.DEFAULT, transactionSupplier);
     }
 
     public synchronized void close() {

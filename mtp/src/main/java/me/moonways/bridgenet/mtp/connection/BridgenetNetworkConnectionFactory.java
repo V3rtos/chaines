@@ -2,10 +2,7 @@ package me.moonways.bridgenet.mtp.connection;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFactory;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.ServerChannel;
+import io.netty.channel.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -80,8 +77,8 @@ public class BridgenetNetworkConnectionFactory {
             return this;
         }
 
-        public ServerBuilder setChannelInitializer(@NotNull InboundChannelOptionsHandler nettyPipeline) {
-            serverBootstrap.childHandler(nettyPipeline);
+        public ServerBuilder setChannelInitializer(@NotNull InboundChannelOptionsHandler optionsHandler) {
+            serverBootstrap.childHandler(optionsHandler);
             return this;
         }
 

@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 
 @RunWith(ModernTestEngineRunner.class)
 @TestModules(AllModules.class)
-public class ConnectorHandshakeTest {
+public class ClientHandshakeTest {
 
     private final ExampleClient subj = new ExampleClient();
 

@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 public final class BeansStore {
 
     private final Map<UUID, Bean> store = Collections.synchronizedMap(new LinkedHashMap<>());
-
     private final BeansScanningService scanner;
 
     public Collection<Bean> getTotalBeans() {

@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(ModernTestEngineRunner.class)
 @TestModules(AllModules.class)
-public class ConnectorGetCommandsListTest {
+public class ClientGetCommandsListTest {
 
     private final ExampleClient subj = new ExampleClient();
 

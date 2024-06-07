@@ -2,6 +2,8 @@ package me.moonways.bridgenet.mtp.inbound;
 
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
@@ -44,8 +46,9 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
     }
 
     private void initCodec(@NotNull ChannelPipeline pipeline) {
+        addToPipeline(pipeline, new LengthFieldBasedFrameDecoder(65535, 0, 4, 0, 4));
+        addToPipeline(pipeline, new LengthFieldPrepender(4));
         addToPipeline(pipeline, new NetworkMessageDecoder(networkController.getNetworkMessagesService(), configuration));
-        addToPipeline(pipeline, new InboundChannelMessageAggregator(MAX_CONTENT_LENGTH));
         addToPipeline(pipeline, new NetworkMessageEncoder(configuration));
     }
 
@@ -54,7 +57,7 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
         childrenHandlers.add(channelHandler);
     }
 
-    private void initOptions(@NotNull ChannelConfig config) {
+    public void initOptions(@NotNull ChannelConfig config) {
         config.setRecvByteBufAllocator(new FixedRecvByteBufAllocator(MAX_CONTENT_LENGTH));
         config.setAllocator(PooledByteBufAllocator.DEFAULT);
 
