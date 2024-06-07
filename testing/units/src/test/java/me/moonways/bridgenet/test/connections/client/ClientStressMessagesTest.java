@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.test.connections.client;
 
+import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.client.api.data.UserDto;
 import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.model.message.SendCommand;
@@ -24,8 +25,6 @@ public class ClientStressMessagesTest {
     private static final int PACKETS_LENGTH = 1000;
     private static final int SLEEPING_TIMEOUT = PACKETS_LENGTH * 10;
 
-    private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijtklmnopqrstuvwxyz1234567890";
-
     private final ExampleClient subj = new ExampleClient();
 
     @Before
@@ -36,14 +35,15 @@ public class ClientStressMessagesTest {
     @Test
     public void test_stressingPacketsRouting() throws InterruptedException {
         BridgenetNetworkChannel channel = subj.getChannel();
+
         for (int count = 0; count < PACKETS_LENGTH; count++) {
-            processRandomPlayer(channel);
+            pullGeneratedPlayer(channel);
         }
 
         Thread.sleep(SLEEPING_TIMEOUT);
     }
 
-    private void processRandomPlayer(BridgenetNetworkChannel channel) {
+    private void pullGeneratedPlayer(BridgenetNetworkChannel channel) {
         UUID playerID = UUID.randomUUID();
 
         channel.sendAwait(Handshake.Success.class,
@@ -51,19 +51,17 @@ public class ClientStressMessagesTest {
                         UserDto.builder()
                                 .uniqueId(playerID)
                                 .proxyId(UUID.randomUUID())
-                                .name(randomizeString(1000))
+                                .name(randomString(1000))
                                 .build().toProperties())
 
-        ).whenComplete((success, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            channel.send(new SendCommand(playerID, "/memory"));
-        });
+        ).whenComplete((success, throwable) ->
+                channel.send(new SendCommand(playerID, "/testCommand")));
     }
 
-    private static String randomizeString(int length) {
+
+    private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijtklmnopqrstuvwxyz1234567890";
+
+    private static String randomString(int length) {
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < length; i++) {

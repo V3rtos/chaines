@@ -87,15 +87,17 @@ public final class ResourcesFileSystem {
      *
      * @param resourceName - наименование ресурса.
      */
-    public void copy(String resourceName) {
+    public boolean copy(String resourceName) {
         Path path = findPath(resourceName);
         if (!Files.exists(path)) {
             try {
                 Files.copy(assembly.readResourceStream(resourceName), path);
+                return true;
             } catch (IOException exception) {
                 log.error("§4Couldn't copy resource \"{}\" to '{}' directory", resourceName, path);
             }
         }
+        return false;
     }
 
     /**
@@ -110,5 +112,25 @@ public final class ResourcesFileSystem {
             log.warn("§6Couldn't find resource \"{}\" in '{}' directory", resourceName, path);
         }
         return path.toFile();
+    }
+
+    /**
+     * Создать новый пустой по содержанию ресурс
+     * в общем каталоге ресурсов `etc` в локальной
+     * версии запущенной системы.
+     *
+     * @param resourceName - наименование создаваемого ресурса
+     */
+    public File createEmptyFile(String resourceName) {
+        Path path = findPath(resourceName);
+        if (Files.exists(path)) {
+            try {
+                Files.createFile(path);
+                return path.toFile();
+            } catch (IOException exception) {
+                log.error("§4Couldn't create resource \"{}\" into '{}' directory", resourceName, path);
+            }
+        }
+        return null;
     }
 }

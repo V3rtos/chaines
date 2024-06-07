@@ -17,6 +17,7 @@ public final class ResourcesTypes {
     public static final String REMOTE_SERVICES_XML = "remote_services.xml";
     public static final String DECORATORS_XML = "decorators.xml";
     public static final String RMI_POLICY = "rmi.policy";
+    public static final String FAKE_CLIENT_INI = "fake_client.ini";
 
     // minecraft data json files.
     public static final String MINECRAFT_ENCHANTS_JSON = "minecraft_data/enchantments.json";

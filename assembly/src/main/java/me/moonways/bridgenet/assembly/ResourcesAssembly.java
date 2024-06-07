@@ -53,6 +53,48 @@ public final class ResourcesAssembly {
     }
 
     /**
+     * Создать новый пустой по содержанию ресурс
+     * в общем каталоге ресурсов `etc` в локальной
+     * версии запущенной системы.
+     *
+     * @param resourceName - наименование создаваемого ресурса
+     */
+    public void createEmptyResource(String resourceName) {
+        File emptyFile = fileSystem.createEmptyFile(resourceName);
+
+        if (emptyFile == null) {
+            throw new BridgenetAssemblyException("create: " + resourceName);
+        }
+    }
+
+    /**
+     * Скопировать ресурс из локальной файловой системы
+     * (ClassLoader) в общий каталог ресурсов `etc` в локальной
+     * версии запущенной системы.
+     *
+     * @param resourceName - наименование создаваемого ресурса
+     * @param createOnFailure - воспроизвести попытку создания пустого файла в случае неудачи копирования
+     */
+    public void copyLocalResource(String resourceName, boolean createOnFailure) {
+        boolean isCopied = fileSystem.copy(resourceName);
+
+        if (!isCopied && createOnFailure) {
+            createEmptyResource(resourceName);
+        }
+    }
+
+    /**
+     * Скопировать ресурс из локальной файловой системы
+     * (ClassLoader) в общий каталог ресурсов `etc` в локальной
+     * версии запущенной системы.
+     *
+     * @param resourceName - наименование создаваемого ресурса
+     */
+    public void copyLocalResource(String resourceName) {
+        copyLocalResource(resourceName, false);
+    }
+
+    /**
      * Найти и прочитать ресурс во всевозможных файловых системах
      * (локальная из ClassLoader в приоритете), и получить его в
      * виде InputStream.

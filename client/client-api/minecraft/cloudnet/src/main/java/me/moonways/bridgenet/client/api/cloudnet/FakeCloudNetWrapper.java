@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.assembly.ini.IniConfig;
 
 import java.net.InetSocketAddress;
@@ -12,7 +13,6 @@ import java.net.InetSocketAddress;
 public final class FakeCloudNetWrapper implements CloudNetWrapper {
 
     private static final String SERVICE_NAME_FORMAT = "%s-%d";
-    private static final String CLIENT_INFO_CONF = "fake_client.ini";
 
     private IniConfig clientInfoConfig;
 
@@ -21,7 +21,8 @@ public final class FakeCloudNetWrapper implements CloudNetWrapper {
 
     @PostConstruct
     private void initConfig() {
-        clientInfoConfig = assembly.readIniConfig(CLIENT_INFO_CONF);
+        assembly.copyLocalResource(ResourcesTypes.FAKE_CLIENT_INI);
+        clientInfoConfig = assembly.readIniConfig(ResourcesTypes.FAKE_CLIENT_INI);
     }
 
     @Override
