@@ -45,7 +45,10 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
             bridgenetDataLogger.logReadsCount(ProfilerType.MTP_TRAFFIC, readableBytes);
 
             int messageId = byteBuf.readInt();
+            long callbackId = byteBuf.readLong();
+
             ExportedMessage message = decodeMessage(messageId, byteBuf, channelHandlerContext);
+            message.setCallbackID(callbackId);
 
             list.add(message);
 

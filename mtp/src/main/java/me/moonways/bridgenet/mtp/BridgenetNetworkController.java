@@ -80,12 +80,15 @@ public class BridgenetNetworkController implements Serializable {
     @KeepTime
     @Synchronized
     public void pull(@NotNull InboundMessageContext<?> context) {
+        beansService.inject(context);
         handlerList.handle(context);
+
+        long callbackID = context.getCallbackID();
 
         Object message = context.getMessage();
 
-        if (responsibleMessageService.isWaiting(message.getClass())) {
-            responsibleMessageService.complete(message);
+        if (responsibleMessageService.isWaiting(callbackID, message.getClass())) {
+            responsibleMessageService.complete(callbackID, message);
         }
     }
 

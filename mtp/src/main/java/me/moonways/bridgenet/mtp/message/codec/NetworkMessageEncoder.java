@@ -39,6 +39,8 @@ public class NetworkMessageEncoder extends MessageToByteEncoder<ExportedMessage>
             messageTransfer.buf();
 
             byteBuf.writeInt(wrapper.getId());
+            byteBuf.writeLong(exportedMessage.getCallbackID());
+
             ByteBuf buffer = messageTransfer.getByteBuf();
 
             if (wrapper.needsEncryption()) {

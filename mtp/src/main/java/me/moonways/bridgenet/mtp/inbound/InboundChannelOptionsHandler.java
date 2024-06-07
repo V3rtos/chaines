@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 @Autobind
 public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
 
-    private static final int MAX_CONTENT_LENGTH = 1048576;
+    private static final int MAX_CONTENT_LENGTH = 52428800;
 
     @Setter
     private ChannelDirection channelDirection;

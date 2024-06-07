@@ -34,7 +34,7 @@ public class ClientStressMessagesTest {
     }
 
     @Test
-    public void test_packetsLength() throws InterruptedException {
+    public void test_stressingPacketsRouting() throws InterruptedException {
         BridgenetNetworkChannel channel = subj.getChannel();
         for (int count = 0; count < PACKETS_LENGTH; count++) {
             processRandomPlayer(channel);
@@ -51,10 +51,14 @@ public class ClientStressMessagesTest {
                         UserDto.builder()
                                 .uniqueId(playerID)
                                 .proxyId(UUID.randomUUID())
-                                .name(randomizeString(16))
+                                .name(randomizeString(1000))
                                 .build().toProperties())
 
         ).whenComplete((success, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
             channel.send(new SendCommand(playerID, "memory"));
         });
     }

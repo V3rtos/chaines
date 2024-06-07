@@ -32,7 +32,7 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
     public static final AttributeKey<ChannelDirection> DIRECTION_ATTRIBUTE = AttributeKey.valueOf("direction_attribute");
     public static final Function<ChannelDirection, String> MESSAGE_HANDLE_LOG_MSG = (direction) -> direction == ChannelDirection.TO_SERVER ? "Client[%s] -> Server" : "Server -> Client[%s]";
 
-    public static final int DEFAULT_RESPONSE_TIMEOUT = 5000;
+    public static final int DEFAULT_RESPONSE_TIMEOUT = 15_000;
 
     @Getter
     private final ChannelDirection direction;
@@ -63,15 +63,25 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
     @Synchronized
     @Override
     public void send(@NotNull Object message) {
-        ExportedMessage exported = networkMessagesService.export(message);
+        send(networkMessagesService.export(message));
+    }
+
+    @Override
+    public void send(@NotNull ExportedMessage exportedMessage) {
+        Object message = exportedMessage.getMessage();
 
         log.info("§9[{}]: §r{}", String.format(MESSAGE_HANDLE_LOG_MSG.apply(direction), handle.remoteAddress()), message);
-        handle.writeAndFlush(exported);
+        handle.writeAndFlush(exportedMessage);
     }
 
     @Override
     public void pull(@NotNull Object message) {
-        pull(new InboundMessageContext<>(message, this, System.currentTimeMillis()));
+        pull(networkMessagesService.export(message));
+    }
+
+    @Override
+    public void pull(@NotNull ExportedMessage message) {
+        pull(new InboundMessageContext<>(message.getCallbackID(), message, this, System.currentTimeMillis()));
     }
 
     @Override
@@ -94,10 +104,13 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
     @Synchronized
     @Override
     public <R> CompletableFuture<R> sendAwait(int timeout, @NotNull Class<R> responseType, @NotNull Object message) {
-        send(message);
+        ExportedMessage exportedMessage = networkMessagesService.export(message);
+        exportedMessage.marksResponsible(responsibleService);
+
+        send(exportedMessage);
 
         CompletableFuture<R> future = new CompletableFuture<>();
-        responsibleService.await(timeout, future, responseType);
+        responsibleService.await(timeout, exportedMessage.getCallbackID(), future, responseType);
 
         return future;
     }

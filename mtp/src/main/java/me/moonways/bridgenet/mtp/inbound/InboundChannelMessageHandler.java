@@ -81,7 +81,7 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
                 String.format(NetworkRemoteChannel.MESSAGE_HANDLE_LOG_MSG.apply(channelDirection.reverse()),
                         ctx.channel().remoteAddress()), message);
 
-        networkController.pull(new InboundMessageContext<>(message, inboundChannel, System.currentTimeMillis()));
+        networkController.pull(new InboundMessageContext<>(exportedMessage.getCallbackID(), message, inboundChannel, System.currentTimeMillis()));
         eventService.fireEvent(new ChannelReadEvent(ctx, inboundChannel, exportedMessage));
     }
 

@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.mtp.channel;
 
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,17 @@ public final class NetworkReferenceChannel implements BridgenetNetworkChannel {
     }
 
     @Override
+    public void send(@NotNull ExportedMessage message) {
+        channelRef.get().send(message);
+    }
+
+    @Override
     public void pull(@NotNull Object message) {
+        channelRef.get().pull(message);
+    }
+
+    @Override
+    public void pull(@NotNull ExportedMessage message) {
         channelRef.get().pull(message);
     }
 

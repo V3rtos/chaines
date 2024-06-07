@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.mtp.channel;
 
+import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,11 +46,25 @@ public interface BridgenetNetworkChannel extends Serializable {
     void send(@NotNull Object message);
 
     /**
+     * Отправить сообщение на подключенный канал.
+     *
+     * @param message - отправляемое сообщение.
+     */
+    void send(@NotNull ExportedMessage message);
+
+    /**
      * Пробросить сообщение внутри сети.
      *
      * @param message - отправляемое сообщение.
      */
     void pull(@NotNull Object message);
+
+    /**
+     * Пробросить сообщение внутри сети.
+     *
+     * @param message - отправляемое сообщение.
+     */
+    void pull(@NotNull ExportedMessage message);
 
     /**
      * Пробросить сообщение внутри сети.
