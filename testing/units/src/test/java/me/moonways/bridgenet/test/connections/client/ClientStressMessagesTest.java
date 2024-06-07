@@ -59,7 +59,7 @@ public class ClientStressMessagesTest {
                 throwable.printStackTrace();
                 return;
             }
-            channel.send(new SendCommand(playerID, "memory"));
+            channel.send(new SendCommand(playerID, "/memory"));
         });
     }
 
