@@ -8,7 +8,6 @@ import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.model.message.Redirect;
 import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
 import me.moonways.bridgenet.model.service.players.Player;
-import me.moonways.bridgenet.model.service.players.component.statistic.Statistic;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.model.service.servers.ServersServiceModel;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;
@@ -42,6 +41,7 @@ public final class InboundPlayerConnectionListener {
             String userUuidProperty = properties.getProperty(HandshakePropertiesConst.USER_UUID);
 
             if (userUuidProperty == null) {
+                context.callback(new Handshake.Failure());
                 return;
             }
 

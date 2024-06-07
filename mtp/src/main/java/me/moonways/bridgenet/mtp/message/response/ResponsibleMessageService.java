@@ -7,10 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
@@ -72,7 +69,7 @@ public final class ResponsibleMessageService {
             }
         }
 
-        List<CompletableFuture<Object>> futures = new LinkedList<>();
+        List<CompletableFuture<Object>> futures = Collections.synchronizedList(new LinkedList<>());
         futures.add((CompletableFuture<Object>) future);
 
         responseDescriptorSet.add(

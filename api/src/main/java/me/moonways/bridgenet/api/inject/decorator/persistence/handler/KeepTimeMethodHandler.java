@@ -10,14 +10,12 @@ public class KeepTimeMethodHandler implements DecoratedMethodHandler {
     @Override
     public Object handleProxyInvocation(DecoratorInvocation invocation) {
         long startTimeMillis = System.currentTimeMillis();
-        long startTimeNanos = System.nanoTime();
 
         Object returnObject = invocation.proceed();
 
         long keepTimeMillis = System.currentTimeMillis() - startTimeMillis;
-        long keepTimeNanos = System.nanoTime() - startTimeNanos;
 
-        log.info("§3Decorated method {} proceed for {} ms. ({} ns.)", invocation, keepTimeMillis, keepTimeNanos);
+        log.info("§3Decorated method {} proceed for {} ms", invocation, keepTimeMillis);
         return returnObject;
     }
 }

@@ -2,6 +2,7 @@ package me.moonways.bridgenet.test.connections.client;
 
 import me.moonways.bridgenet.client.api.data.UserDto;
 import me.moonways.bridgenet.model.message.Handshake;
+import me.moonways.bridgenet.model.message.SendCommand;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.test.data.ExampleClient;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
@@ -35,19 +36,27 @@ public class ClientStressMessagesTest {
     @Test
     public void test_packetsLength() throws InterruptedException {
         BridgenetNetworkChannel channel = subj.getChannel();
-
         for (int count = 0; count < PACKETS_LENGTH; count++) {
-            channel.send(
-                    new Handshake(Handshake.Type.PLAYER,
-                            UserDto.builder()
-                                    .uniqueId(UUID.randomUUID())
-                                    .proxyId(UUID.randomUUID())
-                                    .name(randomizeString(16))
-                                    .build().toProperties())
-            );
+            processRandomPlayer(channel);
         }
 
         Thread.sleep(SLEEPING_TIMEOUT);
+    }
+
+    private void processRandomPlayer(BridgenetNetworkChannel channel) {
+        UUID playerID = UUID.randomUUID();
+
+        channel.sendAwait(Handshake.Success.class,
+                new Handshake(Handshake.Type.PLAYER,
+                        UserDto.builder()
+                                .uniqueId(playerID)
+                                .proxyId(UUID.randomUUID())
+                                .name(randomizeString(16))
+                                .build().toProperties())
+
+        ).whenComplete((success, throwable) -> {
+            channel.send(new SendCommand(playerID, "memory"));
+        });
     }
 
     private static String randomizeString(int length) {
