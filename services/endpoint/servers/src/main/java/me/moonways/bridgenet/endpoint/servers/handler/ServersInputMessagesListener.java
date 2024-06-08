@@ -79,7 +79,7 @@ public class ServersInputMessagesListener {
         ConnectedServerStub server = container.getConnectedServerExact(serverId);
 
         if (server == null) {
-            log.info("§4Server by key '{}' is not connected", serverId);
+            log.debug("§4Server by key '{}' is not connected", serverId);
             return;
         }
 
@@ -117,7 +117,7 @@ public class ServersInputMessagesListener {
             input.callback(new Handshake.Success(serverId));
 
         } else {
-            log.info("§4Server {} has already registered by key: {}", serverInfo.getName(), serverId);
+            log.debug("§4Server {} has already registered by key: {}", serverInfo.getName(), serverId);
             input.callback(new Handshake.Failure(serverId));
         }
     }

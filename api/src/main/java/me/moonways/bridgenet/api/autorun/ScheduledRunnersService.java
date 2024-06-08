@@ -55,7 +55,7 @@ public class ScheduledRunnersService {
         for (Object runner : runners) {
 
             Class<?> runnerClass = runner.getClass();
-            log.info("Automatically runner §a'{}' §rwas found", runnerClass.getSimpleName());
+            log.debug("Automatically runner §a'{}' §rwas found", runnerClass.getSimpleName());
 
             RunningPeriod periodAnnotation = runnerClass.getDeclaredAnnotation(RunningPeriod.class);
 

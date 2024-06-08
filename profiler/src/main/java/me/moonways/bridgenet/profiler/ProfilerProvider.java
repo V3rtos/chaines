@@ -58,7 +58,7 @@ public final class ProfilerProvider {
      * @return - ссылка на готовую иллюстрацию с рисованными данными метрики.
      */
     public String provideMetricIllustration(ChartType chartType, Profiler profiler) {
-        log.info("Requesting '{}' type of metrics illustration for §2{}", chartType, profiler);
+        log.debug("Requesting '{}' type of metrics illustration for §2{}", chartType, profiler);
 
         ChartDataMapper chartDataMapper = new ChartDataMapper(chartType, profiler);
         IllustrationRequest request = wrapChartToRequestBody(

@@ -52,9 +52,9 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        log.info("§9The activation of a new connection channel is played:");
-        log.info("§7 - Channel ID of the new connection: {}", ctx.channel().id());
-        log.info("§7 - Remote channel connection address: {}", ctx.channel().remoteAddress());
+        log.debug("§9The activation of a new connection channel is played:");
+        log.debug("§7 - Channel ID of the new connection: {}", ctx.channel().id());
+        log.debug("§7 - Remote channel connection address: {}", ctx.channel().remoteAddress());
 
         callChildrenHandlers(child -> child.channelActive(ctx));
 
@@ -64,7 +64,7 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        log.info("§4Connected client connection channel has been severed: (ID={})", ctx.channel().id());
+        log.debug("§4Connected client connection channel has been severed: (ID={})", ctx.channel().id());
 
         callChildrenHandlers(child -> child.channelInactive(ctx));
 
@@ -77,7 +77,7 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
         BridgenetNetworkChannel inboundChannel = toChannel(ctx);
         Object message = exportedMessage.getMessage();
 
-        log.info("§9[{}]: §r{}",
+        log.debug("§9[{}]: §r{}",
                 String.format(NetworkRemoteChannel.MESSAGE_HANDLE_LOG_MSG.apply(channelDirection.reverse()),
                         ctx.channel().remoteAddress()), message);
 

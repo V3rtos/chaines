@@ -9,6 +9,7 @@ import me.moonways.bridgenet.assembly.ini.IniConfigLoader;
 import me.moonways.bridgenet.assembly.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.assembly.jaxb.XmlRootObject;
 import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.*;
 import java.net.URL;
@@ -50,6 +51,21 @@ public final class ResourcesAssembly {
             log.debug("Override system-property: §7'{}' = \"{}\"", propertyName, value);
             System.setProperty(propertyName.toString(), value.toString());
         });
+
+        toggleDebugMode();
+    }
+
+    /**
+     * Переключить DEBUG-режим в зависимости от
+     * значения секции в общей properties-конфигурации
+     * проекта: "debug.mode"
+     */
+    private void toggleDebugMode() {
+        if (OverridenProperty.DEBUG_MODE.get()) {
+            Configurator.setRootLevel(org.apache.logging.log4j.Level.DEBUG);
+        } else {
+            Configurator.setRootLevel(org.apache.logging.log4j.Level.INFO);
+        }
     }
 
     /**

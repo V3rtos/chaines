@@ -12,6 +12,7 @@ import java.util.function.Supplier;
  */
 public interface OverridenProperty {
 
+    Supplier<Boolean> DEBUG_MODE            = () -> Boolean.parseBoolean(System.getProperty("debug.mode"));
     Supplier<String> SYSTEM_NAME            = () -> System.getProperty("system.name");
     Supplier<String> SYSTEM_VERSION         = () -> System.getProperty("system.version");
 

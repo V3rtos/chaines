@@ -60,7 +60,7 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
 
         try {
             if (isBefore() || isAfter()) {
-                log.info("Executing bean function: §2{}", method);
+                log.debug("Executing bean function: §2{}", method);
             }
 
             method.invoke(bean.getRoot(), args);

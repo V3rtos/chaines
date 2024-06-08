@@ -34,7 +34,7 @@ public final class BootstrapHookContainer {
             return;
         }
 
-        log.info("BootstrapHookContainer.bindHooks() => begin;");
+        log.debug("BootstrapHookContainer.bindHooks() => begin;");
 
         XMLBootstrapConfigDescriptor xmlBootstrap = parseConfiguration();
         List<XMLHookDescriptor> hooks = xmlBootstrap.getHooks();
@@ -45,7 +45,7 @@ public final class BootstrapHookContainer {
             if (bootstrapHook == null)
                 continue;
 
-            log.info("Hook '{}' was success parsed", xmlHook.getDisplayName());
+            log.debug("Hook '{}' was success parsed", xmlHook.getDisplayName());
 
             Class<? extends BootstrapHook> cls = bootstrapHook.getClass();
 
@@ -53,7 +53,7 @@ public final class BootstrapHookContainer {
             instancesByHooksTypesMap.put(cls, bootstrapHook);
         }
 
-        log.info("BootstrapHookContainer.bindHooks() => end;");
+        log.debug("BootstrapHookContainer.bindHooks() => end;");
     }
 
     private BootstrapHook parseHook(XMLHookDescriptor xmlHook) {
@@ -132,7 +132,7 @@ public final class BootstrapHookContainer {
             registeredHooks = registeredHooks.stream().sorted(comparator).collect(Collectors.toList());
         }
 
-        log.info("Found §6{} §rregistered hooks: [{}]", registeredHooks.size(), joinHooksToNamesLine(registeredHooks));
+        log.debug("Found §6{} §rregistered hooks: [{}]", registeredHooks.size(), joinHooksToNamesLine(registeredHooks));
         return registeredHooks;
     }
 

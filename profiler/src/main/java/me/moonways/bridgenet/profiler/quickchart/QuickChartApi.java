@@ -43,7 +43,7 @@ public final class QuickChartApi {
         String requestJson = GSON.toJson(request);
         String responseJson = requestHttpClient(requestJson);
 
-        log.info("Metric-illustration was success requested by {}", requestJson);
+        log.debug("Metric-illustration was success requested by {}", requestJson);
 
         return GSON.fromJson(responseJson, IllustrationResponse.class);
     }

@@ -15,7 +15,7 @@ public class KeepTimeMethodHandler implements DecoratedMethodHandler {
 
         long keepTimeMillis = System.currentTimeMillis() - startTimeMillis;
 
-        log.info("§3Decorated method {} proceed for {} ms", invocation, keepTimeMillis);
+        log.debug("§3Decorated method {} proceed for {} ms", invocation, keepTimeMillis);
         return returnObject;
     }
 }

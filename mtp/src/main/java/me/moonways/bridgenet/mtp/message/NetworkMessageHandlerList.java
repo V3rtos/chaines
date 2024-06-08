@@ -58,7 +58,7 @@ public class NetworkMessageHandlerList {
     public void bind(Object handler) {
         if (subscribers.addAll(toStates(handler))) {
 
-            log.info("Registered incoming messages listener: §6{}", handler.getClass().getSimpleName());
+            log.debug("Registered incoming messages listener: §6{}", handler.getClass().getSimpleName());
             beansService.inject(handler);
         }
     }
@@ -93,7 +93,7 @@ public class NetworkMessageHandlerList {
 
                 String handlerClassName = subscriber.getSource().getClass().getSimpleName();
 
-                log.info("Received message §3{} §rredirected to §2{}", messageClass, handlerClassName);
+                log.debug("Received message §3{} §rredirected to §2{}", messageClass, handlerClassName);
 
                 method.setAccessible(true);
                 method.invoke(subscriber.getSource(), value);
@@ -107,7 +107,7 @@ public class NetworkMessageHandlerList {
         }
 
         if (handlingCount == 0) {
-            log.info("§4No one founded message subscriber for '{}'", messageClass.getName());
+            log.debug("§4No one founded message subscriber for '{}'", messageClass.getName());
         }
     }
 

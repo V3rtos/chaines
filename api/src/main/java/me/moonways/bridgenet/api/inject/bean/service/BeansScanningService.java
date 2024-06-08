@@ -53,7 +53,7 @@ public class BeansScanningService {
 
         Set<Class<?>> classSet = reflections.getSubTypesOf(Object.class);
 
-        log.info("Scanning result is §e{} §rresources", classSet.size());
+        log.debug("Scanning result is §e{} §rresources", classSet.size());
         allResourcesSet.addAll(classSet);
     }
 

@@ -37,7 +37,7 @@ public class AppBootstrap {
         if (hooksByPriority == null)
             return;
 
-        log.info("AppBootstrap.processBootstrapHooks() => begin: (priority={});", priority);
+        log.debug("AppBootstrap.processBootstrapHooks() => begin: (priority={});", priority);
 
         hooksByPriority.forEach(hook -> {
 
@@ -45,7 +45,7 @@ public class AppBootstrap {
             hook.apply(this, namespace);
         });
 
-        log.info("AppBootstrap.processBootstrapHooks() => end;");
+        log.debug("AppBootstrap.processBootstrapHooks() => end;");
     }
 
     public void startBeansActivity(boolean needsFull) {

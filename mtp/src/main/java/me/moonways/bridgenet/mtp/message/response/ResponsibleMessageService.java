@@ -45,7 +45,7 @@ public final class ResponsibleMessageService {
         responseDescriptorSet.removeIf(removed::contains);
 
         for (ResponseDescriptor descriptor : removed) {
-            log.info("§4Awaited response message §3{} §4has timed out", descriptor.responseType.getName());
+            log.error("§4Awaited response message §3{} §4has timed out", descriptor.responseType.getName());
             descriptor.completeExceptionally(
                     new ResponsibleMessageTimeoutException(descriptor.toString()));
         }
@@ -69,7 +69,7 @@ public final class ResponsibleMessageService {
      * @param responseType - ожидаемый тип сообщения.
      */
     public void await(int timeout, long id, @NotNull CompletableFuture<?> future, @NotNull Class<?> responseType) {
-        log.info("Responsible message §3{} §rsaved as awaited response by §6{}ms §rtimeout", responseType.getName(), timeout);
+        log.debug("Responsible message §3{} §rsaved as awaited response by §6{}ms §rtimeout", responseType.getName(), timeout);
 
         if (isWaiting(id, responseType)) {
             Set<ResponseDescriptor> result = responseDescriptorSet.stream()
@@ -112,7 +112,7 @@ public final class ResponsibleMessageService {
 
         if (!completed.isEmpty()) {
             responseDescriptorSet.removeIf(completed::contains);
-            log.info("Awaited response message §2{} §rwas completed", inputMessage.getClass().getName());
+            log.debug("Awaited response message §2{} §rwas completed", inputMessage.getClass().getName());
         }
     }
 

@@ -130,7 +130,7 @@ public abstract class AbstractNetworkConnection implements BridgenetNetworkConne
             throw new BridgenetChannelException("null");
         }
 
-        log.info("io.netty.channel.Channel is shutting down");
+        log.debug("io.netty.channel.Channel is shutting down");
         channel.close();
     }
 }

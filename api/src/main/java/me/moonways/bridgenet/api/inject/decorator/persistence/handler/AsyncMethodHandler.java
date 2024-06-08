@@ -19,7 +19,7 @@ public class AsyncMethodHandler implements DecoratedMethodHandler {
     public Object handleProxyInvocation(DecoratorInvocation invocation) {
         Supplier<Object> asyncExecutorCommand = () -> {
 
-            log.info("§3Running decorated {} asynchronous execution: [thread={}]", invocation, Thread.currentThread().getName());
+            log.debug("§3Running decorated {} asynchronous execution: [thread={}]", invocation, Thread.currentThread().getName());
             return invocation.proceed();
         };
 

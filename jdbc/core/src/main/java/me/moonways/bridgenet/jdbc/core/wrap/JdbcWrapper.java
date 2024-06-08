@@ -83,7 +83,7 @@ public class JdbcWrapper {
         String passwordString = new String(credentials.getPassword());
         jdbc = DriverManager.getConnection(credentials.getUri(), credentials.getUsername(), passwordString);
 
-        log.info("Connection '{}' was initialized by {}", connectionID.getUniqueId(), credentials);
+        log.debug("Connection '{}' was initialized by {}", connectionID.getUniqueId(), credentials);
     }
 
     public void reconnect() {
@@ -103,7 +103,7 @@ public class JdbcWrapper {
                 observe(new DbClosedEvent(System.currentTimeMillis(), connectionID));
                 jdbc.close();
 
-                log.info("Connection was closed as force");
+                log.debug("Connection was closed as force");
             }
         } catch (SQLException exception) {
             exceptionHandler.uncaughtException(Thread.currentThread(), exception);
@@ -113,7 +113,7 @@ public class JdbcWrapper {
     @SneakyThrows
     private Result<ResultWrapper> executeOrdered(String sql,
                                                  SqlFunction<PreparedQuerySession, ResultWrapper> resultLookup) {
-        log.info("Inbound Query: §2{}", sql);
+        log.debug("Inbound Query: §2{}", sql);
 
         final Thread thread = Thread.currentThread();
         final Result<ResultWrapper> result = Result.ofEmpty();
@@ -185,7 +185,7 @@ public class JdbcWrapper {
             if (jdbc.getAutoCommit()) {
                 jdbc.setTransactionIsolation(isolation.getLevel());
 
-                log.info("Transaction session isolation was changed to {}", isolation);
+                log.debug("Transaction session isolation was changed to {}", isolation);
             }
         } catch (SQLException exception) {
             exceptionHandler.uncaughtException(Thread.currentThread(), exception);
@@ -200,7 +200,7 @@ public class JdbcWrapper {
                     if (jdbc.getAutoCommit()) {
 
                         jdbc.setAutoCommit(false);
-                        log.info("Transaction session state is opened");
+                        log.debug("Transaction session state is opened");
 
                         observe(new DbTransactionOpenEvent(System.currentTimeMillis(), connectionID));
                     }
@@ -215,7 +215,7 @@ public class JdbcWrapper {
                         jdbc.commit();
                         jdbc.setAutoCommit(true);
 
-                        log.info("Transaction session state is closed");
+                        log.debug("Transaction session state is closed");
 
                         observe(new DbTransactionCloseEvent(System.currentTimeMillis(), connectionID));
                     }

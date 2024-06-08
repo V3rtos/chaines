@@ -19,7 +19,7 @@ public abstract class AbstractJsonConfig<O> {
         O object = RESOURCES_ASSEMBLY.readJsonAtEntity(filename, sourceType);
         doReload(object);
 
-        log.info("Json configuration parsed from {}", filename);
+        log.debug("Json configuration parsed from {}", filename);
     }
 
     protected abstract void doReload(O object);

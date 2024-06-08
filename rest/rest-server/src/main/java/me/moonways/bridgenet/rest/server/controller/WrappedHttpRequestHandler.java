@@ -59,7 +59,7 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
         if (!pattern.getName().isEmpty()) {
             String controllerName = controller.getClass().getSimpleName();
 
-            log.info(REQUEST_REDIRECTION_LOG, apiType, controllerName);
+            log.debug(REQUEST_REDIRECTION_LOG, apiType, controllerName);
 
         } else {
             controller = undefinedController;
@@ -97,7 +97,7 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
             return undefinedController;
         }
 
-        log.info(REQUEST_HAS_RECEIVED_LOG, method, uri);
+        log.debug(REQUEST_HAS_RECEIVED_LOG, method, uri);
         return controller;
     }
 }

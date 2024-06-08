@@ -24,7 +24,7 @@ public class LateExecutionMethodHandler implements DecoratedMethodHandler {
         CompletableFuture<Object> completableFuture = new CompletableFuture<>();
 
         SCHEDULER.schedule((Runnable) () -> completableFuture.complete(invocation.proceed()), annotation.delay(), annotation.unit());
-        log.info("§3Running decorated {} scheduled execution: [info={}]", invocation,
+        log.debug("§3Running decorated {} scheduled execution: [info={}]", invocation,
                 annotation.toString().substring(annotation.annotationType().getName().length() + 1));
 
         if (invocation.isVoid())

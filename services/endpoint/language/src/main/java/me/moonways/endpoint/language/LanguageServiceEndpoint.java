@@ -78,7 +78,7 @@ public final class LanguageServiceEndpoint extends EndpointRemoteObject implemen
 
             registeredLanguagesMap.put(language.getId(), registeredLanguage);
 
-            log.info("Registered language type §6{} §7(short={}) §rfrom resource §6/{}",
+            log.debug("Registered language type §6{} §7(short={}) §rfrom resource §6/{}",
                     languageDisplayNameMapper.getDisplayName(language),
                     language.getName().toUpperCase(), resourceName);
         }

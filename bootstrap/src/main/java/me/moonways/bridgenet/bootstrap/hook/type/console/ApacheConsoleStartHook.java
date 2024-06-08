@@ -20,6 +20,7 @@ public class ApacheConsoleStartHook extends BootstrapHook {
         BridgenetConsole bridgenetConsole = new BridgenetConsole();
         beansService.bind(bridgenetConsole);
 
+        log.info("§2BridgeNet was completed for using!");
         bridgenetConsole.start();
     }
 }

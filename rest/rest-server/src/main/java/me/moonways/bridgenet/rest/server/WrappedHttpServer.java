@@ -152,7 +152,7 @@ public class WrappedHttpServer {
                     beansService.inject(context);
                     bootstrap.registerHandler(pattern.getName(), context);
 
-                    log.info("HTTP Controller §2'{}' §rwas registered §7(method='{}', pattern='{}')",
+                    log.debug("HTTP Controller §2'{}' §rwas registered §7(method='{}', pattern='{}')",
                             pattern.getController().getClass().getSimpleName(),
                             pattern.getMethod(), pattern.getName());
                 });

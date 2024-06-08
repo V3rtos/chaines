@@ -108,12 +108,12 @@ public final class RemoteServicesManagement {
     }
 
     public void exportEndpoints() {
-        log.info("Exporting remote-services...");
+        log.debug("Exporting remote-services...");
         endpointController.bindEndpoints();
     }
 
     private void initXmlModules(List<XMLServiceModuleDescriptor> xmlModulesList) {
-        log.info("Registering §2{} §rremote service modules", xmlModulesList.size());
+        log.info("Registering §2{} §rremote-service modules", xmlModulesList.size());
 
         for (XMLServiceModuleDescriptor xmlService : xmlModulesList) {
             registerModule(xmlService);
@@ -121,7 +121,7 @@ public final class RemoteServicesManagement {
     }
 
     private void initXmlServices(List<XmlServiceInfoDescriptor> xmlServicesList) {
-        log.info("Registering §2{} §rremote services descriptions", xmlServicesList.size());
+        log.info("Registering §2{} §rremote-service descriptions", xmlServicesList.size());
 
         for (XmlServiceInfoDescriptor xmlService : xmlServicesList) {
 
@@ -129,8 +129,7 @@ public final class RemoteServicesManagement {
             String bindPort = xmlService.getBindPort();
             String modelPath = xmlService.getModelPath();
 
-            log.info("Registered new Service description: §f{} §r(port={}, class={})", name, bindPort, modelPath);
-
+            log.debug("Registering new remote-service: §f{} §r(port={}, class={})", name, bindPort, modelPath);
             servicesInfos.put(name.toLowerCase(), createServiceInfo(xmlService));
         }
     }
@@ -238,7 +237,7 @@ public final class RemoteServicesManagement {
         ModuleFactory moduleFactory = createModuleFactory(wrapper);
         ModuleID id = moduleFactory.getId();
 
-        log.info("{} was registered", id);
+        log.debug("{} was registered", id);
 
         modulesFactories.put(id, moduleFactory);
     }

@@ -75,7 +75,7 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
 
     @Override
     protected void initChannel(Channel channel) {
-        log.info("Running channel {} initialization", channel);
+        log.debug("Running channel {} initialization", channel);
 
         MessageEncryption encryption = configuration.getEncryption();
         encryption.generateKeys();

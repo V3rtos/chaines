@@ -103,7 +103,7 @@ public final class MessageEncryption {
             publicKey = generatePublicKey(security.getPublicKey());
             privateKey = generatePrivateKey(security.getPrivateKey());
 
-            log.info("Encrypted keys was matches from security config");
+            log.debug("Encrypted keys was matches from security config");
         }
     }
 

@@ -14,7 +14,7 @@ public abstract class OnlyResponseHttpController implements HttpController {
     @Override
     public final void process(HttpRequest request, VerificationConfig verificationConfig) {
         if (canLogging()) {
-            log.info("");
+            log.debug("");
         }
     }
 }

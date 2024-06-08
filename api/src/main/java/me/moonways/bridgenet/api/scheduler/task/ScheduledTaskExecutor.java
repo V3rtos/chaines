@@ -61,7 +61,7 @@ public class ScheduledTaskExecutor {
         else
             future = executorService.schedule(executorTaskRunnable, scheduledTask.getDelay().toNanos(), TimeUnit.NANOSECONDS);
 
-        log.info("Running execution {}", scheduledTask);
+        log.debug("Running execution {}", scheduledTask);
         return future;
     }
 

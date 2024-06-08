@@ -70,7 +70,7 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
     public void send(@NotNull ExportedMessage exportedMessage) {
         Object message = exportedMessage.getMessage();
 
-        log.info("§9[{}]: §r{}", String.format(MESSAGE_HANDLE_LOG_MSG.apply(direction), handle.remoteAddress()), message);
+        log.debug("§9[{}]: §r{}", String.format(MESSAGE_HANDLE_LOG_MSG.apply(direction), handle.remoteAddress()), message);
         handle.writeAndFlush(exportedMessage);
     }
 
@@ -88,7 +88,7 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
     public void pull(@NotNull InboundMessageContext<?> context) {
         setProperty(PULLING_STATE_PROPERTY, true);
 
-        log.info("§9[PULL]: §r{}", context.getMessage());
+        log.debug("§9[PULL]: §r{}", context.getMessage());
         networkController.pull(context);
 
         setProperty(PULLING_STATE_PROPERTY, false);

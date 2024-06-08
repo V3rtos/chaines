@@ -87,12 +87,12 @@ public final class BeansService {
     public void fakeStart() {
         CompletableFuture.runAsync(() -> {
 
-            log.info("BeansService.fakeStart -> begin;");
+            log.debug("BeansService.fakeStart -> begin;");
 
             bindThis();
             initBeanFactories();
 
-            log.info("BeansService.fakeStart -> end;");
+            log.debug("BeansService.fakeStart -> end;");
 
         }, executorService).join();
     }
@@ -103,14 +103,14 @@ public final class BeansService {
     public void start() {
         CompletableFuture.runAsync(() -> {
 
-            log.info("BeansService.start -> begin;");
+            log.debug("BeansService.start -> begin;");
 
             bindThis();
             initBeanFactories();
 
             scanAllAnnotationProcessors();
 
-            log.info("BeansService.start -> end;");
+            log.debug("BeansService.start -> end;");
 
         }, executorService).join();
     }
@@ -120,7 +120,7 @@ public final class BeansService {
      * бинов в системе с автоматической их инжекцией.
      */
     private void initBeanFactories() {
-        log.info("Initialize beans factories & providers...");
+        log.debug("Initialize beans factories & providers...");
 
         BeanFactoryProviders.DEFAULT = Optional.ofNullable(OverridenProperty.BEANS_FACTORY_DEFAULT.get())
                 .map(BeanFactoryProviders::valueOf)
@@ -139,8 +139,8 @@ public final class BeansService {
      * верификацию обнаруженного бина и передаем его в обработку процессору аннотации.
      */
     public void scanAnnotationProcessors(List<TypeAnnotationProcessor<?>> inboundProcessors) {
-        log.info("Processing inbound list of TypeAnnotationProcessor`s...");
-        log.info("Founded §3{} §rannotation-processors", inboundProcessors.size());
+        log.debug("Processing inbound list of TypeAnnotationProcessor`s...");
+        log.debug("Founded §3{} §rannotation-processors", inboundProcessors.size());
 
         for (TypeAnnotationProcessor<?> processor : inboundProcessors) {
             processTypeAnnotationProcessor(processor);
@@ -178,7 +178,7 @@ public final class BeansService {
                     return;
                 }
 
-                log.info("Processing TypeAnnotationProcessor implement - §2@{}", annotationType.getName());
+                log.debug("Processing TypeAnnotationProcessor implement - §2@{}", annotationType.getName());
 
                 initializedAnnotationsSet.add(annotationType);
                 scanner.scanBeans(config).forEach(bean -> processBean(config, bean));
@@ -307,7 +307,7 @@ public final class BeansService {
         store.store(bean);
         injector.flushInjectionQueue();
 
-        log.info("Binding a bean of §6{}", bean.getType().getRoot().getName());
+        log.debug("Binding a bean of §6{}", bean.getType().getRoot().getName());
 
         // call @PostConstruct functions.
         List<BeanMethod> postConstructFunctions = bean.getType().getPostConstructFunctions();
@@ -361,7 +361,7 @@ public final class BeansService {
      */
     public void unbind(Bean bean) {
         store.delete(bean);
-        log.info("Unbinding a bean of §4{}", bean.getType().getRoot().getName());
+        log.debug("Unbinding a bean of §4{}", bean.getType().getRoot().getName());
     }
 
     /**

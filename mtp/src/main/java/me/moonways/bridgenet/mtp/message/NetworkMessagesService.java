@@ -63,7 +63,7 @@ public class NetworkMessagesService {
         WrappedNetworkMessage wrapper = toWrapper(annotation, messageType);
         networkMessageWrappers.add(wrapper);
 
-        log.info("Protocol was registered message: §3{} §7(id: {}, direction: {})", messageType.getName(),
+        log.debug("Protocol was registered message: §3{} §7(id: {}, direction: {})", messageType.getName(),
                 wrapper.getId(),
                 wrapper.getDirection());
     }
