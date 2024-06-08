@@ -55,16 +55,16 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
             Constructor<? extends RemoteService> constructor = subclass.getConstructor();
             RemoteService stub = constructor.newInstance();
 
+            log.info("Exporting endpoint '{}' from §3{} §rto §9{}", name, serviceInfo.getModelClass().getSimpleName(), stub.getClass().getSimpleName());
             beansService.bind(serviceInfo.getModelClass(), stub);
 
             try {
                 LocateRegistry.createRegistry(serviceInfo.getPort());
                 Naming.rebind(uri, stub);
 
-                log.info("Endpoint '{}' was exported: §f{}", name, stub.getClass().getSimpleName());
                 remoteServicesManagement.registerService(serviceInfo, stub);
             } catch (RemoteException exception) {
-                log.error("§4Cannot be export endpoint uri {}: §c{}", uri, exception.toString());
+                log.error("§4Cannot be export an endpoint from {}: §c{}", uri, exception.toString());
             }
         } catch (Exception exception) {
             log.error("§4Cannot be export an endpoint '{}'", name, exception);
