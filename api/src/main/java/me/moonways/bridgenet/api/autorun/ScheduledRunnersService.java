@@ -53,10 +53,7 @@ public class ScheduledRunnersService {
         List<RunnableUnit> result = new ArrayList<>();
 
         for (Object runner : runners) {
-
             Class<?> runnerClass = runner.getClass();
-            log.debug("Automatically runner §a'{}' §rwas found", runnerClass.getSimpleName());
-
             RunningPeriod periodAnnotation = runnerClass.getDeclaredAnnotation(RunningPeriod.class);
 
             for (Method method : runnerClass.getDeclaredMethods()) {
@@ -71,8 +68,11 @@ public class ScheduledRunnersService {
                         period = ScheduledTime.of(periodAnnotation.period(), periodAnnotation.unit());
                     }
 
-                    result.add(new RunnableUnit(period,
-                            () -> ReflectionUtils.callMethod(runner, method.getName())));
+                    RunnableUnit runnableUnit = new RunnableUnit(period,
+                            () -> ReflectionUtils.callMethod(runner, method.getName()));
+
+                    log.debug("Registering auto-runner §a'{}' §rwith id: §3{}", runnerClass.getSimpleName(), runnableUnit.getUuid());
+                    result.add(runnableUnit);
                 }
             }
         }
