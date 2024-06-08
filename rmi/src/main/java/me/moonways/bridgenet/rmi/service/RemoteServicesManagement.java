@@ -74,7 +74,7 @@ public final class RemoteServicesManagement {
     public void initConfig() {
         xmlConfiguration = assembly.readXmlAtEntity(ResourcesTypes.REMOTE_SERVICES_XML, XMLServicesConfigDescriptor.class);
 
-        log.info("Parsed RMI XML-Configuration content: {}", xmlConfiguration);
+        log.debug("Parsed RMI XML-Configuration content: {}", xmlConfiguration);
 
         List<XMLServiceModuleDescriptor> xmlModulesList = xmlConfiguration.getModulesList();
         List<XmlServiceInfoDescriptor> xmlServicesList = xmlConfiguration.getServicesList();
