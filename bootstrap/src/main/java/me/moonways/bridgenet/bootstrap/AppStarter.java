@@ -10,22 +10,6 @@ public class AppStarter {
 
     private static final String THREAD_POOL_NAME = "bridgenet-bootstrap";
 
-    public static void main(String[] args) {
-        PreviousLogsCompressor.compressToGzip();
-
-        ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultThreadFactory(THREAD_POOL_NAME));
-        Threads.pull(executorService);
-
-        executorService.submit(() -> bootstrap(args));
-    }
-
-    private static void bootstrap(String[] args) {
-        AppBootstrap bootstrap = new AppBootstrap();
-
-        logGreeting();
-        bootstrap.start(args);
-    }
-
     private static void logGreeting() {
         System.out.println(
                 "\n" +
@@ -40,5 +24,21 @@ public class AppStarter {
                         " ░         ░      ░     ░          ░    ░  ░         ░    ░  ░         \n" +
                         "      ░               ░                                                \n"
         );
+    }
+
+    private static void bootstrap(String[] args) {
+        AppBootstrap bootstrap = new AppBootstrap();
+
+        logGreeting();
+        bootstrap.start(args);
+    }
+
+    public static void main(String[] args) {
+        PreviousLogsCompressor.compressToGzip();
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultThreadFactory(THREAD_POOL_NAME));
+        Threads.pull(executorService);
+
+        executorService.submit(() -> bootstrap(args));
     }
 }
