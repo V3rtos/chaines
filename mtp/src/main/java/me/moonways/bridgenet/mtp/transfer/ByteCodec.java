@@ -2,14 +2,13 @@ package me.moonways.bridgenet.mtp.transfer;
 
 import io.netty.buffer.ByteBuf;
 import lombok.experimental.UtilityClass;
-import org.mockito.internal.util.Primitives;
 
 import java.lang.reflect.Field;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @UtilityClass
 public final class ByteCodec {
@@ -18,6 +17,7 @@ public final class ByteCodec {
     private static final int DEFAULT_OBJ_BUFFER_SIZE = 512;
 
     private final static Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_MAP = new HashMap<>();
+
     static {
         PRIMITIVE_TO_WRAPPER_MAP.put(boolean.class, Boolean.class);
         PRIMITIVE_TO_WRAPPER_MAP.put(byte.class, Byte.class);

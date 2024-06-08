@@ -7,12 +7,10 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -21,6 +19,19 @@ import java.util.stream.Collectors;
 public final class ResponsibleMessageService {
 
     private final Set<ResponseDescriptor> responseDescriptorSet = new CopyOnWriteArraySet<>();
+    private final AtomicLong callbackIdSeed = new AtomicLong(1);
+
+    /**
+     * Сгенерировать уникальный идентификатор
+     * ответа на ожидаемое сообщение.
+     */
+    public long generateCallbackID() {
+        long next = callbackIdSeed.getAndIncrement();
+        if (next == Long.MAX_VALUE) {
+            callbackIdSeed.set(1);
+        }
+        return next;
+    }
 
     /**
      * Очистить истекшие по таймауту
@@ -34,7 +45,7 @@ public final class ResponsibleMessageService {
         responseDescriptorSet.removeIf(removed::contains);
 
         for (ResponseDescriptor descriptor : removed) {
-            log.info("§4Awaited response message §3{} §4has timed out", descriptor.responseType);
+            log.error("§4Awaited response message §3{} §4has timed out", descriptor.responseType.getName());
             descriptor.completeExceptionally(
                     new ResponsibleMessageTimeoutException(descriptor.toString()));
         }
@@ -42,27 +53,28 @@ public final class ResponsibleMessageService {
 
     /**
      * Ожидается ли ответ указанного типа сообщения.
+     *
      * @param responseType - класс ожидаемого сообщения.
      */
-    public boolean isWaiting(@NotNull Class<?> responseType) {
+    public boolean isWaiting(long id, @NotNull Class<?> responseType) {
         return responseDescriptorSet.stream()
                 .filter(responseDescriptor -> !responseDescriptor.isExpired())
-                .anyMatch(responseDescriptor -> responseDescriptor.isSimilar(responseType));
+                .anyMatch(responseDescriptor -> responseDescriptor.isForThis(id, responseType));
     }
 
     /**
      * Поставить указанный тип сообщения респонса в ожидание.
      *
-     * @param future - исполняемый процесс при получении респонса.
+     * @param future       - исполняемый процесс при получении респонса.
      * @param responseType - ожидаемый тип сообщения.
      */
-    public void await(int timeout, @NotNull CompletableFuture<?> future, @NotNull Class<?> responseType) {
-        log.info("Responsible message §3{} §rsaved as awaited response by §6{}ms §rtimeout", responseType, timeout);
+    public void await(int timeout, long id, @NotNull CompletableFuture<?> future, @NotNull Class<?> responseType) {
+        log.debug("Responsible message §3{} §rsaved as awaited response by §6{}ms §rtimeout", responseType.getName(), timeout);
 
-        if (isWaiting(responseType)) {
+        if (isWaiting(id, responseType)) {
             Set<ResponseDescriptor> result = responseDescriptorSet.stream()
                     .filter(responseDescriptor -> responseDescriptor.timeout == timeout)
-                    .filter(responseDescriptor -> responseDescriptor.isSimilar(responseType))
+                    .filter(responseDescriptor -> responseDescriptor.isForThis(id, responseType))
                     .collect(Collectors.toSet());
 
             if (!result.isEmpty()) {
@@ -71,26 +83,27 @@ public final class ResponsibleMessageService {
             }
         }
 
-        List<CompletableFuture<Object>> futures = new LinkedList<>();
+        List<CompletableFuture<Object>> futures = Collections.synchronizedList(new LinkedList<>());
         futures.add((CompletableFuture<Object>) future);
 
         responseDescriptorSet.add(
                 new ResponseDescriptor(System.currentTimeMillis() + timeout, timeout,
-                        futures, responseType));
+                        id, futures, responseType));
     }
 
     /**
      * Выполнить ожидаемые запросы на респонс исходя
      * из входящего сообщения.
      *
+     * @param callbackID - идентификатор ответа на сообщение
      * @param inputMessage - входящее сообщение
      */
-    public void complete(@NotNull Object inputMessage) {
+    public void complete(long callbackID, @NotNull Object inputMessage) {
         List<ResponseDescriptor> completed = new ArrayList<>();
         Class<?> inputMessageClass = inputMessage.getClass();
 
         for (ResponseDescriptor descriptor : responseDescriptorSet) {
-            if (descriptor.isSimilar(inputMessageClass)) {
+            if (descriptor.isForThis(callbackID, inputMessageClass)) {
 
                 descriptor.complete(inputMessage);
                 completed.add(descriptor);
@@ -99,7 +112,7 @@ public final class ResponsibleMessageService {
 
         if (!completed.isEmpty()) {
             responseDescriptorSet.removeIf(completed::contains);
-            log.info("Awaited response message §2{} §rwas completed", inputMessage.getClass().getName());
+            log.debug("Awaited response message §2{} §rwas completed", inputMessage.getClass().getName());
         }
     }
 
@@ -108,9 +121,10 @@ public final class ResponsibleMessageService {
     private static class ResponseDescriptor {
 
         private final long expireIn;
+        private final int timeout;
 
         @EqualsAndHashCode.Include
-        private final int timeout;
+        private final long callbackID;
 
         @Getter
         private final List<CompletableFuture<Object>> futures;
@@ -122,7 +136,11 @@ public final class ResponsibleMessageService {
             return expireIn <= System.currentTimeMillis();
         }
 
-        public boolean isSimilar(Class<?> responseType) {
+        public boolean isForThis(long callbackID, Class<?> responseType) {
+            return Objects.equals(this.callbackID, callbackID) && isTypeSimilar(responseType);
+        }
+
+        private boolean isTypeSimilar(Class<?> responseType) {
             return this.responseType.equals(responseType) || this.responseType.isAssignableFrom(responseType);
         }
 

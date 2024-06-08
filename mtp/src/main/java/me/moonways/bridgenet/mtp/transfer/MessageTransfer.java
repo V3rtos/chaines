@@ -1,19 +1,18 @@
 package me.moonways.bridgenet.mtp.transfer;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
-import me.moonways.bridgenet.api.inject.bean.factory.UnsafeFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.type.UnsafeFactory;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
 
 @Log4j2
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -52,7 +51,7 @@ public final class MessageTransfer {
         ByteTransfer declaredAnnotation = field.getDeclaredAnnotation(ByteTransfer.class);
 
         if (declaredAnnotation == null) {
-            log.warn("Message field '{}' is not transferable then to be ignored", field);
+            log.warn("§6Message field '{}' is not transferable then to be ignored", field);
             return null;
         }
 
@@ -81,8 +80,7 @@ public final class MessageTransfer {
                 } else {
                     bufField(value, transferProvider, byteBuf);
                 }
-            }
-            catch (IllegalAccessException exception) {
+            } catch (IllegalAccessException exception) {
                 log.error(new MessageTransferException(exception));
                 return;
             }
@@ -124,8 +122,7 @@ public final class MessageTransfer {
 
             field.setAccessible(true);
             field.set(messagePacket, collection);
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error(new MessageTransferException(exception));
         }
     }
@@ -136,8 +133,7 @@ public final class MessageTransfer {
         try {
             field.setAccessible(true);
             field.set(messagePacket, providedObject);
-        }
-        catch (IllegalAccessException exception) {
+        } catch (IllegalAccessException exception) {
             log.error(new MessageTransferException(exception));
         }
     }

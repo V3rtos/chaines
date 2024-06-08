@@ -37,8 +37,7 @@ public class InterceptController {
             prepareInterceptor();
 
             return createInterfaceProxy();
-        }
-        else {
+        } else {
             return createSuperclassProxy();
         }
     }
@@ -67,9 +66,8 @@ public class InterceptController {
 
             prepareInterceptor();
             return proxyFactory.create(new Class[0], new Object[0], superclassProxy);
-        }
-        catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-               InvocationTargetException exception) {
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException exception) {
 
             log.error("§4Cannot be create component proxy: §c{}", exception.toString());
         }

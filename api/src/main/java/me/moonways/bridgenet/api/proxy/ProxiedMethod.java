@@ -43,8 +43,7 @@ public class ProxiedMethod {
             declare.setAccessible(true);
 
             return lastCallReturnedValue = declare.invoke(source, args);
-        }
-        catch (IllegalAccessException | InvocationTargetException exception) {
+        } catch (IllegalAccessException | InvocationTargetException exception) {
             log.error("§4Cannot be invoke proxied method {}: §c{}", this, exception.toString());
 
             Throwable cause = exception.getCause();

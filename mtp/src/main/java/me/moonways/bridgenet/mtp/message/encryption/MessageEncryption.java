@@ -1,11 +1,10 @@
 package me.moonways.bridgenet.mtp.message.encryption;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.mtp.config.CipherSecurity;
+import me.moonways.bridgenet.mtp.config.descriptor.NetworkCipherSecurityDescriptor;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 
 import javax.crypto.Cipher;
@@ -28,7 +27,7 @@ public final class MessageEncryption {
     private static final int KEY_SIZE = 2048;
 
 
-    private final CipherSecurity security;
+    private final NetworkCipherSecurityDescriptor security;
     private PrivateKey privateKey;
     private PublicKey publicKey;
 
@@ -41,8 +40,7 @@ public final class MessageEncryption {
 
             publicKey = pair.getPublic();
             privateKey = pair.getPrivate();
-        }
-        catch (NoSuchAlgorithmException exception) {
+        } catch (NoSuchAlgorithmException exception) {
             log.error("§4Cannot be generate private-key: §c{}", exception.toString());
         }
     }
@@ -55,8 +53,7 @@ public final class MessageEncryption {
             KeyFactory keyFactory = KeyFactory.getInstance(GENERATION_ALGORITHM);
 
             return keyFactory.generatePrivate(encodedKeySpec);
-        }
-        catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
             log.error("§4Cannot be generate private-key: §c{}", exception.toString());
         }
 
@@ -64,7 +61,7 @@ public final class MessageEncryption {
     }
 
     private PublicKey generatePublicKey(String key) {
-        try{
+        try {
             byte[] byteKey = BASE64_DECODER.decode(key.getBytes());
 
             X509EncodedKeySpec encodedKeySpec = new X509EncodedKeySpec(byteKey);
@@ -92,8 +89,8 @@ public final class MessageEncryption {
     public void generateKeys() {
         if (security == null || !security.isFilled()) {
 
-            log.warn("§4Paired keys cannot be matches!");
-            log.warn("§4Generating new security keys...");
+            log.warn("§6Paired keys cannot be matches!");
+            log.warn("§6Generating new security keys...");
 
             generateKeyPair();
 
@@ -106,7 +103,7 @@ public final class MessageEncryption {
             publicKey = generatePublicKey(security.getPublicKey());
             privateKey = generatePrivateKey(security.getPrivateKey());
 
-            log.info("Encrypted keys was matches from security config");
+            log.debug("Encrypted keys was matches from security config");
         }
     }
 
@@ -116,8 +113,7 @@ public final class MessageEncryption {
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
             return Unpooled.buffer().writeBytes(cipher.doFinal(ByteCodec.readBytesArray(byteBuf)));
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error("§4Cannot be decode encrypted message: §c{}", exception.toString());
         }
 
@@ -130,8 +126,7 @@ public final class MessageEncryption {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
             return Unpooled.buffer().writeBytes(cipher.doFinal(ByteCodec.readBytesArray(byteBuf)));
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             log.error("§4Cannot be encode message with encryption: §c{}", exception.toString());
         }
 

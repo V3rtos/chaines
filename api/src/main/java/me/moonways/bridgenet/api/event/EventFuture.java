@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class EventFuture<E extends Event>{
+public class EventFuture<E extends Event> {
 
     private final EventFollower<E> follower = new EventFollower<>();
 
@@ -85,7 +85,7 @@ public class EventFuture<E extends Event>{
             long totalTimeoutMillis = System.currentTimeMillis() + timeout;
             executorService.execute(() -> {
 
-                while (timeout > 0 && System.currentTimeMillis() - totalTimeoutMillis > 0);
+                while (timeout > 0 && System.currentTimeMillis() - totalTimeoutMillis > 0) ;
 
                 if (timeout <= 0) {
                     if (handler != null) {

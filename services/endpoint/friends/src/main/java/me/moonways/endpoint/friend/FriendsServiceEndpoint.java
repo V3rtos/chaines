@@ -1,107 +1,76 @@
 package me.moonways.endpoint.friend;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import lombok.Getter;
-import me.moonways.bridgenet.api.event.EventService;
-import me.moonways.bridgenet.api.event.subscribe.EventSubscribeBuilder;
-import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.model.friends.FriendsList;
-import me.moonways.bridgenet.model.friends.FriendsServiceModel;
-import me.moonways.bridgenet.model.friends.event.FriendJoinEvent;
-import me.moonways.bridgenet.model.friends.event.FriendLeaveEvent;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.model.service.friends.FriendsList;
+import me.moonways.bridgenet.model.service.friends.FriendsServiceModel;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteContext;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
+import me.moonways.endpoint.friend.event.FriendActivityListener;
 
 import java.rmi.RemoteException;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
 @Getter
-@Autobind
-public final class FriendsServiceEndpoint extends AbstractEndpointDefinition implements FriendsServiceModel {
+public final class FriendsServiceEndpoint extends EndpointRemoteObject implements FriendsServiceModel {
 
     private static final long serialVersionUID = 6945343361490533671L;
 
-    @Inject
-    private EventService eventService;
-    @Inject
-    private BeansService beansService;
-    @Inject
-    private PlayersServiceModel playersModel;
+    private final Cache<UUID, FriendsList> playerFriendsCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(1, TimeUnit.HOURS)
+            .build();
 
-    private final Map<UUID, FriendsList> playerFriendsMap = new HashMap<>();
+    private final FriendsDbRepository repository = new FriendsDbRepository();
 
-    private Consumer<FriendJoinEvent> friendJoinEventConsumer = (event) -> {};
-    private Consumer<FriendLeaveEvent> friendLeaveEventConsumer = (event) -> {};
-
-    private FriendsDbRepository repository;
+    @Inject
+    private PlayersServiceModel playersServiceModel;
 
     public FriendsServiceEndpoint() throws RemoteException {
         super();
     }
 
-    @PostConstruct
-    private void init() {
-        repository = new FriendsDbRepository();
-        beansService.inject(repository);
-
-        eventService.subscribe(EventSubscribeBuilder.newBuilder(FriendJoinEvent.class)
-                .follow(friendJoinEventConsumer)
-                .build());
-        eventService.subscribe(EventSubscribeBuilder.newBuilder(FriendLeaveEvent.class)
-                .follow(friendLeaveEventConsumer)
-                .build());
+    @Override
+    protected void construct(EndpointRemoteContext context) {
+        context.registerEventListener(new FriendActivityListener());
     }
 
     private FriendsList lookupPlayerFriends(UUID playerUUID) throws RemoteException {
         List<UUID> friendsList = repository.findFriendsList(playerUUID);
-        return new FriendsListStub(
+        FriendsListStub friendsListStub = new FriendsListStub(
                 playerUUID,
-                playersModel,
                 repository,
                 new HashSet<>(friendsList));
+
+        getEndpointContext().inject(friendsListStub);
+
+        return friendsListStub;
     }
 
     @Override
-    public FriendsList findFriends(UUID playerUUID) throws RemoteException {
-        if (playerFriendsMap.containsKey(playerUUID)) {
-            return playerFriendsMap.get(playerUUID);
+    public FriendsList getFriends(UUID playerUUID) throws RemoteException {
+        playerFriendsCache.cleanUp();
+        ConcurrentMap<UUID, FriendsList> cacheMap = playerFriendsCache.asMap();
+
+        if (cacheMap.containsKey(playerUUID)) {
+            return cacheMap.get(playerUUID);
         }
 
         FriendsList friendsList = lookupPlayerFriends(playerUUID);
-        playerFriendsMap.put(playerUUID, friendsList);
+        playerFriendsCache.put(playerUUID, friendsList);
 
         return friendsList;
     }
 
     @Override
-    public FriendsList findFriends(String playerName) throws RemoteException {
-        UUID playerId = playersModel.findPlayerId(playerName);
-        return findFriends(playerId);
-    }
-
-    @Override
-    public void cleanup(UUID playerUUID) throws RemoteException {
-        playerFriendsMap.remove(playerUUID);
-    }
-
-    @Override
-    public void cleanup(String playerName) throws RemoteException {
-        UUID playerId = playersModel.findPlayerId(playerName);
-        this.cleanup(playerId);
-    }
-
-    @Override
-    public FriendsServiceModel subscribeJoin(Consumer<FriendJoinEvent> eventHandler) {
-        friendJoinEventConsumer = friendJoinEventConsumer.andThen(eventHandler);
-        return this;
-    }
-
-    @Override
-    public FriendsServiceModel subscribeLeave(Consumer<FriendLeaveEvent> eventHandler) {
-        friendLeaveEventConsumer = friendLeaveEventConsumer.andThen(eventHandler);
-        return this;
+    public FriendsList getFriends(String playerName) throws RemoteException {
+        UUID playerId = playersServiceModel.store().idByName(playerName);
+        return getFriends(playerId);
     }
 }

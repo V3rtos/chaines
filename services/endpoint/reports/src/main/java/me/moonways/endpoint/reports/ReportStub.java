@@ -2,9 +2,9 @@ package me.moonways.endpoint.reports;
 
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
-import me.moonways.bridgenet.model.reports.Report;
-import me.moonways.bridgenet.model.reports.ReportReason;
+import me.moonways.bridgenet.model.service.reports.Report;
+import me.moonways.bridgenet.model.service.reports.ReportReason;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 
 @ToString
 @Getter
-public class ReportStub extends AbstractEndpointDefinition implements Report {
+public class ReportStub extends EndpointRemoteObject implements Report {
 
     private static final long serialVersionUID = -3931465978117678586L;
 

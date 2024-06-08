@@ -61,7 +61,7 @@ public class ScheduledTaskExecutor {
         else
             future = executorService.schedule(executorTaskRunnable, scheduledTask.getDelay().toNanos(), TimeUnit.NANOSECONDS);
 
-        log.info("Running execution {}", scheduledTask);
+        log.debug("Running execution {}", scheduledTask);
         return future;
     }
 
@@ -141,8 +141,7 @@ public class ScheduledTaskExecutor {
 
                     taskFuture.post();
                     pollFuture(taskFuture);
-                }
-                catch (InterruptedException exception) {
+                } catch (InterruptedException exception) {
                     throw new ScheduleException(exception, "Internal task process exception - {0}", scheduledTask.getId());
                 }
 
@@ -155,8 +154,7 @@ public class ScheduledTaskExecutor {
 
                             taskFuture.post();
                             pollFuture(taskFuture);
-                        }
-                        catch (InterruptedException exception) {
+                        } catch (InterruptedException exception) {
                             throw new ScheduleException(exception, "Internal task process exception - {0}", scheduledTask.getId());
                         }
                     }

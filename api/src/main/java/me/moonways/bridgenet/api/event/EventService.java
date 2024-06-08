@@ -1,49 +1,68 @@
 package me.moonways.bridgenet.api.event;
 
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscription;
 import me.moonways.bridgenet.api.event.subscribe.EventSubscriptionApplier;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.util.thread.Threads;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;
 
 @Autobind
+@Log4j2
+@WaitTypeAnnotationProcessor(InboundEventListener.class)
 public final class EventService {
 
-    private final ExecutorService threadsExecutorService = Threads.newCachedThreadPool();
+    private final ExecutorService forkJoinPool = Threads.newWorkSteelingPool();
 
     private final EventRegistry eventRegistry = new EventRegistry();
-    private final EventExecutor eventExecutor = new EventExecutor(threadsExecutorService, eventRegistry);
+    private final EventExecutor eventExecutor = new EventExecutor(forkJoinPool, eventRegistry);
 
     private final EventSubscriptionApplier eventSubscriptionApplier = new EventSubscriptionApplier(this);
 
     @Inject
     private BeansService beansService;
 
+    @GetTypeAnnotationProcessor
+    private TypeAnnotationProcessorResult<Object> listenersResult;
+
+    @PostConstruct
+    private void registerInboundListeners() {
+        listenersResult.toList().forEach(this::registerListener);
+    }
+
     @NotNull
-    public <E extends Event> EventFuture<E> fireEvent(@NotNull E event) {
+    public synchronized <E extends Event> EventFuture<E> fireEvent(@NotNull E event) {
         beansService.inject(event);
 
         EventFuture<E> eventFuture = eventExecutor.fireEvent(event);
         eventSubscriptionApplier.followSubscription(eventFuture);
 
+        log.debug("Event: §7{}", event);
         return eventFuture;
     }
 
-    public void registerHandler(@NotNull Object handler) {
-        beansService.inject(handler);
-        eventRegistry.register(handler);
+    public void registerListener(@NotNull Object listener) {
+        log.debug("Listening inbound events started on §6{}", listener.getClass().getName());
+
+        beansService.inject(listener);
+        eventRegistry.register(listener);
     }
 
-    public void unregisterHandler(@NotNull Object handler) {
-        eventRegistry.unregister(handler.getClass());
+    public void unregisterListener(@NotNull Object listener) {
+        unregisterListener(listener.getClass());
     }
 
-    public void unregisterHandler(@NotNull Class<?> handlerType) {
-        eventRegistry.unregister(handlerType);
+    public void unregisterListener(@NotNull Class<?> listenerClass) {
+        log.debug("Listening inbound events shutdown for §4{}", listenerClass.getName());
+        eventRegistry.unregister(listenerClass);
     }
 
     public void subscribe(@NotNull EventSubscription<?> subscription) {

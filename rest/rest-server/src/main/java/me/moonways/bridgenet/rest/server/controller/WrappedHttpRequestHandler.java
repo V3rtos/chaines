@@ -2,10 +2,13 @@ package me.moonways.bridgenet.rest.server.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
+import me.moonways.bridgenet.profiler.ProfilerType;
+import me.moonways.bridgenet.rest.server.HttpServerConfig;
 import me.moonways.bridgenet.rest.server.controller.undefined.UndefinedHttpController;
 import me.moonways.bridgenet.rest.server.controller.verify.VerificationConfig;
 import me.moonways.bridgenet.rest.server.controller.verify.VerifyHelper;
-import me.moonways.bridgenet.rest.server.HttpServerConfig;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -35,6 +38,9 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
 
     private final VerifyHelper verifyHelper;
 
+    @Inject
+    private BridgenetDataLogger bridgenetDataLogger;
+
     @Override
     public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
         VerificationConfig verificationConfig = verifyHelper.process(request, response);
@@ -53,7 +59,7 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
         if (!pattern.getName().isEmpty()) {
             String controllerName = controller.getClass().getSimpleName();
 
-            log.info(REQUEST_REDIRECTION_LOG, apiType, controllerName);
+            log.debug(REQUEST_REDIRECTION_LOG, apiType, controllerName);
 
         } else {
             controller = undefinedController;
@@ -66,10 +72,18 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
                                    HttpRequest httpRequest, HttpResponse httpResponse)
             throws HttpException, IOException {
 
+        bridgenetDataLogger.logConnectionOpen(ProfilerType.HTTP_REST);
+        bridgenetDataLogger.logReadsCount(ProfilerType.HTTP_REST, httpResponse.getEntity().getContentLength());
+
         controller.process(httpRequest, verificationConfig);
 
         httpResponse.setStatusCode(HttpURLConnection.HTTP_OK);
         controller.processCallback(httpResponse, verificationConfig);
+
+        if (httpResponse.getEntity().getContentLength() > 0) {
+            bridgenetDataLogger.logReadsCount(ProfilerType.HTTP_REST, httpResponse.getEntity().getContentLength());
+        }
+        bridgenetDataLogger.logConnectionClose(ProfilerType.HTTP_REST);
     }
 
     private HttpController findController(String method, String uri) {
@@ -83,7 +97,7 @@ public class WrappedHttpRequestHandler implements HttpRequestHandler {
             return undefinedController;
         }
 
-        log.info(REQUEST_HAS_RECEIVED_LOG, method, uri);
+        log.debug(REQUEST_HAS_RECEIVED_LOG, method, uri);
         return controller;
     }
 }

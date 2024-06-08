@@ -1,9 +1,9 @@
 package me.moonways.bridgenet.mtp.transfer;
 
-import java.util.Arrays;
-
 import lombok.*;
 import lombok.experimental.NonFinal;
+
+import java.util.Arrays;
 
 @Getter
 @Setter

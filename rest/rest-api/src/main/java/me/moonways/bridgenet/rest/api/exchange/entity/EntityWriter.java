@@ -18,8 +18,7 @@ public final class EntityWriter {
     private void write(byte[] arr) {
         try {
             container.write(arr);
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             throw new RestEntityException(exception);
         }
     }

@@ -1,8 +1,14 @@
 package me.moonways.endpoint.parties;
 
 import lombok.Getter;
-import me.moonways.bridgenet.model.parties.*;
-import me.moonways.bridgenet.rsi.endpoint.AbstractEndpointDefinition;
+import me.moonways.bridgenet.api.event.EventService;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.model.event.PartyCreateEvent;
+import me.moonways.bridgenet.model.event.PartyRegisterEvent;
+import me.moonways.bridgenet.model.event.PartyUnregisterEvent;
+import me.moonways.bridgenet.model.service.parties.*;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;
@@ -10,12 +16,16 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class PartiesServiceEndpoint extends AbstractEndpointDefinition implements PartiesServiceModel {
-
+@Getter
+public final class PartiesServiceEndpoint extends EndpointRemoteObject implements PartiesServiceModel {
     private static final long serialVersionUID = 4320252037235387938L;
 
-    @Getter
     private final Set<Party> registeredParties = Collections.synchronizedSet(new HashSet<>());
+
+    @Inject
+    private BeansService beansService;
+    @Inject
+    private EventService eventService;
 
     public PartiesServiceEndpoint() throws RemoteException {
         super();
@@ -44,6 +54,12 @@ public final class PartiesServiceEndpoint extends AbstractEndpointDefinition imp
         }
 
         party.setOwner(new PartyOwner(ownerName, party));
+        beansService.inject(party.getMembersContainer());
+
+        eventService.fireEvent(
+                PartyCreateEvent.builder()
+                        .party(party)
+                        .build());
         return party;
     }
 
@@ -65,12 +81,22 @@ public final class PartiesServiceEndpoint extends AbstractEndpointDefinition imp
     public void registerParty(@NotNull Party party) {
         validateNull(party);
         registeredParties.add(party);
+
+        eventService.fireEvent(
+                PartyRegisterEvent.builder()
+                        .party(party)
+                        .build());
     }
 
     @Override
     public void unregisterParty(@NotNull Party party) {
         validateNull(party);
         registeredParties.remove(party);
+
+        eventService.fireEvent(
+                PartyUnregisterEvent.builder()
+                        .party(party)
+                        .build());
     }
 
     @Override

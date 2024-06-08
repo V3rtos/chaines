@@ -32,7 +32,7 @@ public class EventRegistry {
 
     private void validateEmptyHandlers(Object handler) {
         Arrays.stream(handler.getClass().getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(EventHandle.class))
+                .filter(method -> method.isAnnotationPresent(SubscribeEvent.class))
                 .findFirst()
                 .orElseThrow(() -> new EventException("registered handler is not contain event-handlers"));
     }
@@ -64,8 +64,7 @@ public class EventRegistry {
             try {
                 EventInvoker<?> invoker = injectReflectedEventHandle(handler, method);
                 resultSet.add(invoker);
-            }
-            catch (IllegalAccessException exception) {
+            } catch (IllegalAccessException exception) {
                 throw new EventException(exception, "Internal handler registration error - {0}", handler);
             }
         }
@@ -75,7 +74,7 @@ public class EventRegistry {
 
     @SuppressWarnings("unchecked")
     private EventInvoker<?> injectReflectedEventHandle(Object handler, Method method) throws IllegalAccessException {
-        EventHandle annotation = method.getDeclaredAnnotation(EventHandle.class);
+        SubscribeEvent annotation = method.getDeclaredAnnotation(SubscribeEvent.class);
         if (annotation == null) {
             return null;
         }

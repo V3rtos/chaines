@@ -1,11 +1,5 @@
 package me.moonways.bridgenet.api.inject.decorator;
 
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
@@ -13,6 +7,13 @@ import me.moonways.bridgenet.api.proxy.InterceptionFactory;
 import me.moonways.bridgenet.api.proxy.MethodHandler;
 import me.moonways.bridgenet.api.proxy.MethodInterceptor;
 import me.moonways.bridgenet.api.proxy.ProxiedMethod;
+
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Log4j2
 @MethodInterceptor
@@ -31,10 +32,10 @@ public class DecoratedObjectProxy {
 
     private Object executeInvocation(DecoratorInvocation invocation) {
         Set<Class<?>> annotationsTypes = decoratedMethodScanner.getAnnotationsTypes()
-            .stream()
-            .<Class<? extends Annotation>>map(cls -> cls.asSubclass(Annotation.class))
-            .filter(invocation::hasAnnotation)
-            .collect(Collectors.toSet());
+                .stream()
+                .<Class<? extends Annotation>>map(cls -> cls.asSubclass(Annotation.class))
+                .filter(invocation::hasAnnotation)
+                .collect(Collectors.toSet());
 
         if (annotationsTypes.isEmpty()) {
             return invocation.callNative();
@@ -47,8 +48,8 @@ public class DecoratedObjectProxy {
 
         List<Class<?>> orderedInherits = findOrderedInherits(annotationsTypes);
         List<Class<?>> singletonList = annotationsTypes.stream()
-            .filter(cls -> !orderedInherits.contains(cls))
-            .collect(Collectors.toList());
+                .filter(cls -> !orderedInherits.contains(cls))
+                .collect(Collectors.toList());
 
         if (annotationsTypes.size() - orderedInherits.size() <= 0) {
             log.error("§4Decorator beginner was not found for {}", invocation);
@@ -77,13 +78,13 @@ public class DecoratedObjectProxy {
 
         if (annotationTypes.size() - list.size() != 1) {
             list.addAll(annotationTypes
-                .stream()
-                .filter(cls -> !list.contains(cls))
-                .collect(Collectors.toSet()));
+                    .stream()
+                    .filter(cls -> !list.contains(cls))
+                    .collect(Collectors.toSet()));
         }
 
         return list.stream().limit(annotationTypes.size() - 1)
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     private Object handleAnnotation(Class<?> cls, DecoratorInvocation invocation) {
@@ -122,8 +123,8 @@ public class DecoratedObjectProxy {
 
                 for (Class<?> conflictedAnnotation : conflictedAnnotations) {
                     if (proxiedMethod.hasAnnotation(conflictedAnnotation.asSubclass(Annotation.class))) {
-                        log.warn("§4Founded decorators conflict at {}: §c{} with {}", proxiedMethod,
-                            "@" + annotation.getSimpleName(), "@" + conflictedAnnotation.getSimpleName());
+                        log.warn("§6Founded decorators conflict at {}: §e{} with {}", proxiedMethod,
+                                "@" + annotation.getSimpleName(), "@" + conflictedAnnotation.getSimpleName());
 
                         return true;
                     }

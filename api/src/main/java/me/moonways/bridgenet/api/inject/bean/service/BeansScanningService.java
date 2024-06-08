@@ -1,84 +1,154 @@
 package me.moonways.bridgenet.api.inject.bean.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.IgnoredRegistry;
-import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
-import org.reflections.Configuration;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
-import me.moonways.bridgenet.api.inject.bean.Bean;
-import me.moonways.bridgenet.api.inject.bean.BeanComponent;
-import me.moonways.bridgenet.api.inject.bean.BeanMethod;
-import me.moonways.bridgenet.api.inject.bean.BeanType;
+import me.moonways.bridgenet.api.inject.bean.*;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProvider;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
 import me.moonways.bridgenet.api.inject.processor.AnnotationProcessorConfig;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.util.pair.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("rawtypes")
+@Log4j2
 @RequiredArgsConstructor
 public class BeansScanningService {
+    private final Set<Class<?>> allResourcesSet = Collections.synchronizedSet(new HashSet<>());
 
     /**
-     * Создание базовой комплектации конфигурации сканнера
-     * для поиска необходимых ресурсов в проекте.
+     * Сканировать все существующие ресурсы проекта
+     * для дальнейшей оптимизации поиска конкретных ресурсов.
      */
-    private ConfigurationBuilder createScannerConfigurationBaseBuilder() {
-        List<ClassLoader> classLoadersList = new ArrayList<>();
+    private synchronized void scanAllResourcesAsClasses() {
+        if (!allResourcesSet.isEmpty()) {
+            return;
+        }
 
-        classLoadersList.add(ClasspathHelper.contextClassLoader());
-        classLoadersList.add(ClasspathHelper.staticClassLoader());
+        // Preparing org.reflections.Reflections for project scanning.
+        ConfigurationBuilder configuration = ConfigurationBuilder.build(new SubTypesScanner(false));
 
-        Collection<URL> urls = ClasspathHelper.forClassLoader(
-                classLoadersList.toArray(new ClassLoader[0]));
+        configuration.setParallel(System.getProperty("test.engine.enabled") == null);
+        configuration.setExpandSuperTypes(false);
 
-        return new ConfigurationBuilder()
-                .setUrls(urls)
-                .setParallel(false);
-    }
-
-    /**
-     * Воспроизвести сканирование проекта для поиска
-     * и дальнейшей инициализации и применения объектов,
-     * которые наследуют указанный тип класса.
-     *
-     * @param superclass - класс наследник, по которому собираемся искать объекты.
-     */
-    public Set<Bean> scanBeansBySuperclass(Class<?> superclass) {
-        return scanTypesBySuperclass(superclass).stream().map(this::createBean)
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Воспроизвести сканирование проекта для поиска
-     * и дальнейшей инициализации и применения объектов,
-     * которые наследуют указанный тип класса.
-     *
-     * @param superclass - класс наследник, по которому собираемся искать объекты.
-     */
-    public Set<Class<?>> scanTypesBySuperclass(Class<?> superclass) {
-        Configuration configuration = createScannerConfigurationBaseBuilder();
         Reflections reflections = new Reflections(configuration);
 
-        @SuppressWarnings("unchecked")
-        Set<Class<?>> classes = (Set<Class<?>>) reflections.getSubTypesOf(superclass);
+        // Running scanner with resources caching.
+        log.info("Processing search all project resources & classes...");
 
-        return classes;
+        Set<Class<?>> classSet = reflections.getSubTypesOf(Object.class);
+
+        log.debug("Scanning result is §e{} §rresources", classSet.size());
+        allResourcesSet.addAll(classSet);
+    }
+
+    /**
+     * Получить список ресурсов из общего, которые наследуют
+     * указанный тип класса как superclass.
+     *
+     * @param superclass - класс наследник.
+     */
+    private synchronized Stream<Class<?>> getResourcesBySuperclass(Class<?> superclass) {
+        scanAllResourcesAsClasses();
+        return allResourcesSet.stream().parallel().filter(superclass::isAssignableFrom);
+    }
+
+    /**
+     * Получить список ресурсов из общего, которые наследуют
+     * указанный тип класса как superclass.
+     *
+     * @param superclass - класс наследник.
+     */
+    private synchronized <T> Stream<Class<T>> getResourcesBySuperclassCast(Class<T> superclass) {
+        return getResourcesBySuperclass(superclass).map(aClass -> (Class<T>) aClass);
+    }
+
+    /**
+     * Получить список ресурсов из общего, которые аннотируют
+     * указанный тип аннотации
+     *
+     * @param annotationType - класс аннотации.
+     */
+    private synchronized Stream<Class<?>> getResourcesAnnotatedWith(Class<? extends Annotation> annotationType) {
+        scanAllResourcesAsClasses();
+        return allResourcesSet.stream().parallel().filter(resourceClass -> resourceClass.isAnnotationPresent(annotationType));
+    }
+
+    /**
+     * Получить список ресурсов из общего, которые находятся
+     * в одном из указанных пакейджей.
+     *
+     * @param packageNamesArray - имена пакейджей
+     */
+    private synchronized Stream<Class<?>> getResourcesFromPackage(String... packageNamesArray) {
+        if (packageNamesArray.length == 0) {
+            return Stream.of();
+        }
+
+        scanAllResourcesAsClasses();
+        return allResourcesSet.stream()
+                .parallel()
+                .filter(resourceClass -> {
+                    String resourcePackageName = resourceClass.getPackage().getName();
+
+                    for (String packageName : packageNamesArray) {
+                        if (resourcePackageName.startsWith(packageName)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+    }
+
+    /**
+     * Воспроизвести сканирование проекта для поиска
+     * и дальнейшей инициализации и применения объектов,
+     * которые наследуют указанный тип класса.
+     *
+     * @param superclass - класс наследник, по которому собираемся искать объекты.
+     */
+    public Set<Bean> scanBeansBySuperclass(@NotNull Class<?> superclass) {
+        return getResourcesBySuperclass(superclass).map(this::createBean).collect(Collectors.toSet());
+    }
+
+    /**
+     * Воспроизвести сканирование проекта для поиска
+     * и дальнейшей инициализации и применения объектов,
+     * которые наследуют указанный тип класса.
+     *
+     * @param superclass - класс наследник, по которому собираемся искать объекты.
+     */
+    public Set<Class<?>> scanBySuperclass(@NotNull Class<?> superclass) {
+        return getResourcesBySuperclass(superclass).collect(Collectors.toSet());
+    }
+
+    /**
+     * Воспроизвести сканирование проекта для поиска
+     * и дальнейшей инициализации и применения процессоров
+     * аннотаций классов, относящихся к технологии Dependency Injection.
+     *
+     * @param packageNames - имя пакейджа, в котором искать бины.
+     */
+    public List<Bean> scanByPackage(String... packageNames) {
+        return getResourcesFromPackage(packageNames)
+                .filter(resourceClass -> resourceClass.isAnnotationPresent(Autobind.class))
+                .map(this::createBean)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -86,14 +156,11 @@ public class BeansScanningService {
      * и дальнейшей инициализации и применения процессоров
      * аннотаций классов, относящихся к технологии Dependency Injection.
      */
-    public List<TypeAnnotationProcessor<?>> scanTypeAnnotationProcessors() {
-        Configuration configuration = createScannerConfigurationBaseBuilder();
-        Reflections reflections = new Reflections(configuration);
+    public List<TypeAnnotationProcessor<?>> scanAnnotationProcessors() {
+        Set<Class<? extends TypeAnnotationProcessor>> result = getResourcesBySuperclassCast(TypeAnnotationProcessor.class).collect(Collectors.toSet());
+        Set<Class<?>> usageAnnotationsTypes = getResourcesAnnotatedWith(UseTypeAnnotationProcessor.class).collect(Collectors.toSet());
 
-        Set<Class<? extends TypeAnnotationProcessor>> result = reflections.getSubTypesOf(TypeAnnotationProcessor.class);
         List<TypeAnnotationProcessor<?>> typeAnnotationProcessors = toTypeAnnotationsProcessors(result);
-
-        Set<Class<?>> usageAnnotationsTypes = reflections.getTypesAnnotatedWith(UseTypeAnnotationProcessor.class);
 
         for (Class<?> annotationType : usageAnnotationsTypes) {
             if (Annotation.class.isAssignableFrom(annotationType)) {
@@ -129,21 +196,6 @@ public class BeansScanningService {
     }
 
     /**
-     * Создание конфигурации для сканирования и поиска бинов.
-     * @param config - конфигурация фильтра для процесса сканирования.
-     */
-    private Configuration createBeansScannerConfiguration(AnnotationProcessorConfig<?> config) {
-        ConfigurationBuilder builder = createScannerConfigurationBaseBuilder();
-
-        FilterBuilder filter = new FilterBuilder();
-        config.getPackages().forEach(filter::includePackage);
-
-        return builder
-                .setScanners(Scanners.TypesAnnotated, Scanners.SubTypes)
-                .filterInputsBy(filter);
-    }
-
-    /**
      * Воспроизвести сканирование проекта.
      * Внутри процесса создается конфигурация фильтра вложений
      * результата и конфигурация самого сканирования, после которой
@@ -153,10 +205,9 @@ public class BeansScanningService {
      * @param config - конфигурация процессора аннотаций
      */
     public List<Bean> scanBeans(AnnotationProcessorConfig<?> config) {
-        Configuration configuration = createBeansScannerConfiguration(config);
-        Reflections reflections = new Reflections(configuration);
-
-        Set<Class<?>> result = reflections.getTypesAnnotatedWith(config.getAnnotationType());
+        Set<Class<?>> result = getResourcesFromPackage(config.getPackages().toArray(new String[0]))
+                .filter(resourceClass -> resourceClass.isAnnotationPresent(config.getAnnotationType()))
+                .collect(Collectors.toSet());
 
         return toBeansList(result);
     }
@@ -192,7 +243,7 @@ public class BeansScanningService {
      * класса ресурса из процесса сканирования.
      *
      * @param resourceType - полученный класс ресурса.
-     * @param root - инстанс бина.
+     * @param root         - инстанс бина.
      */
     public Bean createBean(Class<?> resourceType, Object root) {
         return createBean(resourceType, ((type) -> root));
@@ -202,7 +253,7 @@ public class BeansScanningService {
      * Создать бин по подобию образа полученного
      * класса ресурса из процесса сканирования.
      *
-     * @param resourceType - полученный класс ресурса.
+     * @param resourceType   - полученный класс ресурса.
      * @param functionOfRoot - функция получения инстанса бина.
      */
     private Bean createBean(Class<?> resourceType, Function<BeanType, Object> functionOfRoot) {
@@ -230,6 +281,7 @@ public class BeansScanningService {
 
     /**
      * Создание основного инстанса бина
+     *
      * @param beanType - тип бина.
      */
     public Object createRoot(BeanType beanType) {
@@ -272,9 +324,15 @@ public class BeansScanningService {
 
     /**
      * Сортировка бинов для дальнейшей инжекции.
+     *
      * @param beans - список всех готовых бинов.
      */
     private List<Bean> sort(List<Bean> beans) {
+        Pair<Class<?>, Class<?>> recursionPair = searchRecursiveInjections(beans);
+        if (recursionPair != null) {
+            throw new BeanException("Recursive beans injection in " + recursionPair);
+        }
+
         List<Class<?>> resources = toResources(beans);
 
         int sortedBeans = 0;
@@ -297,6 +355,39 @@ public class BeansScanningService {
             }
         }
         return sortedBeans > 0 ? sort(beans) : beans;
+    }
+
+    /**
+     * Данная функция выполняет поиск конфликтов под
+     * теговым названием "рекурсивная инжекция", и возвращает
+     * первый найденный конфликт между двумя классами,
+     * которые относятся к "рекурсивной инжекции".
+     *
+     * @param beans - список бинов, в которых производится поиск.
+     */
+    private Pair<Class<?>, Class<?>> searchRecursiveInjections(List<Bean> beans) {
+        for (Bean bean : beans) {
+            BeanType beanType = bean.getType();
+
+            for (BeanComponent component : beanType.getInjectComponents()) {
+                Bean componentBean = beans.stream().filter(other -> other.getType().isSimilar(component.getType()))
+                        .findFirst()
+                        .orElse(null);
+
+                // skip self-injection
+                if (componentBean != null && !componentBean.isSimilar(bean)) {
+
+                    for (BeanComponent componentInternalComponent : componentBean.getType().getInjectComponents()) {
+
+                        if (beanType.isSimilar(componentInternalComponent.getType())) {
+                            return Pair.immutable(beanType.getRoot(), component.getType());
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

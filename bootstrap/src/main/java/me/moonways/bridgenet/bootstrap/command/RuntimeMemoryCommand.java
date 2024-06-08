@@ -9,14 +9,13 @@ import me.moonways.bridgenet.api.command.annotation.CommandParameter;
 import me.moonways.bridgenet.api.command.annotation.MentorExecutor;
 import me.moonways.bridgenet.api.command.option.CommandParameterOnlyConsoleUse;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
-import me.moonways.bridgenet.api.util.minecraft.ChatColor;
+import me.moonways.bridgenet.api.minecraft.ChatColor;
 
 import java.text.SimpleDateFormat;
 import java.util.function.Function;
 
 @Alias("mem")
 @Command("memory")
-@CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class RuntimeMemoryCommand {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy в HH:mm:ss.SSS");

@@ -15,8 +15,9 @@ public enum TransactionIsolation {
     READ_COMMITTED(Connection.TRANSACTION_READ_COMMITTED),
     READ_UNCOMMITTED(Connection.TRANSACTION_READ_UNCOMMITTED),
     REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
-    SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE)
-    ;
+    SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
+
+    public static final TransactionIsolation DEFAULT = TransactionIsolation.REPEATABLE_READ;
 
     private final int level;
 }

@@ -6,6 +6,7 @@ target/
 ### BridgeNet ###
 *.build
 logs/
+profiler-logs
 
 ### IntelliJ IDEA ###
 *.idea

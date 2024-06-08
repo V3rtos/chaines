@@ -6,12 +6,12 @@ import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
-import me.moonways.bridgenet.api.inject.bean.factory.UnsafeFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.type.UnsafeFactory;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
 import me.moonways.bridgenet.api.inject.decorator.persistence.Async;
 import me.moonways.bridgenet.api.inject.decorator.persistence.KeepTime;
-import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.rest.api.HttpHost;
 import me.moonways.bridgenet.rest.server.controller.HttpContextPattern;
@@ -36,7 +36,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -56,7 +57,7 @@ public class WrappedHttpServer {
     @Inject
     private BeansService beansService;
     @Inject
-    private XmlJaxbParser jaxbParser;
+    private ResourcesAssembly assembly;
 
     @Inject // self-inject
     private WrappedHttpServer current;
@@ -74,8 +75,7 @@ public class WrappedHttpServer {
         try {
             httpServer.start();
             log.info("HttpServer was success started and listening on §6{}", config.getHost());
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             exceptionHandler.log(exception);
         }
     }
@@ -87,7 +87,7 @@ public class WrappedHttpServer {
     }
 
     private void initConfig() {
-        JaxbServerContext jaxbServerContext = jaxbParser.parseToDescriptorByType(ResourcesTypes.REST_SERVER_XML, JaxbServerContext.class);
+        JaxbServerContext jaxbServerContext = assembly.readXmlAtEntity(ResourcesTypes.REST_SERVER_XML, JaxbServerContext.class);
         this.exceptionHandler = new HttpServerExceptionHandler(jaxbServerContext.getPrintExceptions());
 
         initConfigInstance(jaxbServerContext);
@@ -149,13 +149,12 @@ public class WrappedHttpServer {
                     WrappedHttpRequestHandler context
                             = new WrappedHttpRequestHandler(forcedUndefinedController, config, pattern, verifyHelper);
 
+                    beansService.inject(context);
                     bootstrap.registerHandler(pattern.getName(), context);
 
-                    log.info("HTTP Controller §2'{}' §rwas registered §7(method='{}', pattern='{}')",
+                    log.debug("HTTP Controller §2'{}' §rwas registered §7(method='{}', pattern='{}')",
                             pattern.getController().getClass().getSimpleName(),
                             pattern.getMethod(), pattern.getName());
-
-                    beansService.inject(context);
                 });
 
         // set expectation verifier
@@ -210,8 +209,7 @@ public class WrappedHttpServer {
         try {
             Class<?> aClass = Class.forName(classpath);
             return (T) UNSAFE_FACTORY.create(aClass);
-        }
-        catch (ClassNotFoundException exception) {
+        } catch (ClassNotFoundException exception) {
             exceptionHandler.log(exception);
         }
 

@@ -2,10 +2,10 @@ package me.moonways.bridgenet.rest.server.controller.undefined;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.rest.server.controller.verify.VerificationConfig;
 import me.moonways.bridgenet.rest.server.HttpServerConfig;
 import me.moonways.bridgenet.rest.server.controller.HttpContextPattern;
 import me.moonways.bridgenet.rest.server.controller.HttpController;
+import me.moonways.bridgenet.rest.server.controller.verify.VerificationConfig;
 import org.apache.http.*;
 import org.apache.http.client.entity.EntityBuilder;
 
@@ -43,7 +43,7 @@ public final class UndefinedHttpController implements HttpController {
         final RequestLine state = request.getRequestLine();
         final ProtocolVersion protocolVersion = state.getProtocolVersion();
 
-        log.warn("§4HttpServer (v{}) has received UNDEFINED request: (method='{}', uri='{}')",
+        log.warn("§6HttpServer (v{}) has received UNDEFINED request: (method='{}', uri='{}')",
                 String.format("%d.%d", protocolVersion.getMajor(), protocolVersion.getMinor()),
                 state.getMethod(), state.getUri());
     }

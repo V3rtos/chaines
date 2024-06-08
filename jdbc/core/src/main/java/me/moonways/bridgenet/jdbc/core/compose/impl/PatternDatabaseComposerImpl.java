@@ -1,10 +1,10 @@
 package me.moonways.bridgenet.jdbc.core.compose.impl;
 
+import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.type.collection.*;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.type.query.*;
 import me.moonways.bridgenet.jdbc.core.compose.template.*;
 import me.moonways.bridgenet.jdbc.core.compose.template.collection.*;
-import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
 
 public class PatternDatabaseComposerImpl implements DatabaseComposer {
 

@@ -10,7 +10,7 @@ import java.net.SocketException;
 @RequiredArgsConstructor
 public class HttpServerExceptionHandler implements ExceptionLogger {
 
-    private static final String INTERNAL_ERROR_MSG = "§4HttpServer throws internal error: §c{}";
+    private static final String INTERNAL_ERROR_MSG = "§4HTTP server caught an exception while trying to process a request: §c{}";
     private final boolean printStackTrace;
 
     @Override

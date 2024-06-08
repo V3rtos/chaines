@@ -5,12 +5,11 @@ import me.moonways.bridgenet.api.command.annotation.*;
 import me.moonways.bridgenet.api.command.option.CommandParameterOnlyConsoleUse;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.util.minecraft.ChatColor;
-import me.moonways.bridgenet.model.servers.EntityServer;
-import me.moonways.bridgenet.model.servers.ServersServiceModel;
+import me.moonways.bridgenet.api.minecraft.ChatColor;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
+import me.moonways.bridgenet.model.service.servers.ServersServiceModel;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,25 +55,17 @@ public class ServersInfoCommand {
     @ProducerExecutor("list")
     @ProducerDescription("Get a total servers list")
     public void list(CommandSession session) throws RemoteException {
-        List<EntityServer> serversList = new ArrayList<>();
-        serversList.addAll(servers.getDefaultServers());
-        serversList.addAll(servers.getFallbackServers());
-
-        List<String> serversNamesList = new ArrayList<>();
-
-        for (EntityServer server : serversList) {
-            serversNamesList.add(server.getName());
+        List<EntityServer> totalServers = servers.getTotalServers();
+        if (totalServers.isEmpty()) {
+            session.getSender().sendMessage("Servers not found");
+            return;
         }
-
-        session.getSender().sendMessage(String.join(", ", serversNamesList));
+        for (EntityServer server : totalServers) {
+            sendServerInfo(server, session.getSender());
+        }
     }
 
     private void sendServerInfo(EntityServer entityServer, EntityCommandSender sender) throws RemoteException {
-        StringBuilder result = new StringBuilder();
-
-        result.append(entityServer.getServerInfo()).append("\n");
-        result.append(entityServer.getTotalOnline());
-
-        sender.sendMessage(result.toString());
+        sender.sendMessage("{info=" + entityServer.getServerInfo() + ", online=" + entityServer.getTotalOnline() + "}");
     }
 }

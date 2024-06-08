@@ -3,8 +3,7 @@ package me.moonways.bridgenet.endpoint.servers;
 import lombok.Synchronized;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
-import me.moonways.bridgenet.model.servers.ServerFlag;
+import me.moonways.bridgenet.model.service.servers.ServerFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,8 +89,10 @@ public final class ServersContainer {
     }
 
     public Stream<ConnectedServerStub> getConnectedServersWithFlag(@NotNull ServerFlag flag) {
-        return registeredServersMap.values()
-                .stream()
-                .filter(server -> server.getServerInfo().hasFlag(flag));
+        return getConnectedServers().filter(server -> server.getServerInfo().hasFlag(flag));
+    }
+
+    public Stream<ConnectedServerStub> getConnectedServers() {
+        return registeredServersMap.values().stream();
     }
 }

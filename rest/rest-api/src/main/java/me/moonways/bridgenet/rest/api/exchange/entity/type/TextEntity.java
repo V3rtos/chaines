@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.rest.api.exchange.entity.type;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import me.moonways.bridgenet.rest.api.exchange.entity.EntityWriter;
 import me.moonways.bridgenet.rest.api.exchange.entity.ExchangeableEntity;
 import org.jetbrains.annotations.NotNull;

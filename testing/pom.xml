@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>me.moonways.bridgenet</groupId>
+        <artifactId>bridgenet</artifactId>
+        <version>1.2</version>
+    </parent>
+
+    <artifactId>testing</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>engine</module>
+        <module>data</module>
+        <module>units</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Internal Bridgenet dependencies -->
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${bootstrap.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>api</artifactId>
+            <version>${api.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>mtp</artifactId>
+            <version>${mtp.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>jdbc-provider</artifactId>
+            <version>${jdbc.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>rmi</artifactId>
+            <version>${rmi.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>model</artifactId>
+            <version>${model.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>rest-server</artifactId>
+            <version>${rest.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>rest-client</artifactId>
+            <version>${rest.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>client-api-root</artifactId>
+            <version>${client.api.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

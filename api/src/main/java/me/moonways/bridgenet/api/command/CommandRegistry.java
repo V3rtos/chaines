@@ -64,7 +64,7 @@ public final class CommandRegistry {
         for (String alias : findAliases(object))
             commandWrapperMap.put(alias.toLowerCase(), commandWrapper);
 
-        log.info("Command §7'{}' §rwas success registered", object.getClass().getSimpleName());
+        log.debug("Command §7'{}' §rwas success registered", object.getClass().getSimpleName());
     }
 
     private String findCommandName(Object comandObject) {

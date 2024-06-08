@@ -2,11 +2,11 @@ package me.moonways.bridgenet.jdbc.core;
 
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.jdbc.core.observer.DatabaseObserver;
 import me.moonways.bridgenet.jdbc.core.util.result.Result;
 import me.moonways.bridgenet.jdbc.core.wrap.JdbcWrapper;
 import me.moonways.bridgenet.jdbc.core.wrap.ResponseProvider;
 import me.moonways.bridgenet.jdbc.core.wrap.ResultWrapper;
-import me.moonways.bridgenet.jdbc.core.observer.DatabaseObserver;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
@@ -22,6 +22,17 @@ public class DatabaseConnection {
     @Getter
     private final ConnectionID id;
     private final JdbcWrapper jdbcWrapper;
+
+    public DatabaseConnection copyWithExceptionHandler(Thread.UncaughtExceptionHandler exceptionHandler) {
+        return new DatabaseConnection(id, JdbcWrapper.builder()
+                .exceptionHandler(exceptionHandler)
+                .connectionID(jdbcWrapper.getConnectionID())
+                .jdbc(jdbcWrapper.getJdbc())
+                .observers(jdbcWrapper.getObservers())
+                .currentlyWorker(jdbcWrapper.isCurrentlyWorker())
+                .credentials(jdbcWrapper.getCredentials())
+                .build());
+    }
 
     public Result<ResponseStream> call(String sql) {
         if (!jdbcWrapper.isConnected()) {
@@ -51,7 +62,7 @@ public class DatabaseConnection {
         return this;
     }
 
-    public void openTransaction(TransactionIsolation isolation) {
+    public synchronized void openTransaction(TransactionIsolation isolation) {
         if (!jdbcWrapper.isConnected()) {
             jdbcWrapper.reconnect();
         }
@@ -60,11 +71,11 @@ public class DatabaseConnection {
         jdbcWrapper.setTransactionIsolation(isolation);
     }
 
-    public void openTransaction() {
-        openTransaction(TransactionIsolation.SERIALIZABLE);
+    public synchronized void openTransaction() {
+        openTransaction(TransactionIsolation.DEFAULT);
     }
 
-    public void closeTransaction() {
+    public synchronized void closeTransaction() {
         if (jdbcWrapper.isConnected()) {
             jdbcWrapper.setTransactionState(TransactionState.INACTIVE);
         }
@@ -78,7 +89,7 @@ public class DatabaseConnection {
     }
 
     public synchronized <T> T ofTransactionalGet(Supplier<T> transactionSupplier) {
-        return ofTransactionalGet(TransactionIsolation.SERIALIZABLE, transactionSupplier);
+        return ofTransactionalGet(TransactionIsolation.DEFAULT, transactionSupplier);
     }
 
     public synchronized void close() {

@@ -4,11 +4,11 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
-import me.moonways.bridgenet.bootstrap.hook.ApplicationBootstrapHook;
+import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
 import org.jetbrains.annotations.NotNull;
 
 @Log4j2
-public class ApacheConsoleStartHook extends ApplicationBootstrapHook {
+public class ApacheConsoleStartHook extends BootstrapHook {
 
     @Inject
     private BeansService beansService;
@@ -20,6 +20,7 @@ public class ApacheConsoleStartHook extends ApplicationBootstrapHook {
         BridgenetConsole bridgenetConsole = new BridgenetConsole();
         beansService.bind(bridgenetConsole);
 
+        log.info("§2BridgeNet was completed for using!");
         bridgenetConsole.start();
     }
 }

@@ -2,12 +2,14 @@ package me.moonways.bridgenet.api.proxy.proxy;
 
 import lombok.SneakyThrows;
 import lombok.ToString;
-import me.moonways.bridgenet.api.proxy.*;
+import me.moonways.bridgenet.api.proxy.InterceptionException;
+import me.moonways.bridgenet.api.proxy.MethodHandler;
+import me.moonways.bridgenet.api.proxy.MethodPriority;
+import me.moonways.bridgenet.api.proxy.ProxiedMethod;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
@@ -110,8 +112,7 @@ public class ProxyManager {
 
                 if (target.length == 0 || (target.length == 1 && target[0].equals(Annotation.class))) {
                     methodHandlers.add(proxiedMethod);
-                }
-                else for (Annotation annotation : annotations) {
+                } else for (Annotation annotation : annotations) {
                     for (Class<? extends Annotation> interceptorAnnotationType : target) {
 
                         if (annotation.annotationType().equals(interceptorAnnotationType)) {

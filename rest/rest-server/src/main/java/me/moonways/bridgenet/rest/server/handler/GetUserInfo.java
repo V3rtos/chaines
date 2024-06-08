@@ -11,11 +11,11 @@ public class GetUserInfo implements HttpController {
 
     @Override
     public void process(HttpRequest request, VerificationConfig verificationConfig) {
-        log.info("process request");
+        log.debug("process request");
     }
 
     @Override
     public void processCallback(HttpResponse response, VerificationConfig verificationConfig) {
-        log.info("process callback");
+        log.debug("process callback");
     }
 }

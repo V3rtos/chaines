@@ -4,10 +4,10 @@ import com.google.gson.GsonBuilder;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
-import me.moonways.bridgenet.bootstrap.hook.ApplicationBootstrapHook;
+import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
 import org.jetbrains.annotations.NotNull;
 
-public class BindGsonLibraryHook extends ApplicationBootstrapHook {
+public class BindGsonLibraryHook extends BootstrapHook {
 
     @Inject
     private BeansService beansService;

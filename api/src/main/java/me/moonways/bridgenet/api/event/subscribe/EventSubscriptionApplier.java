@@ -1,11 +1,7 @@
 package me.moonways.bridgenet.api.event.subscribe;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.event.EventFollower;
-import me.moonways.bridgenet.api.event.EventFuture;
-import me.moonways.bridgenet.api.event.EventService;
-import me.moonways.bridgenet.api.event.Event;
-import me.moonways.bridgenet.api.event.EventException;
+import me.moonways.bridgenet.api.event.*;
 
 import java.util.Set;
 

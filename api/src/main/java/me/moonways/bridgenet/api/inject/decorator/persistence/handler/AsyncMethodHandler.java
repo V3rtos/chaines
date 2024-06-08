@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.api.inject.decorator.persistence.handler;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedMethodHandler;
+import me.moonways.bridgenet.api.inject.decorator.DecoratorInvocation;
 import me.moonways.bridgenet.api.util.thread.Threads;
 
 import java.util.concurrent.CompletableFuture;
@@ -19,7 +19,7 @@ public class AsyncMethodHandler implements DecoratedMethodHandler {
     public Object handleProxyInvocation(DecoratorInvocation invocation) {
         Supplier<Object> asyncExecutorCommand = () -> {
 
-            log.info("§3Running decorated {} asynchronous execution: [thread={}]", invocation, Thread.currentThread().getName());
+            log.debug("§3Running decorated {} asynchronous execution: [thread={}]", invocation, Thread.currentThread().getName());
             return invocation.proceed();
         };
 

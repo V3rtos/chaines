@@ -1,13 +1,12 @@
 package me.moonways.bridgenet.api.inject.processor;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationContext;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationResult;
+import me.moonways.bridgenet.assembly.OverridenProperty;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
-import java.util.Properties;
 
 @RequiredArgsConstructor
 public abstract class TypeAnnotationProcessorAdapter<V extends Annotation> implements TypeAnnotationProcessor<V> {
@@ -30,9 +29,9 @@ public abstract class TypeAnnotationProcessorAdapter<V extends Annotation> imple
     }
 
     @Override
-    public AnnotationProcessorConfig<V> configure(Properties properties) {
+    public AnnotationProcessorConfig<V> configure() {
         return AnnotationProcessorConfig.newConfigBuilder(getAnnotationType())
-                .addPackage(properties.getProperty(BeansService.PROPERTY_PACKAGE_NAME))
+                .addPackage(OverridenProperty.BEANS_PACKAGE.get())
                 .build();
     }
 

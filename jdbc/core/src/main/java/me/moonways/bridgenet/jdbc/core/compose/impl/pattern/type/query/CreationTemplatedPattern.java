@@ -1,14 +1,16 @@
 package me.moonways.bridgenet.jdbc.core.compose.impl.pattern.type.query;
 
+import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
+import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
+import me.moonways.bridgenet.jdbc.core.compose.StorageType;
 import me.moonways.bridgenet.jdbc.core.compose.impl.collection.element.Encoding;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.AbstractPattern;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.PatternCollectionConfigurator;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.PatternCollections;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.verification.VerificationContext;
 import me.moonways.bridgenet.jdbc.core.compose.impl.pattern.verification.VerificationResult;
-import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedSignature;
-import me.moonways.bridgenet.jdbc.core.compose.StorageType;
 import me.moonways.bridgenet.jdbc.core.compose.template.CreationTemplate;
+import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedSignature;
 import org.jetbrains.annotations.NotNull;
 
 public class CreationTemplatedPattern extends AbstractPattern implements CreationTemplate {
@@ -40,6 +42,22 @@ public class CreationTemplatedPattern extends AbstractPattern implements Creatio
                 .adjust(getTotals());
 
         setSignatureSupportsEnabled();
+
+        PatternCollectionConfigurator primaryKeysConfigurator = PatternCollectionConfigurator.create("primary");
+        boolean hasPrimaryKeys = false;
+
+        for (CombinedStructs.CombinedStyledParameter parameter : signature.parameters()) {
+            if (parameter.getStyle().getAddons().contains(ParameterAddon.PRIMARY)) {
+                hasPrimaryKeys = true;
+                primaryKeysConfigurator.pushPrimaryKey(parameter);
+            }
+        }
+
+        if (hasPrimaryKeys) {
+            setPrimaryKeysSupportsEnabled();
+            primaryKeysConfigurator.adjust(getTotals());
+        }
+
         return this;
     }
 
@@ -54,12 +72,18 @@ public class CreationTemplatedPattern extends AbstractPattern implements Creatio
     @Override
     public VerificationResult verify(@NotNull VerificationContext context) {
         return context.newTransaction(getTotals())
-                .markCollectionsTogether("has_signature", "parameters")
+                //.markCollectionsTogether("has_signature", "parameters")
                 .commitVerificationResult();
     }
 
     private void setSignatureSupportsEnabled() {
         PatternCollectionConfigurator.create("has_signature")
+                .pushStringOnly("0")
+                .adjust(getTotals());
+    }
+
+    private void setPrimaryKeysSupportsEnabled() {
+        PatternCollectionConfigurator.create("has_primary")
                 .pushStringOnly("0")
                 .adjust(getTotals());
     }

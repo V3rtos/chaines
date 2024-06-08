@@ -1,23 +1,17 @@
 package me.moonways.bridgenet.api.inject.decorator;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.inject.decorator.config.XMLMethodHandlerDescriptor;
-import me.moonways.bridgenet.api.inject.decorator.config.XMLInterceptorDescriptor;
 import me.moonways.bridgenet.api.inject.decorator.config.XMLInputDescriptor;
-import me.moonways.bridgenet.api.util.jaxb.XmlJaxbParser;
+import me.moonways.bridgenet.api.inject.decorator.config.XMLInterceptorDescriptor;
+import me.moonways.bridgenet.api.inject.decorator.config.XMLMethodHandlerDescriptor;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.assembly.ResourcesTypes;
 
 import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @Log4j2
 public final class DecoratedMethodScanner {
@@ -27,10 +21,10 @@ public final class DecoratedMethodScanner {
     private final Map<String, Set<String>> conflictsMap = new HashMap<>(), inheritsMap = new HashMap<>();
 
     @Inject
-    private XmlJaxbParser xmlJaxbParser;
+    private ResourcesAssembly assembly;
 
     private XMLInterceptorDescriptor parseXmlInterceptor() {
-        return xmlJaxbParser.parseToDescriptorByType(ResourcesTypes.DECORATORS_XML, XMLInterceptorDescriptor.class);
+        return assembly.readXmlAtEntity(ResourcesTypes.DECORATORS_XML, XMLInterceptorDescriptor.class);
     }
 
     public void bindHandlers() {
@@ -53,15 +47,14 @@ public final class DecoratedMethodScanner {
 
                 if (conflicts != null) {
                     conflictsMap.put(name,
-                        conflicts.stream().map(XMLInputDescriptor::getValue).collect(Collectors.toSet()));
+                            conflicts.stream().map(XMLInputDescriptor::getValue).collect(Collectors.toSet()));
                 }
                 if (inherits != null) {
                     inheritsMap.put(name,
-                        inherits.stream().map(XMLInputDescriptor::getValue).collect(Collectors.toSet()));
+                            inherits.stream().map(XMLInputDescriptor::getValue).collect(Collectors.toSet()));
                 }
-            }
-            catch (ClassNotFoundException | InstantiationException
-                   | IllegalAccessException exception) {
+            } catch (ClassNotFoundException | InstantiationException
+                     | IllegalAccessException exception) {
 
                 log.error("§4Cannot be inject MethodHandler for {} annotation: §c{}", decoratorXML.getAnnotationClassname(), exception.toString());
             }
@@ -85,9 +78,9 @@ public final class DecoratedMethodScanner {
         }
 
         return conflictedNames.stream()
-            .map(this::findAnnotationByName)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toSet());
+                .map(this::findAnnotationByName)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
     public Set<Class<?>> findInheritsAnnotations(Class<? extends Annotation> cls) {
@@ -99,9 +92,9 @@ public final class DecoratedMethodScanner {
         }
 
         return parentsNames.stream()
-            .map(this::findAnnotationByName)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toSet());
+                .map(this::findAnnotationByName)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
     private Class<?> findAnnotationByName(String name) {

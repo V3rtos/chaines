@@ -6,13 +6,13 @@ import lombok.Setter;
 import lombok.ToString;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
-import me.moonways.bridgenet.model.bus.message.Redirect;
-import me.moonways.bridgenet.model.players.PlayersServiceModel;
-import me.moonways.bridgenet.model.players.connection.ConnectedEntityPlayer;
-import me.moonways.bridgenet.model.players.connection.PlayerConnection;
-import me.moonways.bridgenet.model.servers.EntityServer;
-import me.moonways.bridgenet.model.servers.ServerInfo;
-import me.moonways.bridgenet.mtp.MTPMessageSender;
+import me.moonways.bridgenet.model.message.Redirect;
+import me.moonways.bridgenet.model.service.players.Player;
+import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
+import me.moonways.bridgenet.model.service.players.component.PlayerStore;
+import me.moonways.bridgenet.model.service.servers.EntityServer;
+import me.moonways.bridgenet.model.service.servers.ServerInfo;
+import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
@@ -31,7 +31,7 @@ public class ConnectedServerStub implements EntityServer {
     private UUID uniqueId;
 
     private final ServerInfo serverInfo;
-    private final MTPMessageSender channel;
+    private final BridgenetNetworkChannel channel;
 
     @Inject
     private PlayersServiceModel playersServiceModel;
@@ -50,23 +50,23 @@ public class ConnectedServerStub implements EntityServer {
     }
 
     @Override
-    public CompletableFuture<Boolean> connectThat(@NotNull ConnectedEntityPlayer player) throws RemoteException {
-        Redirect message = new Redirect(player.getUniqueId(), uniqueId);
+    public CompletableFuture<Boolean> connectThat(@NotNull Player player) throws RemoteException {
+        Redirect message = new Redirect(player.getId(), uniqueId);
 
         CompletableFuture<Redirect.Result> resultFuture
-                = channel.sendMessageWithResponse(Redirect.Result.class, message);
+                = channel.sendAwait(Redirect.Result.class, message);
 
         return resultFuture.thenApply(result -> result instanceof Redirect.Success);
     }
 
     @Override
-    public Collection<ConnectedEntityPlayer> getConnectedPlayers() throws RemoteException {
-        PlayerConnection playerConnection = playersServiceModel.getPlayerConnection();
+    public Collection<Player> getConnectedPlayers() throws RemoteException {
+        PlayerStore store = playersServiceModel.store();
         return playersOnServersConnectionService.getPlayersOnServerByKey(uniqueId)
                 .stream()
                 .map(uuid -> {
                     try {
-                        return playerConnection.getConnectedPlayer(uuid);
+                        return store.get(uuid).get();
                     } catch (RemoteException exception) {
                         throw new ServersEndpointException(exception);
                     }

@@ -1,16 +1,22 @@
 package me.moonways.bridgenet.mtp.message;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import me.moonways.bridgenet.mtp.message.response.ResponsibleMessageService;
 
 @Getter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
 public class ExportedMessage {
 
-    private final MessageWrapper wrapper;
+    @Setter
+    private long callbackID;
+
+    private final WrappedNetworkMessage wrapper;
+    @EqualsAndHashCode.Include
     private final Object message;
+
+    public void marksResponsible(ResponsibleMessageService service) {
+        callbackID = service.generateCallbackID();
+    }
 }

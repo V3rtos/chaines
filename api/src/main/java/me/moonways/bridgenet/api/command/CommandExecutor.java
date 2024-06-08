@@ -38,9 +38,9 @@ public final class CommandExecutor {
     @Inject
     private CommandRegistry registry;
     @Inject
-    private BeansService beansService;
-    @Inject
     private AnnotationInterceptor interceptor;
+    @Inject
+    private BeansService beansService;
 
     @GetTypeAnnotationProcessor
     private TypeAnnotationProcessorResult<Object> commandsResult;
@@ -101,7 +101,13 @@ public final class CommandExecutor {
         String permission = producerChild.getPermission();
 
         if (permission == null || matchesPermission(sender, permission)) {
-            CommandDescriptor descriptor = new CommandDescriptor(producerChild.getName(), producerChild.getPermission(), producerChild.getUsage(), producerChild.getDescription(), producerChild.getAliases());
+            CommandDescriptor descriptor = new CommandDescriptor(
+                    producerChild.getName(),
+                    producerChild.getPermission(),
+                    producerChild.getUsage(),
+                    producerChild.getDescription(),
+                    producerChild.getAliases());
+
             CommandSession childSession = factory.createSession(descriptor, wrapper.getHelpMessageView(), sender, factory.copyArgumentsOfRange(args));
 
             invokeMethod(childSession, wrapper.getSource(), producerChild.getMethod());
@@ -128,8 +134,9 @@ public final class CommandExecutor {
 
         boolean hasPermission = sender.hasPermission(permission);
 
-        if (!hasPermission)
+        if (!hasPermission) {
             sender.sendMessage("§cYou do not have permission to execute this command");
+        }
 
         return hasPermission;
     }

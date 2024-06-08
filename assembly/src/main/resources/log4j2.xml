@@ -3,7 +3,6 @@
     <Properties>
         <Property name="logfile_pattern">%d{HH:mm:ss.SSS} [%c{0} %level] %msg%n</Property>
         <Property name="terminal_info_pattern">§f%d{HH:mm:ss.SSS} §a[%c{1} %level] §r%msg%n</Property>
-        <Property name="terminal_error_pattern">§f%d{HH:mm:ss.SSS} §c[%c{1} %level] §4%msg%n</Property>
     </Properties>
     <Appenders>
         <RollingFile name="latest_logs" fileName="logs/latest.log" filePattern="logs/info-%d{dd-MM-yyyy}-%i.log">
@@ -23,15 +22,15 @@
         <TerminalConsole name="terminal_console_info">
             <PatternLayout pattern="%minecraftFormatting{${terminal_info_pattern}}"/>
         </TerminalConsole>
-        <TerminalConsole name="terminal_console_error">
-            <PatternLayout pattern="%minecraftFormatting{${terminal_error_pattern}}"/>
-        </TerminalConsole>
     </Appenders>
     <Loggers>
-        <Root level="trace" additivity="false">
+        <Logger name="DebugLogger" level="debug" additivity="false">
+            <AppenderRef ref="latest_logs"/>
+            <AppenderRef ref="terminal_console_info"/>
+        </Logger>
+        <Root level="info" additivity="false">
             <AppenderRef ref="error_logs" level="error"/>
             <AppenderRef ref="latest_logs"/>
-            <!--AppenderRef ref="terminal_console_error" level="error"/-->
             <AppenderRef ref="terminal_console_info"/>
         </Root>
     </Loggers>

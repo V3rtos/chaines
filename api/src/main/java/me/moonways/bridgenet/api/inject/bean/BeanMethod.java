@@ -49,8 +49,8 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
      * инициализации бина.
      */
     public void invoke(Object... args) {
-        if (hasConflicts()) {
-            throw new BeanException("Init function " + this + " has conflicts");
+        if ((isAfter() || isBefore()) && hasConflicts()) {
+            throw new BeanException("Method was detected conflicts: " + this);
         }
 
         Method method = getRoot();
@@ -59,12 +59,11 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
         method.setAccessible(true);
 
         try {
-            method.invoke(bean.getRoot(), args);
-
             if (isBefore() || isAfter()) {
-                log.info("Invoked bean construct-function of §2" + method);
+                log.debug("Executing bean function: §2{}", method);
             }
 
+            method.invoke(bean.getRoot(), args);
         } catch (IllegalAccessException | InvocationTargetException exception) {
             throw new BeanException(exception);
         }

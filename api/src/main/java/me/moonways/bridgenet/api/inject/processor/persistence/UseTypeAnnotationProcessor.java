@@ -10,6 +10,7 @@ import java.lang.annotation.*;
  * будет кешировать найденные бины и помечать как
  * забинденные.
  */
+@Inherited
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

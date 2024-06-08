@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.jdbc.core.observer;
 
 import me.moonways.bridgenet.jdbc.core.observer.event.*;
-import me.moonways.bridgenet.jdbc.core.observer.event.*;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -16,15 +15,32 @@ public abstract class ObserverAdapter implements DatabaseObserver {
 
 // ========================= // OVERRIDE THAT`S // ========================= //
 
-    protected void observe(DbRequestCompletedEvent event) {}
+    protected void observe(DbRequestCompletedEvent event) {
+    }
 
-    protected void observe(DbConnectEvent event) {}
+    protected void observe(DbRequestFailureEvent event) {
+    }
 
-    protected void observe(DbClosedEvent event) {}
+    protected void observe(DbConnectEvent event) {
+    }
 
-    protected void observe(DbRequestPreprocessEvent event) {}
+    protected void observe(DbClosedEvent event) {
+    }
 
-    protected void observe(DbReconnectPreprocessEvent event) {}
+    protected void observe(DbRequestPreprocessEvent event) {
+    }
+
+    protected void observe(DbReconnectPreprocessEvent event) {
+    }
+
+    protected void observe(DbTransactionOpenEvent event) {
+    }
+
+    protected void observe(DbTransactionCloseEvent event) {
+    }
+
+    protected void observe(DbTransactionRollbackEvent event) {
+    }
 
 // =========================================================================== //
 
@@ -49,8 +65,7 @@ public abstract class ObserverAdapter implements DatabaseObserver {
                 method.setAccessible(true);
                 method.invoke(this, event);
             }
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
     }

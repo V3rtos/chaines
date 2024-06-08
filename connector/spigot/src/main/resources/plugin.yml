@@ -1,6 +1,0 @@
-name: BridgeNetSync
-main: me.moonways.bridgenet.connector.spigot.BridgenetSpigotPlugin
-version: 1.0
-api-version: 1.13
-author: lyx
-description: Synchronization with bridgenet-server processes
