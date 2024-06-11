@@ -10,8 +10,8 @@ import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotation
 import me.moonways.bridgenet.api.scheduler.ScheduledTime;
 import me.moonways.bridgenet.api.scheduler.Scheduler;
 import me.moonways.bridgenet.api.autorun.persistence.AutoRunner;
-import me.moonways.bridgenet.api.autorun.persistence.Runnable;
-import me.moonways.bridgenet.api.autorun.persistence.RunningPeriod;
+import me.moonways.bridgenet.api.autorun.persistence.RunUnit;
+import me.moonways.bridgenet.api.autorun.persistence.DelayedPeriod;
 import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 
 import java.lang.reflect.Method;
@@ -54,12 +54,12 @@ public class ScheduledRunnersService {
 
         for (Object runner : runners) {
             Class<?> runnerClass = runner.getClass();
-            RunningPeriod periodAnnotation = runnerClass.getDeclaredAnnotation(RunningPeriod.class);
+            DelayedPeriod periodAnnotation = runnerClass.getDeclaredAnnotation(DelayedPeriod.class);
 
             for (Method method : runnerClass.getDeclaredMethods()) {
 
-                if (method.isAnnotationPresent(Runnable.class)) {
-                    RunningPeriod periodUnitAnnotation = method.getDeclaredAnnotation(RunningPeriod.class);
+                if (method.isAnnotationPresent(RunUnit.class)) {
+                    DelayedPeriod periodUnitAnnotation = method.getDeclaredAnnotation(DelayedPeriod.class);
                     ScheduledTime period = DEFAULT_PERIOD;
 
                     if (periodUnitAnnotation != null) {

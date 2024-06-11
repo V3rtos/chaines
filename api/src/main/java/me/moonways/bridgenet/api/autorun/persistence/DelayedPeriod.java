@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface RunningPeriod {
+public @interface DelayedPeriod {
 
     TimeUnit unit();
 
