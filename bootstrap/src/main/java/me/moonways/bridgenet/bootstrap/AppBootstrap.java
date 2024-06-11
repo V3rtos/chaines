@@ -8,6 +8,8 @@ import me.moonways.bridgenet.assembly.OverridenProperty;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHook;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookContainer;
 import me.moonways.bridgenet.bootstrap.hook.BootstrapHookPriority;
+import me.moonways.bridgenet.bootstrap.system.LoggersManager;
+import me.moonways.bridgenet.bootstrap.system.OverridenPropertiesManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -64,11 +66,18 @@ public class AppBootstrap {
                 OverridenProperty.SYSTEM_VERSION.get());
     }
 
+    public void runSystems() {
+        OverridenPropertiesManager.INSTANCE.run();
+        LoggersManager.INSTANCE.run();
+    }
+
     public void start(String[] args) {
         setRunning(true);
         log.info("Running Bridgenet bootstrap process with args = {}", Arrays.toString(args));
 
+        runSystems();
         startBeansActivity(true);
+
         hooksContainer.bindHooks();
 
         processBootstrapHooks(BootstrapHookPriority.RUNNER);

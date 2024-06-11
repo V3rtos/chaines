@@ -9,13 +9,10 @@ import me.moonways.bridgenet.assembly.ini.IniConfigLoader;
 import me.moonways.bridgenet.assembly.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.assembly.jaxb.XmlRootObject;
 import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Properties;
 
 @Log4j2
 public final class ResourcesAssembly {
@@ -32,42 +29,6 @@ public final class ResourcesAssembly {
     private final XmlJaxbParser xmlJaxbParser = new XmlJaxbParser(this);
     @Getter
     private final IniConfigLoader iniConfigLoader = new IniConfigLoader();
-
-    /**
-     * Подгрузить и перезаписать данные в системные properties
-     * из отдельной конфигурации сборки 'config.properties'
-     */
-    public void overrideSystemProperties() {
-        InputStream propertiesStream = readResourceStream(ResourcesTypes.SYSTEM_OVERRIDE_PROPERTIES);
-        Properties properties = new Properties();
-
-        try {
-            properties.load(propertiesStream);
-        } catch (IOException exception) {
-            throw new BridgenetAssemblyException(exception);
-        }
-
-        properties.forEach((propertyName, value) -> {
-
-            log.debug("Override system-property: §7'{}' = \"{}\"", propertyName, value);
-            System.setProperty(propertyName.toString(), value.toString());
-        });
-
-        toggleDebugMode();
-    }
-
-    /**
-     * Переключить DEBUG-режим в зависимости от
-     * значения секции в общей properties-конфигурации
-     * проекта: "debug.mode"
-     */
-    private void toggleDebugMode() {
-        if (OverridenProperty.DEBUG_MODE.get()) {
-            Configurator.setRootLevel(Level.DEBUG);
-        } else {
-            Configurator.setRootLevel(Level.INFO);
-        }
-    }
 
     /**
      * Создать новый пустой по содержанию ресурс
