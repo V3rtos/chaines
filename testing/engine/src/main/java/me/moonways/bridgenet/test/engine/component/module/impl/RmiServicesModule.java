@@ -8,20 +8,20 @@ import java.util.Arrays;
 
 public class RmiServicesModule extends ModuleAdapter {
 
-    private static final String SERVICES_MODEL_PACKAGE = "me.moonways.bridgenet.model";
+    private static final String SERVICES_MODEL__PACKAGE = "me.moonways.bridgenet.model";
 
     public RmiServicesModule() {
         super(ModuleConfig.builder()
                 .dependencies(
                         Arrays.asList(
                                 EventsModule.class,
-                                CommandsModule.class,
                                 DatabasesModule.class,
-                                MtpModule.class
+                                MtpModule.class,
+                                CommandsModule.class
                         ))
                 .packagesToScanning(
                         Arrays.asList(
-                                SERVICES_MODEL_PACKAGE,
+                                SERVICES_MODEL__PACKAGE,
                                 fromClassPackage(RemoteServicesManagement.class)
                         ))
                 .build());

@@ -10,7 +10,6 @@ public class MtpModule extends ModuleAdapter {
 
     public MtpModule() {
         super(ModuleConfig.builder()
-                .dependencies(Collections.singletonList(RmiServicesModule.class))
                 .packagesToScanning(
                         Collections.singletonList(
                                 fromClassPackage(BridgenetNetworkController.class)
