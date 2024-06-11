@@ -10,7 +10,7 @@ import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProvider;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
 import me.moonways.bridgenet.api.inject.processor.AnnotationProcessorConfig;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.def.DefaultTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.util.pair.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -97,7 +97,7 @@ public class BeansScanningService {
      */
     private synchronized Stream<Class<?>> getResourcesFromPackage(String... packageNamesArray) {
         if (packageNamesArray.length == 0) {
-            return Stream.of();
+            return Stream.empty();
         }
 
         scanAllResourcesAsClasses();
@@ -162,7 +162,7 @@ public class BeansScanningService {
 
         for (Class<?> annotationType : usageAnnotationsTypes) {
             if (Annotation.class.isAssignableFrom(annotationType)) {
-                typeAnnotationProcessors.add(new JustBindTypeAnnotationProcessor((Class<? extends Annotation>) annotationType));
+                typeAnnotationProcessors.add(new DefaultTypeAnnotationProcessor((Class<? extends Annotation>) annotationType));
             }
         }
 

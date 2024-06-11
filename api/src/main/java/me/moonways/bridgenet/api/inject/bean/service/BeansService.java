@@ -74,9 +74,6 @@ public final class BeansService {
         bind(annotationsAwaits);
         bind(interceptor);
 
-        // other internal Bridgenet module dependencies.
-        subscribeOn(ResourcesAssembly.class, ResourcesAssembly::overrideSystemProperties);
-
         bind(new ResourcesAssembly());
         bind(new BridgenetDataLogger());
     }
@@ -180,15 +177,15 @@ public final class BeansService {
 
                 log.debug("Processing TypeAnnotationProcessor implement - §2@{}", annotationType.getName());
 
-                initializedAnnotationsSet.add(annotationType);
                 scanner.scanBeans(config).forEach(bean -> processBean(config, bean));
-
-                annotationsAwaits.flushQueue(annotationType);
 
                 Runnable onBinding = processorsOnBindingsMap.remove(annotationType);
                 if (onBinding != null) {
                     onBinding.run();
                 }
+
+                initializedAnnotationsSet.add(annotationType);
+                annotationsAwaits.flushQueue(annotationType);
             }
 
             public void processBean(AnnotationProcessorConfig<V> config, Bean bean) {
@@ -199,6 +196,10 @@ public final class BeansService {
 
                 if (result.isSuccess()) {
                     bean.getProperties().setProperty(TypeAnnotationProcessor.BEAN_ANNOTATION_TYPE_PROPERTY, config.getAnnotationType().getName());
+                    if (bean.getType().isAuto()) {
+                        bind(bean);
+                    }
+
                     processor.processBean(BeansService.this, bean);
                 }
             }
@@ -459,11 +460,9 @@ public final class BeansService {
      * @param bean - бин.
      */
     public synchronized void justStore(Bean bean) {
-        store.store(bean);
-        injector.touchInjectionQueue();
-
-        // call post-binding consumers.
-        callPostBindingConsumers(bean);
+        if (!store.isStored(bean)) {
+            store.store(bean);
+        }
     }
 
     /**

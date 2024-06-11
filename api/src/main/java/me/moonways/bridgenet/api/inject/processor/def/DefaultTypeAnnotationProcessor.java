@@ -11,7 +11,7 @@ import java.lang.annotation.Annotation;
 
 @Log4j2
 @RequiredArgsConstructor
-public class JustBindTypeAnnotationProcessor extends TypeAnnotationProcessorAdapter<Annotation> {
+public class DefaultTypeAnnotationProcessor extends TypeAnnotationProcessorAdapter<Annotation> {
     private final Class<? extends Annotation> annotationType;
 
     @Inject
@@ -25,6 +25,6 @@ public class JustBindTypeAnnotationProcessor extends TypeAnnotationProcessorAdap
 
     @Override
     public void processBean(BeansService service, Bean bean) {
-        beans.bind(bean);
+        beans.justStore(bean);
     }
 }
