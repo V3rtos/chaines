@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Autobind
 public final class BridgenetSpigotGuiEngine {
-
     private final Cache<UUID, BukkitGui> remoteGuisCache =
             CacheBuilder.newBuilder()
                     .expireAfterAccess(10, TimeUnit.MINUTES)
@@ -36,8 +35,6 @@ public final class BridgenetSpigotGuiEngine {
 
     @Inject
     private GuiServiceModel guiServiceModel;
-
-    // todo - добавить автоматическое закрытие гуи после его инвалидности в кеше.
 
     /**
      * Обрабатывает действие клика по GUI.
@@ -77,8 +74,8 @@ public final class BridgenetSpigotGuiEngine {
     public void save(Player player, BukkitGui bukkitGui) {
         beansService.inject(bukkitGui);
 
-        remoteGuisCache.cleanUp();
         remoteGuisCache.put(player.getUniqueId(), bukkitGui);
+        remoteGuisCache.cleanUp();
     }
 
     /**
@@ -88,5 +85,6 @@ public final class BridgenetSpigotGuiEngine {
      */
     public void invalidate(Player player) {
         remoteGuisCache.invalidate(player.getUniqueId());
+        remoteGuisCache.cleanUp();
     }
 }
