@@ -17,7 +17,6 @@ import java.util.UUID;
 @Getter
 @ToString
 @ServerMessage
-@ClientMessage
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(onConstructor_ = @Inject)
