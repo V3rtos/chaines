@@ -7,13 +7,14 @@ import me.moonways.bridgenet.model.service.gui.Gui;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiServiceModel;
 import me.moonways.bridgenet.model.service.gui.GuiType;
+import me.moonways.bridgenet.model.service.gui.click.ClickAction;
 import me.moonways.bridgenet.model.service.gui.item.ItemStack;
 import me.moonways.bridgenet.model.service.gui.item.entries.material.Material;
 import me.moonways.bridgenet.model.service.gui.item.entries.material.MaterialEntry;
 import me.moonways.bridgenet.model.service.gui.item.types.Materials;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,13 +91,14 @@ public class GuiServiceEndpointTest {
                         .material(TestConst.Items.MATERIAL)
                         .name(TestConst.Items.NAME));
 
-        gui.addClickListener(TestConst.Items.SLOT, log::debug);
+        gui.addGlobalListener(TestConst.Items.SLOT, log::debug);
 
-        serviceModel.fireClickAction(gui,
-                GuiItemClickEvent.builder()
+        serviceModel.fireClickAction(
+                ClickAction.builder()
                         .slot(TestConst.Items.SLOT)
                         .clickType(TestConst.Items.CLICK_TYPE)
-                        .itemStack(gui.getItem(TestConst.Items.SLOT))
+                        .playerId(TestConst.Player.ID)
+                        .guiId(gui.getId())
                         .build());
 
         log.debug(gui);

@@ -25,10 +25,6 @@ public class WrappedNetworkMessage {
     @ToString.Include
     private final ChannelDirection direction;
 
-    public boolean isServerSide() {
-        return direction == ChannelDirection.TO_CLIENT;
-    }
-
     public boolean needsEncryption() {
         return messageType.isAnnotationPresent(EncryptedMessage.class);
     }

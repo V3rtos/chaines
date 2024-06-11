@@ -2,6 +2,7 @@ package me.moonways.endpoint.players.player;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.audience.ComponentHolders;
 import me.moonways.bridgenet.model.event.AudienceSendEvent;
@@ -24,12 +25,15 @@ import java.util.Set;
 import java.util.UUID;
 
 @Getter
+@ToString(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
 public class OfflinePlayerStub implements OfflinePlayer {
 
     private static final String PLAYER_IS_OFFLINE = "player \"%s\" is offline";
 
+    @ToString.Include
     private final UUID id;
+    @ToString.Include
     private final String name;
 
     @Getter

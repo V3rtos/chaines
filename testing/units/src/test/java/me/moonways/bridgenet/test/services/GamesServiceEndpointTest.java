@@ -11,9 +11,9 @@ import me.moonways.bridgenet.model.service.games.GamesServiceModel;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.data.junit.assertion.ServicesAssert;
-import me.moonways.bridgenet.test.data.management.ExampleNetworkConnection;
+import me.moonways.bridgenet.test.data.management.ExampleClientConnection;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertNull;
 public class GamesServiceEndpointTest {
 
     @Inject
-    private ExampleNetworkConnection exampleNetworkConnection;
+    private ExampleClientConnection exampleClientConnection;
     @Inject
     private GamesServiceModel gamesServiceModel;
 
@@ -41,7 +41,7 @@ public class GamesServiceEndpointTest {
     @Test
     @TestOrdered(1)
     public void test_createGameSuccess() throws RemoteException {
-        BridgenetNetworkChannel channel = exampleNetworkConnection.getChannel();
+        BridgenetNetworkChannel channel = exampleClientConnection.getChannel();
         sendHandshakeMessage();
 
         CompletableFuture<CreateGame.Result> future = channel.sendAwait(CreateGame.Result.class,
@@ -58,7 +58,7 @@ public class GamesServiceEndpointTest {
     @Test
     @TestOrdered(2)
     public void test_updateGameState() throws RemoteException, InterruptedException {
-        BridgenetNetworkChannel channel = exampleNetworkConnection.getChannel();
+        BridgenetNetworkChannel channel = exampleClientConnection.getChannel();
         channel.send(
                 new UpdateGame(subj.getGameId(), subj.getActiveId(),
                         GameStatus.PROCESSING, 0, 0));
@@ -72,7 +72,7 @@ public class GamesServiceEndpointTest {
     @Test
     @TestOrdered(3)
     public void test_successGameDelete() throws RemoteException, InterruptedException {
-        BridgenetNetworkChannel channel = exampleNetworkConnection.getChannel();
+        BridgenetNetworkChannel channel = exampleClientConnection.getChannel();
         channel.send(
                 new DeleteGame(subj.getGameId(), subj.getActiveId()));
 
@@ -82,9 +82,9 @@ public class GamesServiceEndpointTest {
     }
 
     private Handshake.Result sendHandshakeMessage() {
-        BridgenetNetworkChannel channel = exampleNetworkConnection.getChannel();
+        BridgenetNetworkChannel channel = exampleClientConnection.getChannel();
 
-        Handshake message = new Handshake(Handshake.Type.SERVER, TestConst.Game.SERVER_DESC.toProperties());
+        Handshake message = new Handshake(Handshake.Type.SERVER, TestConst.Game.SERVER_DTO.toProperties());
         CompletableFuture<Handshake.Result> future = channel.sendAwait(Handshake.Result.class, message);
         try {
             return future.join();

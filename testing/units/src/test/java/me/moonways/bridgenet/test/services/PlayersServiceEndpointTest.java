@@ -8,7 +8,9 @@ import me.moonways.bridgenet.model.service.players.component.PlayerLeveling;
 import me.moonways.bridgenet.model.service.players.component.PlayerStore;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.RmiServicesModule;
+import me.moonways.bridgenet.test.engine.component.step.impl.JoinPlayerStep;
+import me.moonways.bridgenet.test.engine.persistance.BeforeSteps;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import org.junit.Test;
@@ -22,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(ModernTestEngineRunner.class)
 @TestModules(RmiServicesModule.class)
+@BeforeSteps(JoinPlayerStep.class)
 public class PlayersServiceEndpointTest {
 
     @Inject

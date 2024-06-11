@@ -2,6 +2,7 @@ package me.moonways.bridgenet.model.service.players.component;
 
 import me.moonways.bridgenet.model.event.PlayerPostRedirectEvent;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
+import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.Remote;
@@ -49,4 +50,37 @@ public interface PlayerConnection extends Remote {
      * к которому игрок был подключен при входе, если он задан, в противном случае пустое значение.
      */
     Optional<EntityServer> getServerOnJoined() throws RemoteException;
+
+    /**
+     * Отправить сообщение на подключенный канал.
+     *
+     * @param message - отправляемое сообщение.
+     */
+    void send(@NotNull Object message) throws RemoteException;
+
+    /**
+     * Отправить сообщение на подключенный канал.
+     *
+     * @param message - отправляемое сообщение.
+     */
+    void send(@NotNull ExportedMessage message) throws RemoteException;
+
+    /**
+     * Отправить сообщение на подключенный канал
+     * с ожиданием ответа.
+     *
+     * @param responseType - тип ожидаемого ответа.
+     * @param message      - отправляемое сообщение.
+     */
+    <R> CompletableFuture<R> sendAwait(@NotNull Class<R> responseType, @NotNull Object message) throws RemoteException;
+
+    /**
+     * Отправить сообщение на подключенный канал
+     * с ожиданием ответа.
+     *
+     * @param timeout      - таймаут ожидания сообщения
+     * @param responseType - тип ожидаемого ответа.
+     * @param message      - отправляемое сообщение.
+     */
+    <R> CompletableFuture<R> sendAwait(int timeout, @NotNull Class<R> responseType, @NotNull Object message) throws RemoteException;
 }

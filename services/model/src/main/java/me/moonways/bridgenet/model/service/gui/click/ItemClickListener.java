@@ -13,5 +13,5 @@ public interface ItemClickListener {
      *
      * @param event Событие клика, которое произошло.
      */
-    void consume(GuiItemClickEvent event);
+    void consume(GuiItemClickEvent event) throws Throwable;
 }

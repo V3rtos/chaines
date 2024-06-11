@@ -47,7 +47,7 @@ public final class CommandExecutor {
 
     @PostConstruct
     private void init() {
-        commandsResult.toList().forEach(registry::registerCommand);
+//        commandsResult.toList().forEach(registry::registerCommand);
     }
 
     public void execute(@NotNull EntityCommandSender sender, @NotNull String label) throws CommandExecutionException {

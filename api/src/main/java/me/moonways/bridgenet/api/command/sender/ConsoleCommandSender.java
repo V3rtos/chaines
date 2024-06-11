@@ -10,6 +10,11 @@ import org.jetbrains.annotations.Nullable;
 public final class ConsoleCommandSender implements EntityCommandSender {
 
     @Override
+    public String getName() {
+        return "BridgeNet";
+    }
+
+    @Override
     public void sendMessage(String message) {
         log.info(message);
     }

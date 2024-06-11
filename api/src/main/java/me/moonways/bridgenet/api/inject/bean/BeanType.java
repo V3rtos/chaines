@@ -131,6 +131,10 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
     private Class<?> lookupSuperclass(Class<?> root) {
         Class<?> superclass = root.getSuperclass();
 
+        if (superclass == null) {
+            return null;
+        }
+
         if (!superclass.equals(Object.class)) {
             Package rootPackage = root.getPackage();
 

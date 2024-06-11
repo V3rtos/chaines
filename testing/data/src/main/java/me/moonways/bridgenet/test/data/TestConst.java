@@ -1,10 +1,12 @@
 package me.moonways.bridgenet.test.data;
 
 import me.moonways.bridgenet.client.api.data.ClientDto;
+import me.moonways.bridgenet.client.api.data.GameDto;
 import me.moonways.bridgenet.client.api.data.UserDto;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiSlot;
 import me.moonways.bridgenet.model.service.gui.GuiType;
+import me.moonways.bridgenet.model.service.gui.click.ClickAction;
 import me.moonways.bridgenet.model.service.gui.click.ClickType;
 import me.moonways.bridgenet.model.service.gui.item.entries.material.Material;
 import me.moonways.bridgenet.model.service.gui.item.types.Materials;
@@ -31,11 +33,22 @@ public final class TestConst {
         public static final String NAME = "Developing Game";
         public static final String MAP = "IDE with opened Bridgenet project";
 
+        public static final int MAX_PLAYERS = 2;
+        public static final int PLAYERS_IN_TEAM = 1;
+
+        public static final GameDto GAME_DTO =
+                GameDto.builder()
+                        .name(NAME)
+                        .map(MAP)
+                        .maxPlayers(MAX_PLAYERS)
+                        .playersInTeam(PLAYERS_IN_TEAM)
+                        .build();
+
         public static final String SERVER_NAME = "development-arena-1";
         public static final String SERVER_HOST = "127.0.0.1";
         public static final int SERVER_PORT = 12345;
 
-        public static final ClientDto SERVER_DESC =
+        public static final ClientDto SERVER_DTO =
                 ClientDto.builder()
                         .name(SERVER_NAME)
                         .host(SERVER_HOST)
@@ -69,15 +82,6 @@ public final class TestConst {
                         .build();
     }
 
-    public static final class Connector {
-        public static final ClientDto CLIENT_INFO =
-                ClientDto.builder()
-                        .name("testing-connector")
-                        .host(Server.HOST)
-                        .port(Server.PORT + 1)
-                        .build();
-    }
-
     public static final class Friend {
         public static final UUID FRIEND_ID = UUID.randomUUID();
         public static final String FRIEND_NICKNAME = "bridgenet_user";
@@ -105,7 +109,7 @@ public final class TestConst {
         public static final GuiSlot SLOT = GuiSlot.first();
         public static final Material MATERIAL = Materials.DIAMOND_BLOCK;
         public static final String NAME = "Tested item stack";
-        public static final ClickType CLICK_TYPE = ClickType.LEFT_MOUSE;
+        public static final ClickType CLICK_TYPE = ClickType.LEFT;
     }
 
     public static final class Inventory {

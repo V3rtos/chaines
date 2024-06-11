@@ -83,12 +83,21 @@ public final class InboundPlayerCommandListener {
         private TextComponent textComponent = Component.text("");
 
         public synchronized void flushMessageText() {
-            if (!textComponent.content().isEmpty() || textComponent.children().isEmpty()) {
+            if (!textComponent.content().isEmpty() || !textComponent.children().isEmpty()) {
                 try {
                     player.sendMessage(textComponent);
                 } catch (RemoteException exception) {
                     throw new RuntimeException(exception);
                 }
+            }
+        }
+
+        @Override
+        public String getName() {
+            try {
+                return player.getName();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
             }
         }
 

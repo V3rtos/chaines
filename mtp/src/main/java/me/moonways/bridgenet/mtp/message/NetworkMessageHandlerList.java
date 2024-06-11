@@ -11,6 +11,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.mtp.message.exception.MessageHandleException;
 import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.Priority;
@@ -95,7 +96,7 @@ public class NetworkMessageHandlerList {
 
                 log.debug("Received message §3{} §rredirected to §2{}", messageClass, handlerClassName);
 
-                method.setAccessible(true);
+                ReflectionUtils.grantAccess(method);
                 method.invoke(subscriber.getSource(), value);
 
                 handlingCount++;

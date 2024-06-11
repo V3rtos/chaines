@@ -69,7 +69,7 @@ public class ScheduledRunnersService {
                     }
 
                     RunnableUnit runnableUnit = new RunnableUnit(period,
-                            () -> ReflectionUtils.callMethod(runner, method.getName()));
+                            () -> ReflectionUtils.invoke(runner, method.getName()));
 
                     log.debug("Registering auto-runner §a'{}' §rwith id: §3{}", runnerClass.getSimpleName(), runnableUnit.getUuid());
                     result.add(runnableUnit);

@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.jdbc.core.compose.transform;
 
 import lombok.experimental.UtilityClass;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.jdbc.core.compose.transform.data.TransformInputState;
 import me.moonways.bridgenet.jdbc.core.compose.transform.data.TransformStatements;
 
@@ -278,7 +279,7 @@ public class QueryTransformationOps {
         for (Field field : fields) {
             Object value;
             try {
-                field.setAccessible(true);
+                ReflectionUtils.grantAccess(field);
                 value = field.get(element);
             } catch (Exception exception) {
                 value = null;

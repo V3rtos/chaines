@@ -19,7 +19,7 @@ public final class Material implements ItemsEntryable<MaterialEntry> {
     }
 
     private final String namespace;
-    private MaterialEntry entry;
+    private transient MaterialEntry entry;
 
     @Override
     public String namespace() {

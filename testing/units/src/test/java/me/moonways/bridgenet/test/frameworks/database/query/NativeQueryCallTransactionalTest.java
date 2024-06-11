@@ -5,7 +5,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.TransactionIsolation;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.DatabasesModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.DatabasesModule;
 import me.moonways.bridgenet.test.engine.persistance.PersistenceAcceptType;
 import me.moonways.bridgenet.test.engine.persistance.TestExternal;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;

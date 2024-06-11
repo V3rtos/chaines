@@ -1,8 +1,7 @@
 package me.moonways.endpoint.players.player;
 
-import com.google.gson.Gson;
 import lombok.Getter;
-import me.moonways.bridgenet.api.inject.Inject;
+import lombok.ToString;
 import me.moonways.bridgenet.api.util.ComponentContentReader;
 import me.moonways.bridgenet.model.audience.ComponentHolders;
 import me.moonways.bridgenet.model.audience.MessageDirection;
@@ -19,9 +18,6 @@ import me.moonways.bridgenet.model.util.Title;
 import me.moonways.bridgenet.model.util.TitleFade;
 import me.moonways.endpoint.players.database.PlayerDescription;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.serializer.ComponentSerializer;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 import java.rmi.RemoteException;
 import java.util.Optional;
@@ -34,9 +30,6 @@ public class PlayerStub extends OfflinePlayerStub implements Player {
     private final PlayerConnectionStub connection;
 
     private final PlayerStore playerStore;
-
-    //@Inject
-    //private Gson gson;
 
     public PlayerStub(UUID id, String name, PlayerDescription description, PlayerStore playerStore) {
         super(id, name, description);
@@ -183,11 +176,16 @@ public class PlayerStub extends OfflinePlayerStub implements Player {
 
         if (serverOptional.isPresent()) {
             EntityServer entityServer = serverOptional.get();
-            entityServer.getChannel().send(message);
+            entityServer.send(message);
 
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("PlayerStub(id=%s, name=%s)", getId(), getName());
     }
 }

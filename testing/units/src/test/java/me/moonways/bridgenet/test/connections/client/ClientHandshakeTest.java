@@ -8,7 +8,7 @@ import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.test.data.ExampleClient;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.AllModules;
+import me.moonways.bridgenet.test.engine.component.module.impl.ClientModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import org.junit.Test;
@@ -17,10 +17,11 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 @RunWith(ModernTestEngineRunner.class)
-@TestModules(AllModules.class)
+@TestModules(ClientModule.class)
 public class ClientHandshakeTest {
 
-    private final ExampleClient subj = new ExampleClient();
+    @Inject
+    private ExampleClient subj;
 
     @Inject
     private CommandExecutor commandExecutor;
@@ -30,9 +31,7 @@ public class ClientHandshakeTest {
     @Test
     @TestOrdered(1)
     public void test_handshakeSuccess() {
-        subj.start();
         assertNotNull(subj.getCurrentClientId());
-
         testServersCommand();
     }
 
@@ -46,7 +45,7 @@ public class ClientHandshakeTest {
     private void testServersCommand() {
         try {
             commandExecutor.execute(consoleCommandSender, "servers list");
-            commandExecutor.execute(consoleCommandSender, "servers get " + TestConst.Connector.CLIENT_INFO.getName());
+            commandExecutor.execute(consoleCommandSender, "servers get " + TestConst.Server.DESC.getName());
         } catch (CommandExecutionException exception) {
             fail(exception.getMessage());
         }

@@ -70,7 +70,7 @@ public class BeansInjectionService {
      * @param component - компонент бина, которому производим self-injection.
      * @return - true, если удалось воспроизвести, и false если не удалось.
      */
-    public boolean tryInjectSelf(BeanComponent component) {
+    public boolean injectSelf(BeanComponent component) {
         Bean bean = component.getBean();
 
         if (component.getType().isAssignableFrom(bean.getType().getRoot())) {
@@ -86,7 +86,7 @@ public class BeansInjectionService {
      * кешированного бина для того, чтобы проинициализировать
      * поля, не успевшие получить свой бин из кеша вовремя.
      */
-    public void flushInjectionQueue() {
+    public void touchInjectionQueue() {
         HashSet<BeanComponent> clone = new HashSet<>(componentsInjectionQueueSet); // fix CME
         clone.forEach(this::doInjectComponent);
     }

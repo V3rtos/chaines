@@ -8,7 +8,7 @@ import me.moonways.bridgenet.model.service.settings.Setting;
 import me.moonways.bridgenet.model.service.settings.SettingID;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import org.junit.Test;
 import org.junit.runner.RunWith;

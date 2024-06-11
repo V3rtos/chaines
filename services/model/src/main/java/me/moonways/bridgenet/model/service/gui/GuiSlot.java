@@ -7,10 +7,13 @@ import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GuiSlot {
+public final class GuiSlot implements Serializable {
+    private static final long serialVersionUID = 4445464632390217837L;
 
     @Contract("_, _ -> new")
     public static @NotNull GuiSlot matrix(int x, int y) {
@@ -33,7 +36,7 @@ public final class GuiSlot {
     }
 
     public static @NotNull GuiSlot center(@NotNull GuiDescription description) {
-        int middleRow = description.getSize() / description.getType().getRowSize();
+        int middleRow = (int) Math.round((double) (description.getSize() / description.getType().getRowSize()) / 2);
         return center(middleRow, description);
     }
 

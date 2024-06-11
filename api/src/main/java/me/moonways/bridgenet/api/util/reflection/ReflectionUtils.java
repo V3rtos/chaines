@@ -3,36 +3,34 @@ package me.moonways.bridgenet.api.util.reflection;
 import lombok.experimental.UtilityClass;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
+import java.security.AccessControlException;
 import java.util.stream.Stream;
 
 @UtilityClass
 public class ReflectionUtils {
 
-    public Object callMethod(Object instance, String methodName, Class<?>[] params, Object[] args) {
+    public Object invoke(Object instance, String methodName, Class<?>[] params, Object[] args) {
         Class<?> instanceType = instance.getClass();
         try {
-            Method privateMethod = instanceType.getDeclaredMethod(methodName, params);
-            privateMethod.setAccessible(true);
+            Method method = instanceType.getDeclaredMethod(methodName, params);
+            grantAccess(method);
 
-            return privateMethod.invoke(instance, args);
+            return method.invoke(instance, args);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             throw new BridgenetReflectionException(exception);
         }
     }
 
-    public Object callMethod(Object instance, String methodName, Object[] args) {
-        return callMethod(instance, methodName,
+    public Object invoke(Object instance, String methodName, Object[] args) {
+        return invoke(instance, methodName,
                 Stream.of(args)
                         .map(Object::getClass)
                         .toArray(Class<?>[]::new), args);
     }
 
-    public Object callMethod(Object instance, String methodName) {
-        return callMethod(instance, methodName, new Object[0]);
+    public Object invoke(Object instance, String methodName) {
+        return invoke(instance, methodName, new Object[0]);
     }
 
     public void setField(Object instance, String fieldName, Object value) {
@@ -40,7 +38,7 @@ public class ReflectionUtils {
         try {
             Field field = instanceType.getDeclaredField(fieldName);
 
-            field.setAccessible(true);
+            grantAccess(field);
             field.set(instance, value);
         } catch (NoSuchFieldException | IllegalAccessException exception) {
             throw new BridgenetReflectionException(exception);
@@ -55,7 +53,7 @@ public class ReflectionUtils {
         }
     }
 
-    public Object createInstance(Class cls) {
+    public Object newInstanceOf(Class cls) {
         Object instance = tryConstructInstanceOrNull(cls);
         if (instance == null) {
             return BeanFactoryProviders.UNSAFE.getImpl().get().create(cls);
@@ -74,15 +72,8 @@ public class ReflectionUtils {
     }
 
     public Object defaultValue(Class<?> returnType) {
-        if (returnType.isPrimitive() && !returnType.equals(boolean.class)) {
-            if (returnType.equals(long.class)) { // fuck java cast
-                return 0L;
-            } else {
-                return 0;
-            }
-        }
-        if (Number.class.isAssignableFrom(returnType)) {
-            if (returnType.equals(Long.class)) { // fuck java cast
+        if ((returnType.isPrimitive() && !returnType.equals(boolean.class)) || Number.class.isAssignableFrom(returnType)) {
+            if (returnType.equals(long.class) || returnType.equals(Long.class)) { // fuck java cast
                 return 0L;
             } else {
                 return 0;
@@ -92,5 +83,13 @@ public class ReflectionUtils {
             return false;
         }
         return null;
+    }
+
+    public void grantAccess(AccessibleObject accessibleObject) {
+        try {
+            accessibleObject.setAccessible(true);
+        } catch (Throwable ignored) {
+            // ignore any exceptions.
+        }
     }
 }

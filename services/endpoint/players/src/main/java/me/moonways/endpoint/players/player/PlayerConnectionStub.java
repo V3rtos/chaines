@@ -8,6 +8,7 @@ import me.moonways.bridgenet.model.service.players.Player;
 import me.moonways.bridgenet.model.service.players.component.PlayerConnection;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.model.service.servers.ServersServiceModel;
+import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.RemoteException;
@@ -58,5 +59,39 @@ public final class PlayerConnectionStub implements PlayerConnection {
     @Override
     public Optional<EntityServer> getServerOnJoined() throws RemoteException {
         return Optional.ofNullable(serverOnJoined);
+    }
+
+    @Override
+    public void send(@NotNull Object message) throws RemoteException {
+        Optional<EntityServer> serverOptional = getServer();
+        if (serverOptional.isPresent()) {
+            serverOptional.get().send(message);
+        }
+    }
+
+    @Override
+    public void send(@NotNull ExportedMessage message) throws RemoteException {
+        Optional<EntityServer> serverOptional = getServer();
+        if (serverOptional.isPresent()) {
+            serverOptional.get().send(message);
+        }
+    }
+
+    @Override
+    public <R> CompletableFuture<R> sendAwait(@NotNull Class<R> responseType, @NotNull Object message) throws RemoteException {
+        Optional<EntityServer> serverOptional = getServer();
+        if (serverOptional.isPresent()) {
+            return serverOptional.get().sendAwait(responseType, message);
+        }
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @Override
+    public <R> CompletableFuture<R> sendAwait(int timeout, @NotNull Class<R> responseType, @NotNull Object message) throws RemoteException {
+        Optional<EntityServer> serverOptional = getServer();
+        if (serverOptional.isPresent()) {
+            return serverOptional.get().sendAwait(timeout, responseType, message);
+        }
+        return CompletableFuture.completedFuture(null);
     }
 }

@@ -8,7 +8,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
-import me.moonways.bridgenet.mtp.transfer.provider.TransferUuidProvider;
+import me.moonways.bridgenet.mtp.transfer.provider.ToUUIDProvider;
 
 import java.util.UUID;
 
@@ -20,10 +20,10 @@ import java.util.UUID;
 @NoArgsConstructor(onConstructor_ = @Inject)
 public class Redirect {
 
-    @ByteTransfer(provider = TransferUuidProvider.class)
+    @ByteTransfer(provider = ToUUIDProvider.class)
     private UUID playerUUID;
 
-    @ByteTransfer(provider = TransferUuidProvider.class)
+    @ByteTransfer(provider = ToUUIDProvider.class)
     private UUID serverKey;
 
     public interface Result {
@@ -36,10 +36,10 @@ public class Redirect {
     @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Failure implements Result {
 
-        @ByteTransfer(provider = TransferUuidProvider.class)
+        @ByteTransfer(provider = ToUUIDProvider.class)
         private UUID playerUUID;
 
-        @ByteTransfer(provider = TransferUuidProvider.class)
+        @ByteTransfer(provider = ToUUIDProvider.class)
         private UUID serverKey;
     }
 
@@ -50,10 +50,10 @@ public class Redirect {
     @NoArgsConstructor(onConstructor_ = @Inject)
     public static class Success implements Result {
 
-        @ByteTransfer(provider = TransferUuidProvider.class)
+        @ByteTransfer(provider = ToUUIDProvider.class)
         private UUID playerUUID;
 
-        @ByteTransfer(provider = TransferUuidProvider.class)
+        @ByteTransfer(provider = ToUUIDProvider.class)
         private UUID serverKey;
     }
 }

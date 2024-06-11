@@ -6,7 +6,7 @@ import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.DatabasesModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.DatabasesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import org.junit.Test;
 import org.junit.runner.RunWith;

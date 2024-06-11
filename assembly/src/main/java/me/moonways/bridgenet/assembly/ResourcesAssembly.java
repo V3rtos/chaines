@@ -9,6 +9,7 @@ import me.moonways.bridgenet.assembly.ini.IniConfigLoader;
 import me.moonways.bridgenet.assembly.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.assembly.jaxb.XmlRootObject;
 import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.*;
@@ -62,9 +63,9 @@ public final class ResourcesAssembly {
      */
     private void toggleDebugMode() {
         if (OverridenProperty.DEBUG_MODE.get()) {
-            Configurator.setRootLevel(org.apache.logging.log4j.Level.DEBUG);
+            Configurator.setRootLevel(Level.DEBUG);
         } else {
-            Configurator.setRootLevel(org.apache.logging.log4j.Level.INFO);
+            Configurator.setRootLevel(Level.INFO);
         }
     }
 

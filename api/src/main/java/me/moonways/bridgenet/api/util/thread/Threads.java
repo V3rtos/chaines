@@ -57,13 +57,15 @@ public class Threads {
         return executorService;
     }
 
-    public ExecutorService newWorkSteelingPool() {
-        ExecutorService executorService = new ForkJoinPool
-                (Runtime.getRuntime().availableProcessors(),
-                        ForkJoinPool.defaultForkJoinWorkerThreadFactory,
-                        new WrappedUncaughtExceptionHandler(), true);
+    public ExecutorService newWorkSteelingPool(int parallelism) {
+        ExecutorService executorService = Executors.newWorkStealingPool(parallelism);
         pull(executorService);
         return executorService;
+    }
+
+    public ExecutorService newWorkSteelingPool() {
+        int parallelism = Runtime.getRuntime().availableProcessors();
+        return newWorkSteelingPool(parallelism);
     }
 
     public ScheduledExecutorService newSingleThreadScheduledExecutor() {

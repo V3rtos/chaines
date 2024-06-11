@@ -10,7 +10,6 @@ import me.moonways.bridgenet.client.api.cloudnet.CloudNetDistributor;
 import me.moonways.bridgenet.client.api.cloudnet.CloudNetWrapper;
 import me.moonways.bridgenet.client.api.data.ClientDto;
 import me.moonways.bridgenet.model.message.Handshake;
-import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 
 @Log4j2
 @RequiredArgsConstructor

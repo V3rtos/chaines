@@ -77,7 +77,6 @@ public class BridgenetNetworkController implements Serializable {
         handlerList.bind(handler);
     }
 
-    @KeepTime
     @Synchronized
     public void pull(@NotNull InboundMessageContext<?> context) {
         beansService.inject(context);

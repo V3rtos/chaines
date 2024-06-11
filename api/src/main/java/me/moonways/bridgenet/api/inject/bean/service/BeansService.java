@@ -75,7 +75,7 @@ public final class BeansService {
         bind(interceptor);
 
         // other internal Bridgenet module dependencies.
-        onBinding(ResourcesAssembly.class, ResourcesAssembly::overrideSystemProperties);
+        subscribeOn(ResourcesAssembly.class, ResourcesAssembly::overrideSystemProperties);
 
         bind(new ResourcesAssembly());
         bind(new BridgenetDataLogger());
@@ -224,7 +224,7 @@ public final class BeansService {
      * @param type   - класс бина.
      * @param object - инстанс бина.
      */
-    public void fakeBind(Class<?> type, Object object) {
+    public synchronized void fakeBind(Class<?> type, Object object) {
         fakeBind(scanner.createBean(type, object));
     }
 
@@ -238,7 +238,7 @@ public final class BeansService {
      *
      * @param object - instance бина.
      */
-    public void fakeBind(Object object) {
+    public synchronized void fakeBind(Object object) {
         fakeBind(object.getClass(), object);
     }
 
@@ -247,7 +247,7 @@ public final class BeansService {
      *
      * @param bean - бин.
      */
-    public void fakeBind(Bean bean) {
+    public synchronized void fakeBind(Bean bean) {
         inject(bean.getRoot());
 
         // call @PostConstruct functions.
@@ -261,7 +261,7 @@ public final class BeansService {
      * @param type   - класс бина.
      * @param object - instance бина.
      */
-    public void bind(Class<?> type, Object object) {
+    public synchronized void bind(Class<?> type, Object object) {
         bind(scanner.createBean(type, object));
     }
 
@@ -274,7 +274,7 @@ public final class BeansService {
      *
      * @param object - instance бина.
      */
-    public void bind(Object object) {
+    public synchronized void bind(Object object) {
         bind(object.getClass(), object);
     }
 
@@ -283,7 +283,7 @@ public final class BeansService {
      *
      * @param bean - бин.
      */
-    public void bind(Bean bean) {
+    public synchronized void bind(Bean bean) {
         if (store.isStored(bean)) {
             return;
         }
@@ -301,22 +301,28 @@ public final class BeansService {
 
         // self-injection process
         for (BeanComponent component : bean.getType().getInjectSelfComponents()) {
-            injector.tryInjectSelf(component);
+            injector.injectSelf(component);
         }
 
-        store.store(bean);
-        injector.flushInjectionQueue();
-
         log.debug("Binding a bean of §6{}", bean.getType().getRoot().getName());
+        justStoreAndConstruct(bean);
+    }
 
-        // call @PostConstruct functions.
-        List<BeanMethod> postConstructFunctions = bean.getType().getPostConstructFunctions();
-        postConstructFunctions.forEach(BeanMethod::invoke);
-
-        // call post-binding consumers.
-        Bean finalBean = bean;
+    /**
+     * Вызвать сохраненные консумеры, ожидающие
+     * бинда указанного бина.
+     *
+     * @param bean - бин, которого могут ожидать консумеры.
+     */
+    private void callPostBindingConsumers(Bean bean) {
+        Object root = bean.getRoot();
         Optional.ofNullable(beansOnBindingsMap.remove(bean.getType().getRoot()))
-                .ifPresent(consumer -> consumer.accept(finalBean.getRoot()));
+                .ifPresent(consumer -> consumer.accept(root));
+
+        for (Class<?> beanInterface : bean.getType().getInterfaces()) {
+            Optional.ofNullable(beansOnBindingsMap.remove(beanInterface))
+                    .ifPresent(consumer -> consumer.accept(root));
+        }
     }
 
     /**
@@ -336,7 +342,7 @@ public final class BeansService {
      *
      * @param beanType - класс бина.
      */
-    public void unbind(Class<?> beanType) {
+    public synchronized void unbind(Class<?> beanType) {
         unbind(store.find(beanType).orElse(null));
     }
 
@@ -350,7 +356,7 @@ public final class BeansService {
      *
      * @param object - instance бина.
      */
-    public void unbind(Object object) {
+    public synchronized void unbind(Object object) {
         unbind(object.getClass());
     }
 
@@ -359,7 +365,7 @@ public final class BeansService {
      *
      * @param bean - бин.
      */
-    public void unbind(Bean bean) {
+    public synchronized void unbind(Bean bean) {
         store.delete(bean);
         log.debug("Unbinding a bean of §4{}", bean.getType().getRoot().getName());
     }
@@ -371,7 +377,7 @@ public final class BeansService {
      *
      * @param object - объект, который нуждается в инициализации.
      */
-    public void inject(Object object) {
+    public synchronized void inject(Object object) {
         injector.injectComponents(object);
     }
 
@@ -404,7 +410,13 @@ public final class BeansService {
      * @param onBinding - процесс, вызываемый после биндинга.
      */
     @SuppressWarnings("unchecked")
-    public <T> void onBinding(Class<T> type, Consumer<T> onBinding) {
+    public <T> void subscribeOn(Class<T> type, Consumer<T> onBinding) {
+        Optional<T> instanceOptional = getInstance(type);
+        if (instanceOptional.isPresent()) {
+            onBinding.accept(instanceOptional.get());
+            return;
+        }
+
         Consumer<Object> consumer = beansOnBindingsMap.get(type);
         Consumer<Object> cast = (Consumer<Object>) onBinding;
 
@@ -424,7 +436,7 @@ public final class BeansService {
      * @param type      - тип процессора аннотаций, который ожидается для этого процесса.
      * @param onBinding - процесс, вызываемый после биндинга.
      */
-    public void onAnnotationProcessing(Class<? extends Annotation> type, Runnable onBinding) {
+    public void subscribeAnnotated(Class<? extends Annotation> type, Runnable onBinding) {
         Runnable runnable = processorsOnBindingsMap.get(type);
 
         if (runnable == null) {
@@ -438,5 +450,55 @@ public final class BeansService {
         }
 
         processorsOnBindingsMap.put(type, runnable);
+    }
+
+    /**
+     * Воспроизвести обычную запись бина в кеш
+     * без дополнительных инжекций и процессов.
+     *
+     * @param bean - бин.
+     */
+    public synchronized void justStore(Bean bean) {
+        store.store(bean);
+        injector.touchInjectionQueue();
+
+        // call post-binding consumers.
+        callPostBindingConsumers(bean);
+    }
+
+    /**
+     * Воспроизвести обычную запись бина в кеш
+     * без дополнительных инжекций и процессов.
+     *
+     * @param bean - бин.
+     */
+    public synchronized void justStore(Object bean) {
+        justStore(scanner.createBean(bean.getClass(), bean));
+    }
+
+    /**
+     * Воспроизвести обычную запись бина в кеш,
+     * дополнительно воспроизведя только процессы
+     * конструкции объекта.
+     *
+     * @param bean - бин.
+     */
+    public synchronized void justStoreAndConstruct(Bean bean) {
+        justStore(bean);
+
+        // call @PostConstruct functions.
+        List<BeanMethod> postConstructFunctions = bean.getType().getPostConstructFunctions();
+        postConstructFunctions.forEach(BeanMethod::invoke);
+    }
+
+    /**
+     * Воспроизвести обычную запись бина в кеш,
+     * дополнительно воспроизведя только процессы
+     * конструкции объекта.
+     *
+     * @param bean - бин.
+     */
+    public synchronized void justStoreAndConstruct(Object bean) {
+        justStoreAndConstruct(scanner.createBean(bean.getClass(), bean));
     }
 }

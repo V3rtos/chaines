@@ -7,7 +7,7 @@ import me.moonways.bridgenet.test.data.EntityUser;
 import me.moonways.bridgenet.test.data.ExampleUserEvent;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.EventsModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.EventsModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import org.junit.Test;
 import org.junit.runner.RunWith;

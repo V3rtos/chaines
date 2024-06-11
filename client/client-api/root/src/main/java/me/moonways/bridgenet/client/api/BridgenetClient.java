@@ -7,6 +7,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.client.api.data.ClientDto;
 import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.mtp.BridgenetNetworkController;
@@ -156,7 +157,7 @@ public abstract class BridgenetClient {
      * Полностью обрубить соединение с единым сервером
      * Bridgenet и деинициализировать сервисы.
      */
-    public final void shutdownConnection() {
+    public final void shutdown() {
         BridgenetNetworkChannel channel = getChannel();
 
         if (channel != null) {
@@ -167,6 +168,8 @@ public abstract class BridgenetClient {
         }
 
         bridgenetServerSync.setChannel(null);
+
+        Threads.shutdownForceAll();
 
         clientConnectionFactory = null;
         beansStore = null;

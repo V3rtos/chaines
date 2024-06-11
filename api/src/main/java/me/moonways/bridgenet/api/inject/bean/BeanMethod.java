@@ -3,6 +3,7 @@ package me.moonways.bridgenet.api.inject.bean;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.PreConstruct;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -56,7 +57,7 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
         Method method = getRoot();
         Bean bean = getBean();
 
-        method.setAccessible(true);
+        ReflectionUtils.grantAccess(method);
 
         try {
             if (isBefore() || isAfter()) {

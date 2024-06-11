@@ -4,6 +4,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.BeanException;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -46,8 +47,8 @@ public class ConstructorFactory implements BeanFactory {
         try {
             Constructor<T> constructor = lookupConstructor(cls)
                     .orElseThrow(() -> new BeanException("no constructor found for " + cls));
-            constructor.setAccessible(true);
 
+            ReflectionUtils.grantAccess(constructor);
             Object[] args = parametersToArguments(constructor.getParameterTypes());
 
             return constructor.newInstance(args);

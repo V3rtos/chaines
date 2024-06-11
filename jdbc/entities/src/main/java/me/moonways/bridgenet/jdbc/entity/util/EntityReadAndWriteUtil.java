@@ -75,7 +75,7 @@ public class EntityReadAndWriteUtil {
     }
 
     public Object write(EntityDescriptor entity) {
-        Object instance = ReflectionUtils.createInstance(entity.getRootClass());
+        Object instance = ReflectionUtils.newInstanceOf(entity.getRootClass());
 
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
             Method getter = parameterUnit.findGetter(entity.getRootClass());

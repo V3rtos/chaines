@@ -6,6 +6,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.assembly.OverridenProperty;
 
 import java.lang.reflect.Field;
@@ -53,7 +54,7 @@ public abstract class EndpointRemoteObject extends UnicastRemoteObject {
             if (declaredField.isAnnotationPresent(Inject.class)) {
                 continue;
             }
-            declaredField.setAccessible(true);
+            ReflectionUtils.grantAccess(declaredField);
             try {
                 Object value = declaredField.get(this);
 

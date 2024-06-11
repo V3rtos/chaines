@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
@@ -40,7 +41,7 @@ public class ProxiedMethod {
             return null;
         }
         try {
-            declare.setAccessible(true);
+            ReflectionUtils.grantAccess(declare);
 
             return lastCallReturnedValue = declare.invoke(source, args);
         } catch (IllegalAccessException | InvocationTargetException exception) {

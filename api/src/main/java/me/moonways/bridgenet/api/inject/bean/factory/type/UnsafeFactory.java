@@ -2,6 +2,7 @@ package me.moonways.bridgenet.api.inject.bean.factory.type;
 
 import me.moonways.bridgenet.api.inject.bean.BeanException;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
@@ -12,7 +13,7 @@ public class UnsafeFactory implements BeanFactory {
     static {
         try {
             Field unsafeInstanceField = Unsafe.class.getDeclaredField("theUnsafe");
-            unsafeInstanceField.setAccessible(true);
+            ReflectionUtils.grantAccess(unsafeInstanceField);
 
             UNSAFE = ((Unsafe) unsafeInstanceField.get(null));
         } catch (Exception exception) {

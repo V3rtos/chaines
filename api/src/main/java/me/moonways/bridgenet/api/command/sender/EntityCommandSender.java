@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface EntityCommandSender {
 
+    String getName();
+
     /**
      * Отправить отправителю сообщение.
      *
