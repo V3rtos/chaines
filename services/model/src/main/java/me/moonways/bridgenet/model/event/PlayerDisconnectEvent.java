@@ -11,7 +11,7 @@ import me.moonways.bridgenet.model.service.players.Player;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class PlayerJoinEvent implements Event {
+public class PlayerDisconnectEvent implements Event {
 
     private final Player player;
 }
