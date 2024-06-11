@@ -465,6 +465,7 @@ public final class BeansService {
     public synchronized void justStore(Bean bean) {
         if (!store.isStored(bean)) {
             store.store(bean);
+            injector.touchInjectionQueue();
         }
     }
 
