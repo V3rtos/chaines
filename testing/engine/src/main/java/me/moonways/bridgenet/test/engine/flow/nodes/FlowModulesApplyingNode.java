@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
 import me.moonways.bridgenet.api.inject.bean.service.BeansAnnotationsAwaitService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.def.DefaultTypeAnnotationProcessor;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
 import me.moonways.bridgenet.test.engine.flow.TestFlowNode;
 import me.moonways.bridgenet.test.engine.component.module.Module;
@@ -102,7 +102,7 @@ public class FlowModulesApplyingNode implements TestFlowNode {
             Class<? extends Annotation>[] awaitsAnnotationsTypes = annotationsAwaits.getAwaitsAnnotationsTypes(bean);
 
             for (Class<? extends Annotation> annotationType : awaitsAnnotationsTypes) {
-                beansService.processTypeAnnotationProcessor(new JustBindTypeAnnotationProcessor(annotationType));
+                beansService.processTypeAnnotationProcessor(new DefaultTypeAnnotationProcessor(annotationType));
             }
         }
     }
