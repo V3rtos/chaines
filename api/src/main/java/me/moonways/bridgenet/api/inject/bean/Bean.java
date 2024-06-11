@@ -10,7 +10,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 @Getter
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
 public class Bean {
@@ -20,6 +20,7 @@ public class Bean {
     @EqualsAndHashCode.Include
     private final UUID id;
 
+    @ToString.Include
     private final BeanType type;
     private final Object root;
 

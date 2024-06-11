@@ -175,17 +175,20 @@ public final class BeansService {
                     return;
                 }
 
-                log.debug("Processing TypeAnnotationProcessor implement - §2@{}", annotationType.getName());
+                List<Bean> beans = scanner.scanBeans(config);
 
-                scanner.scanBeans(config).forEach(bean -> processBean(config, bean));
+                log.debug("Founded {} beans annotated by §7@{}§r: {}", beans.size(), annotationType.getSimpleName(), beans);
+
+                initializedAnnotationsSet.add(annotationType);
+                beans.forEach(bean -> processBean(config, bean));
+
+                annotationsAwaits.flushQueue(annotationType);
+                injector.touchInjectionQueue();
 
                 Runnable onBinding = processorsOnBindingsMap.remove(annotationType);
                 if (onBinding != null) {
                     onBinding.run();
                 }
-
-                initializedAnnotationsSet.add(annotationType);
-                annotationsAwaits.flushQueue(annotationType);
             }
 
             public void processBean(AnnotationProcessorConfig<V> config, Bean bean) {
