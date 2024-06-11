@@ -3,6 +3,7 @@ package me.moonways.bridgenet.endpoint.servers;
 import me.moonways.bridgenet.endpoint.servers.command.ServersInfoCommand;
 import me.moonways.bridgenet.endpoint.servers.handler.ServersDownstreamListener;
 import me.moonways.bridgenet.endpoint.servers.handler.ServersInputMessagesListener;
+import me.moonways.bridgenet.endpoint.servers.players.PlayerDisconnectListener;
 import me.moonways.bridgenet.endpoint.servers.players.PlayersOnServersConnectionService;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.model.service.servers.ServerFlag;
@@ -31,6 +32,7 @@ public class ServersServiceEndpoint extends EndpointRemoteObject implements Serv
         context.bind(new PlayersOnServersConnectionService());
         context.registerCommand(new ServersInfoCommand());
         context.registerEventListener(new ServersDownstreamListener(serversContainer));
+        context.registerEventListener(new PlayerDisconnectListener());
         context.registerMessageListener(new ServersInputMessagesListener(serversContainer));
     }
 
