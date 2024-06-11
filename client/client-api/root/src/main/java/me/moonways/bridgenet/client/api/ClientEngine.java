@@ -131,7 +131,7 @@ public final class ClientEngine {
         T service = accessModule.lookupStub();
 
         beansService.bind(modelClass, service);
-        log.info("Success connected to rmi service - §2" + descriptor);
+        log.info("Rmi-service '{}' has §2connected", descriptor.getName());
     }
 
     @SuppressWarnings("unchecked")
@@ -142,14 +142,6 @@ public final class ClientEngine {
                 .asSubclass(RemoteService.class);
 
         beansService.unbind(modelClass);
-        log.info("§4Disconnected from rmi service - " + descriptor);
-    }
-
-    public BridgenetNetworkChannel newBridgenetChannel(BridgenetNetworkController networkDriver, NetworkClientConnectionFactory connectionFactory,
-                                                       BridgenetNetworkClientHandler channelHandler) {
-        networkDriver.bindMessages();
-        networkDriver.bindMessageListeners();
-
-        return connectionFactory.newReferenceClient(channelHandler);
+        log.info("Rmi-service '{}' has §4disconnected", descriptor.getName());
     }
 }

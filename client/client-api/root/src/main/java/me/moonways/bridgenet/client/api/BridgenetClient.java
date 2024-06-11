@@ -79,7 +79,11 @@ public abstract class BridgenetClient {
      * системы Bridgenet.
      */
     private void tryConnectToBridgenetServer() {
-        BridgenetNetworkChannel channel = engine.newBridgenetChannel(networkDriver, clientConnectionFactory, channelHandler);
+        networkDriver.bindMessages();
+        networkDriver.bindMessageListeners();
+
+        BridgenetNetworkChannel channel = clientConnectionFactory.newReferenceClient(channelHandler);
+
         handleConnection(channel);
     }
 
