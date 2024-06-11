@@ -21,7 +21,7 @@ public class EndpointLoader {
 
     private static final String LOCAL_BUILD_DIR = ".build/services";
     private static final String DEDICATED_BUILD_DIR = "services";
-    private static final String CONFIG_FILE_NAME = "endpoint_config.json";
+    private static final String CONFIG_FILE_NAME = "endpoint.json";
 
     @Inject
     private RemoteServicesManagement remoteServicesManagement;

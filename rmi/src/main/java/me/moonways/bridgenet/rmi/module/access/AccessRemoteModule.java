@@ -47,7 +47,7 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
         uri = String.format(URI_FORMAT, host, port, serviceInfo.getName());
     }
 
-    public void exportStub(@NotNull ServiceInfo serviceInfo) {
+    public RemoteService exportStub(@NotNull ServiceInfo serviceInfo) {
         String name = serviceInfo.getName();
         Class<? extends RemoteService> subclass = endpointClass.asSubclass(RemoteService.class);
 
@@ -66,8 +66,10 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
             } catch (RemoteException exception) {
                 log.error("§4Cannot be export an endpoint from {}: §c{}", uri, exception.toString());
             }
+            return stub;
         } catch (Exception exception) {
             log.error("§4Cannot be export an endpoint '{}'", name, exception);
+            return null;
         }
     }
 

@@ -17,7 +17,7 @@ import me.moonways.endpoint.bus.handler.GetCommandsMessageHandler;
 
 import java.rmi.RemoteException;
 
-public class BusServiceEndpoint extends EndpointRemoteObject implements BusServiceModel {
+public final class BusServiceEndpoint extends EndpointRemoteObject implements BusServiceModel {
 
     private static final long serialVersionUID = 3915937249408474506L;
 

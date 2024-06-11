@@ -1,17 +1,20 @@
 package me.moonways.bridgenet.rmi.endpoint.persistance;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.assembly.OverridenProperty;
+import me.moonways.bridgenet.rmi.endpoint.Endpoint;
 
 import java.lang.reflect.Field;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Map;
 
 public abstract class EndpointRemoteObject extends UnicastRemoteObject {
 
@@ -23,13 +26,17 @@ public abstract class EndpointRemoteObject extends UnicastRemoteObject {
     @Inject
     private BeansStore beansStore;
 
+    @Getter
+    private Endpoint endpoint;
+
     public EndpointRemoteObject() throws RemoteException {
         super();
     }
 
     @SneakyThrows
-    @PostConstruct
-    private void internal_postConstruct() {
+    public void init(Endpoint endpoint) {
+        this.endpoint = endpoint;
+
         beansService.inject(endpointContext);
 
         construct(endpointContext);
@@ -75,5 +82,11 @@ public abstract class EndpointRemoteObject extends UnicastRemoteObject {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T get(String configKey) {
+        Map<String, Object> hashConfig = endpoint.getConfig().getHashConfig();
+        return (T) hashConfig.get(configKey);
     }
 }
