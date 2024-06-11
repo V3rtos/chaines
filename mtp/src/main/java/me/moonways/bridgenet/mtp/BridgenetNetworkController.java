@@ -7,7 +7,6 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
-import me.moonways.bridgenet.api.inject.decorator.persistence.Async;
 import me.moonways.bridgenet.api.inject.decorator.persistence.KeepTime;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
@@ -54,19 +53,16 @@ public class BridgenetNetworkController implements Serializable {
         beansService.bind(networkMessagesService);
     }
 
-    @Async
     @KeepTime
     public void bindMessages() {
         networkMessagesService.bindMessages(false);
     }
 
-    @Async
     @KeepTime
     public void bindMessagesWithDirectionReverse() {
         networkMessagesService.bindMessages(true);
     }
 
-    @Async
     @KeepTime
     public void bindMessageListeners() {
         handlerList.bindHandlers();
@@ -77,8 +73,7 @@ public class BridgenetNetworkController implements Serializable {
         handlerList.bind(handler);
     }
 
-    @Synchronized
-    public void pull(@NotNull InboundMessageContext<?> context) {
+    public synchronized void pull(@NotNull InboundMessageContext<?> context) {
         beansService.inject(context);
         handlerList.handle(context);
 
