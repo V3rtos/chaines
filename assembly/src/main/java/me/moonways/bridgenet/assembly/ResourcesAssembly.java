@@ -38,6 +38,7 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование создаваемого ресурса
      */
     public void createEmptyResource(String resourceName) {
+        log.debug("§7createEmptyResource(resourceName={})", resourceName);
         File emptyFile = fileSystem.createEmptyFile(resourceName);
 
         if (emptyFile == null) {
@@ -54,6 +55,7 @@ public final class ResourcesAssembly {
      * @param createOnFailure - воспроизвести попытку создания пустого файла в случае неудачи копирования
      */
     public void copyLocalResource(String resourceName, boolean createOnFailure) {
+        log.debug("§7copyLocalResource(resourceName={}, createOnFailure={})", resourceName, createOnFailure);
         boolean isCopied = fileSystem.copy(resourceName);
 
         if (!isCopied && createOnFailure) {
@@ -69,7 +71,8 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование создаваемого ресурса
      */
     public void copyLocalResource(String resourceName) {
-        copyLocalResource(resourceName, false);
+        log.debug("§7copyLocalResource(resourceName={})", resourceName);
+        fileSystem.copy(resourceName);
     }
 
     /**
@@ -80,6 +83,8 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование ресурса.
      */
     public InputStream readResourceStream(String resourceName) {
+        log.debug("§7readResourceStream(resourceName={})", resourceName);
+
         InputStream inputStream = classLoader.readResourceStream(resourceName);
         if (inputStream != null) {
             return inputStream;
@@ -100,6 +105,8 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование ресурса.
      */
     public String readResourcePath(String resourceName) {
+        log.debug("§7readResourcePath(resourceName={})", resourceName);
+
         URL url = classLoader.readResourceURL(resourceName);
         if (url != null) {
             return url.toString();
@@ -117,6 +124,7 @@ public final class ResourcesAssembly {
      * @param charset      - кодировка, в которой воспроизводить чтение.
      */
     public String readResourceFullContent(String resourceName, Charset charset) {
+        log.debug("§7readResourceFullContent(resourceName={}, charset={})", resourceName, charset);
         return StreamToStringUtils.toStringFull(readResourceStream(resourceName), charset);
     }
 
@@ -127,6 +135,7 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование ресурса.
      */
     public String readResourceFullContent(String resourceName) {
+        log.debug("§7readResourceFullContent(resourceName={})", resourceName);
         return StreamToStringUtils.toStringFull(readResourceStream(resourceName));
     }
 
@@ -140,6 +149,7 @@ public final class ResourcesAssembly {
      * @param entity       - тип сущности, в которую преобразовывать полученный json.
      */
     public <T> T readJsonAtEntity(String resourceName, Charset charset, Class<T> entity) {
+        log.debug("§7readJsonAtEntity(resourceName={}, charset={}, entity={})", resourceName, charset, entity.getName());
         return GSON.fromJson(readResourceFullContent(resourceName, charset), entity);
     }
 
@@ -152,6 +162,7 @@ public final class ResourcesAssembly {
      * @param entity       - тип сущности, в которую преобразовывать полученный json.
      */
     public <T> T readJsonAtEntity(String resourceName, Class<T> entity) {
+        log.debug("§7readJsonAtEntity(resourceName={}, entity={})", resourceName, entity.getName());
         return GSON.fromJson(readResourceFullContent(resourceName), entity);
     }
 
@@ -164,6 +175,7 @@ public final class ResourcesAssembly {
      * @param entity       - тип сущности, в которую преобразовывать полученный XML.
      */
     public <T extends XmlRootObject> T readXmlAtEntity(String resourceName, Class<T> entity) {
+        log.debug("§7readXmlAtEntity(resourceName={}, entity={})", resourceName, entity.getName());
         return xmlJaxbParser.parseToDescriptorByType(readResourceStream(resourceName), entity);
     }
 
@@ -174,6 +186,7 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование ресурса.
      */
     public IniConfig readIniConfig(String resourceName) {
+        log.debug("§7readIniConfig(resourceName={})", resourceName);
         return iniConfigLoader.load(readResourceStream(resourceName));
     }
 
