@@ -36,6 +36,7 @@
 
         <client.api.version>1.2</client.api.version>
         <client.api.minecraft.version>1.2</client.api.minecraft.version>
+        <client.minestom.version>1.2</client.minestom.version>
         <client.spigot.version>1.2</client.spigot.version>
         <client.velocity.version>1.2</client.velocity.version>
 

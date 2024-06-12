@@ -14,9 +14,10 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>client-api</module>
+        <module>minestom</module>
         <module>spigot</module>
         <module>velocity</module>
-        <module>client-api</module>
     </modules>
 
     <dependencies>

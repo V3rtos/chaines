@@ -8,13 +8,19 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 @Log4j2
 @RequiredArgsConstructor
 public final class ResourcesFileSystem {
 
-    private static final String EXCLUDE_DIRECTORY_NAME = (File.separator + "testing" + File.separator + "units");
     private static final String ETC_DIRECTORY_PREFIX = "etc";
+    private static final List<String> EXCLUDE_DIRECTORY_NAMES =
+            Arrays.asList(
+                    File.separator + "testing" + File.separator + "units",
+                    File.separator + "client" +  File.separator + "minestom"
+            );
 
     private final ResourcesAssembly assembly;
 
@@ -45,8 +51,10 @@ public final class ResourcesFileSystem {
         resourceName = resourceName.replace("/", File.separator);
         String rootPathname = Paths.get("").toAbsolutePath().toString();
 
-        if (rootPathname.contains(EXCLUDE_DIRECTORY_NAME)) {
-            rootPathname = rootPathname.replace(EXCLUDE_DIRECTORY_NAME, "");
+        for (String excludeDirectoryName : EXCLUDE_DIRECTORY_NAMES) {
+            if (rootPathname.contains(excludeDirectoryName)) {
+                rootPathname = rootPathname.replace(excludeDirectoryName, "");
+            }
         }
 
         String absolutePathname = rootPathname + File.separator + resourceName;
@@ -66,8 +74,10 @@ public final class ResourcesFileSystem {
         resourceName = resourceName.replace("/", File.separator);
         String rootPathname = Paths.get("").toAbsolutePath().toString();
 
-        if (rootPathname.contains(EXCLUDE_DIRECTORY_NAME)) {
-            rootPathname = rootPathname.replace(EXCLUDE_DIRECTORY_NAME, "");
+        for (String excludeDirectoryName : EXCLUDE_DIRECTORY_NAMES) {
+            if (rootPathname.contains(excludeDirectoryName)) {
+                rootPathname = rootPathname.replace(excludeDirectoryName, "");
+            }
         }
 
         Path etcFilepath = Paths.get("assembly", ETC_DIRECTORY_PREFIX);
