@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.client.minestom;
 
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.client.minestom.command.GamemodeCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Duration;
 import java.util.List;
 
+@Log4j2
 public class MinestomServer {
 
     private final MinestomClient minestomClient = new MinestomClient();
@@ -116,10 +118,13 @@ public class MinestomServer {
     public void start() {
         setProperties();
 
+        log.info("Starting minestom-server...");
+
         MinecraftServer.setCompressionThreshold(0);
         MinecraftServer minecraftServer = MinecraftServer.init();
 
         registerCommands();
+        registerEvents();
 
         MinecraftServer.getBenchmarkManager().enable(Duration.of(10, TimeUnit.SECOND));
         MinecraftServer.getSchedulerManager().buildShutdownTask(() -> System.out.println("Good night"));
