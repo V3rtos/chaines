@@ -30,6 +30,7 @@ public class BridgenetNetworkController implements Serializable {
 
     private static final long serialVersionUID = 2199366969666560453L;
 
+    @Getter
     private NetworkMessagesService networkMessagesService;
 
     @Inject
