@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @Log4j2
 @MethodInterceptor
 public class DecoratedObjectProxy {
-
     private final DecoratedMethodScanner decoratedMethodScanner = new DecoratedMethodScanner();
 
     @Inject

@@ -1,9 +1,6 @@
 package me.moonways.bridgenet.api.inject.bean;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Properties;
 import java.util.UUID;
@@ -12,7 +9,7 @@ import java.util.stream.Stream;
 @Getter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class Bean {
 
     private final Properties properties;
@@ -22,7 +19,9 @@ public class Bean {
 
     @ToString.Include
     private final BeanType type;
-    private final Object root;
+
+    @Setter
+    private Object root;
 
     /**
      * Проверить на совместимсть и схожесть бинов

@@ -8,10 +8,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Function;
 
+@Getter
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class BeanPropertyWrapper {
+public final class WrappedProperty {
 
     private static final Function<String, Class<?>> TO_CLASS_MAPPER = ((value) -> {
         try {
@@ -28,15 +29,24 @@ public final class BeanPropertyWrapper {
      *
      * @param component - компонент бина.
      */
-    public static BeanPropertyWrapper from(BeanComponent component) {
+    public static WrappedProperty fromBean(BeanComponent component) {
         Optional<String> propertyKey = component.getPropertyKey();
         if (!propertyKey.isPresent()) {
             throw new BeanException("System property isn`t found for " + component.getRoot());
         }
-        return new BeanPropertyWrapper(propertyKey.orElse(null));
+        return fromProperty(propertyKey.orElse(null));
     }
 
-    @Getter
+    /**
+     * Создать обертку проперти по его
+     * системному ключу.
+     *
+     * @param property - системный ключ проперти.
+     */
+    public static WrappedProperty fromProperty(String property) {
+        return new WrappedProperty(property);
+    }
+
     private final String property;
 
     /**

@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.api.inject.bean.service;
 
 import lombok.RequiredArgsConstructor;
-import me.moonways.bridgenet.api.inject.BeanPropertyWrapper;
+import me.moonways.bridgenet.api.inject.WrappedProperty;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanComponent;
 
@@ -107,8 +107,8 @@ public class BeansInjectionService {
             if (component.getType().equals(String.class)) {
                 component.setValue(property);
             }
-            if (component.getType().equals(BeanPropertyWrapper.class)) {
-                component.setValue(BeanPropertyWrapper.from(component));
+            if (component.getType().equals(WrappedProperty.class)) {
+                component.setValue(WrappedProperty.fromBean(component));
             }
         }
     }
