@@ -59,15 +59,10 @@ public class WrappedHttpServer {
     @Inject
     private ResourcesAssembly assembly;
 
-    @Inject // self-inject
-    private WrappedHttpServer current;
-
     @PostConstruct
     private void initServer() {
         initConfig();
         initHttpServer();
-
-        current.bindSync();
     }
 
     @KeepTime
@@ -76,7 +71,11 @@ public class WrappedHttpServer {
             httpServer.start();
             log.info("HttpServer was success started and listening on §6{}", config.getHost());
         } catch (IOException exception) {
-            exceptionHandler.log(exception);
+            if (exceptionHandler != null) {
+                exceptionHandler.log(exception);
+            } else {
+                log.error(exception);
+            }
         }
     }
 
@@ -88,7 +87,7 @@ public class WrappedHttpServer {
 
     private void initConfig() {
         JaxbServerContext jaxbServerContext = assembly.readXmlAtEntity(ResourcesTypes.REST_SERVER_XML, JaxbServerContext.class);
-        this.exceptionHandler = new HttpServerExceptionHandler(jaxbServerContext.getPrintExceptions());
+        exceptionHandler = new HttpServerExceptionHandler(jaxbServerContext.getPrintExceptions());
 
         initConfigInstance(jaxbServerContext);
         initConfigHttpControllers(jaxbServerContext);
@@ -210,7 +209,11 @@ public class WrappedHttpServer {
             Class<?> aClass = Class.forName(classpath);
             return (T) UNSAFE_FACTORY.create(aClass);
         } catch (ClassNotFoundException exception) {
-            exceptionHandler.log(exception);
+            if (exceptionHandler != null) {
+                exceptionHandler.log(exception);
+            } else {
+                log.error(exception);
+            }
         }
 
         return null;

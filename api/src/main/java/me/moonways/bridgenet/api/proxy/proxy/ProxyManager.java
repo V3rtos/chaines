@@ -33,7 +33,7 @@ public class ProxyManager {
                 continue;
             }
 
-            ProxiedMethod proxiedMethod = ProxiedMethod.create(type.isInterface() ? null : source, method);
+            ProxiedMethod proxiedMethod = ProxiedMethod.create(source, method);
             proxiedMethodSet.add(proxiedMethod);
         }
     }

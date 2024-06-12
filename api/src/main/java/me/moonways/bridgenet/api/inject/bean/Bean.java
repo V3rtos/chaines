@@ -18,10 +18,27 @@ public class Bean {
     private final UUID id;
 
     @ToString.Include
-    private final BeanType type;
-
+    private BeanType type;
     @Setter
     private Object root;
+
+    /**
+     * Получить наименование класса от текущего
+     * корневого экземпляра.
+     * @return - имя класса.
+     */
+    public String getClassName() {
+        return type.getRoot().getSimpleName();
+    }
+
+    /**
+     * Получить полное наименование класса от текущего
+     * корневого экземпляра.
+     * @return - имя класса.
+     */
+    public String getFullClassName() {
+        return type.getRoot().getName();
+    }
 
     /**
      * Проверить на совместимсть и схожесть бинов

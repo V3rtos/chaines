@@ -6,11 +6,12 @@ import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanComponent;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class BeansInjectionService {
+public final class BeansInjectionService {
 
-    private final Set<BeanComponent> componentsInjectionQueueSet = Collections.synchronizedSet(new HashSet<>());
+    private final Set<BeanComponent> definitionsQueueSet = Collections.synchronizedSet(new HashSet<>());
 
     private final BeansStore store;
     private final BeansScanningService scanner;
@@ -53,14 +54,14 @@ public class BeansInjectionService {
         Optional<Bean> beanOptional = store.find(component.getType());
 
         if (!beanOptional.isPresent()) {
-            componentsInjectionQueueSet.add(component);
+            definitionsQueueSet.add(component);
             return;
         }
 
         Bean bean = beanOptional.get();
         component.setValue(bean.getRoot());
 
-        componentsInjectionQueueSet.remove(component);
+        definitionsQueueSet.remove(component);
     }
 
     /**
@@ -82,12 +83,24 @@ public class BeansInjectionService {
     }
 
     /**
+     * Находится ли указанный класс бина в ожидании
+     * полной инжекции всех необходимых компонентов.
+     *
+     * @param rootClass - класс корня бина.
+     */
+    public boolean isQueued(Class<?> rootClass) {
+        return definitionsQueueSet.stream()
+                .anyMatch(beanComponent -> beanComponent.getBean().getType()
+                        .isSimilar(rootClass));
+    }
+
+    /**
      * Данный метод вызывается в случае появления нового
      * кешированного бина для того, чтобы проинициализировать
      * поля, не успевшие получить свой бин из кеша вовремя.
      */
-    public void touchInjectionQueue() {
-        HashSet<BeanComponent> clone = new HashSet<>(componentsInjectionQueueSet); // fix CME
+    public void touchQueue() {
+        HashSet<BeanComponent> clone = new HashSet<>(definitionsQueueSet); // fix CME
         clone.forEach(this::doInjectComponent);
     }
 

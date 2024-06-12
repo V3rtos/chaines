@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Log4j2
 @Getter
@@ -42,18 +43,12 @@ public class ProxiedMethod {
         }
         try {
             ReflectionUtils.grantAccess(declare);
-
             return lastCallReturnedValue = declare.invoke(source, args);
-        } catch (IllegalAccessException | InvocationTargetException exception) {
-            log.error("§4Cannot be invoke proxied method {}: §c{}", this, exception.toString());
-
-            Throwable cause = exception.getCause();
-
-            if (cause == null) {
-                cause = exception;
-            }
-
-            throw new InterceptionException(cause);
+        } catch (Throwable exception) {
+            log.error("§4Cannot be invoke proxied method {}: §c{}", this, exception.toString(),
+                    Optional.ofNullable(exception.getCause())
+                            .orElse(exception));
+            return null;
         }
     }
 

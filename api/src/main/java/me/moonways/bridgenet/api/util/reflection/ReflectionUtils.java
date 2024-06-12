@@ -1,10 +1,9 @@
 package me.moonways.bridgenet.api.util.reflection;
 
 import lombok.experimental.UtilityClass;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 
 import java.lang.reflect.*;
-import java.security.AccessControlException;
 import java.util.stream.Stream;
 
 @UtilityClass
@@ -56,7 +55,7 @@ public class ReflectionUtils {
     public Object newInstanceOf(Class cls) {
         Object instance = tryConstructInstanceOrNull(cls);
         if (instance == null) {
-            return BeanFactoryProviders.UNSAFE.getImpl().get().create(cls);
+            return FactoryType.UNSAFE.get().create(cls);
         }
         return instance;
     }

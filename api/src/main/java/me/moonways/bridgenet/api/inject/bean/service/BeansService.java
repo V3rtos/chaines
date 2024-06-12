@@ -7,9 +7,8 @@ import me.moonways.bridgenet.api.inject.Lazy;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanComponent;
 import me.moonways.bridgenet.api.inject.bean.BeanMethod;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
-import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
 import me.moonways.bridgenet.api.inject.processor.AnnotationProcessorConfig;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.verification.AnnotationVerificationContext;
@@ -37,7 +36,6 @@ import java.util.stream.Stream;
  */
 @Log4j2
 public final class BeansService {
-
     private static final ExecutorService executorService
             = Threads.newSingleThreadExecutor();
 
@@ -56,8 +54,7 @@ public final class BeansService {
     private final Map<Class<?>, Runnable> processorsOnBindingsMap = Collections.synchronizedMap(new HashMap<>());
 
     private final Lazy<DecoratedObjectProxy> decoratorsProxyLazy =
-            Lazy.supply(DecoratedObjectProxy.class, DecoratedObjectProxy::new)
-                    .whenInit(this::inject);
+            Lazy.ofFactory(DecoratedObjectProxy.class);
 
     public BeansService() {
         this.scanner = new BeansScanningService();
@@ -87,9 +84,8 @@ public final class BeansService {
      * Инициализация проекта и системы Dependency Injection.
      */
     public void fakeStart() {
+        log.debug("BeansService.fakeStart -> begin;");
         CompletableFuture.runAsync(() -> {
-
-            log.debug("BeansService.fakeStart -> begin;");
 
             bindThis();
             initBeanFactories();
@@ -103,9 +99,8 @@ public final class BeansService {
      * Инициализация проекта и системы Dependency Injection.
      */
     public void start() {
+        log.debug("BeansService.start -> begin;");
         CompletableFuture.runAsync(() -> {
-
-            log.debug("BeansService.start -> begin;");
 
             bindThis();
             initBeanFactories();
@@ -124,12 +119,12 @@ public final class BeansService {
     private void initBeanFactories() {
         log.debug("Initialize beans factories & providers...");
 
-        BeanFactoryProviders.DEFAULT = Optional.ofNullable(OverridenProperty.BEANS_FACTORY_DEFAULT.get())
-                .map(BeanFactoryProviders::valueOf)
-                .orElse(BeanFactoryProviders.CONSTRUCTOR);
+        FactoryType.DEFAULT = Optional.ofNullable(OverridenProperty.BEANS_FACTORY_DEFAULT.get())
+                .map(FactoryType::valueOf)
+                .orElse(FactoryType.CONSTRUCTOR);
 
-        for (BeanFactoryProviders provider : BeanFactoryProviders.values()) {
-            inject(provider.getImpl().get());
+        for (FactoryType provider : FactoryType.values()) {
+            inject(provider.get());
         }
     }
 
@@ -248,17 +243,27 @@ public final class BeansService {
      * @param bean - бин.
      */
     public synchronized void bind(Bean bean) {
-        if (store.isStored(bean)) {
-            return;
-        }
-
         if (annotationsAwaits.needsAwaits(bean)) {
             annotationsAwaits.offer(bean);
             return;
         }
+        if (store.isStored(bean)) {
+            return;
+        }
 
+        doBind(bean);
+    }
+
+    /**
+     * Воспроизвести полноценный процесс бинда бина.
+     *
+     * @param bean - бин.
+     */
+    private void doBind(Bean bean) {
         inject(bean.getRoot());
-        overrideWithDecorators(bean);
+
+        callPostConstructs(bean);
+        tryOverrideDecorators(bean);
 
         // self-injection process
         for (BeanComponent component : bean.getType().getInjectSelfComponents()) {
@@ -267,8 +272,27 @@ public final class BeansService {
 
         log.debug("Binding a bean of §6{}", bean.getType().getRoot().getName());
 
-        justStoreAndConstruct(bean);
+        justStore(bean);
         callPostBindingConsumers(bean);
+    }
+
+    /**
+     * Преобразовать экземпляр в только что созданный бин.
+     *
+     * @param object - экземпляр, который преобразуем в бин.
+     */
+    public Bean createBean(Object object) {
+        return scanner.createBean(object.getClass(), object);
+    }
+
+    /**
+     * Преобразовать экземпляр в только что созданный бин.
+     *
+     * @param cls - класс, который берем в основу типизации бина.
+     * @param object - экземпляр, который преобразуем в бин.
+     */
+    public Bean createBean(Class<?> cls, Object object) {
+        return scanner.createBean(cls, object);
     }
 
     /**
@@ -277,8 +301,8 @@ public final class BeansService {
      *
      * @param bean - бин, который необходимо проверить.
      */
-    private void overrideWithDecorators(Bean bean) {
-        if (bean.getType().isAnnotated(EnableDecorators.class)) {
+    public synchronized void tryOverrideDecorators(Bean bean) {
+        if (bean.getType().isDecoratorsEnabled()) {
             enableDecorators(bean);
         }
     }
@@ -290,10 +314,10 @@ public final class BeansService {
      * @param bean - бин.
      */
     private void enableDecorators(Bean bean) {
-        if (bean.getProperties().getProperty("decorators.enabled", "false").equals("false")) {
-            bean.setRoot(interceptor.createProxy(bean.getRoot(), decoratorsProxyLazy.get()));
-            bean.getProperties().setProperty("decorators.enabled", "true");
-        }
+        Object root = bean.getRoot();
+        Object proxy = interceptor.createProxy(root, decoratorsProxyLazy.get());
+        //inject(proxy);
+        bean.setRoot(proxy);
     }
 
     /**
@@ -380,6 +404,20 @@ public final class BeansService {
     }
 
     /**
+     * Вызов функций, ожидающих выполнения сразу после
+     * конструирования и инжекции бина.
+     *
+     * @param bean - бин
+     */
+    private void callPostConstructs(Bean bean) {
+        if (!injector.isQueued(bean.getRoot().getClass())) {
+            bean.getType()
+                    .getPostConstructFunctions()
+                    .forEach(BeanMethod::invoke);
+        }
+    }
+
+    /**
      * Потребляет указанный процесс, при определении забиндиного
      * типа бина.
      *
@@ -437,11 +475,9 @@ public final class BeansService {
      */
     public synchronized void justStore(Bean bean) {
         if (!store.isStored(bean)) {
-            overrideWithDecorators(bean);
-
             store.store(bean);
-            injector.touchInjectionQueue();
         }
+        injector.touchQueue();
     }
 
     /**
@@ -463,10 +499,7 @@ public final class BeansService {
      */
     public synchronized void justStoreAndConstruct(Bean bean) {
         justStore(bean);
-
-        // call @PostConstruct functions.
-        List<BeanMethod> postConstructFunctions = bean.getType().getPostConstructFunctions();
-        postConstructFunctions.forEach(BeanMethod::invoke);
+        callPostConstructs(bean);
     }
 
     /**
@@ -544,7 +577,7 @@ public final class BeansService {
             beans.forEach(bean -> processBean(config, bean));
 
             annotationsAwaits.flushQueue(annotationType);
-            injector.touchInjectionQueue();
+            injector.touchQueue();
         }
 
         /**

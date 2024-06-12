@@ -4,7 +4,8 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -27,10 +28,10 @@ public class Lazy<T> {
      * @param cls класс объекта, который будет лениво инициализирован.
      * @return новый экземпляр Lazy.
      */
-    public static <T> Lazy<T> defaultFactory(Class<T> cls) {
-        return factory(cls,
-                Optional.ofNullable(BeanFactoryProviders.DEFAULT)
-                        .orElse(BeanFactoryProviders.CONSTRUCTOR));
+    public static <T> Lazy<T> ofFactory(@NotNull Class<T> cls) {
+        return of(cls, () ->
+                Optional.ofNullable(FactoryType.DEFAULT)
+                        .orElse(FactoryType.CONSTRUCTOR).get().create(cls));
     }
 
     /**
@@ -41,8 +42,8 @@ public class Lazy<T> {
      * @param provider поставщик фабрики для создания объекта.
      * @return новый экземпляр Lazy.
      */
-    public static <T> Lazy<T> factory(Class<T> cls, BeanFactoryProviders provider) {
-        return supply(cls, () -> provider.getImpl().get().create(cls));
+    public static <T> Lazy<T> ofFactory(@NotNull Class<T> cls, @NotNull FactoryType provider) {
+        return of(cls, () -> provider.get().create(cls));
     }
 
     /**
@@ -53,7 +54,7 @@ public class Lazy<T> {
      * @param factory поставщик, создающий объект.
      * @return новый экземпляр Lazy.
      */
-    public static <T> Lazy<T> supply(Class<T> cls, Supplier<T> factory) {
+    public static <T> Lazy<T> of(@NotNull Class<T> cls, @NotNull Supplier<T> factory) {
         return new Lazy<>(cls, factory);
     }
 
@@ -63,25 +64,31 @@ public class Lazy<T> {
 
     @EqualsAndHashCode.Include
     @ToString.Include
-    private T subj;
+    private volatile T subj;
 
-    private Consumer<T> onGet;
-    private Consumer<T> onSet;
+    private Consumer<T> subscribe;
+    private Consumer<T> init;
 
     /**
      * Возвращает лениво инициализированный объект. Если объект еще не инициализирован, он будет создан с использованием фабрики.
      *
      * @return лениво инициализированный объект.
      */
-    public synchronized T get() {
+    @NotNull
+    public T get() {
         if (subj == null) {
-            subj = factory.get();
-            if (onSet != null) {
-                onSet.accept(subj);
+            synchronized (cls) {
+                subj = factory.get();
+
+                if (init != null) {
+                    init.accept(subj);
+                }
             }
         }
-        if (onGet != null) {
-            onGet.accept(subj);
+        if (subscribe != null) {
+            synchronized (cls) {
+                subscribe.accept(subj);
+            }
         }
         return subj;
     }
@@ -108,11 +115,11 @@ public class Lazy<T> {
      *
      * @param consumer обработчик, который будет вызван при получении объекта.
      */
-    public Lazy<T> subscribe(Consumer<T> consumer) {
-        if (onGet == null) {
-            onGet = consumer;
+    public Lazy<T> subscribe(@NotNull Consumer<T> consumer) {
+        if (subscribe == null) {
+            subscribe = consumer;
         } else {
-            onGet = onGet.andThen(consumer);
+            subscribe = subscribe.andThen(consumer);
         }
         return this;
     }
@@ -122,11 +129,11 @@ public class Lazy<T> {
      *
      * @param consumer обработчик, который будет вызван при создании объекта.
      */
-    public Lazy<T> whenInit(Consumer<T> consumer) {
-        if (onSet == null) {
-            onSet = consumer;
+    public Lazy<T> whenInit(@NotNull Consumer<T> consumer) {
+        if (init == null) {
+            init = consumer;
         } else {
-            onSet = onSet.andThen(consumer);
+            init = init.andThen(consumer);
         }
         return this;
     }

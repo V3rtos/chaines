@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.test.engine.flow.nodes;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.test.engine.component.step.Step;
 import me.moonways.bridgenet.test.engine.component.step.StepConfig;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
@@ -59,7 +59,7 @@ public class FlowBeforeStepsApplyingNode implements TestFlowNode {
         List<Step> resultList = new ArrayList<>();
 
         for (Class<? extends Step> stepClass : typesArray) {
-            Step step = BeanFactoryProviders.DEFAULT.getImpl().get().create(stepClass);
+            Step step = FactoryType.DEFAULT.get().create(stepClass);
             previousInstancesList.add(step);
 
             StepConfig config = step.config();

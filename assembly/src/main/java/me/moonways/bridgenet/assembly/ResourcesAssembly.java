@@ -55,7 +55,7 @@ public final class ResourcesAssembly {
      * @param createOnFailure - воспроизвести попытку создания пустого файла в случае неудачи копирования
      */
     public void copyLocalResource(String resourceName, boolean createOnFailure) {
-        log.debug("§7copyLocalResource(resourceName={}, createOnFailure={})", resourceName, createOnFailure);
+        log.debug("copy §7[resourceName={}, createOnFailure={}]", resourceName, createOnFailure);
         boolean isCopied = fileSystem.copy(resourceName);
 
         if (!isCopied && createOnFailure) {
@@ -71,7 +71,7 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование создаваемого ресурса
      */
     public void copyLocalResource(String resourceName) {
-        log.debug("§7copyLocalResource(resourceName={})", resourceName);
+        log.debug("copy §7[resourceName={}]", resourceName);
         fileSystem.copy(resourceName);
     }
 
@@ -83,8 +83,11 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование ресурса.
      */
     public InputStream readResourceStream(String resourceName) {
-        log.debug("§7readResourceStream(resourceName={})", resourceName);
+        log.debug("read stream §7[resourceName={}]", resourceName);
+        return doStream(resourceName);
+    }
 
+    private InputStream doStream(String resourceName) {
         InputStream inputStream = classLoader.readResourceStream(resourceName);
         if (inputStream != null) {
             return inputStream;
@@ -105,7 +108,7 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование ресурса.
      */
     public String readResourcePath(String resourceName) {
-        log.debug("§7readResourcePath(resourceName={})", resourceName);
+        log.debug("read path §7[resourceName={}]", resourceName);
 
         URL url = classLoader.readResourceURL(resourceName);
         if (url != null) {
@@ -124,8 +127,8 @@ public final class ResourcesAssembly {
      * @param charset      - кодировка, в которой воспроизводить чтение.
      */
     public String readResourceFullContent(String resourceName, Charset charset) {
-        log.debug("§7readResourceFullContent(resourceName={}, charset={})", resourceName, charset);
-        return StreamToStringUtils.toStringFull(readResourceStream(resourceName), charset);
+        log.debug("read content §7[resourceName={}, charset={}]", resourceName, charset);
+        return StreamToStringUtils.toStringFull(doStream(resourceName), charset);
     }
 
     /**
@@ -135,8 +138,8 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование ресурса.
      */
     public String readResourceFullContent(String resourceName) {
-        log.debug("§7readResourceFullContent(resourceName={})", resourceName);
-        return StreamToStringUtils.toStringFull(readResourceStream(resourceName));
+        log.debug("read content §7[resourceName={}]", resourceName);
+        return StreamToStringUtils.toStringFull(doStream(resourceName));
     }
 
     /**
@@ -149,8 +152,8 @@ public final class ResourcesAssembly {
      * @param entity       - тип сущности, в которую преобразовывать полученный json.
      */
     public <T> T readJsonAtEntity(String resourceName, Charset charset, Class<T> entity) {
-        log.debug("§7readJsonAtEntity(resourceName={}, charset={}, entity={})", resourceName, charset, entity.getName());
-        return GSON.fromJson(readResourceFullContent(resourceName, charset), entity);
+        log.debug("read §7[resourceName={}, charset={}, entity={}]", resourceName, charset, entity.getName());
+        return GSON.fromJson(StreamToStringUtils.toStringFull(doStream(resourceName), charset), entity);
     }
 
     /**
@@ -162,8 +165,8 @@ public final class ResourcesAssembly {
      * @param entity       - тип сущности, в которую преобразовывать полученный json.
      */
     public <T> T readJsonAtEntity(String resourceName, Class<T> entity) {
-        log.debug("§7readJsonAtEntity(resourceName={}, entity={})", resourceName, entity.getName());
-        return GSON.fromJson(readResourceFullContent(resourceName), entity);
+        log.debug("read §7[resourceName={}, entity={}]", resourceName, entity.getName());
+        return GSON.fromJson(StreamToStringUtils.toStringFull(doStream(resourceName)), entity);
     }
 
     /**
@@ -175,8 +178,8 @@ public final class ResourcesAssembly {
      * @param entity       - тип сущности, в которую преобразовывать полученный XML.
      */
     public <T extends XmlRootObject> T readXmlAtEntity(String resourceName, Class<T> entity) {
-        log.debug("§7readXmlAtEntity(resourceName={}, entity={})", resourceName, entity.getName());
-        return xmlJaxbParser.parseToDescriptorByType(readResourceStream(resourceName), entity);
+        log.debug("read §7[resourceName={}, entity={}]", resourceName, entity.getName());
+        return xmlJaxbParser.parseToDescriptorByType(doStream(resourceName), entity);
     }
 
     /**
@@ -186,8 +189,8 @@ public final class ResourcesAssembly {
      * @param resourceName - наименование ресурса.
      */
     public IniConfig readIniConfig(String resourceName) {
-        log.debug("§7readIniConfig(resourceName={})", resourceName);
-        return iniConfigLoader.load(readResourceStream(resourceName));
+        log.debug("read §7[resourceName={}]", resourceName);
+        return iniConfigLoader.load(doStream(resourceName));
     }
 
     /**

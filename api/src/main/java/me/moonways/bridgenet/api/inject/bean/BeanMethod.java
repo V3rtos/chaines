@@ -49,7 +49,7 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
      * Вызвать исполнение функции
      * инициализации бина.
      */
-    public void invoke(Object... args) {
+    public Object invoke(Object... args) {
         if ((isAfter() || isBefore()) && hasConflicts()) {
             throw new BeanException("Method was detected conflicts: " + this);
         }
@@ -60,13 +60,21 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
         ReflectionUtils.grantAccess(method);
 
         try {
-            if (isBefore() || isAfter()) {
-                log.debug("Executing bean function: §2{}", method);
-            }
+            log.debug("invoke §2{}.{}() §7[{}]", bean.getClassName(), method.getName(), getSource());
+            return method.invoke(bean.getRoot(), args);
 
-            method.invoke(bean.getRoot(), args);
-        } catch (IllegalAccessException | InvocationTargetException exception) {
-            throw new BeanException(exception);
+        } catch (Throwable exception) {
+            throw new BeanException(method.toString(), exception);
         }
+    }
+
+    private String getSource() {
+        if (isAfter()) {
+            return ":PostConstruct";
+        }
+        if (isBefore()) {
+            return ":PreConstruct";
+        }
+        return ":native";
     }
 }

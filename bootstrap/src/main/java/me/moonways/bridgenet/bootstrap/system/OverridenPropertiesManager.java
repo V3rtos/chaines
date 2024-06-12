@@ -18,6 +18,8 @@ public final class OverridenPropertiesManager {
     public static final OverridenPropertiesManager INSTANCE = new OverridenPropertiesManager();
     private static final ResourcesAssembly ASSEMBLY = new ResourcesAssembly();
 
+    private Properties overridenProperties;
+
     /**
      * Подгрузить и перезаписать данные в системные properties
      * из отдельной конфигурации сборки 'config.properties'
@@ -28,14 +30,14 @@ public final class OverridenPropertiesManager {
 
         try {
             properties.load(propertiesStream);
+            overridenProperties = properties;
         } catch (IOException exception) {
             throw new BridgenetAssemblyException(exception);
         }
 
-        properties.forEach((propertyName, value) -> {
+        overridenProperties.forEach((propertyName, value) ->
+                System.setProperty(propertyName.toString(), value.toString()));
 
-            log.debug("Override system-property: §7'{}' = \"{}\"", propertyName, value);
-            System.setProperty(propertyName.toString(), value.toString());
-        });
+        log.info("config.properties content has overriden");
     }
 }

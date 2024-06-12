@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
-@Getter
 @Autobind
 @EnableDecorators
 @WaitTypeAnnotationProcessor({ClientMessage.class, ServerMessage.class})

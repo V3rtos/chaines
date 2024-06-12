@@ -73,7 +73,7 @@ public class AppBootstrap {
 
     public void start(String[] args) {
         setRunning(true);
-        log.info("Running Bridgenet bootstrap process with args = {}", Arrays.toString(args));
+        log.info("Running with args = {}", Arrays.toString(args));
 
         runSystems();
         startBeansActivity(true);

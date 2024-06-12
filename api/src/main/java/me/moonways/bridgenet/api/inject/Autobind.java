@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.api.inject;
 
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 
 import java.lang.annotation.*;
@@ -11,5 +11,5 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 public @interface Autobind {
 
-    BeanFactoryProviders provider() default BeanFactoryProviders.CONSTRUCTOR;
+    FactoryType provider() default FactoryType.CONSTRUCTOR;
 }

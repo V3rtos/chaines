@@ -3,7 +3,9 @@ package me.moonways.bridgenet.api.inject.bean;
 import lombok.Getter;
 import lombok.ToString;
 import me.moonways.bridgenet.api.inject.Autobind;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProvider;
+import me.moonways.bridgenet.api.inject.Prototype;
+import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
+import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -12,7 +14,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,12 +26,12 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
     private final Class<?>[] interfaces;
 
     @ToString.Exclude
-    private final transient AtomicReference<Bean> beanRef;
+    private final transient Prototype<Bean> beanRef;
 
-    public BeanType(AtomicReference<Bean> beanRef, Class<?> root, Class<?>[] interfaces) {
-        super(null, root);
+    public BeanType(Prototype<Bean> beanWeak, Class<?> root, Class<?>[] interfaces) {
+        super(beanWeak.get(), root);
 
-        this.beanRef = beanRef;
+        this.beanRef = beanWeak;
         this.root = root;
         this.interfaces = interfaces;
     }
@@ -71,8 +72,8 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * Получить установленную фабрику инстансов бина, прописанную
      * в аннотации автоматического бинда.
      */
-    public BeanFactoryProvider getAutoFactoryProvider() {
-        return getAnnotation(Autobind.class).map(autobind -> autobind.provider().getImpl())
+    public BeanFactory getAutoFactory() {
+        return getAnnotation(Autobind.class).map(autobind -> autobind.provider().get())
                 .orElse(null);
     }
 
@@ -82,6 +83,14 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      */
     public boolean isAuto() {
         return isAnnotated(Autobind.class);
+    }
+
+    /**
+     * Проверить на наличие аннотации
+     * автоматического проксирования декораторов.
+     */
+    public boolean isDecoratorsEnabled() {
+        return isAnnotated(EnableDecorators.class);
     }
 
     /**
@@ -162,7 +171,7 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * бина, нуждающихся в применении автоматической инжекции.
      */
     public List<BeanComponent> getInjectComponents() {
-        Class<?> root = beanRef.get().getRoot().getClass();
+        Class<?> root = beanRef.toOptional().map(Bean::getRoot).map(Object::getClass).orElseThrow(() -> new BeanException("bean weak is clear"));
         return Stream.of(getDeclaredFields(root)).map(this::toComponent)
                 .filter(BeanComponent::isInject).collect(Collectors.toList());
     }
@@ -173,7 +182,7 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * инстанса экземпляра, в котором они и находятся.
      */
     public List<BeanComponent> getInjectSelfComponents() {
-        Class<?> root = beanRef.get().getRoot().getClass();
+        Class<?> root = beanRef.toOptional().map(Bean::getRoot).map(Object::getClass).orElseThrow(() -> new BeanException("bean weak is clear"));
         return Stream.of(getDeclaredFields(root)).map(this::toComponent)
                 .filter(BeanComponent::isInject).filter(component -> component.getType().isAssignableFrom(root))
                 .collect(Collectors.toList());
@@ -185,7 +194,7 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * инициализации пропертей.
      */
     public List<BeanComponent> getPropertyComponents() {
-        Class<?> root = beanRef.get().getRoot().getClass();
+        Class<?> root = beanRef.toOptional().map(Bean::getRoot).map(Object::getClass).orElseThrow(() -> new BeanException("bean weak is clear"));
         return Stream.of(getDeclaredFields(root)).map(this::toComponent)
                 .filter(BeanComponent::isProperty).collect(Collectors.toList());
     }
@@ -194,7 +203,7 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * Получить весь список вложенных компонентов бина.
      */
     public List<BeanComponent> getAllComponents() {
-        Class<?> root = beanRef.get().getRoot().getClass();
+        Class<?> root = beanRef.toOptional().map(Bean::getRoot).map(Object::getClass).orElseThrow(() -> new BeanException("bean weak is clear"));
         return Stream.of(getDeclaredFields(root)).map(this::toComponent)
                 .collect(Collectors.toList());
     }
@@ -203,7 +212,7 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * Получить список всех функций внутри бина.
      */
     public List<BeanMethod> getAllFunctions() {
-        Class<?> root = beanRef.get().getRoot().getClass();
+        Class<?> root = beanRef.toOptional().map(Bean::getRoot).map(Object::getClass).orElseThrow(() -> new BeanException("bean weak is clear"));
         return Stream.of(root.getMethods()).map(this::toBeanMethod).collect(Collectors.toList());
     }
 
@@ -211,7 +220,7 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * Получить список всех функций внутри бина.
      */
     public List<BeanMethod> getAllDeclaredFunctions() {
-        Class<?> root = beanRef.get().getRoot().getClass();
+        Class<?> root = beanRef.toOptional().map(Bean::getRoot).map(Object::getClass).orElseThrow(() -> new BeanException("bean weak is clear"));
         return Stream.of(getDeclaredMethods(root)).map(this::toBeanMethod).collect(Collectors.toList());
     }
 
@@ -243,7 +252,7 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * инстанса бина.
      */
     public List<BeanMethod> getPreConstructFunctions() {
-        Class<?> root = beanRef.get().getRoot().getClass();
+        Class<?> root = beanRef.toOptional().map(Bean::getRoot).map(Object::getClass).orElseThrow(() -> new BeanException("bean weak is clear"));
         return Stream.of(root.getMethods()).map(this::toBeanMethod).filter(BeanMethod::isBefore)
                 .collect(Collectors.toList());
     }
@@ -254,7 +263,7 @@ public class BeanType extends AnnotatedBeanComponent<Class<?>> {
      * инстанса бина.
      */
     public List<BeanMethod> getPostConstructFunctions() {
-        Class<?> root = beanRef.get().getRoot().getClass();
+        Class<?> root = beanRef.toOptional().map(Bean::getRoot).map(Object::getClass).orElseThrow(() -> new BeanException("bean weak is clear"));
         return Stream.of(getDeclaredMethods(root)).map(this::toBeanMethod).filter(BeanMethod::isAfter)
                 .collect(Collectors.toList());
     }

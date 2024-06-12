@@ -12,7 +12,7 @@ import java.util.function.Function;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class WrappedProperty {
+public class WrappedProperty {
 
     private static final Function<String, Class<?>> TO_CLASS_MAPPER = ((value) -> {
         try {

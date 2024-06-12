@@ -51,6 +51,6 @@ public final class GuiNamespacedEntriesLoader<T extends ItemsEntry> {
             entry.getInstance().set(completed);
         }
 
-        log.debug("Success loaded §2{} §rnamespaced entries from §6{}", entries.size(), instanceName);
+        log.debug("Success loaded §2{} §rnamespaced entries for §6{}", entries.size(), instanceName);
     }
 }

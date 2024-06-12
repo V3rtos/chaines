@@ -1,7 +1,7 @@
 package me.moonways.bridgenet.test.api;
 
 import me.moonways.bridgenet.api.inject.Lazy;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.test.data.ExampleText;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.persistance.BeforeAll;
@@ -13,11 +13,11 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(ModernTestEngineRunner.class)
 public class LazyTest {
 
-    private final Lazy<ExampleText> lazy1 = Lazy.defaultFactory(ExampleText.class);
+    private final Lazy<ExampleText> lazy1 = Lazy.ofFactory(ExampleText.class);
 
-    private final Lazy<ExampleText> lazy2 = Lazy.factory(ExampleText.class, BeanFactoryProviders.UNSAFE);
+    private final Lazy<ExampleText> lazy2 = Lazy.ofFactory(ExampleText.class, FactoryType.UNSAFE);
 
-    private final Lazy<ExampleText> lazy3 = Lazy.supply(ExampleText.class, () -> new ExampleText("Hello world!"));
+    private final Lazy<ExampleText> lazy3 = Lazy.of(ExampleText.class, () -> new ExampleText("Hello world!"));
 
     @BeforeAll
     public void setUp() {

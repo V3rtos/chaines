@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class BeansAnnotationsAwaitService {
+public final class BeansAnnotationsAwaitService {
 
     private final Map<Bean, Class<? extends Annotation>[]> annotationsQueueMap
             = Collections.synchronizedMap(new HashMap<>());
@@ -49,11 +49,11 @@ public class BeansAnnotationsAwaitService {
             return false;
         }
 
-        boolean isNotNeeds = !service.isAnnotationsInitialized(awaitsAnnotationType);
-        if (!isNotNeeds) {
+        boolean isStillNotInitialized = !service.isAnnotationsInitialized(awaitsAnnotationType);
+        if (!isStillNotInitialized) {
             initAnnotationProcessorResult(bean);
         }
-        return isNotNeeds;
+        return isStillNotInitialized;
     }
 
     /**
@@ -65,9 +65,8 @@ public class BeansAnnotationsAwaitService {
      */
     public void offer(Bean bean) {
         if (annotationsQueueMap.containsKey(bean)) {
-            throw new BeanException("Bean " + bean.getType().getRoot().getName() + " has already await anyone annotation-processor");
+            throw new BeanException("Bean " + bean.getFullClassName() + " has already await anyone annotation-processor");
         }
-
         annotationsQueueMap.put(bean, getAwaitsAnnotationsTypes(bean));
     }
 

@@ -4,15 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.IgnoredRegistry;
+import me.moonways.bridgenet.api.inject.Prototype;
 import me.moonways.bridgenet.api.inject.bean.*;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProvider;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.api.inject.processor.AnnotationProcessorConfig;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.def.DefaultTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.util.pair.Pair;
+import me.moonways.bridgenet.assembly.OverridenProperty;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -21,20 +22,20 @@ import org.reflections.util.ConfigurationBuilder;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Log4j2
 @RequiredArgsConstructor
-public class BeansScanningService {
+public final class BeansScanningService {
     private final Set<Class<?>> allResourcesSet = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Сканировать все существующие ресурсы проекта
      * для дальнейшей оптимизации поиска конкретных ресурсов.
      */
+    @SuppressWarnings("deprecation")
     private synchronized void scanAllResourcesAsClasses() {
         if (!allResourcesSet.isEmpty()) {
             return;
@@ -53,7 +54,7 @@ public class BeansScanningService {
 
         Set<Class<?>> classSet = reflections.getSubTypesOf(Object.class);
 
-        log.debug("Scanning result is §e{} §rresources", classSet.size());
+        log.info("Scanning result contains is §e{} §rresources", classSet.size());
         allResourcesSet.addAll(classSet);
     }
 
@@ -102,6 +103,7 @@ public class BeansScanningService {
 
         scanAllResourcesAsClasses();
         return allResourcesSet.stream()
+                .parallel()
                 .filter(resourceClass -> {
                     String resourcePackageName = resourceClass.getPackage().getName();
                     for (String packageName : packageNamesArray) {
@@ -177,9 +179,7 @@ public class BeansScanningService {
      */
     private List<TypeAnnotationProcessor<?>> toTypeAnnotationsProcessors(Set<Class<? extends TypeAnnotationProcessor>> scannerResultSet) {
         List<TypeAnnotationProcessor<?>> result = new ArrayList<>();
-
-        BeanFactoryProvider factoryProvider = BeanFactoryProviders.UNSAFE.getImpl();
-        BeanFactory beanFactory = factoryProvider.get();
+        BeanFactory beanFactory = FactoryType.UNSAFE.get();
 
         for (Class<? extends TypeAnnotationProcessor> type : scannerResultSet) {
             if (type.isInterface() || (type.getModifiers() & Modifier.ABSTRACT) == Modifier.ABSTRACT) {
@@ -255,7 +255,7 @@ public class BeansScanningService {
      * @param functionOfRoot - функция получения инстанса бина.
      */
     private Bean createBean(Class<?> resourceType, Function<BeanType, Object> functionOfRoot) {
-        AtomicReference<Bean> beanRef = new AtomicReference<>();
+        Prototype<Bean> beanRef = Prototype.empty();
 
         BeanType beanType = new BeanType(beanRef, resourceType, getInterfaces(resourceType));
         Bean bean = new Bean(new Properties(), UUID.randomUUID(), beanType, functionOfRoot.apply(beanType));
@@ -283,14 +283,14 @@ public class BeansScanningService {
      * @param beanType - тип бина.
      */
     public Object createRoot(BeanType beanType) {
-        BeanFactoryProvider factoryProvider = BeanFactoryProviders.DEFAULT.getImpl();
+        BeanFactory factory = FactoryType.DEFAULT.get();
         Class<?> rootType = beanType.getRoot();
 
         if (beanType.isAuto()) {
-            factoryProvider = beanType.getAutoFactoryProvider();
+            factory = beanType.getAutoFactory();
         }
 
-        return factoryProvider.get().create(rootType);
+        return factory.create(rootType);
     }
 
     /**

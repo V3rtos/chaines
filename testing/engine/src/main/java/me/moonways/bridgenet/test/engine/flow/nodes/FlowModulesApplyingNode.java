@@ -2,7 +2,7 @@ package me.moonways.bridgenet.test.engine.flow.nodes;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.Bean;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.api.inject.bean.service.BeansAnnotationsAwaitService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
@@ -111,7 +111,7 @@ public class FlowModulesApplyingNode implements TestFlowNode {
         List<Module> engineModuleList = new ArrayList<>();
 
         for (Class<? extends Module> engineModuleClass : typesArray) {
-            Module module = BeanFactoryProviders.DEFAULT.getImpl()
+            Module module = FactoryType.DEFAULT
                     .get()
                     .create(engineModuleClass);
 

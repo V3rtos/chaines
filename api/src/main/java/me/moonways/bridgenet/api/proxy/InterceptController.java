@@ -3,6 +3,7 @@ package me.moonways.bridgenet.api.proxy;
 import javassist.util.proxy.ProxyFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.proxy.proxy.InterfaceProxy;
 import me.moonways.bridgenet.api.proxy.proxy.ProxyManager;
 import me.moonways.bridgenet.api.proxy.proxy.SuperclassProxy;
@@ -24,7 +25,7 @@ public class InterceptController {
 
     private void prepareInterceptor() {
         Arrays.stream(interceptor.getClass().getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(InterceptionFactory.class))
+                .filter(method -> method.isAnnotationPresent(PostConstruct.class))
                 .forEachOrdered(method -> {
 
                     ProxiedMethod proxiedMethod = ProxiedMethod.create(interceptor, method);
