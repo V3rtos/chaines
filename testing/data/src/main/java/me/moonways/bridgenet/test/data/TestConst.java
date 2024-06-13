@@ -16,13 +16,9 @@ import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 
 import java.time.Duration;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public final class TestConst {
-
-    public static final class Exceptions {
-        // Printing stacktrace elements only with packages of Bridgenet if this value is TRUE.
-        public static final boolean FILTER_BY_PACKAGE = Boolean.TRUE;
-    }
 
     public static final class Auth {
         public static final String ACTUAL_PASSWORD = "123qweasdzxc";
