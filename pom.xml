@@ -48,6 +48,7 @@
         <service.gui.version>1.0</service.gui.version>
         <service.guilds.version>1.0</service.guilds.version>
         <service.language.version>1.0</service.language.version>
+        <service.mojang.version>1.0</service.mojang.version>
         <service.parties.version>1.0</service.parties.version>
         <service.permissions.version>1.0</service.permissions.version>
         <service.players.version>1.0</service.players.version>
