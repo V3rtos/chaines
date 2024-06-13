@@ -10,7 +10,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
 
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 @RequiredArgsConstructor
 public abstract class AnnotatedBeanComponent<V extends AnnotatedElement> {
 

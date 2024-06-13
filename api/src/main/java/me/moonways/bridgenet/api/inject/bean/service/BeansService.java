@@ -262,6 +262,13 @@ public final class BeansService {
     private void doBind(Bean bean) {
         inject(bean.getRoot());
 
+        Class<?> rootClass = bean.getRoot().getClass();
+
+        if (injector.isQueued(rootClass)) {
+            injector.subscribeLeaveAtQueue(rootClass, this::doBind);
+            return;
+        }
+
         callPostConstructs(bean);
         tryOverrideDecorators(bean);
 

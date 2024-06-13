@@ -16,7 +16,7 @@ public class InterfaceProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (proxyManager == null) {
-            proxyManager = new ProxyManager(proxy, interfaceClass);
+            proxyManager = new ProxyManager(null, interfaceClass);
         }
 
         return proxyManager.invoke(method, interceptor, args);

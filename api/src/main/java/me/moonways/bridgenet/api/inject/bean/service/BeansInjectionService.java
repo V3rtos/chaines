@@ -6,12 +6,16 @@ import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanComponent;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public final class BeansInjectionService {
 
     private final Set<BeanComponent> definitionsQueueSet = Collections.synchronizedSet(new HashSet<>());
+    private final Map<Class<?>, Consumer<Bean>> beansSubscriptionsOnQueueLeaveMap = new HashMap<>();
 
     private final BeansStore store;
     private final BeansScanningService scanner;
@@ -23,7 +27,7 @@ public final class BeansInjectionService {
      *
      * @param object - объект, который инициализируем.
      */
-    public void injectComponents(Object object) {
+    public synchronized void injectComponents(Object object) {
         Bean bean = scanner.createBean(object.getClass(), object);
 
         doInject(bean);
@@ -51,17 +55,19 @@ public final class BeansInjectionService {
      * @param component - целевой компонент.
      */
     private void doInjectComponent(BeanComponent component) {
-        Optional<Bean> beanOptional = store.find(component.getType());
+        Optional<Bean> componentTypeBeanOptional = store.find(component.getType());
 
-        if (!beanOptional.isPresent()) {
+        if (!componentTypeBeanOptional.isPresent()) {
             definitionsQueueSet.add(component);
             return;
         }
 
-        Bean bean = beanOptional.get();
-        component.setValue(bean.getRoot());
-
+        component.setValue(componentTypeBeanOptional.get().getRoot());
         definitionsQueueSet.remove(component);
+
+        if (!isQueued(component.getBean())) {
+            callLeavesAtQueueSubscriptions(component.getBean());
+        }
     }
 
     /**
@@ -71,7 +77,7 @@ public final class BeansInjectionService {
      * @param component - компонент бина, которому производим self-injection.
      * @return - true, если удалось воспроизвести, и false если не удалось.
      */
-    public boolean injectSelf(BeanComponent component) {
+    public synchronized boolean injectSelf(BeanComponent component) {
         Bean bean = component.getBean();
 
         if (component.getType().isAssignableFrom(bean.getType().getRoot())) {
@@ -95,11 +101,22 @@ public final class BeansInjectionService {
     }
 
     /**
+     * Находится ли указанный бин в ожидании
+     * полной инжекции всех необходимых компонентов.
+     *
+     * @param bean - бин.
+     */
+    public boolean isQueued(Bean bean) {
+        return definitionsQueueSet.stream()
+                .anyMatch(beanComponent -> beanComponent.getBean().isSimilar(bean));
+    }
+
+    /**
      * Данный метод вызывается в случае появления нового
      * кешированного бина для того, чтобы проинициализировать
      * поля, не успевшие получить свой бин из кеша вовремя.
      */
-    public void touchQueue() {
+    public synchronized void touchQueue() {
         HashSet<BeanComponent> clone = new HashSet<>(definitionsQueueSet); // fix CME
         clone.forEach(this::doInjectComponent);
     }
@@ -123,6 +140,33 @@ public final class BeansInjectionService {
             if (component.getType().equals(WrappedProperty.class)) {
                 component.setValue(WrappedProperty.fromBean(component));
             }
+        }
+    }
+
+    /**
+     * Подписаться на событие о выходе из очереди
+     * инжекции бина по его корневому классу.
+     *
+     * @param rootClass - корневой класс бина, по которому искать в очереди.
+     * @param beanConsumer - обработчик события выхода из очереди ожидания.
+     */
+    public synchronized void subscribeLeaveAtQueue(Class<?> rootClass, Consumer<Bean> beanConsumer) {
+        Consumer<Bean> subscription = beansSubscriptionsOnQueueLeaveMap.get(rootClass);
+        if (subscription == null) {
+            subscription = beanConsumer;
+        } else {
+            subscription = subscription
+                    .andThen(beanConsumer);
+        }
+        beansSubscriptionsOnQueueLeaveMap.put(rootClass, subscription);
+    }
+
+    private void callLeavesAtQueueSubscriptions(Bean bean) {
+        Class<?> rootClass = bean.getRoot().getClass();
+        Consumer<Bean> consumer = beansSubscriptionsOnQueueLeaveMap.remove(rootClass);
+
+        if (consumer != null) {
+            consumer.accept(bean);
         }
     }
 }
