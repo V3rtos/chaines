@@ -17,7 +17,6 @@ import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
@@ -35,8 +34,6 @@ public final class CommandRegistry {
     private final CommandChildrenScanner childService = new CommandChildrenScanner();
     private final InternalCommandFactory factory = new InternalCommandFactory();
 
-    @Inject
-    private AnnotationInterceptor interceptor;
     @Inject
     private BeansService beansService;
 
@@ -108,10 +105,12 @@ public final class CommandRegistry {
     }
 
     private Object toProxy(Object commandObject) {
+        beansService.inject(commandObject);
+
         Bean bean = beansService.createBean(commandObject);
         beansService.tryOverrideDecorators(bean);
-        beansService.inject(bean);
-        return bean;
+
+        return bean.getRoot();
     }
 
     private CommandSession.HelpMessageView createHelpMessageView(List<CommandChild> childrenList) {

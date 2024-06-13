@@ -7,6 +7,7 @@ import me.moonways.bridgenet.api.proxy.proxy.ProxyManager;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Autobind
 public final class AnnotationInterceptor {
