@@ -38,10 +38,11 @@ public class HttpChannel {
         try {
             URL url = new URL(host.getHost());
 
+            log.debug(url);
             activeConnection = openConnection(url, host.isUseSSL());
             initOptions(activeConnection);
         } catch (IOException exception) {
-            log.error(new RestClientException(exception));
+            log.error("", new RestClientException(exception));
         }
     }
 
@@ -53,7 +54,7 @@ public class HttpChannel {
                 https = (HttpsURLConnection) urlConnection;
             } else return (HttpURLConnection) urlConnection;
         } catch (IOException exception) {
-            log.error(new RestClientException(exception));
+            log.error("", new RestClientException(exception));
         }
 
         //initSSLCertificates(https);
@@ -70,7 +71,7 @@ public class HttpChannel {
             Certificate[] serverCertificates = https.getServerCertificates();
             // todo
         } catch (SSLPeerUnverifiedException exception) {
-            log.error(new RestClientException(exception));
+            log.error("", new RestClientException(exception));
         }
     }
 
@@ -83,7 +84,7 @@ public class HttpChannel {
         try {
             activeConnection.setRequestMethod(messageType.name());
         } catch (IOException exception) {
-            log.error(new RestEntityException(exception));
+            log.error("", new RestEntityException(exception));
         }
     }
 
@@ -98,7 +99,7 @@ public class HttpChannel {
             OutputStream outputStream = activeConnection.getOutputStream();
             outputStream.write(byteArray);
         } catch (Exception exception) {
-            log.error(new RestEntityException(exception));
+            log.error("", new RestEntityException(exception));
         }
     }
 
@@ -107,7 +108,7 @@ public class HttpChannel {
         try {
             activeConnection.getOutputStream().flush();
         } catch (IOException exception) {
-            log.error(new RestEntityException(exception));
+            log.error("", new RestEntityException(exception));
         }
     }
 
@@ -128,7 +129,7 @@ public class HttpChannel {
                     .setMethod(activeConnection.getRequestMethod())
                     .build();
         } catch (IOException exception) {
-            log.error(new RestClientException(exception));
+            log.error("", new RestClientException(exception));
             return null;
         }
     }
