@@ -29,21 +29,21 @@ public class RuntimeMemoryCommand {
 
         sender.sendMessage("Замеры памяти на актуальный момент:");
 
-        sender.sendMessage(getMemory(actualDump, "Максимально памяти (МБ)", MemoryDump::getMaxMemory));
-        sender.sendMessage(getMemory(actualDump, "Выделено памяти (МБ)", MemoryDump::getTotalMemory));
-        sender.sendMessage(getMemory(actualDump, "Свободно памяти (МБ)", MemoryDump::getFreeMemory));
-        sender.sendMessage(getMemory(actualDump, "Используется памяти (МБ)", MemoryDump::getUsedMemory));
+        sender.sendMessage(getMemory(false, actualDump, "Максимально памяти (МБ)", MemoryDump::getMaxMemory));
+        sender.sendMessage(getMemory(false, actualDump, "Выделено памяти (МБ)", MemoryDump::getTotalMemory));
+        sender.sendMessage(getMemory(false, actualDump, "Свободно памяти (МБ)", MemoryDump::getFreeMemory));
+        sender.sendMessage(getMemory(true, actualDump, "Используется памяти (МБ)", MemoryDump::getUsedMemory));
 
         sender.sendMessage("§7Последний замер был воспроизведен: §6" + DATE_FORMAT.format(previousDump.getTimestamp()));
 
         previousDump = actualDump;
     }
 
-    private String getMemory(MemoryDump actualDump, String description, Function<MemoryDump, Long> typeGet) {
+    private String getMemory(boolean reversed, MemoryDump actualDump, String description, Function<MemoryDump, Long> typeGet) {
         long previousValue = typeGet.apply(previousDump);
         long actualValue = typeGet.apply(actualDump);
 
-        ChatColor chatColor = actualValue > previousValue ? ChatColor.RED : actualValue == previousValue ? ChatColor.YELLOW : ChatColor.GREEN;
+        ChatColor chatColor = actualValue > previousValue ? (reversed ? ChatColor.GREEN : ChatColor.RED) : (actualValue == previousValue ? ChatColor.YELLOW : (reversed ? ChatColor.RED : ChatColor.GREEN));
 
         String differenceSign = actualValue > previousValue ? "+" : actualValue == previousValue ? "" : "-";
 
