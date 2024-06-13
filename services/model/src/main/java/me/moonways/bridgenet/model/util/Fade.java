@@ -7,10 +7,10 @@ import lombok.ToString;
 @Getter
 @ToString
 @Builder(toBuilder = true)
-public final class TitleFade {
+public final class Fade {
 
-    public static TitleFade defaults() {
-        return TitleFade.builder()
+    public static Fade defaults() {
+        return Fade.builder()
                 .fadeIn(20)
                 .stay(60)
                 .fadeOut(20)

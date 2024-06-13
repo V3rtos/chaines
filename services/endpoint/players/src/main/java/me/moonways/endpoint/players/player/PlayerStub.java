@@ -1,7 +1,6 @@
 package me.moonways.endpoint.players.player;
 
 import lombok.Getter;
-import lombok.ToString;
 import me.moonways.bridgenet.api.util.ComponentContentReader;
 import me.moonways.bridgenet.model.audience.ComponentHolders;
 import me.moonways.bridgenet.model.audience.MessageDirection;
@@ -15,7 +14,7 @@ import me.moonways.bridgenet.model.service.players.component.PlayerStore;
 import me.moonways.bridgenet.model.service.players.component.statistic.ActivityStatistics;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.model.util.Title;
-import me.moonways.bridgenet.model.util.TitleFade;
+import me.moonways.bridgenet.model.util.Fade;
 import me.moonways.endpoint.players.database.PlayerDescription;
 import net.kyori.adventure.text.Component;
 
@@ -160,7 +159,7 @@ public class PlayerStub extends OfflinePlayerStub implements Player {
         Component componentSubtitle = Optional.ofNullable(title.getSubtitle())
                 .orElse(Component.empty());
 
-        TitleFade fade = Optional.ofNullable(title.getFade()).orElseGet(TitleFade::defaults);
+        Fade fade = Optional.ofNullable(title.getFade()).orElseGet(Fade::defaults);
 
         String titleComponentJson = ComponentContentReader.read(holders.apply(this, componentTitle));
         String subtitleComponentJson = ComponentContentReader.read(holders.apply(this, componentSubtitle));

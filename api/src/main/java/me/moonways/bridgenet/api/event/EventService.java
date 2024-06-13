@@ -7,9 +7,9 @@ import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
-import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.ScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.AwaitAnnotationsScanning;
 import me.moonways.bridgenet.api.util.thread.Threads;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 
 @Autobind
 @Log4j2
-@WaitTypeAnnotationProcessor(InboundEventListener.class)
+@AwaitAnnotationsScanning(InboundEventListener.class)
 public final class EventService {
 
     private final ExecutorService forkJoinPool = Threads.newWorkSteelingPool();
@@ -30,8 +30,8 @@ public final class EventService {
     @Inject
     private BeansService beansService;
 
-    @GetTypeAnnotationProcessor
-    private TypeAnnotationProcessorResult<Object> listenersResult;
+    @GetAnnotationsScanningResult
+    private ScanningResult<Object> listenersResult;
 
     @PostConstruct
     private void registerInboundListeners() {

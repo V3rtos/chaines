@@ -1,57 +1,28 @@
 package me.moonways.bridgenet.mtp;
 
-import lombok.Getter;
-import lombok.Synchronized;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.decorator.EnableDecorators;
 import me.moonways.bridgenet.api.inject.decorator.persistence.KeepTime;
-import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
-import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
 import me.moonways.bridgenet.mtp.message.InboundMessageContext;
 import me.moonways.bridgenet.mtp.message.NetworkMessageHandlerList;
 import me.moonways.bridgenet.mtp.message.NetworkMessagesService;
-import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
-import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.message.response.ResponsibleMessageService;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
-import java.util.Comparator;
-import java.util.List;
-
 @Autobind
 @EnableDecorators
-@WaitTypeAnnotationProcessor({ClientMessage.class, ServerMessage.class})
-public class BridgenetNetworkController implements Serializable {
+public class BridgenetNetworkController {
 
-    private static final long serialVersionUID = 2199366969666560453L;
-
-    @Getter
+    @Inject
     private NetworkMessagesService networkMessagesService;
-
     @Inject
     private BeansService beansService;
     @Inject
     private NetworkMessageHandlerList handlerList;
     @Inject
     private ResponsibleMessageService responsibleMessageService;
-
-    @GetTypeAnnotationProcessor
-    private TypeAnnotationProcessorResult<Object> messagesResult;
-
-    @PostConstruct
-    private void init() {
-        List<Object> messagesList = messagesResult.toList();
-        messagesList.sort(Comparator.comparing(o -> o.getClass().getName()));
-
-        networkMessagesService = new NetworkMessagesService(messagesList);
-
-        beansService.bind(networkMessagesService);
-    }
 
     @KeepTime
     public void bindMessages() {

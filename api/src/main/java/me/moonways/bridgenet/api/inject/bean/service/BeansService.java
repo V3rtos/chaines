@@ -560,11 +560,12 @@ public final class BeansService {
 
             if (result.isSuccess()) {
                 bean.getProperties().setProperty(TypeAnnotationProcessor.BEAN_ANNOTATION_TYPE_PROPERTY, config.getAnnotationType().getName());
+
                 if (bean.getType().isAuto()) {
                     bind(bean);
+                } else {
+                    processor.processBean(BeansService.this, bean);
                 }
-
-                processor.processBean(BeansService.this, bean);
             }
         }
 

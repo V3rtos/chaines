@@ -56,13 +56,12 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
             RemoteService stub = constructor.newInstance();
 
             log.info("Exporting endpoint '{}' from §3{} §rto §9{}", name, serviceInfo.getModelClass().getSimpleName(), stub.getClass().getSimpleName());
-            beansService.inject(stub);
+            beansService.bind(serviceInfo.getModelClass(), stub);
 
             try {
                 LocateRegistry.createRegistry(serviceInfo.getPort());
                 Naming.rebind(uri, stub);
 
-                beansService.bind(serviceInfo.getModelClass(), lookupStub());
                 remoteServicesManagement.registerService(serviceInfo, stub);
 
             } catch (RemoteException exception) {
