@@ -12,5 +12,5 @@ public final class Title<T> {
     private final T title;
     private final T subtitle;
 
-    private final TitleFade fade;
+    private final Fade fade;
 }

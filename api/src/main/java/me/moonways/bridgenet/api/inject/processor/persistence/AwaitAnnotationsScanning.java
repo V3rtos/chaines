@@ -6,12 +6,12 @@ import java.lang.annotation.*;
  * Данная аннотация ставит в ожидание бин,
  * на который она была повешена, до инициализации
  * аннотированных бинов, помеченных указанным
- * типом аннотации в значении текущей.
+ * типом аннотации в значении.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface WaitTypeAnnotationProcessor {
+public @interface AwaitAnnotationsScanning {
 
     Class<? extends Annotation>[] value();
 }

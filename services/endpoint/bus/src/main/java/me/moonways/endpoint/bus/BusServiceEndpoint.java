@@ -16,7 +16,6 @@ import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.endpoint.bus.handler.GetCommandsMessageHandler;
 
 import java.rmi.RemoteException;
-import java.util.Optional;
 
 public final class BusServiceEndpoint extends EndpointRemoteObject implements BusServiceModel {
 

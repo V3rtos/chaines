@@ -13,5 +13,5 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface GetTypeAnnotationProcessor {
+public @interface GetAnnotationsScanningResult {
 }

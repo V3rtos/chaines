@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @ToString
 @RequiredArgsConstructor
-public final class TypeAnnotationProcessorResult<T> {
+public final class ScanningResult<T> {
 
     @Getter
     private final Class<? extends Annotation>[] annotationsTypes;

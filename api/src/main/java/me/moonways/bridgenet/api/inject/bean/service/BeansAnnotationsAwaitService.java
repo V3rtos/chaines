@@ -6,9 +6,9 @@ import me.moonways.bridgenet.api.inject.bean.BeanComponent;
 import me.moonways.bridgenet.api.inject.bean.BeanException;
 import me.moonways.bridgenet.api.inject.bean.BeanType;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorAdapter;
-import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
-import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.ScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.AwaitAnnotationsScanning;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -31,8 +31,8 @@ public final class BeansAnnotationsAwaitService {
      * @param bean - бин, в рамках которого ищем аннотацию.
      */
     public Class<? extends Annotation>[] getAwaitsAnnotationsTypes(Bean bean) {
-        return bean.getType().getAnnotation(WaitTypeAnnotationProcessor.class)
-                .map(WaitTypeAnnotationProcessor::value)
+        return bean.getType().getAnnotation(AwaitAnnotationsScanning.class)
+                .map(AwaitAnnotationsScanning::value)
                 .orElse(null);
     }
 
@@ -105,7 +105,7 @@ public final class BeansAnnotationsAwaitService {
 
         List<BeanComponent> resultComponents = beanType.getAllComponents()
                 .stream()
-                .filter(component -> component.isAnnotated(GetTypeAnnotationProcessor.class))
+                .filter(component -> component.isAnnotated(GetAnnotationsScanningResult.class))
                 .collect(Collectors.toList());
 
         if (!resultComponents.isEmpty()) {
@@ -117,12 +117,12 @@ public final class BeansAnnotationsAwaitService {
             for (BeanComponent component : resultComponents) {
                 Class<?> type = component.getType();
 
-                if (!type.equals(TypeAnnotationProcessorResult.class)) {
+                if (!type.equals(ScanningResult.class)) {
                     throw new BeanException("Component " + component.getRoot() + " must be return type of TypeAnnotationProcessorResult");
                 }
 
                 Class<?> genericType = TypeAnnotationProcessorAdapter.getGenericType(0, type);
-                TypeAnnotationProcessorResult<?> value = new TypeAnnotationProcessorResult<>(awaitsAnnotationType, genericType, proceedBeans);
+                ScanningResult<?> value = new ScanningResult<>(awaitsAnnotationType, genericType, proceedBeans);
 
                 component.setValue(value);
             }
