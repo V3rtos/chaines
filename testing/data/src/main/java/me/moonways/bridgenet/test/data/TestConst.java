@@ -52,6 +52,12 @@ public final class TestConst {
                         .build();
     }
 
+    public static final class Mojang {
+        public static final String LICENSED_ID = "069a79f444e94726a5befca90e38aaf5";
+        public static final String LICENSED_NICK = "Notch";
+        public static final String PIRATE_NICK = "aboba61398";
+    }
+
     public static final class Player {
         public static final UUID PROXY_ID = UUID.randomUUID();
         public static final UUID ID = UUID.randomUUID();
