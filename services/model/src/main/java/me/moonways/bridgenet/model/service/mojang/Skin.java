@@ -9,6 +9,8 @@ import lombok.ToString;
 @ToString
 public class Skin {
 
+    private final String id;
+
     private final String nickname;
 
     private final String texture;

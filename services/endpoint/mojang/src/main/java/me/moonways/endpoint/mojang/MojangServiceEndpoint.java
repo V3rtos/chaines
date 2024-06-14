@@ -64,6 +64,7 @@ public final class MojangServiceEndpoint extends EndpointRemoteObject implements
     public Optional<Skin> getMinecraftSkinById(String id) throws RemoteException {
         return mojangApi.getProfile(id).map(profile ->
                 Skin.builder()
+                        .id(profile.getId())
                         .nickname(profile.getName())
                         .texture(profile.getProperties()[0].getValue())
                         .signature(profile.getProperties()[0].getSignature())
