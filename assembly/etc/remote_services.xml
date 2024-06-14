@@ -127,7 +127,7 @@
             <!-- Service direction name -->
             <name>mojang</name>
             <!-- Target service class type -->
-            <modelPath>me.moonways.bridgenet.model.service.language.MojangServiceModel</modelPath>
+            <modelPath>me.moonways.bridgenet.model.service.mojang.MojangServiceModel</modelPath>
         </service>
     </services>
 </configuration>
