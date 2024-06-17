@@ -5,7 +5,7 @@
 
 <br>
 <img src="https://img.shields.io/badge/language-Java-gold?style=flat" />
-<img src="https://img.shields.io/badge/release-v1.2-gold?style=flat" />
+<img src="https://img.shields.io/badge/release-v1.3-gold?style=flat" />
 <img src="https://img.shields.io/badge/dev_branch-development-gold?style=flat" />
 
 </div>
