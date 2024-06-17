@@ -94,9 +94,9 @@ if (!nicknameOptional.isPresent()) {
 </service>
 ```
 
-- Реализация эндпоинта лежит в модуле `endpoints/language`;
+- Реализация эндпоинта лежит в модуле `endpoints/mojang`;
 - Имплементацией основного модельного интерфейса сервиса
-  <br>является `me.moonways.endpoint.language.LanguageServiceEndpoint`;
+  <br>является `me.moonways.endpoint.mojang.MojangServiceEndpoint`;
 - Реализация эндпоинта использует REST-запросы, результаты которых сразу кеширует
   <br>на определенное время, и при повторном запросе каких-либо данных преварительно
   <br>пытается найти их в кешированных.
