@@ -15,7 +15,7 @@ import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 import me.moonways.bridgenet.model.service.permissions.permission.PermissionsManager;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import org.junit.Test;

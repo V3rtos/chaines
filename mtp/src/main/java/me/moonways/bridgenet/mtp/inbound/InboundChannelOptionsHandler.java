@@ -12,6 +12,7 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.mtp.channel.ChannelDirection;
 import me.moonways.bridgenet.mtp.config.NetworkJsonConfiguration;
+import me.moonways.bridgenet.mtp.message.NetworkMessagesService;
 import me.moonways.bridgenet.mtp.message.codec.NetworkMessageDecoder;
 import me.moonways.bridgenet.mtp.message.codec.NetworkMessageEncoder;
 import me.moonways.bridgenet.mtp.message.encryption.MessageEncryption;
@@ -34,7 +35,7 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
     private Consumer<Channel> initChannelConsumer;
 
     @Inject
-    private BridgenetNetworkController networkController;
+    private NetworkMessagesService messagesService;
     @Inject
     private NetworkJsonConfiguration configuration;
     @Inject
@@ -48,7 +49,7 @@ public class InboundChannelOptionsHandler extends ChannelInitializer<Channel> {
     private void initCodec(@NotNull ChannelPipeline pipeline) {
         addToPipeline(pipeline, new LengthFieldBasedFrameDecoder(65535, 0, 4, 0, 4));
         addToPipeline(pipeline, new LengthFieldPrepender(4));
-        addToPipeline(pipeline, new NetworkMessageDecoder(networkController.getNetworkMessagesService(), configuration));
+        addToPipeline(pipeline, new NetworkMessageDecoder(messagesService, configuration));
         addToPipeline(pipeline, new NetworkMessageEncoder(configuration));
     }
 

@@ -9,7 +9,7 @@ import me.moonways.bridgenet.model.service.language.*;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.data.junit.assertion.ServicesAssert;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.RmiServicesModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import net.kyori.adventure.text.Component;

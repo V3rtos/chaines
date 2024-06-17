@@ -44,13 +44,12 @@ public class BridgenetVelocityPlugin extends BridgenetClient {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        start();
+        super.start();
     }
 
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
-        BridgenetServerSync bridgenet = getBridgenetServerSync();
-        bridgenet.exportClientDisconnect();
+        super.shutdown();
     }
 
     @Override

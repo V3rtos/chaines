@@ -8,9 +8,10 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
-import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.ScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.AwaitAnnotationsScanning;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.mtp.message.exception.MessageHandleException;
 import me.moonways.bridgenet.mtp.message.persistence.InboundMessageListener;
 import me.moonways.bridgenet.mtp.message.persistence.Priority;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Autobind
-@WaitTypeAnnotationProcessor(InboundMessageListener.class)
+@AwaitAnnotationsScanning(InboundMessageListener.class)
 public class NetworkMessageHandlerList {
 
     private static final Comparator<MessageSubscriberState> SORTING = Comparator.comparingInt(MessageSubscriberState::getPriority);
@@ -36,8 +37,8 @@ public class NetworkMessageHandlerList {
     @Inject
     private BeansService beansService;
 
-    @GetTypeAnnotationProcessor
-    private TypeAnnotationProcessorResult<Object> handlersResult;
+    @GetAnnotationsScanningResult
+    private ScanningResult<Object> handlersResult;
 
     public void bindHandlers() {
         handlersResult.toList().forEach(this::bind);
@@ -95,7 +96,7 @@ public class NetworkMessageHandlerList {
 
                 log.debug("Received message §3{} §rredirected to §2{}", messageClass, handlerClassName);
 
-                method.setAccessible(true);
+                ReflectionUtils.grantAccess(method);
                 method.invoke(subscriber.getSource(), value);
 
                 handlingCount++;

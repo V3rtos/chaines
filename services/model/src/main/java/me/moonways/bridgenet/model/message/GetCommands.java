@@ -10,6 +10,7 @@ import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
 
 import java.util.List;
 
+@ToString
 @ClientMessage
 @NoArgsConstructor(onConstructor_ = @Inject)
 public class GetCommands {

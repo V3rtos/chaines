@@ -1,24 +1,35 @@
 package me.moonways.bridgenet.mtp.message;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.inject.Autobind;
+import me.moonways.bridgenet.api.inject.PostConstruct;
+import me.moonways.bridgenet.api.inject.processor.ScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.AwaitAnnotationsScanning;
 import me.moonways.bridgenet.mtp.channel.ChannelDirection;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Log4j2
-@RequiredArgsConstructor
+@Autobind
+@AwaitAnnotationsScanning({ClientMessage.class, ServerMessage.class})
 public class NetworkMessagesService {
 
     private final Set<WrappedNetworkMessage> networkMessageWrappers = Collections.synchronizedSet(new HashSet<>());
-    private final List<Object> messagesList;
+    private List<Object> messagesList;
+
+    @GetAnnotationsScanningResult
+    private ScanningResult<Object> messagesResult;
+
+    @PostConstruct
+    private void init() {
+        messagesList = messagesResult.toList();
+        messagesList.sort(Comparator.comparing(o -> o.getClass().getName()));
+    }
 
     private WrappedNetworkMessage toWrapper(ChannelDirection direction, Class<?> messageClass) {
         int messageID = networkMessageWrappers.size();
@@ -31,7 +42,9 @@ public class NetworkMessagesService {
     }
 
     public void bindMessages(boolean reverse) {
-        messagesList.forEach(message -> register(reverse, message.getClass()));
+        for (Object message : messagesList) {
+            register(reverse, message.getClass());
+        }
     }
 
     private Class<? extends Annotation> findMessageAnnotation(Class<?> messageClass) {

@@ -2,6 +2,8 @@ package me.moonways.bridgenet.api.inject.bean.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.api.inject.Prototype;
+import me.moonways.bridgenet.api.inject.Weak;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanException;
 import me.moonways.bridgenet.api.inject.bean.BeanType;
@@ -9,7 +11,6 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -35,7 +36,7 @@ public final class BeansStore {
      *
      * @param bean - бин.
      */
-    public void store(Bean bean) {
+    public synchronized void store(Bean bean) {
         if (isStored(bean)) {
             throw new BeanException("Bean has already bind");
         }
@@ -109,8 +110,7 @@ public final class BeansStore {
                 .filter(interfaceType -> scanner.canInterfaceInclude(interfaceType) && !Arrays.asList(duplicates).contains(interfaceType))
                 .toArray(Class<?>[]::new);
 
-        AtomicReference<Bean> beanRef = new AtomicReference<>(bean);
-        BeanType newType = new BeanType(beanRef, beanType.getRoot(), includeInterfaces);
+        BeanType newType = new BeanType(Prototype.of(bean), beanType.getRoot(), includeInterfaces);
 
         delete(bean);
         store(new Bean(bean.getProperties(), bean.getId(), newType, bean.getRoot()));
@@ -122,7 +122,7 @@ public final class BeansStore {
      *
      * @param bean - бин.
      */
-    public void delete(Bean bean) {
+    public synchronized void delete(Bean bean) {
         store.remove(bean.getId());
     }
 

@@ -1,7 +1,8 @@
 package me.moonways.bridgenet.model.service.gui;
 
-import me.moonways.bridgenet.model.event.GuiItemClickEvent;
+import me.moonways.bridgenet.model.service.gui.click.ClickAction;
 import me.moonways.bridgenet.model.service.gui.item.Items;
+import me.moonways.bridgenet.model.service.players.Player;
 import me.moonways.bridgenet.rmi.service.RemoteService;
 
 import java.rmi.RemoteException;
@@ -47,17 +48,14 @@ public interface GuiServiceModel extends RemoteService {
 
     /**
      * Вызвать событие клика в указанном GUI с заданным событием клика.
-     *
-     * @param guiId - Идентификатор GUI, в котором произошло событие клика.
-     * @param event - Событие клика, которое нужно обработать.
+     * @param clickAction - Описание объектов, которые взаимодействуют с воспроизводимым кликом.
      */
-    void fireClickAction(UUID guiId, GuiItemClickEvent event) throws RemoteException;
+    void fireClickAction(ClickAction clickAction) throws RemoteException;
 
     /**
-     * Вызвать событие клика в указанном GUI с заданным событием клика.
-     *
-     * @param gui   - GUI, в котором произошло событие клика.
-     * @param event - Событие клика, которое нужно обработать.
+     * Вызвать событие закрытия текущего инвентаря
+     * игрока.
+     * @param player - игрок, для которого вызываем закрытие инвентаря.
      */
-    void fireClickAction(Gui gui, GuiItemClickEvent event) throws RemoteException;
+    void fireCloseGui(Player player) throws RemoteException;
 }

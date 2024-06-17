@@ -2,7 +2,7 @@ package me.moonways.bridgenet.test.engine;
 
 import lombok.Getter;
 import lombok.ToString;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.test.data.junit.notification.EmptyTraceFailure;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
 import me.moonways.bridgenet.test.engine.persistance.AfterAll;
@@ -58,7 +58,7 @@ public class TestingObject extends TestingElement {
 
     public Object getInstance() {
         if (instance == null) {
-            instance = BeanFactoryProviders.DEFAULT.getImpl()
+            instance = FactoryType.DEFAULT
                     .get()
                     .create(testClass.getJavaClass());
         }

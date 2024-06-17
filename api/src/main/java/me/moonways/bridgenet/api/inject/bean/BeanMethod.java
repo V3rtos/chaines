@@ -3,6 +3,7 @@ package me.moonways.bridgenet.api.inject.bean;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.PreConstruct;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -48,7 +49,7 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
      * Вызвать исполнение функции
      * инициализации бина.
      */
-    public void invoke(Object... args) {
+    public Object invoke(Object... args) {
         if ((isAfter() || isBefore()) && hasConflicts()) {
             throw new BeanException("Method was detected conflicts: " + this);
         }
@@ -56,16 +57,24 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
         Method method = getRoot();
         Bean bean = getBean();
 
-        method.setAccessible(true);
+        ReflectionUtils.grantAccess(method);
 
         try {
-            if (isBefore() || isAfter()) {
-                log.debug("Executing bean function: §2{}", method);
-            }
+            log.debug("invoke §2{}.{}() §7[{}]", bean.getClassName(), method.getName(), getSource());
+            return method.invoke(bean.getRoot(), args);
 
-            method.invoke(bean.getRoot(), args);
-        } catch (IllegalAccessException | InvocationTargetException exception) {
-            throw new BeanException(exception);
+        } catch (Throwable exception) {
+            throw new BeanException(method.toString(), exception);
         }
+    }
+
+    private String getSource() {
+        if (isAfter()) {
+            return ":PostConstruct";
+        }
+        if (isBefore()) {
+            return ":PreConstruct";
+        }
+        return ":native";
     }
 }

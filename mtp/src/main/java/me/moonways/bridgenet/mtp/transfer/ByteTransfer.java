@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.mtp.transfer;
 
-import me.moonways.bridgenet.mtp.transfer.provider.TransferPrimitiveProvider;
+import me.moonways.bridgenet.mtp.transfer.provider.DefaultProvider;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 
 import java.lang.annotation.ElementType;
@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ByteTransfer {
 
-    Class<? extends TransferProvider> provider() default TransferPrimitiveProvider.class;
+    Class<? extends TransferProvider> provider() default DefaultProvider.class;
 }

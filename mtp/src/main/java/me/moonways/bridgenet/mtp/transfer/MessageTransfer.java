@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
+import me.moonways.bridgenet.api.inject.bean.factory.type.ConstructorFactory;
 import me.moonways.bridgenet.api.inject.bean.factory.type.UnsafeFactory;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 
 import java.lang.reflect.Field;
@@ -18,7 +20,7 @@ import java.util.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MessageTransfer {
 
-    private static final BeanFactory OBJECT_FACTORY = new UnsafeFactory();
+    private static final BeanFactory OBJECT_FACTORY = new ConstructorFactory();
 
     public static MessageTransfer decode(ByteBuf byteBuf) {
         return new MessageTransfer(null, byteBuf);
@@ -57,7 +59,7 @@ public final class MessageTransfer {
 
         Class<? extends TransferProvider> provider = declaredAnnotation.provider();
         if (provider == null)
-            log.error(new MessageTransferException("Provider for " + field + " is not initialized"));
+            log.warn("§6Provider type for " + field + " is not initialized");
 
         return provider;
     }
@@ -72,7 +74,7 @@ public final class MessageTransfer {
             TransferProvider transferProvider = OBJECT_FACTORY.create(provider);
 
             try {
-                field.setAccessible(true);
+                ReflectionUtils.grantAccess(field);
 
                 Object value = field.get(messagePacket);
                 if (Iterable.class.isAssignableFrom(field.getType())) {
@@ -80,9 +82,8 @@ public final class MessageTransfer {
                 } else {
                     bufField(value, transferProvider, byteBuf);
                 }
-            } catch (IllegalAccessException exception) {
-                log.error(new MessageTransferException(exception));
-                return;
+            } catch (Throwable exception) {
+                throw new MessageTransferException(exception);
             }
         }
     }
@@ -120,10 +121,10 @@ public final class MessageTransfer {
                 collection.add(provider.readObject(byteBuf, genericType));
             }
 
-            field.setAccessible(true);
+            ReflectionUtils.grantAccess(field);
             field.set(messagePacket, collection);
-        } catch (Exception exception) {
-            log.error(new MessageTransferException(exception));
+        } catch (Throwable exception) {
+            throw new MessageTransferException(exception);
         }
     }
 
@@ -131,10 +132,10 @@ public final class MessageTransfer {
         Object providedObject = provider.readObject(byteBuf, field.getType());
 
         try {
-            field.setAccessible(true);
+            ReflectionUtils.grantAccess(field);
             field.set(messagePacket, providedObject);
-        } catch (IllegalAccessException exception) {
-            log.error(new MessageTransferException(exception));
+        } catch (Throwable exception) {
+            throw new MessageTransferException(exception);
         }
     }
 

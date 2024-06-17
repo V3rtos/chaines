@@ -5,6 +5,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.BeanException;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -27,7 +28,7 @@ public class FactoryMethodFactory implements BeanFactory {
                 return null;
             }
 
-            factoryMethod.setAccessible(true);
+            ReflectionUtils.grantAccess(factoryMethod);
             Object[] args = parametersToArguments(factoryMethod.getParameterTypes());
 
             return (T) factoryMethod.invoke(null, args);
@@ -49,7 +50,7 @@ public class FactoryMethodFactory implements BeanFactory {
         }
 
         if (factoryMethodsResult.isEmpty()) {
-            log.error("§4No one found factory method for " + cls);
+            log.error("§4No one found factory method for {}", cls);
             return null;
         }
 

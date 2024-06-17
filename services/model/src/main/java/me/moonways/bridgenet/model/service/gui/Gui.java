@@ -2,6 +2,7 @@ package me.moonways.bridgenet.model.service.gui;
 
 import me.moonways.bridgenet.model.service.gui.click.ItemClickListener;
 import me.moonways.bridgenet.model.service.gui.item.ItemStack;
+import me.moonways.bridgenet.model.service.players.Player;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -61,7 +62,7 @@ public interface Gui extends Remote {
      *
      * @param listener - Слушатель событий кликов для всего GUI.
      */
-    void addClickListener(ItemClickListener listener) throws RemoteException;
+    void addGlobalListener(ItemClickListener listener) throws RemoteException;
 
     /**
      * Добавить слушателя событий кликов для указанного слота GUI.
@@ -69,5 +70,11 @@ public interface Gui extends Remote {
      * @param slot     - Слот GUI, для которого нужно добавить слушателя событий кликов.
      * @param listener - Слушатель событий кликов для указанного слота GUI.
      */
-    void addClickListener(GuiSlot slot, ItemClickListener listener) throws RemoteException;
+    void addGlobalListener(GuiSlot slot, ItemClickListener listener) throws RemoteException;
+
+    /**
+     * Открыть текущий инвентарь определенному
+     * игроку, находящемуся в статусе онлайн.
+     */
+    void open(Player player) throws RemoteException;
 }

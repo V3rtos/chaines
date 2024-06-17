@@ -6,7 +6,7 @@ import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
 import me.moonways.bridgenet.test.data.EntityStatus;
 import me.moonways.bridgenet.test.data.EntityUser;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.DatabasesModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.DatabasesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestExternal;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import me.moonways.bridgenet.test.engine.persistance.TestSleeping;

@@ -47,12 +47,17 @@ public class NetworkMessageEncoder extends MessageToByteEncoder<ExportedMessage>
 
                 MessageEncryption encryption = configuration.getEncryption();
                 buffer = encryption.encode(buffer);
+
+                if (buffer == null) {
+                    byteBuf.clear();
+                    return;
+                }
             }
 
             byte[] array = ByteCodec.readBytesArray(buffer);
             ByteCompression.write(array, byteBuf);
 
-            bridgenetDataLogger.logWritesCount(ProfilerType.MTP_TRAFFIC, byteBuf.writableBytes());
+            bridgenetDataLogger.logWritesCount(ProfilerType.MTP_TRAFFIC, byteBuf.readableBytes());
         } catch (Exception exception) {
             throw new MessageCodecException(exception);
         }

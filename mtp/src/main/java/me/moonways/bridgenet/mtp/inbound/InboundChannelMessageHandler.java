@@ -78,7 +78,7 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
         Object message = exportedMessage.getMessage();
 
         log.debug("§9[{}]: §r{}",
-                String.format(NetworkRemoteChannel.MESSAGE_HANDLE_LOG_MSG.apply(channelDirection.reverse()),
+                String.format(NetworkRemoteChannel.handleMessageLogFunc.apply(channelDirection.reverse()),
                         ctx.channel().remoteAddress()), message);
 
         networkController.pull(new InboundMessageContext<>(exportedMessage.getCallbackID(), message, inboundChannel, System.currentTimeMillis()));

@@ -57,10 +57,10 @@ public class ModernTestEngineRunner extends BlockJUnit4ClassRunner {
     private void executeFlowNode(TestClass testClass, TestFlowNode flowNode, TestFlowContext flowContext) {
         String simpleName = flowNode.getClass().getSimpleName();
 
-        log.debug("Step: §7{}.execute <-> begin; §r[for {}]", simpleName, testClass.getJavaClass());
+        log.debug("Flow: §7{}.execute <-> begin; §r[for {}]", simpleName, testClass.getJavaClass());
 
         flowNode.execute(flowContext);
 
-        log.debug("Step: §7{}.execute <-> end; §r[for {}]", simpleName, testClass.getJavaClass());
+        log.debug("Flow: §7{}.execute <-> end; §r[for {}]", simpleName, testClass.getJavaClass());
     }
 }

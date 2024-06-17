@@ -5,7 +5,6 @@ import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
@@ -25,22 +24,19 @@ import java.util.function.Function;
 @Log4j2
 @RequiredArgsConstructor
 public class NetworkRemoteChannel implements BridgenetNetworkChannel {
+
     private static final long serialVersionUID = -4718332193161413564L;
+    public static final int defaultCallbackTimeout = 10_000;
 
-    public static final String PULLING_STATE_PROPERTY = "pulling_state";
+    public static final String pullingStateProperty = "pulling_state";
 
-    public static final AttributeKey<ChannelDirection> DIRECTION_ATTRIBUTE = AttributeKey.valueOf("direction_attribute");
-    public static final Function<ChannelDirection, String> MESSAGE_HANDLE_LOG_MSG = (direction) -> direction == ChannelDirection.TO_SERVER ? "Client[%s] -> Server" : "Server -> Client[%s]";
-
-    public static final int DEFAULT_RESPONSE_TIMEOUT = 15_000;
+    private static final AttributeKey<ChannelDirection> directionAttribute = AttributeKey.valueOf("direction_attribute");
+    public static final Function<ChannelDirection, String> handleMessageLogFunc = (direction) -> direction == ChannelDirection.TO_SERVER ? "Client[%s] -> Server" : "Server -> Client[%s]";
 
     @Getter
     private final ChannelDirection direction;
-
     @Getter
     private final Channel handle;
-
-    private long lastResponseSessionId;
 
     @Inject
     private ResponsibleMessageService responsibleService;
@@ -51,7 +47,7 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
 
     @PostConstruct
     public void initAttributes() {
-        Attribute<ChannelDirection> attribute = handle.attr(DIRECTION_ATTRIBUTE);
+        Attribute<ChannelDirection> attribute = handle.attr(directionAttribute);
         attribute.set(direction);
     }
 
@@ -60,50 +56,47 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
         return ((InetSocketAddress) handle.remoteAddress());
     }
 
-    @Synchronized
     @Override
-    public void send(@NotNull Object message) {
+    public synchronized void send(@NotNull Object message) {
         send(networkMessagesService.export(message));
     }
 
     @Override
-    public void send(@NotNull ExportedMessage exportedMessage) {
+    public synchronized void send(@NotNull ExportedMessage exportedMessage) {
         Object message = exportedMessage.getMessage();
 
-        log.debug("§9[{}]: §r{}", String.format(MESSAGE_HANDLE_LOG_MSG.apply(direction), handle.remoteAddress()), message);
+        log.debug("§9[{}]: §r{}", String.format(handleMessageLogFunc.apply(direction), handle.remoteAddress()), message);
         handle.writeAndFlush(exportedMessage);
     }
 
     @Override
-    public void pull(@NotNull Object message) {
+    public synchronized void pull(@NotNull Object message) {
         pull(networkMessagesService.export(message));
     }
 
     @Override
-    public void pull(@NotNull ExportedMessage message) {
-        pull(new InboundMessageContext<>(message.getCallbackID(), message, this, System.currentTimeMillis()));
+    public synchronized void pull(@NotNull ExportedMessage message) {
+        pull(new InboundMessageContext<>(message.getCallbackID(), message.getMessage(), this, System.currentTimeMillis()));
     }
 
     @Override
-    public void pull(@NotNull InboundMessageContext<?> context) {
-        setProperty(PULLING_STATE_PROPERTY, true);
+    public synchronized void pull(@NotNull InboundMessageContext<?> context) {
+        setProperty(pullingStateProperty, true);
 
         log.debug("§9[PULL]: §r{}", context.getMessage());
         networkController.pull(context);
 
-        setProperty(PULLING_STATE_PROPERTY, false);
+        setProperty(pullingStateProperty, false);
     }
 
-    @Synchronized
     @Override
-    public void close() {
+    public synchronized void close() {
         handle.flush();
         handle.close();
     }
 
-    @Synchronized
     @Override
-    public <R> CompletableFuture<R> sendAwait(int timeout, @NotNull Class<R> responseType, @NotNull Object message) {
+    public synchronized <R> CompletableFuture<R> sendAwait(int timeout, @NotNull Class<R> responseType, @NotNull Object message) {
         ExportedMessage exportedMessage = networkMessagesService.export(message);
         exportedMessage.marksResponsible(responsibleService);
 
@@ -115,17 +108,9 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
         return future;
     }
 
-    @Synchronized
     @Override
-    public <R> CompletableFuture<R> sendAwait(@NotNull Class<R> responseType, @NotNull Object message) {
-        return sendAwait(DEFAULT_RESPONSE_TIMEOUT, responseType, message);
-    }
-
-    private long createResponseSessionId() {
-        if (lastResponseSessionId + 1 == Long.MAX_VALUE) {
-            return lastResponseSessionId = 0;
-        }
-        return lastResponseSessionId++;
+    public synchronized <R> CompletableFuture<R> sendAwait(@NotNull Class<R> responseType, @NotNull Object message) {
+        return sendAwait(defaultCallbackTimeout, responseType, message);
     }
 
     @Override

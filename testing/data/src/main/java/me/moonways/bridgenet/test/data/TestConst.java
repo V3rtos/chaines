@@ -1,10 +1,12 @@
 package me.moonways.bridgenet.test.data;
 
 import me.moonways.bridgenet.client.api.data.ClientDto;
+import me.moonways.bridgenet.client.api.data.GameDto;
 import me.moonways.bridgenet.client.api.data.UserDto;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiSlot;
 import me.moonways.bridgenet.model.service.gui.GuiType;
+import me.moonways.bridgenet.model.service.gui.click.ClickAction;
 import me.moonways.bridgenet.model.service.gui.click.ClickType;
 import me.moonways.bridgenet.model.service.gui.item.entries.material.Material;
 import me.moonways.bridgenet.model.service.gui.item.types.Materials;
@@ -14,13 +16,9 @@ import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 
 import java.time.Duration;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public final class TestConst {
-
-    public static final class Exceptions {
-        // Printing stacktrace elements only with packages of Bridgenet if this value is TRUE.
-        public static final boolean FILTER_BY_PACKAGE = Boolean.TRUE;
-    }
 
     public static final class Auth {
         public static final String ACTUAL_PASSWORD = "123qweasdzxc";
@@ -31,16 +29,33 @@ public final class TestConst {
         public static final String NAME = "Developing Game";
         public static final String MAP = "IDE with opened Bridgenet project";
 
+        public static final int MAX_PLAYERS = 2;
+        public static final int PLAYERS_IN_TEAM = 1;
+
+        public static final GameDto GAME_DTO =
+                GameDto.builder()
+                        .name(NAME)
+                        .map(MAP)
+                        .maxPlayers(MAX_PLAYERS)
+                        .playersInTeam(PLAYERS_IN_TEAM)
+                        .build();
+
         public static final String SERVER_NAME = "development-arena-1";
         public static final String SERVER_HOST = "127.0.0.1";
         public static final int SERVER_PORT = 12345;
 
-        public static final ClientDto SERVER_DESC =
+        public static final ClientDto SERVER_DTO =
                 ClientDto.builder()
                         .name(SERVER_NAME)
                         .host(SERVER_HOST)
                         .port(SERVER_PORT)
                         .build();
+    }
+
+    public static final class Mojang {
+        public static final String LICENSED_ID = "069a79f444e94726a5befca90e38aaf5";
+        public static final String LICENSED_NICK = "Notch";
+        public static final String PIRATE_NICK = "aboba61398";
     }
 
     public static final class Player {
@@ -66,15 +81,6 @@ public final class TestConst {
                         .name(NAME)
                         .host(HOST)
                         .port(PORT)
-                        .build();
-    }
-
-    public static final class Connector {
-        public static final ClientDto CLIENT_INFO =
-                ClientDto.builder()
-                        .name("testing-connector")
-                        .host(Server.HOST)
-                        .port(Server.PORT + 1)
                         .build();
     }
 
@@ -105,7 +111,7 @@ public final class TestConst {
         public static final GuiSlot SLOT = GuiSlot.first();
         public static final Material MATERIAL = Materials.DIAMOND_BLOCK;
         public static final String NAME = "Tested item stack";
-        public static final ClickType CLICK_TYPE = ClickType.LEFT_MOUSE;
+        public static final ClickType CLICK_TYPE = ClickType.LEFT;
     }
 
     public static final class Inventory {

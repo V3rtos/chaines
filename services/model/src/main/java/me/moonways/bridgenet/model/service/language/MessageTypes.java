@@ -17,4 +17,9 @@ public interface MessageTypes {
      * Сообщения, выделенные под группу `Players`
      */
     Message GREETING_ON_JOIN = Message.keyed("players.greetingOnJoin");
+
+    /**
+     * Сообщения, выделенные под группу `Gui`
+     */
+    Message GUI_SESSION_EXPIRED = Message.keyed("gui.openedSessionExpired");
 }

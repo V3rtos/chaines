@@ -8,14 +8,20 @@
             <executorPath>me.moonways.bridgenet.bootstrap.hook.type.BindGsonLibraryHook</executorPath>
         </hook>
         <hook>
-            <displayName>OpenJdbcConnection</displayName>
+            <displayName>HttpServer</displayName>
             <priorityID>2</priorityID>
+            <priority>RUNNER</priority>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.BindHttpServerHook</executorPath>
+        </hook>
+        <hook>
+            <displayName>OpenJdbcConnection</displayName>
+            <priorityID>3</priorityID>
             <priority>RUNNER</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.type.OpenJdbcConnectionHook</executorPath>
         </hook>
         <hook>
             <displayName>Endpoints</displayName>
-            <priorityID>3</priorityID>
+            <priorityID>4</priorityID>
             <priority>RUNNER</priority>
             <executorPath>me.moonways.bridgenet.bootstrap.hook.type.RunRMIEndpointsHook</executorPath>
         </hook>

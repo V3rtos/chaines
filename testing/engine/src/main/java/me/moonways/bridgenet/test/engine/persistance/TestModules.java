@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.test.engine.persistance;
 
-import me.moonways.bridgenet.test.engine.module.TestEngineModule;
+import me.moonways.bridgenet.test.engine.component.module.Module;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface TestModules {
 
-    Class<? extends TestEngineModule>[] value();
+    Class<? extends Module>[] value();
 }

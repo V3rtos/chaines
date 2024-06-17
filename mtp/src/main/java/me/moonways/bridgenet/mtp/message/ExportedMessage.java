@@ -13,6 +13,7 @@ public class ExportedMessage {
     private long callbackID;
 
     private final WrappedNetworkMessage wrapper;
+
     @EqualsAndHashCode.Include
     private final Object message;
 

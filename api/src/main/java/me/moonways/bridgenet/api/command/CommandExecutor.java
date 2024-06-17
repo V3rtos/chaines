@@ -14,10 +14,9 @@ import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
-import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.ScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.AwaitAnnotationsScanning;
 import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Autobind
-@WaitTypeAnnotationProcessor(Command.class)
+@AwaitAnnotationsScanning(Command.class)
 public final class CommandExecutor {
 
     private static final String MENTOR_CHILD_NOT_FOUND_MESSAGE = "Couldn't find @MentorExecutor in command '/{}'";
@@ -39,11 +38,9 @@ public final class CommandExecutor {
     private CommandRegistry registry;
     @Inject
     private AnnotationInterceptor interceptor;
-    @Inject
-    private BeansService beansService;
 
-    @GetTypeAnnotationProcessor
-    private TypeAnnotationProcessorResult<Object> commandsResult;
+    @GetAnnotationsScanningResult
+    private ScanningResult<Object> commandsResult;
 
     @PostConstruct
     private void init() {

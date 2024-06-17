@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.test.engine;
 
+import me.moonways.bridgenet.assembly.OverridenProperty;
 import me.moonways.bridgenet.test.data.TestConst;
 
 import java.io.BufferedReader;
@@ -12,7 +13,6 @@ import java.util.stream.Stream;
 
 public class TestEngineExceptionFormatter {
 
-    private static final String STACKTRACE_ELEMENT_PREFIX = "me.moonways";
     private static final String RESOURCE_PATH = "stacktrace.pattern";
     private static final String ELEMENT_LINE_PREFIX = "!@";
     private static final String
@@ -55,12 +55,21 @@ public class TestEngineExceptionFormatter {
                 .collect(Collectors.joining("\n"));
     }
 
-    private String getDuplicatedElementsLines(boolean filter, Throwable exception, String pattern) {
+    private String getDuplicatedElementsLines(Throwable exception, String pattern) {
+        boolean exceptionsPackagesFilter = Boolean.parseBoolean(System.getProperty("testing.exceptions.packagesFilter"));
+
         String elementLinePattern = findElementLinePattern(pattern);
-        return Stream.of(exception.getStackTrace())
+        Stream<String> stringStream = Stream.of(exception.getStackTrace())
                 .filter(stackTraceElement -> !stackTraceElement.isNativeMethod())
-                .filter(stackTraceElement -> !filter || stackTraceElement.getClassName().contains(STACKTRACE_ELEMENT_PREFIX))
-                .map(stackTraceElement -> replaceElementPlaceholders(stackTraceElement, elementLinePattern))
+                .filter(stackTraceElement -> !exceptionsPackagesFilter || stackTraceElement.getClassName().contains(OverridenProperty.BEANS_PACKAGE.get()))
+                .map(stackTraceElement -> replaceElementPlaceholders(stackTraceElement, elementLinePattern));
+
+        boolean stacktraceLimitEnabled = Boolean.parseBoolean(System.getProperty("testing.exceptions.stacktraceLimitEnabled"));
+        if (stacktraceLimitEnabled) {
+            stringStream = stringStream.limit(Long.parseLong(System.getProperty("testing.exceptions.stacktraceLimit")));
+        }
+
+        return stringStream
                 .collect(Collectors.joining("\n"));
     }
 
@@ -75,7 +84,7 @@ public class TestEngineExceptionFormatter {
         exception = getFirstCause(exception);
 
         String stacktracePattern = readPatternFile();
-        String duplicatedElementsLines = getDuplicatedElementsLines(TestConst.Exceptions.FILTER_BY_PACKAGE, exception, stacktracePattern);
+        String duplicatedElementsLines = getDuplicatedElementsLines(exception, stacktracePattern);
 
         String currentExceptionMessage = replaceExceptionPlaceholders(exception,
                 stacktracePattern.replace(findElementLinePattern(stacktracePattern), duplicatedElementsLines));

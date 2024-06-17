@@ -13,6 +13,7 @@ import me.moonways.bridgenet.model.service.players.component.PlayerStore;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
 import me.moonways.bridgenet.model.service.servers.ServerInfo;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
+import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
@@ -72,6 +73,26 @@ public class ConnectedServerStub implements EntityServer {
                     }
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void send(@NotNull Object message) throws RemoteException {
+        channel.send(message);
+    }
+
+    @Override
+    public void send(@NotNull ExportedMessage message) throws RemoteException {
+        channel.send(message);
+    }
+
+    @Override
+    public <R> CompletableFuture<R> sendAwait(@NotNull Class<R> responseType, @NotNull Object message) throws RemoteException {
+        return channel.sendAwait(responseType, message);
+    }
+
+    @Override
+    public <R> CompletableFuture<R> sendAwait(int timeout, @NotNull Class<R> responseType, @NotNull Object message) throws RemoteException {
+        return channel.sendAwait(timeout, responseType, message);
     }
 
     @Override

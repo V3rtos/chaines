@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AuthServiceEndpoint extends EndpointRemoteObject implements AuthServiceModel {
+public final class AuthServiceEndpoint extends EndpointRemoteObject implements AuthServiceModel {
 
     private static final long serialVersionUID = -1339569131139297348L;
 

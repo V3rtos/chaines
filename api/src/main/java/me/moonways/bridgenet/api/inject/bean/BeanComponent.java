@@ -2,6 +2,7 @@ package me.moonways.bridgenet.api.inject.bean;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.Property;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -55,7 +56,7 @@ public class BeanComponent extends AnnotatedBeanComponent<Field> {
         Field field = getRoot();
         Bean bean = getBean();
 
-        field.setAccessible(true);
+        ReflectionUtils.grantAccess(field);
 
         try {
             field.set(bean.getRoot(), value);

@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.scheduler.ScheduleException;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.CompletableFuture;
+
 @SuppressWarnings("unused")
 @RequiredArgsConstructor
 public class TaskProcessFollower {
@@ -14,6 +16,13 @@ public class TaskProcessFollower {
 
     @Getter
     private long processedLoopsCount;
+
+    private CompletableFuture<Object> completion;
+
+    public void join() {
+        completion = new CompletableFuture<>();
+        completion.join();
+    }
 
     private void validateNull(TaskProcess taskProcess) {
         if (taskProcess == null) {
@@ -34,10 +43,14 @@ public class TaskProcessFollower {
     }
 
     public synchronized void post() {
-        validateNull(taskProcess);
-
         processedLoopsCount++;
-        taskProcess.doProcess(scheduledTask);
+
+        if (taskProcess != null) {
+            taskProcess.doProcess(scheduledTask);
+        }
+        if (completion != null) {
+            completion.complete(new Object());
+        }
     }
 
     @NotNull

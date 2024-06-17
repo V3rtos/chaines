@@ -13,11 +13,10 @@ import me.moonways.bridgenet.api.command.option.CommandParameterMatcher;
 import me.moonways.bridgenet.api.command.wrapper.WrappedCommand;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.inject.decorator.DecoratedObjectProxy;
-import me.moonways.bridgenet.api.proxy.AnnotationInterceptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
@@ -35,8 +34,6 @@ public final class CommandRegistry {
     private final CommandChildrenScanner childService = new CommandChildrenScanner();
     private final InternalCommandFactory factory = new InternalCommandFactory();
 
-    @Inject
-    private AnnotationInterceptor interceptor;
     @Inject
     private BeansService beansService;
 
@@ -80,7 +77,7 @@ public final class CommandRegistry {
     private List<CommandParameterMatcher> findOptions(Object commandObject) {
         Annotation[] declaredAnnotations = commandObject.getClass().getDeclaredAnnotations();
 
-        BeanFactory objectFactory = BeanFactoryProviders.DEFAULT.getImpl().get();
+        BeanFactory objectFactory = FactoryType.DEFAULT.get();
 
         return Arrays.stream(declaredAnnotations)
                 .filter(annotation -> annotation.annotationType().equals(CommandParameter.class))
@@ -109,7 +106,11 @@ public final class CommandRegistry {
 
     private Object toProxy(Object commandObject) {
         beansService.inject(commandObject);
-        return interceptor.createProxy(commandObject, new DecoratedObjectProxy());
+
+        Bean bean = beansService.createBean(commandObject);
+        beansService.tryOverrideDecorators(bean);
+
+        return bean.getRoot();
     }
 
     private CommandSession.HelpMessageView createHelpMessageView(List<CommandChild> childrenList) {

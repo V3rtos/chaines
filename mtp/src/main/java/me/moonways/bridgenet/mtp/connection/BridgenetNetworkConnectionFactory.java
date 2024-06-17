@@ -9,14 +9,18 @@ import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.BeanFactory;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.assembly.ResourcesAssembly;
+import me.moonways.bridgenet.assembly.ResourcesTypes;
 import me.moonways.bridgenet.mtp.config.NetworkJsonConfiguration;
+import me.moonways.bridgenet.mtp.config.descriptor.NetworkSettingsDescriptor;
 import me.moonways.bridgenet.mtp.connection.client.BridgenetNetworkClient;
 import me.moonways.bridgenet.mtp.connection.client.BridgenetNetworkClientHandler;
 import me.moonways.bridgenet.mtp.connection.client.NetworkClientReconnectionHandler;
 import me.moonways.bridgenet.mtp.connection.server.BridgenetNetworkServer;
 import me.moonways.bridgenet.mtp.inbound.InboundChannelOptionsHandler;
+import me.moonways.bridgenet.mtp.message.encryption.MessageEncryption;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
@@ -24,13 +28,13 @@ import java.net.SocketAddress;
 
 @Getter
 @RequiredArgsConstructor
-@Autobind(provider = BeanFactoryProviders.FACTORY_METHOD)
+@Autobind(provider = FactoryType.METHOD)
 public class BridgenetNetworkConnectionFactory {
 
     @BeanFactory
-    private static BridgenetNetworkConnectionFactory newInstance(@NotNull BeansService beansService) {
-        NetworkJsonConfiguration configuration = new NetworkJsonConfiguration();
-        configuration.reload();
+    private static BridgenetNetworkConnectionFactory newInstance(BeansService beansService, ResourcesAssembly assembly) {
+        NetworkSettingsDescriptor settings = assembly.readJsonAtEntity(ResourcesTypes.MTP_CONFIG_JSON, NetworkSettingsDescriptor.class);
+        NetworkJsonConfiguration configuration = new NetworkJsonConfiguration(settings, new MessageEncryption(settings.getSecurity()));
 
         beansService.bind(configuration);
 

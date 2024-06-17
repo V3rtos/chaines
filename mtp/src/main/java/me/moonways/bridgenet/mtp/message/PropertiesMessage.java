@@ -6,7 +6,7 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
-import me.moonways.bridgenet.mtp.transfer.provider.TransferPropertiesProvider;
+import me.moonways.bridgenet.mtp.transfer.provider.ToPropertiesProvider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +24,7 @@ public class PropertiesMessage {
         return new PropertiesMessage();
     }
 
-    @ByteTransfer(provider = TransferPropertiesProvider.class)
+    @ByteTransfer(provider = ToPropertiesProvider.class)
     private final Properties properties = new Properties();
 
     public final synchronized PropertiesMessage setProperty(Object key, Object value) {

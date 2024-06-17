@@ -23,12 +23,8 @@ public final class DecoratedMethodScanner {
     @Inject
     private ResourcesAssembly assembly;
 
-    private XMLInterceptorDescriptor parseXmlInterceptor() {
-        return assembly.readXmlAtEntity(ResourcesTypes.DECORATORS_XML, XMLInterceptorDescriptor.class);
-    }
-
     public void bindHandlers() {
-        XMLInterceptorDescriptor rootXML = parseXmlInterceptor();
+        XMLInterceptorDescriptor rootXML = assembly.readXmlAtEntity(ResourcesTypes.DECORATORS_XML, XMLInterceptorDescriptor.class);
 
         for (XMLMethodHandlerDescriptor decoratorXML : rootXML.getMethodHandlers()) {
             String name = decoratorXML.getName();

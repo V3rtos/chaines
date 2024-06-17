@@ -20,7 +20,6 @@ import me.moonways.bridgenet.mtp.transfer.ByteCompression;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
@@ -35,7 +34,7 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
     private BridgenetDataLogger bridgenetDataLogger;
 
     @Override
-    protected synchronized void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
+    protected synchronized void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> handleList) {
         try {
             int readableBytes = byteBuf.readableBytes();
             if (readableBytes == 0) {
@@ -48,9 +47,12 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
             long callbackId = byteBuf.readLong();
 
             ExportedMessage message = decodeMessage(messageId, byteBuf, channelHandlerContext);
-            message.setCallbackID(callbackId);
+            if (message == null) {
+                return;
+            }
 
-            list.add(message);
+            message.setCallbackID(callbackId);
+            handleList.add(message);
 
         } catch (IndexOutOfBoundsException exception) {
             NetworkCodecDumps.dump(channelHandlerContext, byteBuf);
@@ -70,6 +72,10 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
 
         MessageTransfer messageTransfer = createTransfer(byteBuf, wrapper);
 
+        if (messageTransfer == null) {
+            return null;
+        }
+
         Object message = wrapper.createObject();
         messageTransfer.unbuf(message);
 
@@ -84,6 +90,10 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
 
                 MessageEncryption encryption = configuration.getEncryption();
                 buf = encryption.decode(buf);
+
+                if (buf == null) {
+                    return null;
+                }
             }
 
             return MessageTransfer.decode(buf);

@@ -2,8 +2,8 @@ package me.moonways.bridgenet.api.inject.decorator;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.api.proxy.InterceptionFactory;
 import me.moonways.bridgenet.api.proxy.MethodHandler;
 import me.moonways.bridgenet.api.proxy.MethodInterceptor;
 import me.moonways.bridgenet.api.proxy.ProxiedMethod;
@@ -18,13 +18,12 @@ import java.util.stream.Collectors;
 @Log4j2
 @MethodInterceptor
 public class DecoratedObjectProxy {
-
     private final DecoratedMethodScanner decoratedMethodScanner = new DecoratedMethodScanner();
 
     @Inject
     private BeansService beansService;
 
-    @InterceptionFactory
+    @PostConstruct
     private void init() {
         beansService.inject(decoratedMethodScanner);
         decoratedMethodScanner.bindHandlers();

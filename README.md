@@ -53,6 +53,7 @@
     * [ENDPOINT / GUI](.docs/services/gui-endpoint.md)
     * [ENDPOINT / GUILDS](.docs/services/guilds-endpoint.md)
     * [ENDPOINT / LANGUAGE](.docs/services/language-endpoint.md)
+    * [ENDPOINT / MOJANG](.docs/services/mojang-endpoint.md)
     * [ENDPOINT / PARTIES](.docs/services/parties-endpoint.md)
     * [ENDPOINT / PERMISSIONS](.docs/services/permissions-endpoint.md)
     * [ENDPOINT / PLAYERS](.docs/services/players-endpoint.md)

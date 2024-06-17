@@ -8,8 +8,9 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.model.event.PlayerJoinEvent;
-import me.moonways.bridgenet.model.event.PlayerQuitEvent;
+import me.moonways.bridgenet.model.event.PlayerHandshakeEvent;
+import me.moonways.bridgenet.model.event.PlayerDisconnectEvent;
+import me.moonways.bridgenet.model.message.Handshake;
 import me.moonways.bridgenet.model.service.bus.HandshakePropertiesConst;
 import me.moonways.bridgenet.model.service.players.OfflinePlayer;
 import me.moonways.bridgenet.model.service.players.Player;
@@ -56,8 +57,8 @@ public final class PlayerStoreStub implements PlayerStore {
     @Inject
     private EventService eventService;
 
-    public Player addOnlinePlayer(Properties properties) throws RemoteException {
-        PlayerStub player = createPlayer(properties);
+    public Player addOnlinePlayer(Handshake handshake) throws RemoteException {
+        PlayerStub player = createPlayer(handshake.getProperties());
 
         if (player == null) {
             return null;
@@ -74,7 +75,8 @@ public final class PlayerStoreStub implements PlayerStore {
         onlinePlayersMap.put(player.getId(), player);
 
         eventService.fireEvent(
-                PlayerJoinEvent.builder()
+                PlayerHandshakeEvent.builder()
+                        .handshake(handshake)
                         .player(player)
                         .build());
 
@@ -93,7 +95,7 @@ public final class PlayerStoreStub implements PlayerStore {
         offlinePlayersCache.cleanUp();
 
         eventService.fireEvent(
-                PlayerQuitEvent.builder()
+                PlayerDisconnectEvent.builder()
                         .player(removed)
                         .build());
 

@@ -3,15 +3,21 @@ package me.moonways.endpoint.gui;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import me.moonways.bridgenet.api.event.EventService;
+import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.model.service.gui.Gui;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiSlot;
 import me.moonways.bridgenet.model.event.GuiItemClickEvent;
 import me.moonways.bridgenet.model.service.gui.click.ItemClickListener;
 import me.moonways.bridgenet.model.service.gui.item.ItemStack;
+import me.moonways.bridgenet.model.service.players.Player;
 
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Getter
 @ToString(onlyExplicitlyIncluded = true)
@@ -23,10 +29,18 @@ public class GuiStub implements Gui {
     @ToString.Include
     private final GuiDescription description;
 
-    @ToString.Include
-    private final Map<GuiSlot, ItemStack> contentMap = new HashMap<>();
-    private final Map<GuiSlot, List<ItemClickListener>> clickListenersMap = new HashMap<>();
-    private final List<ItemClickListener> totalsClickListeners = new ArrayList<>();
+    @Getter
+    private final Map<GuiSlot, ItemStack> contentMap = new ConcurrentHashMap<>();
+    private final Map<GuiSlot, List<ItemClickListener>> listenersMap = new ConcurrentHashMap<>();
+    private final List<ItemClickListener> globalListeners = new CopyOnWriteArrayList<>();
+
+    @Getter
+    private final GuiNetworkManager network;
+
+    @Inject
+    private BeansService beansService;
+    @Inject
+    private EventService eventService;
 
     private void addContent(GuiSlot slot, ItemStack itemStack, ItemClickListener clickListener) {
         removeContent(slot);
@@ -39,27 +53,41 @@ public class GuiStub implements Gui {
 
     private void addClickContent(GuiSlot slot, ItemClickListener clickListener) {
         if (clickListener != null) {
-            List<ItemClickListener> itemClickListeners = clickListenersMap.get(slot);
+            List<ItemClickListener> listeners = listenersMap.get(slot);
 
-            if (itemClickListeners == null) {
-                itemClickListeners = new ArrayList<>();
+            if (listeners == null) {
+                listeners = new ArrayList<>();
             }
-            itemClickListeners.add(clickListener);
+
+            beansService.inject(clickListener);
+            listeners.add(clickListener);
+
+            listenersMap.put(slot, listeners);
         }
     }
 
     private void removeContent(GuiSlot slot) {
         contentMap.remove(slot);
-        clickListenersMap.remove(slot);
+        listenersMap.remove(slot);
     }
 
     public void fireClick(GuiItemClickEvent event) {
-        clickListenersMap.values()
-                .stream()
-                .flatMap(Collection::stream)
-                .forEach(listener -> listener.consume(event));
+        eventService.fireEvent(event);
+        globalListeners.forEach(listener -> fireClickOn(listener, event));
 
-        totalsClickListeners.forEach(listener -> listener.consume(event));
+        List<ItemClickListener> listeners = listenersMap.get(event.getSlot());
+        if (listeners != null) {
+            listeners
+                    .forEach(listener -> fireClickOn(listener, event));
+        }
+    }
+
+    private void fireClickOn(ItemClickListener listener, GuiItemClickEvent event) {
+        try {
+            listener.consume(event);
+        } catch (Throwable exception) {
+            throw new GuiEndpointException(exception);
+        }
     }
 
     @Override
@@ -83,12 +111,17 @@ public class GuiStub implements Gui {
     }
 
     @Override
-    public void addClickListener(ItemClickListener listener) throws RemoteException {
-        totalsClickListeners.add(listener);
+    public void addGlobalListener(ItemClickListener listener) throws RemoteException {
+        globalListeners.add(listener);
     }
 
     @Override
-    public void addClickListener(GuiSlot slot, ItemClickListener listener) throws RemoteException {
+    public void addGlobalListener(GuiSlot slot, ItemClickListener listener) throws RemoteException {
         addClickContent(slot, listener);
+    }
+
+    @Override
+    public void open(Player player) throws RemoteException {
+        network.openGui(player, this);
     }
 }

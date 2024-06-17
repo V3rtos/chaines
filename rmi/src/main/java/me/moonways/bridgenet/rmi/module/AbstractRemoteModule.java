@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.rmi.service.RemoteServiceException;
 import me.moonways.bridgenet.rmi.service.ServiceInfo;
 import me.moonways.bridgenet.rmi.xml.XMLServiceModuleDescriptor;
@@ -52,7 +53,7 @@ public abstract class AbstractRemoteModule<Configuration extends ModuleConfigura
             try {
                 Field propertyField = configClass.getDeclaredField(property.getName());
 
-                propertyField.setAccessible(true);
+                ReflectionUtils.grantAccess(propertyField);
                 propertyField.set(config, property.getValue());
             } catch (IllegalAccessException | NoSuchFieldException exception) {
                 log.error(new RemoteServiceException(exception));

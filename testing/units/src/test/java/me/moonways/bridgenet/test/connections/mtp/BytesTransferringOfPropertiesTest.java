@@ -9,7 +9,7 @@ import lombok.ToString;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
-import me.moonways.bridgenet.mtp.transfer.provider.TransferPropertiesProvider;
+import me.moonways.bridgenet.mtp.transfer.provider.ToPropertiesProvider;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +65,7 @@ public class BytesTransferringOfPropertiesTest {
     @AllArgsConstructor
     private static class TestPropertiesMessage {
 
-        @ByteTransfer(provider = TransferPropertiesProvider.class)
+        @ByteTransfer(provider = ToPropertiesProvider.class)
         private Properties properties;
     }
 }

@@ -32,7 +32,7 @@ public class TestingElement {
 
     public void execute(TestFlowContext context) {
         TestingObject testingObject = context.getTestingObject();
-        ReflectionUtils.callMethod(testingObject.getInstance(),
+        ReflectionUtils.invoke(testingObject.getInstance(),
                 frameworkMethod.getName());
     }
 

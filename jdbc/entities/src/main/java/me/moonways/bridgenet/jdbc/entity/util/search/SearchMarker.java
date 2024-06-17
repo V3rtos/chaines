@@ -125,7 +125,7 @@ public final class SearchMarker<T> {
 
         private Constructor<?> findOptimalConstructor() {
             return Arrays.stream(entityClass.getDeclaredConstructors())
-                    .peek(constructor -> constructor.setAccessible(true))
+                    .peek(ReflectionUtils::grantAccess)
                     .min(Comparator.comparingInt(Constructor::getParameterCount))
                     .orElse(null);
         }

@@ -14,7 +14,7 @@ public class ExampleClient extends BridgenetClient {
 
     @Override
     protected ClientDto createClientInfo() {
-        return TestConst.Connector.CLIENT_INFO;
+        return TestConst.Server.DESC;
     }
 
     @Override

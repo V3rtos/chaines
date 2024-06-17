@@ -9,7 +9,7 @@ import lombok.ToString;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.ByteTransfer;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
-import me.moonways.bridgenet.mtp.transfer.provider.TransferUuidProvider;
+import me.moonways.bridgenet.mtp.transfer.provider.ToUUIDProvider;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,7 +68,7 @@ public class BytesTransferringOfUuidTest {
     @AllArgsConstructor
     private static class TestUuidMessage {
 
-        @ByteTransfer(provider = TransferUuidProvider.class)
+        @ByteTransfer(provider = ToUUIDProvider.class)
         private UUID uuid;
     }
 }

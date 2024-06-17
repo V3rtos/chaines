@@ -9,6 +9,7 @@ import me.moonways.bridgenet.mtp.channel.NetworkRemoteChannel;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 @ToString
 @RequiredArgsConstructor
@@ -34,7 +35,9 @@ public class InboundMessageContext<V> implements Serializable {
         ExportedMessage exportedMessage = networkMessagesService.export(message);
         exportedMessage.setCallbackID(callbackID);
 
-        if (channel.<Boolean>getProperty(NetworkRemoteChannel.PULLING_STATE_PROPERTY).orElse(false)) {
+        Optional<Boolean> pullingStateProperty = channel.getProperty(NetworkRemoteChannel.pullingStateProperty);
+
+        if (pullingStateProperty.orElse(false)) {
             channel.pull(exportedMessage);
         } else {
             channel.send(exportedMessage);

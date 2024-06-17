@@ -3,7 +3,7 @@ package me.moonways.bridgenet.test.api;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.test.data.management.ExampleSetPropertyRunner;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.AutorunnersModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.AutorunnersModule;
 import me.moonways.bridgenet.test.engine.persistance.BeforeAll;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import me.moonways.bridgenet.test.engine.persistance.TestSleeping;

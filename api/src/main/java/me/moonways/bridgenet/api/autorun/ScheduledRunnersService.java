@@ -4,14 +4,14 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorResult;
-import me.moonways.bridgenet.api.inject.processor.persistence.GetTypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.persistence.WaitTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.ScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
+import me.moonways.bridgenet.api.inject.processor.persistence.AwaitAnnotationsScanning;
 import me.moonways.bridgenet.api.scheduler.ScheduledTime;
 import me.moonways.bridgenet.api.scheduler.Scheduler;
 import me.moonways.bridgenet.api.autorun.persistence.AutoRunner;
-import me.moonways.bridgenet.api.autorun.persistence.Runnable;
-import me.moonways.bridgenet.api.autorun.persistence.RunningPeriod;
+import me.moonways.bridgenet.api.autorun.persistence.RunUnit;
+import me.moonways.bridgenet.api.autorun.persistence.DelayedPeriod;
 import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 
 import java.lang.reflect.Method;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Autobind
-@WaitTypeAnnotationProcessor(AutoRunner.class)
+@AwaitAnnotationsScanning(AutoRunner.class)
 public class ScheduledRunnersService {
 
     private static final ScheduledTime DEFAULT_PERIOD = ScheduledTime.ofMillis(100);
@@ -30,8 +30,8 @@ public class ScheduledRunnersService {
     @Inject
     private Scheduler scheduler;
 
-    @GetTypeAnnotationProcessor
-    private TypeAnnotationProcessorResult<Object> runnersResult;
+    @GetAnnotationsScanningResult
+    private ScanningResult<Object> runnersResult;
 
     @PostConstruct
     private void init() {
@@ -54,12 +54,12 @@ public class ScheduledRunnersService {
 
         for (Object runner : runners) {
             Class<?> runnerClass = runner.getClass();
-            RunningPeriod periodAnnotation = runnerClass.getDeclaredAnnotation(RunningPeriod.class);
+            DelayedPeriod periodAnnotation = runnerClass.getDeclaredAnnotation(DelayedPeriod.class);
 
             for (Method method : runnerClass.getDeclaredMethods()) {
 
-                if (method.isAnnotationPresent(Runnable.class)) {
-                    RunningPeriod periodUnitAnnotation = method.getDeclaredAnnotation(RunningPeriod.class);
+                if (method.isAnnotationPresent(RunUnit.class)) {
+                    DelayedPeriod periodUnitAnnotation = method.getDeclaredAnnotation(DelayedPeriod.class);
                     ScheduledTime period = DEFAULT_PERIOD;
 
                     if (periodUnitAnnotation != null) {
@@ -69,7 +69,7 @@ public class ScheduledRunnersService {
                     }
 
                     RunnableUnit runnableUnit = new RunnableUnit(period,
-                            () -> ReflectionUtils.callMethod(runner, method.getName()));
+                            () -> ReflectionUtils.invoke(runner, method.getName()));
 
                     log.debug("Registering auto-runner §a'{}' §rwith id: §3{}", runnerClass.getSimpleName(), runnableUnit.getUuid());
                     result.add(runnableUnit);

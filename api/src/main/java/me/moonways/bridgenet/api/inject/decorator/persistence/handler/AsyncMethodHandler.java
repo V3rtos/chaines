@@ -30,8 +30,7 @@ public class AsyncMethodHandler implements DecoratedMethodHandler {
             return objectCompletableFuture.join();
 
         } else {
-
-            ASYNC_POOL_EXECUTOR.execute(asyncExecutorCommand::get);
+            ASYNC_POOL_EXECUTOR.submit(asyncExecutorCommand::get);
             return null;
         }
     }

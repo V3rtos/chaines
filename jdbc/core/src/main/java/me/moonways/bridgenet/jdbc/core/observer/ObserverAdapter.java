@@ -1,5 +1,6 @@
 package me.moonways.bridgenet.jdbc.core.observer;
 
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.jdbc.core.observer.event.*;
 
 import java.lang.reflect.Method;
@@ -62,7 +63,7 @@ public abstract class ObserverAdapter implements DatabaseObserver {
 
         try {
             if (method != null) {
-                method.setAccessible(true);
+                ReflectionUtils.grantAccess(method);
                 method.invoke(this, event);
             }
         } catch (Exception exception) {

@@ -21,6 +21,7 @@ public class FlowSystemBootstrapNode implements TestFlowNode {
         }
 
         bootstrap.setRunning(true);
+        bootstrap.runSystems();
 
         fakeStart(context);
         bootstrap.startBeansActivity(false);

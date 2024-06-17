@@ -45,7 +45,7 @@ public final class InboundPlayerConnectionListener {
                 return;
             }
 
-            Player player = playerStoreStub.addOnlinePlayer(properties);
+            Player player = playerStoreStub.addOnlinePlayer(handshake);
 
             if (player != null) {
                 context.callback(new Handshake.Success(UUID.fromString(userUuidProperty)));

@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.util.thread.Threads;
+import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.rmi.module.ServiceModulesContainer;
 import me.moonways.bridgenet.rmi.module.access.AccessRemoteModule;
 import me.moonways.bridgenet.rmi.service.RemoteService;
@@ -46,7 +47,8 @@ public class EndpointRunner {
     private boolean validate(Endpoint endpoint) {
         final String name = endpoint.getServiceInfo().getName();
         final EndpointConfig config = endpoint.getConfig();
-        Path applicationJarPath = endpoint.getPath().resolve(config.getApplicationJarName());
+
+        Path applicationJarPath = endpoint.getPath().resolve(config.getJar());
 
         if (!Files.exists(applicationJarPath) || Files.readAllBytes(applicationJarPath).length == 0) {
             log.error("§4Application runner file '{}' for '{}' endpoint is not found", applicationJarPath, name);
@@ -112,6 +114,12 @@ public class EndpointRunner {
         }
 
         accessModule.setEndpointClass(serviceImplementClass);
-        accessModule.exportStub(serviceInfo);
+
+        RemoteService remoteService = accessModule.exportStub(serviceInfo);
+        if (remoteService instanceof EndpointRemoteObject) {
+
+            EndpointRemoteObject endpointRemoteObject = (EndpointRemoteObject) remoteService;
+            endpointRemoteObject.init(endpoint);
+        }
     }
 }

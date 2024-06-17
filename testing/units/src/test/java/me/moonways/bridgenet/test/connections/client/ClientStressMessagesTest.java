@@ -7,9 +7,8 @@ import me.moonways.bridgenet.model.message.SendCommand;
 import me.moonways.bridgenet.mtp.channel.BridgenetNetworkChannel;
 import me.moonways.bridgenet.test.data.ExampleClient;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.AllModules;
+import me.moonways.bridgenet.test.engine.component.module.impl.ClientModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,7 +16,7 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RunWith(ModernTestEngineRunner.class)
-@TestModules(AllModules.class)
+@TestModules(ClientModule.class)
 public class ClientStressMessagesTest {
 
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
@@ -25,12 +24,8 @@ public class ClientStressMessagesTest {
     private static final int PACKETS_LENGTH = 1000;
     private static final int SLEEPING_TIMEOUT = PACKETS_LENGTH * 10;
 
-    private final ExampleClient subj = new ExampleClient();
-
-    @Before
-    public void setUp() {
-        subj.start();
-    }
+    @Inject
+    private ExampleClient subj;
 
     @Test
     public void test_stressingPacketsRouting() throws InterruptedException {

@@ -22,7 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.RMISecurityManager;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Log4j2
@@ -37,11 +36,7 @@ public final class RemoteServicesManagement {
     @Getter
     private final Map<ServiceInfo, RemoteService> servicesImplements = Collections.synchronizedMap(new HashMap<>());
     @Getter
-    private final Map<Class<?>, Consumer<? extends RemoteService>> subscriptionsOnRegitstrationMap = Collections.synchronizedMap(new HashMap<>());
-
-    @Getter
     private final Map<ModuleID, ModuleFactory> modulesFactories = Collections.synchronizedMap(new HashMap<>());
-
     @Getter
     private final Map<ServiceInfo, ServiceModulesContainer> modulesContainerMap = Collections.synchronizedMap(new HashMap<>());
 
@@ -53,14 +48,12 @@ public final class RemoteServicesManagement {
     @Getter
     private final EndpointController endpointController = new EndpointController();
 
+    private Runnable onExportedAllServices;
+
     @PostConstruct
     void init() {
         injectSecurityPolicy();
         beansService.inject(endpointController);
-    }
-
-    public <T extends RemoteService> void subscribeOnExported(Class<T> serviceClass, Consumer<T> consumer) {
-        subscriptionsOnRegitstrationMap.put(serviceClass, consumer);
     }
 
     @SuppressWarnings("deprecation")
@@ -166,19 +159,11 @@ public final class RemoteServicesManagement {
         beansService.inject(remoteService);
         servicesImplements.put(serviceInfo, remoteService);
 
-        Class<? extends RemoteService> serviceClass = remoteService.getClass();
-
-        new HashSet<>(subscriptionsOnRegitstrationMap.keySet())
-                .stream()
-                .filter(cls -> serviceClass.isAssignableFrom(cls) || cls.isAssignableFrom(serviceClass))
-                .forEach(modelClass -> {
-
-                    Consumer<RemoteService> consumer = (Consumer<RemoteService>) subscriptionsOnRegitstrationMap.remove(modelClass);
-
-                    if (consumer != null) {
-                        consumer.accept(remoteService);
-                    }
-                });
+        if (servicesImplements.size() == servicesInfos.size()) {
+            if (onExportedAllServices != null) {
+                onExportedAllServices.run();
+            }
+        }
     }
 
     private ModuleID getModuleID(Class<? extends RemoteModule> cls) {
@@ -240,5 +225,16 @@ public final class RemoteServicesManagement {
         log.debug("{} was registered", id);
 
         modulesFactories.put(id, moduleFactory);
+    }
+
+    public void subscribeExportedAll(Runnable runnable) {
+        if (onExportedAllServices == null) {
+            onExportedAllServices = runnable;
+            return;
+        }
+        onExportedAllServices = () -> {
+            onExportedAllServices.run();
+            runnable.run();
+        };
     }
 }

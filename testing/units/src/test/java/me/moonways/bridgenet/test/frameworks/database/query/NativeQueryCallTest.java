@@ -8,7 +8,7 @@ import me.moonways.bridgenet.jdbc.core.util.result.Result;
 import me.moonways.bridgenet.test.data.ExampleDatabaseObserver;
 import me.moonways.bridgenet.test.data.TestConst;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
-import me.moonways.bridgenet.test.engine.module.impl.DatabasesModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.DatabasesModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 import org.junit.Before;
 import org.junit.Test;

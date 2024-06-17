@@ -2,16 +2,16 @@ package me.moonways.bridgenet.test.engine.flow.nodes;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.Bean;
-import me.moonways.bridgenet.api.inject.bean.factory.BeanFactoryProviders;
+import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
 import me.moonways.bridgenet.api.inject.bean.service.BeansAnnotationsAwaitService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
-import me.moonways.bridgenet.api.inject.processor.def.JustBindTypeAnnotationProcessor;
+import me.moonways.bridgenet.api.inject.processor.def.DefaultTypeAnnotationProcessor;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
 import me.moonways.bridgenet.test.engine.flow.TestFlowNode;
-import me.moonways.bridgenet.test.engine.module.TestEngineModule;
-import me.moonways.bridgenet.test.engine.module.TestModuleBeans;
-import me.moonways.bridgenet.test.engine.module.impl.AllModules;
+import me.moonways.bridgenet.test.engine.component.module.Module;
+import me.moonways.bridgenet.test.engine.component.module.ModuleConfig;
+import me.moonways.bridgenet.test.engine.component.module.impl.AllModules;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
 
 import java.lang.annotation.Annotation;
@@ -34,12 +34,12 @@ public class FlowModulesApplyingNode implements TestFlowNode {
         }
 
         log.debug("Annotation §e@TestModules §ris founded, processing...");
-        processModulesAnnotation(context, annotation);
+        processModulesAnnotation(context, annotation.value());
     }
 
-    private void processModulesAnnotation(TestFlowContext context, TestModules annotation) {
+    public void processModulesAnnotation(TestFlowContext context, Class<? extends Module>[] typesArray) {
         BeansService beansService = context.getInstance(TestFlowContext.BEANS).get();
-        List<TestEngineModule> instancesList = toInstancesList(new ArrayList<>(), annotation.value());
+        List<Module> instancesList = toInstancesList(new ArrayList<>(), typesArray);
 
         log.debug("Analyzing §2{} §rimplemented modules...", instancesList.size());
         List<Bean> beans = createBeansList(beansService, instancesList);
@@ -52,25 +52,27 @@ public class FlowModulesApplyingNode implements TestFlowNode {
         beans.forEach(bean -> processBeanBinding(beansService, bean));
 
         log.debug("Installing §2{} §rimplemented modules...", instancesList.size());
-        instancesList.forEach(testEngineModule -> {
 
-            beansService.inject(testEngineModule);
-            testEngineModule.onInstall(context);
+        context.setInstance(TestFlowContext.LOADED_MODULES, instancesList);
+        instancesList.forEach(module -> {
+
+            beansService.bind(module);
+            module.install(context);
         });
     }
 
-    private List<Bean> createBeansList(BeansService beansService, List<TestEngineModule> instancesList) {
+    private List<Bean> createBeansList(BeansService beansService, List<Module> instancesList) {
         List<Bean> beans;
-        if (instancesList.stream().noneMatch(testEngineModule -> testEngineModule.getClass().equals(AllModules.class))) {
+        if (instancesList.stream().noneMatch(module -> module.getClass().equals(AllModules.class))) {
 
             List<String> packageNames = new ArrayList<>();
             packageNames.add(TESTS_PACKAGE_NAME);
 
-            for (TestEngineModule instance : instancesList) {
-                log.debug("Analyzing module §6{}§r...", instance.getClass());
+            for (Module module : instancesList) {
+                log.debug("Analyzing module §6{}§r...", module.getClass().getSimpleName());
 
-                TestModuleBeans instanceBeans = instance.getBeans();
-                packageNames.addAll(instanceBeans.getPackagesToScanning());
+                ModuleConfig config = module.config();
+                packageNames.addAll(config.getPackagesToScanning());
             }
 
             beans = beansService.getScanner()
@@ -100,34 +102,34 @@ public class FlowModulesApplyingNode implements TestFlowNode {
             Class<? extends Annotation>[] awaitsAnnotationsTypes = annotationsAwaits.getAwaitsAnnotationsTypes(bean);
 
             for (Class<? extends Annotation> annotationType : awaitsAnnotationsTypes) {
-                beansService.processTypeAnnotationProcessor(new JustBindTypeAnnotationProcessor(annotationType));
+                beansService.processTypeAnnotationProcessor(new DefaultTypeAnnotationProcessor(annotationType));
             }
         }
     }
 
-    private List<TestEngineModule> toInstancesList(List<TestEngineModule> previousInstancesList, Class<? extends TestEngineModule>[] typesArray) {
-        List<TestEngineModule> engineModuleList = new ArrayList<>();
+    private List<Module> toInstancesList(List<Module> previousInstancesList, Class<? extends Module>[] typesArray) {
+        List<Module> engineModuleList = new ArrayList<>();
 
-        for (Class<? extends TestEngineModule> engineModuleClass : typesArray) {
-            TestEngineModule testEngineModule = BeanFactoryProviders.DEFAULT.getImpl()
+        for (Class<? extends Module> engineModuleClass : typesArray) {
+            Module module = FactoryType.DEFAULT
                     .get()
                     .create(engineModuleClass);
 
-            previousInstancesList.add(testEngineModule);
+            previousInstancesList.add(module);
 
-            TestModuleBeans beans = testEngineModule.getBeans();
-            if (beans.getDependencies() != null && !beans.getDependencies().isEmpty()) {
+            ModuleConfig config = module.config();
+            if (config.getDependencies() != null && !config.getDependencies().isEmpty()) {
 
                 //noinspection unchecked
-                List<TestEngineModule> instancesList = toInstancesList(previousInstancesList, beans.getDependencies()
+                List<Module> instancesList = toInstancesList(previousInstancesList, config.getDependencies()
                         .stream()
-                        .filter(dependencyClass -> previousInstancesList.stream().noneMatch(module -> module.getClass().equals(dependencyClass)))
+                        .filter(dependencyClass -> previousInstancesList.stream().noneMatch(previous -> previous.getClass().equals(dependencyClass)))
                         .toArray(Class[]::new));
 
                 engineModuleList.addAll(instancesList);
             }
 
-            engineModuleList.add(testEngineModule);
+            engineModuleList.add(module);
         }
 
         return engineModuleList.stream()
