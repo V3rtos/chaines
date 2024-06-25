@@ -4,9 +4,6 @@ ENDPOINT_TARGET=$1
 
 echo "ENDPOINT_TARGET = $ENDPOINT_TARGET"
 
-rm -rf "$ENDPOINTS_TARGET_PATH"
-mkdir "$ENDPOINTS_TARGET_PATH"
-
 cd "services/model"
 mvn clean install -Dmaven.test.skip || exit
 cd ../../
@@ -25,7 +22,9 @@ function install_endpoint() {
   local target_path="$ENDPOINTS_TARGET_PATH/$1"
   local endpoint_path="$ENDPOINTS_MODULE_PATH/$1"
 
+  rm -rf "$target_path"
   mkdir "$target_path"
+
   cd "$endpoint_path" || exit
   mvn clean install
   except_code
@@ -43,6 +42,9 @@ function copy_compiled_endpoint() {
 }
 
 function build_all() {
+  rm -rf "$ENDPOINTS_TARGET_PATH"
+  mkdir "$ENDPOINTS_TARGET_PATH"
+
   # shellcheck disable=SC2231
   for endpoint in $ENDPOINTS_MODULE_PATH/*
   do
@@ -51,6 +53,7 @@ function build_all() {
 }
 
 function build() {
+  mkdir "$ENDPOINTS_TARGET_PATH"
   tmp=$(echo "$1" | cut -d'/' -f 3)
   if [ "$tmp" != "target" ]; then
 
