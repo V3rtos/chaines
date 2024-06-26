@@ -6,7 +6,7 @@ import lombok.ToString;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityId;
-import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
+import me.moonways.bridgenet.jdbc.entity.persistence.EntityColumn;
 
 import java.util.UUID;
 
@@ -19,9 +19,9 @@ public class EntityNamespace {
     @Getter(onMethod_ = @EntityId(indexes = ParameterAddon.PRIMARY))
     private final transient long id;
 
-    @Getter(onMethod_ = @EntityParameter(indexes = {ParameterAddon.PRIMARY, ParameterAddon.NOTNULL}))
+    @Getter(onMethod_ = @EntityColumn(indexes = {ParameterAddon.PRIMARY, ParameterAddon.NOTNULL}))
     private final UUID uuid;
 
-    @Getter(onMethod_ = @EntityParameter(order = 2))
+    @Getter(onMethod_ = @EntityColumn(order = 2))
     private final String name;
 }

@@ -29,9 +29,7 @@ import java.util.concurrent.Executors;
 @Builder
 public class JdbcWrapper {
 
-    private static final ExecutorService JDBC_THREADS_POOL = Executors.newCachedThreadPool();
-
-    private static final int TRANSACTION_ISOLATION_LEVEL = Connection.TRANSACTION_SERIALIZABLE;
+    private static final ExecutorService JDBC_THREADS_POOL = Executors.newWorkStealingPool();
     private static final int VALID_TIMEOUT = 3500;
 
     @RequiredArgsConstructor
@@ -50,6 +48,8 @@ public class JdbcWrapper {
     private List<DatabaseObserver> observers;
     private boolean currentlyWorker;
 
+    private int transactionMod;
+
     @SneakyThrows
     public boolean isConnected() {
         return jdbc != null && !jdbc.isClosed() && jdbc.isValid(VALID_TIMEOUT);
@@ -63,9 +63,11 @@ public class JdbcWrapper {
     }
 
     private void observe(@NotNull Observable event) {
-        if (observers != null) {
-            observers.forEach(observer -> observer.observe(event));
-        }
+        JDBC_THREADS_POOL.execute(() -> {
+            if (observers != null) {
+                observers.forEach(observer -> observer.observe(event));
+            }
+        });
     }
 
     public synchronized void connect() {
@@ -197,13 +199,14 @@ public class JdbcWrapper {
         switch (state) {
             case ACTIVE: {
                 try {
-                    if (jdbc.getAutoCommit()) {
-
+                    if (transactionMod == 0) {
                         jdbc.setAutoCommit(false);
+
                         log.debug("Transaction session state is opened");
 
                         observe(new DbTransactionOpenEvent(System.currentTimeMillis(), connectionID));
                     }
+                    transactionMod++;
                 } catch (SQLException exception) {
                     exceptionHandler.uncaughtException(thread, exception);
                 }
@@ -211,7 +214,7 @@ public class JdbcWrapper {
             }
             case INACTIVE: {
                 try {
-                    if (!jdbc.getAutoCommit()) {
+                    if (transactionMod == 1) {
                         jdbc.commit();
                         jdbc.setAutoCommit(true);
 
@@ -219,6 +222,7 @@ public class JdbcWrapper {
 
                         observe(new DbTransactionCloseEvent(System.currentTimeMillis(), connectionID));
                     }
+                    transactionMod--;
                 } catch (SQLException exception) {
                     try {
                         jdbc.rollback();

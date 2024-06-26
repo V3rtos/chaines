@@ -40,6 +40,8 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     private final TypeAdaptersControl typeAdaptersControl = new TypeAdaptersControl();
 
     private void doDelete(EntityDescriptor entityDescriptor, SearchMarker<T> searchMarker) {
+        connection.openTransaction();
+
         checkExternalsBefore(entityDescriptor, searchMarker);
         typeAdaptersControl.trySerializeValues(entityDescriptor);
 
@@ -53,13 +55,13 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                 new EntityOperationComposer(composer)
                         .composeDelete(entityDescriptor, searchMarker);
 
-        connection.openTransaction();
         justCall(operation);
-
         connection.closeTransaction();
     }
 
     private <V> List<V> doSearch(SearchMarker<V> searchMarker) {
+        connection.openTransaction();
+
         EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entityClass);
         checkExternalsBefore(entityDescriptor);
         checkExternalsBefore(entityDescriptor, searchMarker);
@@ -70,10 +72,14 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                 new EntityOperationComposer(composer)
                         .composeSearch(entityDescriptor, searchMarker);
 
-        return connection.ofTransactionalGet(() -> callAndCollect(operation));
+        List<V> resultList = callAndCollect(operation);
+        connection.closeTransaction();
+        return resultList;
     }
 
     private EntityID doInsert(EntityDescriptor entityDescriptor) {
+        connection.openTransaction();
+
         checkExternalsBefore(entityDescriptor);
         typeAdaptersControl.trySerializeValues(entityDescriptor);
 
@@ -81,7 +87,9 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                 new EntityOperationComposer(composer)
                         .composeInsert(entityDescriptor);
 
-        return connection.ofTransactionalGet(() -> callAndGetEntityId(operation));
+        EntityID entityID = callAndGetEntityId(operation);
+        connection.closeTransaction();
+        return entityID;
     }
 
     @Override
@@ -251,7 +259,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
     @Override
     public synchronized SearchMarker<T> newSearchMarker() {
-        return new SearchMarker<>(new SearchMarker.ProxiedParametersFounder<>(entityClass));
+        return new SearchMarker<>(entityClass);
     }
 
     private void justCall(EntityOperationComposer.EntityComposedOperation operation) {

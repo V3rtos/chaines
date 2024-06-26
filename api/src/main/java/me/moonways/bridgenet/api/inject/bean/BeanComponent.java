@@ -53,15 +53,7 @@ public class BeanComponent extends AnnotatedBeanComponent<Field> {
      * @param value - новое значение компонента.
      */
     public void setValue(Object value) {
-        Field field = getRoot();
         Bean bean = getBean();
-
-        ReflectionUtils.grantAccess(field);
-
-        try {
-            field.set(bean.getRoot(), value);
-        } catch (IllegalAccessException exception) {
-            throw new BeanException(exception);
-        }
+        ReflectionUtils.setField(bean.getRoot(), getRoot(), value);
     }
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
-import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
+import me.moonways.bridgenet.jdbc.entity.persistence.EntityColumn;
 import me.moonways.bridgenet.model.service.settings.Setting;
 
 import java.rmi.RemoteException;
@@ -26,14 +26,14 @@ public class EntitySetting {
                 .build();
     }
 
-    @Getter(onMethod_ = @EntityParameter(order = 1, id = "player_id",
+    @Getter(onMethod_ = @EntityColumn(order = 1, id = "player_id",
             indexes = ParameterAddon.KEY))
     private UUID playerId;
 
-    @Getter(onMethod_ = @EntityParameter(order = 2, id = "setting_id",
+    @Getter(onMethod_ = @EntityColumn(order = 2, id = "setting_id",
             indexes = ParameterAddon.KEY))
     private UUID settingId;
 
-    @Getter(onMethod_ = @EntityParameter(order = 3, id = "setting_value"))
+    @Getter(onMethod_ = @EntityColumn(order = 3, id = "setting_value"))
     private Object value;
 }

@@ -57,11 +57,9 @@ public class BeanMethod extends AnnotatedBeanComponent<Method> {
         Method method = getRoot();
         Bean bean = getBean();
 
-        ReflectionUtils.grantAccess(method);
-
         try {
             log.debug("invoke §2{}.{}() §7[{}]", bean.getClassName(), method.getName(), getSource());
-            return method.invoke(bean.getRoot(), args);
+            return ReflectionUtils.invoke(bean.getRoot(), method, args);
 
         } catch (Throwable exception) {
             throw new BeanException(method.toString(), exception);

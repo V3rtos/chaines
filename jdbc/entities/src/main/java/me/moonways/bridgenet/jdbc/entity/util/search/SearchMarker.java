@@ -12,6 +12,7 @@ import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 @ToString(onlyExplicitlyIncluded = true)
@@ -19,8 +20,9 @@ import java.util.function.Function;
 public final class SearchMarker<T> {
 
     public static final int UNLIMITED_LIMIT = -1;
+    private static final Map<Class<?>, ProxiedParametersFounder<?>> foundersMap = new ConcurrentHashMap<>();
 
-    private final ProxiedParametersFounder<T> founder;
+    private final Class<T> entityClass;
 
     @Getter
     @ToString.Include
@@ -35,12 +37,16 @@ public final class SearchMarker<T> {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     private String findParameterId(Function<T, ?> parameterGetter) {
+        ProxiedParametersFounder<T> founder = (ProxiedParametersFounder<T>) foundersMap.computeIfAbsent(entityClass,
+                k -> new ProxiedParametersFounder<>(entityClass));
+
         founder.prepareProxy();
         parameterGetter.apply(founder.proxiedEntity);
 
         return founder.getLastInvocation()
-                .orElseThrow(() -> new DatabaseEntityException("Marked parameter is not annotated as entity element"));
+                .orElseThrow(() -> new DatabaseEntityException("Marked parameter is not annotated as entity-column"));
     }
 
     public <E> SearchMarker<T> withGet(Function<T, E> parameterGetter, E expected) {

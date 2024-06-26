@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface EntityExternalParameter {
+public @interface EntityColumn {
 
     int order() default 0;
 
