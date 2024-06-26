@@ -5,36 +5,29 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>me.moonways.bridgenet</groupId>
-        <artifactId>bridgenet</artifactId>
+        <artifactId>rest-root</artifactId>
         <version>1.2</version>
     </parent>
 
-    <artifactId>rest</artifactId>
+    <artifactId>rest-http</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>root</module>
-        <module>wrappers</module>
+        <module>api</module>
+        <module>server</module>
+        <module>client</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>api</artifactId>
-            <version>${api.version}</version>
-            <scope>compile</scope>
+            <artifactId>rest-model</artifactId>
+            <version>${rest.version}</version>
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>model</artifactId>
-            <version>${model.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>rmi</artifactId>
-            <version>${rmi.version}</version>
-            <scope>compile</scope>
+            <artifactId>rest-repository</artifactId>
+            <version>${rest.version}</version>
         </dependency>
     </dependencies>
 </project>
