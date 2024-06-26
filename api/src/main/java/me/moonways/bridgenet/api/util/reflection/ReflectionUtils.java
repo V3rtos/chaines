@@ -9,7 +9,6 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.stream.Stream;
 
 @UtilityClass
 public class ReflectionUtils {
@@ -40,7 +39,7 @@ public class ReflectionUtils {
     private static final Map<Method, MethodHandle> methodToMethodHandleMap = Collections.synchronizedMap(new HashMap<>());
 
     private Constructor<?> getConstructor(Class<?> cls, int index, Class<?>[] argsTypes) {
-        Pair<Class<?>, Integer> key = Pair.create(cls, index);
+        Pair<Class<?>, Integer> key = Pair.immutable(cls, index);
         return reflectionConstructorsCache.computeIfAbsent(key, k -> {
             try {
                 return cls.getDeclaredConstructor(argsTypes);
@@ -51,7 +50,7 @@ public class ReflectionUtils {
     }
 
     private Method getMethod(Class<?> cls, String name, Class<?>[] argsTypes) {
-        Pair<Class<?>, String> key = Pair.create(cls, name);
+        Pair<Class<?>, String> key = Pair.immutable(cls, name);
         return reflectionMethodsCache.computeIfAbsent(key, k -> {
             try {
                 return cls.getDeclaredMethod(name, argsTypes);
@@ -62,7 +61,7 @@ public class ReflectionUtils {
     }
 
     private Field getField(Class<?> cls, String name) {
-        Pair<Class<?>, String> key = Pair.create(cls, name);
+        Pair<Class<?>, String> key = Pair.immutable(cls, name);
         return reflectionFieldsCache.computeIfAbsent(key, k -> {
             try {
                 return cls.getDeclaredField(name);
