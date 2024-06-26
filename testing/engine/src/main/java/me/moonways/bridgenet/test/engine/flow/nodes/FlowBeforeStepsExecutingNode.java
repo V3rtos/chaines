@@ -87,7 +87,7 @@ public class FlowBeforeStepsExecutingNode implements TestFlowNode {
             DisplayTestItem displayTestItem = DisplayTestItem.builder()
                     .testClass(context.getTestClass())
                     .notifier(context.getRunNotifier())
-                    .displayName(String.format("[:before-step] %s", step.getClass().getSimpleName()))
+                    .displayName(String.format("[:before] %s", step.getClass().getSimpleName()))
                     .build();
 
             log.debug("Executing before-step §2{}§r...", step.getClass().getSimpleName());
