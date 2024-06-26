@@ -9,6 +9,7 @@ import me.moonways.bridgenet.test.engine.persistance.PersistenceAcceptType;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import me.moonways.bridgenet.test.engine.persistance.TestSleeping;
 import org.junit.runner.Description;
+import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.TestClass;
 
@@ -20,14 +21,21 @@ import java.util.Optional;
 public class TestingElement {
 
     private final FrameworkMethod frameworkMethod;
+    private DisplayTestItem displayTestItem;
 
     public String getName() {
         return frameworkMethod.getName();
     }
 
-    public final Description createJunitDescription(TestClass testClass) {
-        return Description.createTestDescription(testClass.getJavaClass(),
-                frameworkMethod.getName());
+    public final DisplayTestItem createDisplayTestItem(TestClass testClass, RunNotifier notifier) {
+        if (displayTestItem == null) {
+            displayTestItem = DisplayTestItem.builder()
+                    .testClass(testClass)
+                    .displayName(frameworkMethod.getName())
+                    .notifier(notifier)
+                    .build();
+        }
+        return displayTestItem;
     }
 
     public void execute(TestFlowContext context) {

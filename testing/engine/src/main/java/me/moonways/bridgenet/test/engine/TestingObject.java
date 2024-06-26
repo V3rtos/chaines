@@ -71,14 +71,14 @@ public class TestingObject extends TestingElement {
     }
 
     private void fireElement(TestFlowContext context, TestingElement testingElement) {
-        Description description = testingElement.createJunitDescription(testClass);
+        DisplayTestItem displayTestItem = testingElement.createDisplayTestItem(testClass, junitNotifier);
 
-        junitNotifier.fireTestStarted(description);
-        callElement(context, description, testingElement);
-        junitNotifier.fireTestFinished(description);
+        displayTestItem.fireStarted();
+        callElement(context, displayTestItem, testingElement);
+        displayTestItem.fireFinished();
     }
 
-    private void callElement(TestFlowContext context, Description description, TestingElement testingElement) {
+    private void callElement(TestFlowContext context, DisplayTestItem displayTestItem, TestingElement testingElement) {
         long beforeSleepingDurationMs = testingElement.getBeforeSleepingDurationMs();
         long postSleepingDurationMs = testingElement.getPostSleepingDurationMs();
 
@@ -96,7 +96,7 @@ public class TestingObject extends TestingElement {
             }
         } catch (Throwable exception) {
             handleException(context, exception);
-            junitNotifier.fireTestFailure(new EmptyTraceFailure(description));
+            displayTestItem.fireFinishedFailure();
         }
     }
 

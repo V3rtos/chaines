@@ -2,6 +2,7 @@ package me.moonways.bridgenet.test.engine.flow.nodes;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.test.engine.DisplayTestItem;
 import me.moonways.bridgenet.test.engine.component.module.Module;
 import me.moonways.bridgenet.test.engine.component.step.Step;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
@@ -83,10 +84,22 @@ public class FlowBeforeStepsExecutingNode implements TestFlowNode {
 
         preparedStepsList.forEach(step -> {
 
+            DisplayTestItem displayTestItem = DisplayTestItem.builder()
+                    .testClass(context.getTestClass())
+                    .notifier(context.getRunNotifier())
+                    .displayName(String.format("[:before-step] %s", step.getClass().getSimpleName()))
+                    .build();
+
             log.debug("Executing before-step §2{}§r...", step.getClass().getSimpleName());
             beansService.inject(step);
 
-            step.execute(context);
+            try {
+                displayTestItem.fireStarted();
+                step.execute(context);
+                displayTestItem.fireFinished();
+            } catch (Throwable throwable) {
+                displayTestItem.fireFinishedFailure();
+            }
         });
     }
 
