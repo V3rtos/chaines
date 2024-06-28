@@ -103,7 +103,6 @@ public final class BeansScanningService {
 
         scanAllResourcesAsClasses();
         return allResourcesSet.stream()
-                .parallel()
                 .filter(resourceClass -> {
                     String resourcePackageName = resourceClass.getPackage().getName();
                     for (String packageName : packageNamesArray) {

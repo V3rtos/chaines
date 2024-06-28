@@ -16,7 +16,9 @@ import me.moonways.bridgenet.test.engine.persistance.TestModules;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -53,7 +55,18 @@ public class FlowModulesApplyingNode implements TestFlowNode {
 
         log.debug("Installing §2{} §rimplemented modules...", instancesList.size());
 
-        context.setInstance(TestFlowContext.LOADED_MODULES, instancesList);
+        Optional<List<Module>> loadedModulesListOptional = context.getInstance(TestFlowContext.LOADED_MODULES);
+        loadedModulesListOptional
+                        .ifPresent(loadedModulesList -> {
+                            instancesList.removeIf(module -> loadedModulesList.stream()
+                                    .anyMatch(loadedModule -> loadedModule.getClass().equals(module.getClass())));
+                            loadedModulesList.addAll(instancesList);
+                        });
+
+        if (!loadedModulesListOptional.isPresent()) {
+            context.setInstance(TestFlowContext.LOADED_MODULES, instancesList);
+        }
+
         instancesList.forEach(module -> {
 
             beansService.bind(module);

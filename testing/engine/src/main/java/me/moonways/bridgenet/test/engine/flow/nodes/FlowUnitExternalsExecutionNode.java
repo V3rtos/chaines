@@ -1,12 +1,20 @@
 package me.moonways.bridgenet.test.engine.flow.nodes;
 
+import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.test.engine.ExternalTestingObject;
+import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.TestingObject;
+import me.moonways.bridgenet.test.engine.flow.ExternalFlowProcessor;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
 import me.moonways.bridgenet.test.engine.flow.TestFlowNode;
-import me.moonways.bridgenet.test.engine.persistance.PersistenceAcceptType;
+import me.moonways.bridgenet.test.engine.flow.TestFlowProcessor;
+import me.moonways.bridgenet.test.engine.persistance.ExternalAcceptationType;
+
+import java.util.concurrent.ExecutorService;
 
 public class FlowUnitExternalsExecutionNode implements TestFlowNode {
+    private static final ExecutorService parallelism = Threads.newWorkStealingPool();
 
     @Override
     public void execute(TestFlowContext context) {
@@ -21,10 +29,36 @@ public class FlowUnitExternalsExecutionNode implements TestFlowNode {
     protected void doExecute(TestFlowContext context, ExternalTestingObject testingObject) {
         testingObject.setInstanceAt(context.getTestingObject().getInstance());
 
-        Runnable submit = () -> context.getRunner().run(context.getRunNotifier(), testingObject);
+        Runnable submit = () -> {
+            TestFlowProcessor testFlowProcessor = new ExternalFlowProcessor();
+            ModernTestEngineRunner modernTestEngineRunner = context.getRunner();
 
-        if (testingObject.getPersistenceAcceptType() == PersistenceAcceptType.PARALLEL) {
-            context.getForkJoinPool().submit(submit);
+            TestFlowContext externalFlowContext =
+                    TestFlowContext.builder()
+                            .runner(modernTestEngineRunner)
+                            .processor(testFlowProcessor)
+                            .flowNodes(testFlowProcessor.flowNodes())
+                            .testingObject(testingObject)
+                            .testClass(testingObject.getTestClass())
+                            .runNotifier(context.getRunNotifier())
+                            .build();
+
+            BeansService beansService = context.getInstance(TestFlowContext.BEANS).orElse(null);
+
+            externalFlowContext.setInstance(TestFlowContext.BOOTSTRAP, context.getInstance(TestFlowContext.BOOTSTRAP).orElse(null));
+            externalFlowContext.setInstance(TestFlowContext.BEANS, beansService);
+            externalFlowContext.setInstance(TestFlowContext.LOADED_MODULES, context.getInstance(TestFlowContext.LOADED_MODULES).orElse(null));
+
+            if (beansService != null) {
+                beansService.fakeBind(testingObject);
+                beansService.fakeBind(testingObject.getInstance());
+            }
+
+            modernTestEngineRunner.runWithContext(externalFlowContext);
+        };
+
+        if (testingObject.getPersistenceAcceptType() == ExternalAcceptationType.PARALLEL) {
+            parallelism.submit(submit);
             return;
         }
 
@@ -32,7 +66,7 @@ public class FlowUnitExternalsExecutionNode implements TestFlowNode {
     }
 
     protected static boolean canApplyHere(ExternalTestingObject obj) {
-        return obj.getPersistenceAcceptType() == PersistenceAcceptType.BEFORE_EXECUTION
-                || obj.getPersistenceAcceptType() == PersistenceAcceptType.PARALLEL;
+        return obj.getPersistenceAcceptType() == ExternalAcceptationType.BEFORE_UNIT
+                || obj.getPersistenceAcceptType() == ExternalAcceptationType.PARALLEL;
     }
 }

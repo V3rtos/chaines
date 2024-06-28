@@ -106,14 +106,14 @@ public class FlowBeforeStepsExecutingNode implements TestFlowNode {
     @SuppressWarnings("unchecked")
     private void applyingModules(TestFlowContext context, List<Class<? extends Module>> moduleDependencies) {
         Optional<List<Module>> loadedModulesListOptional = context.getInstance(TestFlowContext.LOADED_MODULES);
-        List<Module> modules = loadedModulesListOptional.orElse(new ArrayList<>());
+        List<Module> loadedModulesList = loadedModulesListOptional.orElse(new ArrayList<>());
 
         context.getFlowNode(FlowModulesApplyingNode.class)
                 .ifPresent(flowModulesApplyingNode -> {
 
                     flowModulesApplyingNode.processModulesAnnotation(context,
                             moduleDependencies.stream()
-                                    .filter(moduleClass -> modules.stream().noneMatch(module -> module.getClass().equals(moduleClass)))
+                                    .filter(moduleClass -> loadedModulesList.stream().noneMatch(module -> module.getClass().equals(moduleClass)))
                                     .toArray(Class[]::new));
                 });
     }
