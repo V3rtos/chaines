@@ -1,5 +1,8 @@
 package me.moonways.bridgenet.test.client;
 
+import me.moonways.bridgenet.api.command.CommandExecutor;
+import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
+import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.client.api.data.UserDto;
 import me.moonways.bridgenet.model.message.Handshake;
@@ -9,6 +12,7 @@ import me.moonways.bridgenet.test.data.ExampleClient;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.component.module.impl.ClientsModule;
 import me.moonways.bridgenet.test.engine.persistance.TestModules;
+import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,8 +30,13 @@ public class ClientStressMessagesTest {
 
     @Inject
     private ExampleClient subj;
+    @Inject
+    private CommandExecutor commandExecutor;
+    @Inject
+    private ConsoleCommandSender consoleCommandSender;
 
     @Test
+    @TestOrdered(0)
     public void test_stressingPacketsRouting() throws InterruptedException {
         BridgenetNetworkChannel channel = subj.getChannel();
 
@@ -36,6 +45,13 @@ public class ClientStressMessagesTest {
         }
 
         Thread.sleep(SLEEPING_TIMEOUT);
+    }
+
+    @Test
+    @TestOrdered(1)
+    public void test_afterStressChecks() throws CommandExecutionException {
+        commandExecutor.execute(consoleCommandSender, "memory");
+        commandExecutor.execute(consoleCommandSender, "bridgenet");
     }
 
     private void pullGeneratedPlayer(BridgenetNetworkChannel channel) {
