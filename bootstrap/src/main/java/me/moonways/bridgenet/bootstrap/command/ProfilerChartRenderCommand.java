@@ -11,6 +11,9 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.profiler.BridgenetDataLogger;
 import me.moonways.bridgenet.profiler.ProfilerType;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Alias("profiler")
 @Alias("profiling")
 @Alias("metric")
@@ -18,6 +21,7 @@ import me.moonways.bridgenet.profiler.ProfilerType;
 @Command("profilers")
 @CommandParameter(CommandParameterOnlyConsoleUse.class)
 public class ProfilerChartRenderCommand {
+    private final ExecutorService threadExecutor = Executors.newWorkStealingPool();
 
     @Inject
     private BridgenetDataLogger bridgenetDataLogger;
@@ -30,7 +34,10 @@ public class ProfilerChartRenderCommand {
     }
 
     public void receiveRenderedImage(ProfilerType profilerType, EntityCommandSender sender) {
-        String renderedImageUrl = bridgenetDataLogger.renderProfilerChart(profilerType);
-        sender.sendMessage("Illustration of the §7\"%s\" §rmetric is prepared from the link: %s", profilerType.getDisplayName(), renderedImageUrl);
+        threadExecutor.submit(() -> {
+
+            String renderedImageUrl = bridgenetDataLogger.renderProfilerChart(profilerType);
+            sender.sendMessage("Illustration of the §7\"%s\" §rmetric is prepared from the link: %s", profilerType.getDisplayName(), renderedImageUrl);
+        });
     }
 }
