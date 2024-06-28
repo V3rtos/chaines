@@ -32,14 +32,14 @@ public final class PlayersRepository {
         return namespacesRepository.searchIf(
                         namespacesRepository.newSearchMarker()
                                 .and(EntityNamespace::getUuid, id))
-                .replace(this::toEntityPlayer);
+                .map(this::toEntityPlayer);
     }
 
     public SingleFuture<EntityPlayer> get(String name) {
         return namespacesRepository.searchIf(
                         namespacesRepository.newSearchMarker()
                                 .and(EntityNamespace::getName, name.toLowerCase()))
-                .replace(this::toEntityPlayer);
+                .map(this::toEntityPlayer);
     }
 
     private EntityPlayer toEntityPlayer(EntityNamespace entityNamespace) {

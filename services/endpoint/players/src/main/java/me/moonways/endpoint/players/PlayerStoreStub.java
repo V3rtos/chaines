@@ -211,7 +211,7 @@ public final class PlayerStoreStub implements PlayerStore {
 
         if (cachedDescription.get() == null) {
             playersRepository.get(id)
-                    .replace(EntityPlayer::getDescription)
+                    .map(EntityPlayer::getDescription)
                     .blockAndSubscribe(playerDescription -> {
 
                         cachedDescription.set(playerDescription);
@@ -234,7 +234,7 @@ public final class PlayerStoreStub implements PlayerStore {
 
         if (cachedDescription.get() == null) {
             playersRepository.get(name)
-                    .replace(EntityPlayer::getDescription)
+                    .map(EntityPlayer::getDescription)
                     .blockAndSubscribe(playerDescription -> {
 
                         cachedDescription.set(playerDescription);

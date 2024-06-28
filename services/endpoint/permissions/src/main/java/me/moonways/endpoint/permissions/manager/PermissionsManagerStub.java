@@ -54,7 +54,7 @@ public final class PermissionsManagerStub implements PermissionsManager {
                     }
                 })
                 .filter(entityPermission -> !entityPermission.isExpired())
-                .replaceEach(PermissionsManagerStub::fromEntityPermission)
+                .mapEach(PermissionsManagerStub::fromEntityPermission)
                 .blockAll(HashSet::new);
     }
 

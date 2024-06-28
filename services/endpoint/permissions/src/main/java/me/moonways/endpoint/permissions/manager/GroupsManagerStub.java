@@ -49,7 +49,7 @@ public final class GroupsManagerStub implements GroupsManager {
         return repository.searchIf(
                         repository.newSearchMarker()
                                 .and(EntityGroup::getPlayerId, playerId))
-                .replaceFlat(entityGroup -> entityGroup.isExpired() ? getGroup(entityGroup.getGroupId()) : Optional.empty())
+                .flatMap(entityGroup -> entityGroup.isExpired() ? getGroup(entityGroup.getGroupId()) : Optional.empty())
                 .blockOptional();
     }
 

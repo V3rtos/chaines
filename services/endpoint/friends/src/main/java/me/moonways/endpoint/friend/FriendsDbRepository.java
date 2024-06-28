@@ -25,7 +25,7 @@ public class FriendsDbRepository {
         EntityRepository<EntityFriend> friendsPairRepository = getRepository();
         return friendsPairRepository.searchManyIf(friendsPairRepository.newSearchMarker()
                         .and(EntityFriend::getPlayerID, playerID))
-                .replaceEach(EntityFriend::getFriendID)
+                .mapEach(EntityFriend::getFriendID)
                 .blockAll();
     }
 

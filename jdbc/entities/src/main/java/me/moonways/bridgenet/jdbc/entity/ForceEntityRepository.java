@@ -285,7 +285,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
             if (Objects.equals(operation.getResultQuery(), completedQuery)) {
                 listFutureResult.addAll(
                         ListFuture.of(result.get(), ResponseRow.class)
-                                .replaceEach(responseRow -> {
+                                .mapEach(responseRow -> {
                                     EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
 
                                     checkExternalsAfter(entityDescriptor);
