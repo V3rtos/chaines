@@ -26,7 +26,7 @@ public class NetworkMessageEncoder extends MessageToByteEncoder<ExportedMessage>
     private BridgenetDataLogger bridgenetDataLogger;
 
     @Override
-    protected synchronized void encode(ChannelHandlerContext channelHandlerContext, ExportedMessage exportedMessage, ByteBuf byteBuf) {
+    protected void encode(ChannelHandlerContext channelHandlerContext, ExportedMessage exportedMessage, ByteBuf byteBuf) {
         if (exportedMessage == null || exportedMessage.getMessage() == null || exportedMessage.getWrapper() == null) {
             throw new MessageCodecException("Can`t encode " + exportedMessage);
         }

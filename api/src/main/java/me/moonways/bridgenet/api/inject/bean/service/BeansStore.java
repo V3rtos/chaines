@@ -3,7 +3,6 @@ package me.moonways.bridgenet.api.inject.bean.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.moonways.bridgenet.api.inject.Prototype;
-import me.moonways.bridgenet.api.inject.Weak;
 import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanException;
 import me.moonways.bridgenet.api.inject.bean.BeanType;
@@ -11,6 +10,7 @@ import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public final class BeansStore {
 
-    private final Map<UUID, Bean> store = Collections.synchronizedMap(new LinkedHashMap<>());
+    private final Map<UUID, Bean> store = Collections.synchronizedMap(new ConcurrentSkipListMap<>());
     private final BeansScanningService scanner;
 
     public Collection<Bean> getTotalBeans() {
@@ -36,7 +36,7 @@ public final class BeansStore {
      *
      * @param bean - бин.
      */
-    public synchronized void store(Bean bean) {
+    public void store(Bean bean) {
         if (isStored(bean)) {
             throw new BeanException("Bean has already bind");
         }

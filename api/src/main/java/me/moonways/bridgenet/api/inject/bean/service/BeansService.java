@@ -183,7 +183,7 @@ public final class BeansService {
      * @param type   - класс бина.
      * @param object - инстанс бина.
      */
-    public synchronized void fakeBind(Class<?> type, Object object) {
+    public void fakeBind(Class<?> type, Object object) {
         fakeBind(scanner.createBean(type, object));
     }
 
@@ -197,7 +197,7 @@ public final class BeansService {
      *
      * @param object - instance бина.
      */
-    public synchronized void fakeBind(Object object) {
+    public void fakeBind(Object object) {
         fakeBind(object.getClass(), object);
     }
 
@@ -206,7 +206,7 @@ public final class BeansService {
      *
      * @param bean - бин.
      */
-    public synchronized void fakeBind(Bean bean) {
+    public void fakeBind(Bean bean) {
         inject(bean.getRoot());
 
         // call @PostConstruct functions.
@@ -220,7 +220,7 @@ public final class BeansService {
      * @param type   - класс бина.
      * @param object - instance бина.
      */
-    public synchronized void bind(Class<?> type, Object object) {
+    public void bind(Class<?> type, Object object) {
         bind(scanner.createBean(type, object));
     }
 
@@ -233,7 +233,7 @@ public final class BeansService {
      *
      * @param object - instance бина.
      */
-    public synchronized void bind(Object object) {
+    public void bind(Object object) {
         bind(object.getClass(), object);
     }
 
@@ -242,7 +242,7 @@ public final class BeansService {
      *
      * @param bean - бин.
      */
-    public synchronized void bind(Bean bean) {
+    public void bind(Bean bean) {
         if (annotationsAwaits.needsAwaits(bean)) {
             annotationsAwaits.offer(bean);
             return;
@@ -308,7 +308,7 @@ public final class BeansService {
      *
      * @param bean - бин, который необходимо проверить.
      */
-    public synchronized void tryOverrideDecorators(Bean bean) {
+    public void tryOverrideDecorators(Bean bean) {
         if (bean.getType().isDecoratorsEnabled()) {
             enableDecorators(bean);
         }
@@ -350,7 +350,7 @@ public final class BeansService {
      *
      * @param beanType - класс бина.
      */
-    public synchronized void unbind(Class<?> beanType) {
+    public void unbind(Class<?> beanType) {
         unbind(store.find(beanType).orElse(null));
     }
 
@@ -364,7 +364,7 @@ public final class BeansService {
      *
      * @param object - instance бина.
      */
-    public synchronized void unbind(Object object) {
+    public void unbind(Object object) {
         unbind(object.getClass());
     }
 
@@ -373,7 +373,7 @@ public final class BeansService {
      *
      * @param bean - бин.
      */
-    public synchronized void unbind(Bean bean) {
+    public void unbind(Bean bean) {
         store.delete(bean);
         log.debug("Unbinding a bean of §4{}", bean.getType().getRoot().getName());
     }
@@ -385,7 +385,7 @@ public final class BeansService {
      *
      * @param object - объект, который нуждается в инициализации.
      */
-    public synchronized void inject(Object object) {
+    public void inject(Object object) {
         injector.injectComponents(object);
     }
 
@@ -480,7 +480,7 @@ public final class BeansService {
      *
      * @param bean - бин.
      */
-    public synchronized void justStore(Bean bean) {
+    public void justStore(Bean bean) {
         if (!store.isStored(bean)) {
             store.store(bean);
         }
@@ -493,7 +493,7 @@ public final class BeansService {
      *
      * @param bean - бин.
      */
-    public synchronized void justStore(Object bean) {
+    public void justStore(Object bean) {
         justStore(scanner.createBean(bean.getClass(), bean));
     }
 

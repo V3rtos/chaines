@@ -34,7 +34,7 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
     private BridgenetDataLogger bridgenetDataLogger;
 
     @Override
-    protected synchronized void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> handleList) {
+    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> handleList) {
         try {
             int readableBytes = byteBuf.readableBytes();
             if (readableBytes == 0) {

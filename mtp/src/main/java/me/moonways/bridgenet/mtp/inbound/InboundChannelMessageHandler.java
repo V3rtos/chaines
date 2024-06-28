@@ -73,7 +73,7 @@ public class InboundChannelMessageHandler extends SimpleChannelInboundHandler<Ex
     }
 
     @Override
-    protected synchronized void channelRead0(ChannelHandlerContext ctx, ExportedMessage exportedMessage) {
+    protected void channelRead0(ChannelHandlerContext ctx, ExportedMessage exportedMessage) {
         BridgenetNetworkChannel inboundChannel = toChannel(ctx);
         Object message = exportedMessage.getMessage();
 

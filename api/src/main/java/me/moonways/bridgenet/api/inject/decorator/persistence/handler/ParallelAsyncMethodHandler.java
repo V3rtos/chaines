@@ -10,15 +10,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 @Log4j2
-public class AsyncMethodHandler implements DecoratedMethodHandler {
-    private final ExecutorService threadExecutor
-            = Threads.newCachedThreadPool();
+public class ParallelAsyncMethodHandler implements DecoratedMethodHandler {
+    private final ExecutorService threadExecutor = Threads.newWorkStealingPool(12);
 
     @Override
     public Object handleProxyInvocation(DecoratorInvocation invocation) {
         Supplier<Object> asyncExecutorCommand = () -> {
 
-            log.debug("§3Running decorated {} asynchronous execution: [thread={}]", invocation, Thread.currentThread().getName());
+            log.debug("§3Running decorated {} parallel-asynchronous execution: [thread={}]", invocation, Thread.currentThread().getName());
             return invocation.proceed();
         };
 

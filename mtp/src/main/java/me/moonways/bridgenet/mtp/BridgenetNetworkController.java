@@ -44,7 +44,7 @@ public class BridgenetNetworkController {
         handlerList.bind(handler);
     }
 
-    public synchronized void pull(@NotNull InboundMessageContext<?> context) {
+    public void pull(@NotNull InboundMessageContext<?> context) {
         beansService.inject(context);
         handlerList.handle(context);
 
