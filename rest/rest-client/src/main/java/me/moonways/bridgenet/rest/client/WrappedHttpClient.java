@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutorService;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class WrappedHttpClient implements Closeable {
 
-    private static final ExecutorService ASYNC_THREADS_POOL = Threads.newCachedThreadPool();
+    private final ExecutorService ASYNC_THREADS_POOL = Threads.newCachedThreadPool();
 
     public static WrappedHttpClient create(@NotNull HttpHost host) {
         return new WrappedHttpClient(host, new HttpChannel(host));

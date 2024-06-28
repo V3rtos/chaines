@@ -105,6 +105,16 @@ public final class RemoteServicesManagement {
         endpointController.bindEndpoints();
     }
 
+    public void unbindEndpoints() {
+        log.debug("Unbinding remote-services...");
+        endpointController.unbindEndpoints();
+
+        servicesInfos.clear();
+        servicesImplements.clear();
+        modulesFactories.clear();
+        modulesContainerMap.clear();
+    }
+
     private void initXmlModules(List<XMLServiceModuleDescriptor> xmlModulesList) {
         log.info("Registering §2{} §rremote-service modules", xmlModulesList.size());
 
@@ -164,6 +174,10 @@ public final class RemoteServicesManagement {
                 onExportedAllServices.run();
             }
         }
+    }
+
+    public void unregisterService(ServiceInfo serviceInfo) {
+        servicesImplements.remove(serviceInfo);
     }
 
     private ModuleID getModuleID(Class<? extends RemoteModule> cls) {

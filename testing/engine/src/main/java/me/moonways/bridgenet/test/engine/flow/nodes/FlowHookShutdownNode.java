@@ -11,6 +11,6 @@ public class FlowHookShutdownNode implements TestFlowNode {
         AppBootstrap bootstrap = context.getInstance(TestFlowContext.BOOTSTRAP).get();
 
         Runtime runtime = Runtime.getRuntime();
-        runtime.addShutdownHook(new Thread(bootstrap::shutdown));
+        runtime.addShutdownHook(new Thread(bootstrap::shutdownApp));
     }
 }

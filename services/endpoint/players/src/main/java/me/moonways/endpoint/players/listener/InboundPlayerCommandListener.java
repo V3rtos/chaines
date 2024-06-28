@@ -6,6 +6,7 @@ import me.moonways.bridgenet.api.command.CommandExecutor;
 import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
 import me.moonways.bridgenet.api.command.sender.EntityCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.model.message.SendCommand;
 import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 import me.moonways.bridgenet.model.service.players.Player;
@@ -22,14 +23,13 @@ import java.rmi.RemoteException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Log4j2
 @InboundMessageListener
 @RequiredArgsConstructor
 public final class InboundPlayerCommandListener {
 
-    private static final ExecutorService THREAD_EXECUTOR = Executors.newWorkStealingPool();
+    private final ExecutorService threadExecutor = Threads.newWorkStealingPool();
     private final PlayerStoreStub playerStoreStub;
 
     @Inject
@@ -72,7 +72,7 @@ public final class InboundPlayerCommandListener {
             } catch (CommandExecutionException exception) {
                 throw new RuntimeException(exception);
             }
-        }, THREAD_EXECUTOR);
+        }, threadExecutor);
     }
 
     // todo - убрать после влития новой системы команд.

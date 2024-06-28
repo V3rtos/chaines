@@ -31,6 +31,12 @@ public class EndpointController {
         }
     }
 
+    public void unbindEndpoints() {
+        for (Endpoint endpoint : endpointsList) {
+            runner.stop(endpoint);
+        }
+    }
+
     public List<Endpoint> getEndpoints() {
         return Collections.unmodifiableList(endpointsList);
     }

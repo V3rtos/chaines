@@ -12,9 +12,10 @@ import me.moonways.bridgenet.test.engine.flow.TestFlowProcessor;
 import me.moonways.bridgenet.test.engine.persistance.ExternalAcceptationType;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FlowUnitExternalsExecutionNode implements TestFlowNode {
-    private static final ExecutorService parallelism = Threads.newWorkStealingPool();
+    private static final ExecutorService parallelism = Executors.newWorkStealingPool();
 
     @Override
     public void execute(TestFlowContext context) {

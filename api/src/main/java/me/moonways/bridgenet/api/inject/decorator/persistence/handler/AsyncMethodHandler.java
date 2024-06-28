@@ -11,8 +11,7 @@ import java.util.function.Supplier;
 
 @Log4j2
 public class AsyncMethodHandler implements DecoratedMethodHandler {
-
-    private static final ExecutorService ASYNC_POOL_EXECUTOR
+    private final ExecutorService ASYNC_POOL_EXECUTOR
             = Threads.newCachedThreadPool();
 
     @Override

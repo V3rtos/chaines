@@ -83,12 +83,11 @@ public class AppBootstrap {
         processBootstrapHooks(BootstrapHookPriority.RUNNER);
         processBootstrapHooks(BootstrapHookPriority.POST_RUNNER);
 
-        final Runtime runtime = Runtime.getRuntime();
-
-        runtime.addShutdownHook(new Thread(this::shutdown));
+        Runtime runtime = Runtime.getRuntime();
+        runtime.addShutdownHook(new Thread(this::shutdownApp));
     }
 
-    public void shutdown() {
+    public void justShutdown() {
         setRunning(false);
         log.info("§4Shutting down Bridgenet services");
 
@@ -96,7 +95,10 @@ public class AppBootstrap {
         processBootstrapHooks(BootstrapHookPriority.SHUTDOWN);
 
         Threads.shutdownForceAll();
+    }
 
+    public void shutdownApp() {
+        justShutdown();
         Runtime.getRuntime().halt(0);
     }
 }

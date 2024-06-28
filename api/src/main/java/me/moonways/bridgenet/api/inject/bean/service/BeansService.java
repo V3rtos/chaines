@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  */
 @Log4j2
 public final class BeansService {
-    private static final ExecutorService executorService
+    private final ExecutorService executorService
             = Threads.newSingleThreadExecutor();
 
     @Getter
