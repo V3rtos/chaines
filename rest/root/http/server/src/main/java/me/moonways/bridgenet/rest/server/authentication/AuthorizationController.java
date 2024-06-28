@@ -2,6 +2,7 @@ package me.moonways.bridgenet.rest.server.authentication;
 
 import me.moonways.bridgenet.rest.model.Headers;
 import me.moonways.bridgenet.rest.model.HttpRequest;
+import me.moonways.bridgenet.rest.model.authentication.*;
 
 import java.util.Arrays;
 import java.util.List;
