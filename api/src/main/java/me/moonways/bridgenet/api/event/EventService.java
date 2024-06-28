@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutorService;
 @AwaitAnnotationsScanning(InboundEventListener.class)
 public final class EventService {
 
-    private final ExecutorService forkJoinPool = Threads.newWorkSteelingPool();
+    private final ExecutorService forkJoinPool = Threads.newWorkStealingPool();
 
     private final EventRegistry eventRegistry = new EventRegistry();
     private final EventExecutor eventExecutor = new EventExecutor(forkJoinPool, eventRegistry);

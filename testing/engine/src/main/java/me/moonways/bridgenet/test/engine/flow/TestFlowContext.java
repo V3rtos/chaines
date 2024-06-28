@@ -83,8 +83,8 @@ public class TestFlowContext {
     private final RunNotifier runNotifier;
     private final TestingObject testingObject;
 
-    private final ExecutorService forkJoinPool = Executors.newWorkStealingPool();
-    private final Map<KeyRegistry<?>, Object> processingInstancesMap = Collections.synchronizedMap(new ConcurrentHashMap<>());
+    private final Map<KeyRegistry<?>, Object> processingInstancesMap
+            = Collections.synchronizedMap(new ConcurrentHashMap<>());
 
     /**
      * Устанавливает экземпляр для указанного реестра ключей.

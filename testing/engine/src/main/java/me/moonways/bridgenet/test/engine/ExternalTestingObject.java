@@ -3,7 +3,7 @@ package me.moonways.bridgenet.test.engine;
 import lombok.Getter;
 import lombok.ToString;
 import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
-import me.moonways.bridgenet.test.engine.persistance.PersistenceAcceptType;
+import me.moonways.bridgenet.test.engine.persistance.ExternalAcceptationType;
 import me.moonways.bridgenet.test.engine.persistance.TestExternal;
 import org.junit.runners.model.FrameworkField;
 import org.junit.runners.model.TestClass;
@@ -12,7 +12,7 @@ import org.junit.runners.model.TestClass;
 @ToString
 public class ExternalTestingObject extends TestingObject {
 
-    private final PersistenceAcceptType persistenceAcceptType;
+    private final ExternalAcceptationType persistenceAcceptType;
     private final FrameworkField frameworkField;
 
     public ExternalTestingObject(FrameworkField frameworkField) {

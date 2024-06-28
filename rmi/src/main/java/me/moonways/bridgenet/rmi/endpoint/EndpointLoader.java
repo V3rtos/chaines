@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
+import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
 import me.moonways.bridgenet.rmi.service.RemoteServicesManagement;
 import me.moonways.bridgenet.rmi.service.ServiceInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,10 +39,11 @@ public class EndpointLoader {
         }
 
         try {
-            String jsonContent = String.join("", Files.readAllLines(file.toPath()));
+            String jsonContent = StreamToStringUtils.toStringFull(new FileInputStream(file));
             return gson.fromJson(jsonContent, EndpointConfig.class);
         } catch (IOException exception) {
             log.error("§4Cannot be inject endpoint config of '{}': §c{}", endpointName, exception.toString());
+            exception.printStackTrace();
             return null;
         }
     }

@@ -5,10 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
-import me.moonways.bridgenet.test.engine.persistance.PersistenceAcceptType;
+import me.moonways.bridgenet.test.engine.persistance.ExternalAcceptationType;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import me.moonways.bridgenet.test.engine.persistance.TestSleeping;
-import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.TestClass;
@@ -51,13 +50,13 @@ public class TestingElement {
 
     public final long getBeforeSleepingDurationMs() {
         return Optional.ofNullable(frameworkMethod.getAnnotation(TestSleeping.class))
-                .filter(testSleeping -> testSleeping.acceptType() != PersistenceAcceptType.POST_EXECUTION)
+                .filter(testSleeping -> testSleeping.acceptType() != ExternalAcceptationType.POST_UNIT)
                 .map(TestSleeping::value).orElse(0);
     }
 
     public final long getPostSleepingDurationMs() {
         return Optional.ofNullable(frameworkMethod.getAnnotation(TestSleeping.class))
-                .filter(testSleeping -> testSleeping.acceptType() == PersistenceAcceptType.POST_EXECUTION)
+                .filter(testSleeping -> testSleeping.acceptType() == ExternalAcceptationType.POST_UNIT)
                 .map(TestSleeping::value).orElse(0);
     }
 }

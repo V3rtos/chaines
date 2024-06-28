@@ -7,6 +7,7 @@ import me.moonways.bridgenet.api.command.exception.CommandExecutionException;
 import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.bootstrap.AppBootstrap;
+import me.moonways.bridgenet.bootstrap.restart.RestartService;
 import net.minecrell.terminalconsole.SimpleTerminalConsole;
 
 @Log4j2
@@ -19,6 +20,8 @@ public class BridgenetConsole extends SimpleTerminalConsole {
     private CommandExecutor commandExecutor;
     @Inject
     private AppBootstrap bootstrap;
+    @Inject
+    private RestartService restartService;
 
     @Override
     protected boolean isRunning() {
@@ -27,18 +30,29 @@ public class BridgenetConsole extends SimpleTerminalConsole {
 
     @Override
     protected void shutdown() {
-        bootstrap.shutdown();
+        // do nothing.
     }
 
     @Override
     protected void runCommand(String commandLine) {
-        if (commandLine.equalsIgnoreCase("exit")) {
-            bootstrap.shutdown();
-            return;
+        switch (commandLine) {
+            case "exit": {
+                bootstrap.shutdownApp();
+                break;
+            }
+            case "restart": {
+                restartService.doRestart();
+                break;
+            }
+            default: {
+                doRunCommand(commandLine);
+            }
         }
+    }
 
+    private void doRunCommand(String input) {
         try {
-            commandExecutor.execute(consoleSender, commandLine);
+            commandExecutor.execute(consoleSender, input);
         } catch (CommandExecutionException exception) {
             log.warn("§6That command is not found: §e{}", exception.toString());
         }

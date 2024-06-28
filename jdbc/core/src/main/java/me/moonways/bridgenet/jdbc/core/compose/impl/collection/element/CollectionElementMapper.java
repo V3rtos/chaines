@@ -71,6 +71,7 @@ public final class CollectionElementMapper {
 
         var addons = (style.getAddons() != null ? style.getAddons() : Collections.<ParameterAddon>emptyList())
                 .stream()
+                .distinct()
                 .map(Enum::toString)
                 .collect(Collectors.joining(" "));
 

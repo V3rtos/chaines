@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 @Log4j2
 @AutoRunner
-@DelayedPeriod(period = 1, unit = TimeUnit.MINUTES)
+@DelayedPeriod(period = 30, unit = TimeUnit.SECONDS)
 public class MemoryDataLoggingAutorunner {
 
     @Inject

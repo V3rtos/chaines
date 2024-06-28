@@ -26,7 +26,7 @@ import java.util.function.Function;
 public class NetworkRemoteChannel implements BridgenetNetworkChannel {
 
     private static final long serialVersionUID = -4718332193161413564L;
-    public static final int defaultCallbackTimeout = 10_000;
+    public static final int defaultCallbackTimeout = 1200;
 
     public static final String pullingStateProperty = "pulling_state";
 

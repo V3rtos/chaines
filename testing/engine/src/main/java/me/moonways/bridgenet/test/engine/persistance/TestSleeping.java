@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface TestSleeping {
 
-    PersistenceAcceptType acceptType() default PersistenceAcceptType.BEFORE_EXECUTION;
+    ExternalAcceptationType acceptType() default ExternalAcceptationType.BEFORE_UNIT;
 
     int value();
 }

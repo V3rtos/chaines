@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.util.pair.Pair;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.jdbc.core.ConnectionID;
 import me.moonways.bridgenet.jdbc.core.TransactionIsolation;
 import me.moonways.bridgenet.jdbc.core.TransactionState;
@@ -22,14 +23,11 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Getter
 @Log4j2
 @Builder
 public class JdbcWrapper {
-
-    private static final ExecutorService JDBC_THREADS_POOL = Executors.newWorkStealingPool();
     private static final int VALID_TIMEOUT = 3500;
 
     @RequiredArgsConstructor
@@ -38,6 +36,8 @@ public class JdbcWrapper {
         private final PreparedStatement statement;
         private final boolean useGeneratedKeys;
     }
+
+    private final ExecutorService threadExecutor = Threads.newWorkStealingPool();
 
     private final ConnectionID connectionID;
     private final Credentials credentials;
@@ -63,7 +63,7 @@ public class JdbcWrapper {
     }
 
     private void observe(@NotNull Observable event) {
-        JDBC_THREADS_POOL.execute(() -> {
+        threadExecutor.execute(() -> {
             if (observers != null) {
                 observers.forEach(observer -> observer.observe(event));
             }
@@ -140,7 +140,7 @@ public class JdbcWrapper {
                             exceptionHandler.uncaughtException(thread, exception);
                             return null;
                         }
-                    }), JDBC_THREADS_POOL).join();
+                    }), threadExecutor).join();
 
         } catch (SQLException exception) {
             observe(new DbRequestFailureEvent(System.currentTimeMillis(), connectionID, sql));

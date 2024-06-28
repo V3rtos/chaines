@@ -6,7 +6,7 @@ import me.moonways.bridgenet.client.api.BridgenetServerSync;
 import me.moonways.bridgenet.model.service.players.PlayersServiceModel;
 import me.moonways.bridgenet.test.data.ExampleClient;
 import me.moonways.bridgenet.test.data.TestConst;
-import me.moonways.bridgenet.test.engine.component.module.impl.ClientModule;
+import me.moonways.bridgenet.test.engine.component.module.impl.ClientsModule;
 import me.moonways.bridgenet.test.engine.component.step.StepAdapter;
 import me.moonways.bridgenet.test.engine.component.step.StepConfig;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;
@@ -25,7 +25,7 @@ public class JoinPlayerStep extends StepAdapter {
                         ))
                 .modulesDependencies(
                         Collections.singletonList(
-                                ClientModule.class
+                                ClientsModule.class
                         ))
                 .build());
     }

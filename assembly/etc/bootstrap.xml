@@ -28,7 +28,7 @@
         <hook>
             <displayName>ConsoleStart</displayName>
             <priority>POST_RUNNER</priority>
-            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.console.ApacheConsoleStartHook</executorPath>
+            <executorPath>me.moonways.bridgenet.bootstrap.hook.type.console.ConsoleTerminalStartHook</executorPath>
         </hook>
         <hook>
             <displayName>CloseJdbcConnection</displayName>

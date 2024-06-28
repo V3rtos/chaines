@@ -11,7 +11,6 @@ import me.moonways.bridgenet.api.inject.bean.service.BeansScanningService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.bean.service.BeansStore;
 import me.moonways.bridgenet.client.api.BridgenetClient;
-import me.moonways.bridgenet.client.api.BridgenetServerSync;
 import me.moonways.bridgenet.client.api.cloudnet.CloudNetDistributor;
 import me.moonways.bridgenet.client.api.cloudnet.CloudNetWrapper;
 import me.moonways.bridgenet.client.api.data.ClientDto;

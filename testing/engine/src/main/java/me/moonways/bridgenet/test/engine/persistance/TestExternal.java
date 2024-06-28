@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface TestExternal {
 
-    PersistenceAcceptType acceptType() default PersistenceAcceptType.BEFORE_EXECUTION;
+    ExternalAcceptationType acceptType() default ExternalAcceptationType.BEFORE_UNIT;
 }
