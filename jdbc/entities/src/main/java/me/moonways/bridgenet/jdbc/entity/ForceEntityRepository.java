@@ -339,7 +339,8 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
                 if (externalEntityObject != null) {
                     doInsert(EntityReadAndWriteUtil.read(externalEntityObject))
-                            .thenAccept(externalEntityID -> externalUnit.setValue(externalEntityID.getId()));
+                            .thenAccept(externalEntityID -> externalUnit.setValue(externalEntityID.getId()))
+                            .join();
                 } else {
                     externalUnit.setValue(EntityID.NOT_FOUND.getId());
                 }

@@ -131,16 +131,15 @@ public class JdbcWrapper {
                     .whenCompleted(__ -> observe(
                             new DbRequestCompletedEvent(System.currentTimeMillis(), connectionID, sql, result)));
 
-            CompletableFuture.runAsync(() ->
-                    result.completeIntent(() -> {
-                        try {
-                            return resultLookup.get(new PreparedQuerySession(statement, supportsGeneratedKeys));
-                        } catch (SQLException exception) {
-                            observe(new DbRequestFailureEvent(System.currentTimeMillis(), connectionID, sql));
-                            exceptionHandler.uncaughtException(thread, exception);
-                            return null;
-                        }
-                    }), threadExecutor).join();
+            result.completeIntent(() -> {
+                try {
+                    return resultLookup.get(new PreparedQuerySession(statement, supportsGeneratedKeys));
+                } catch (SQLException exception) {
+                    observe(new DbRequestFailureEvent(System.currentTimeMillis(), connectionID, sql));
+                    exceptionHandler.uncaughtException(thread, exception);
+                    return null;
+                }
+            });
 
         } catch (SQLException exception) {
             observe(new DbRequestFailureEvent(System.currentTimeMillis(), connectionID, sql));
