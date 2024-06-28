@@ -160,14 +160,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Reflection classpath utility dependency -->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.10.2</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!-- .ini configurations dependency -->
         <dependency>
             <groupId>org.ini4j</groupId>

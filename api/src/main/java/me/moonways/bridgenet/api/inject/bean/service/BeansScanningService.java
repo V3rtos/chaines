@@ -8,16 +8,13 @@ import me.moonways.bridgenet.api.inject.Prototype;
 import me.moonways.bridgenet.api.inject.bean.*;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.factory.FactoryType;
+import me.moonways.bridgenet.api.inject.bean.util.ClasspathScanner;
 import me.moonways.bridgenet.api.inject.processor.AnnotationProcessorConfig;
 import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.def.DefaultTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationProcessor;
 import me.moonways.bridgenet.api.util.pair.Pair;
-import me.moonways.bridgenet.assembly.OverridenProperty;
 import org.jetbrains.annotations.NotNull;
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
@@ -29,33 +26,23 @@ import java.util.stream.Stream;
 @Log4j2
 @RequiredArgsConstructor
 public final class BeansScanningService {
-    private final Set<Class<?>> allResourcesSet = Collections.synchronizedSet(new HashSet<>());
+    private static volatile Set<Class<?>> allResourcesSet = new HashSet<>();
 
     /**
      * Сканировать все существующие ресурсы проекта
      * для дальнейшей оптимизации поиска конкретных ресурсов.
      */
-    @SuppressWarnings("deprecation")
     private synchronized void scanAllResourcesAsClasses() {
         if (!allResourcesSet.isEmpty()) {
             return;
         }
 
-        // Preparing org.reflections.Reflections for project scanning.
-        ConfigurationBuilder configuration = ConfigurationBuilder.build(new SubTypesScanner(false));
-
-        configuration.setParallel(System.getProperty("test.engine.enabled") == null);
-        configuration.setExpandSuperTypes(false);
-
-        Reflections reflections = new Reflections(configuration);
-
-        // Running scanner with resources caching.
         log.info("Processing search all project resources & classes...");
-
-        Set<Class<?>> classSet = reflections.getSubTypesOf(Object.class);
-
-        log.info("Scanning result contains is §e{} §rresources", classSet.size());
-        allResourcesSet.addAll(classSet);
+        try {
+            allResourcesSet = ClasspathScanner.getAllClasses();
+        } catch (InterruptedException exception) {
+            throw new BeanException(exception);
+        }
     }
 
     /**
@@ -103,6 +90,7 @@ public final class BeansScanningService {
 
         scanAllResourcesAsClasses();
         return allResourcesSet.stream()
+                .parallel()
                 .filter(resourceClass -> {
                     String resourcePackageName = resourceClass.getPackage().getName();
                     for (String packageName : packageNamesArray) {
