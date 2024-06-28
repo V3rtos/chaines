@@ -22,8 +22,6 @@ public final class PlayerLanguagesRepository {
 
     public void update(EntityLanguage entityLanguage) {
         checkRepository();
-
-        languagesRepository.delete(entityLanguage);
         languagesRepository.insert(entityLanguage);
     }
 
@@ -31,6 +29,7 @@ public final class PlayerLanguagesRepository {
         checkRepository();
         return languagesRepository.searchIf(
                 languagesRepository.newSearchMarker()
-                        .withGet(EntityLanguage::getPlayerId, playerId));
+                        .and(EntityLanguage::getPlayerId, playerId))
+                .blockOptional();
     }
 }

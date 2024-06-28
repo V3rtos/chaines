@@ -78,7 +78,9 @@ public class Profiler {
      * @param label - наименование значения, которое ищем.
      */
     public Long get(String label) {
-        return values.stream().filter(value -> value.getLabel().equalsIgnoreCase(label))
+        return new ArrayList<>(values)
+                .stream()
+                .filter(value -> value.getLabel().equalsIgnoreCase(label))
                 .max(Comparator.comparingLong(TimedValue::getTimestamp))
                 .map(TimedValue::getValue)
                 .orElse(0L);

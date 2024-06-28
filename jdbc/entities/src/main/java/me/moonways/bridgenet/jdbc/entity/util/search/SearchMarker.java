@@ -32,7 +32,7 @@ public final class SearchMarker<T> {
     @ToString.Include
     private Map<String, SearchElement<?>> expectationMap;
 
-    public SearchMarker<T> withLimit(int limit) {
+    public SearchMarker<T> limit(int limit) {
         this.limit = limit;
         return this;
     }
@@ -49,20 +49,36 @@ public final class SearchMarker<T> {
                 .orElseThrow(() -> new DatabaseEntityException("Marked parameter is not annotated as entity-column"));
     }
 
-    public <E> SearchMarker<T> withGet(Function<T, E> parameterGetter, E expected) {
-        return withGet(parameterGetter, SearchElement.<E>builder()
+    public <E> SearchMarker<T> and(Function<T, E> parameterGetter, E expected) {
+        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+                .binder(ConditionBinder.AND)
                 .expectation(expected)
                 .build());
     }
 
-    public <E> SearchMarker<T> withGet(Function<T, E> parameterGetter, SearchElement<E> element) {
-        return with(findParameterId(parameterGetter), element);
-    }
-
-    public SearchMarker<T> with(String name, Object expected) {
+    public SearchMarker<T> and(String name, Object expected) {
         return with(name, SearchElement.builder()
+                .binder(ConditionBinder.AND)
                 .expectation(expected)
                 .build());
+    }
+
+    public <E> SearchMarker<T> or(Function<T, E> parameterGetter, E expected) {
+        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+                .binder(ConditionBinder.OR)
+                .expectation(expected)
+                .build());
+    }
+
+    public SearchMarker<T> or(String name, Object expected) {
+        return with(name, SearchElement.builder()
+                .binder(ConditionBinder.OR)
+                .expectation(expected)
+                .build());
+    }
+
+    public <E> SearchMarker<T> with(Function<T, E> parameterGetter, SearchElement<E> element) {
+        return with(findParameterId(parameterGetter), element);
     }
 
     public <E> SearchMarker<T> with(String name, SearchElement<E> element) {
@@ -77,11 +93,6 @@ public final class SearchMarker<T> {
         if (element.getMatcher() == null) {
             element = element.toBuilder()
                     .matcher(ConditionMatcher.EQUALS)
-                    .build();
-        }
-        if (element.getBinder() == null) {
-            element = element.toBuilder()
-                    .binder(ConditionBinder.AND)
                     .build();
         }
         expectationMap.put(name.toLowerCase(), element);

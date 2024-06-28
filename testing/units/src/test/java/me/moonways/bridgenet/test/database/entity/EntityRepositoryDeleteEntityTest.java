@@ -31,12 +31,13 @@ public class EntityRepositoryDeleteEntityTest {
         EntityRepository<EntityUser> userRepository = entityRepositoryInsertEntityTest.getUserRepository();
 
         SearchMarker<EntityUser> searchMarker = userRepository.newSearchMarker()
-                .withGet(EntityUser::getId, 1)
-                .withGet(EntityUser::getFirstName, EntityRepositoryInsertEntityTest.ENTITY_USER.getFirstName());
+                .and(EntityUser::getId, 1)
+                .and(EntityUser::getFirstName, EntityRepositoryInsertEntityTest.ENTITY_USER.getFirstName());
 
         userRepository.deleteIf(searchMarker);
 
-        Optional<EntityUser> userOptional = userRepository.searchIf(searchMarker);
+        Optional<EntityUser> userOptional = userRepository.searchIf(searchMarker)
+                .blockOptional();
 
         assertFalse(userOptional.isPresent());
         log.debug("User is deleted successful");
@@ -48,11 +49,12 @@ public class EntityRepositoryDeleteEntityTest {
         EntityRepository<EntityStatus> statusRepository = entityRepositoryInsertEntityTest.getStatusRepository();
 
         SearchMarker<EntityStatus> searchMarker = statusRepository.newSearchMarker()
-                .withGet(EntityStatus::getId, 1);
+                .and(EntityStatus::getId, 1);
 
         statusRepository.deleteIf(searchMarker);
 
-        Optional<EntityStatus> statusOptional = statusRepository.searchIf(searchMarker);
+        Optional<EntityStatus> statusOptional = statusRepository.searchIf(searchMarker)
+                .blockOptional();
 
         assertFalse(statusOptional.isPresent());
         log.debug("Status is deleted successful");

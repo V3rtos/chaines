@@ -52,11 +52,10 @@ public class PlayerSettings {
     public void loadAll() {
         EntityRepository<EntitySetting> repository
                 = entityRepositoryFactory.fromEntityType(EntitySetting.class);
-
         repository.searchManyIf(
                         repository.newSearchMarker()
-                                .withGet(EntitySetting::getPlayerId, playerID))
-                .forEach(this::loadEntity);
+                                .and(EntitySetting::getPlayerId, playerID))
+                .subscribeEach(this::loadEntity); // todo работает или нет ПРОВЕРЬ ???
     }
 
     private void loadEntity(EntitySetting entitySetting) {

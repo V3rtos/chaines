@@ -6,7 +6,6 @@ import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class FriendsDbRepository {
 
@@ -25,10 +24,9 @@ public class FriendsDbRepository {
     public List<UUID> findFriendsList(UUID playerID) {
         EntityRepository<EntityFriend> friendsPairRepository = getRepository();
         return friendsPairRepository.searchManyIf(friendsPairRepository.newSearchMarker()
-                        .withGet(EntityFriend::getPlayerID, playerID))
-                .stream()
-                .map(EntityFriend::getFriendID)
-                .collect(Collectors.toList());
+                        .and(EntityFriend::getPlayerID, playerID))
+                .replaceEach(EntityFriend::getFriendID)
+                .blockAll();
     }
 
     public void addFriend(EntityFriend pair) {

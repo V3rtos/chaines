@@ -2,9 +2,6 @@ package me.moonways.bridgenet.jdbc.entity;
 
 import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
 
-import java.util.List;
-import java.util.Optional;
-
 public interface EntityRepository<T> {
 
     void delete(Long id);
@@ -22,24 +19,23 @@ public interface EntityRepository<T> {
 
     void updateIf(T entity, SearchMarker<T> searchMarker);
 
-    EntityID insert(T entity);
+    SingleFuture<EntityID> insert(T entity);
 
-    @SuppressWarnings("unchecked")
-    List<EntityID> insertMany(T... entities);
+    ListFuture<EntityID> insertMany(T... entities);
 
-    Optional<T> search(Long id);
+    SingleFuture<T> search(Long id);
 
-    Optional<T> searchIf(SearchMarker<T> searchMarker);
+    SingleFuture<T> searchIf(SearchMarker<T> searchMarker);
 
-    List<T> searchMany(Long... ids);
+    ListFuture<T> searchMany(Long... ids);
 
-    List<T> searchManyIf(SearchMarker<T> searchMarker);
+    ListFuture<T> searchManyIf(SearchMarker<T> searchMarker);
 
-    List<T> searchManyIf(int limit, SearchMarker<T> searchMarker);
+    ListFuture<T> searchManyIf(int limit, SearchMarker<T> searchMarker);
 
-    List<T> searchEach(int limit);
+    ListFuture<T> searchEach(int limit);
 
-    List<T> searchEach();
+    ListFuture<T> searchEach();
 
     SearchMarker<T> newSearchMarker();
 }
