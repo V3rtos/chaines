@@ -25,14 +25,14 @@ public final class RestartService {
     private RemoteServicesManagement remoteServicesManagement;
 
     public void doRestart() {
-        log.info("§c§lFULL RESTART AN APPLICATION!");
+        log.info("§6Restarting an application...");
 
         remoteServicesManagement.unbindEndpoints();
         appBootstrap.justShutdown();
 
         new ArrayList<>(beansStore.getTotalBeans()).forEach(beansService::unbind);
 
-        log.info("§c§lRERUN AN APPLICATION...");
+        log.info("§6Replay the application restart...");
 
         new AppBootstrap().start(new String[0]);
     }
