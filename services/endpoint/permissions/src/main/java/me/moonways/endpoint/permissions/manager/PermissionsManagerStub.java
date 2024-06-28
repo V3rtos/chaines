@@ -45,9 +45,9 @@ public final class PermissionsManagerStub implements PermissionsManager {
 
     private Set<Permission> findPermissions(UUID playerId) {
         EntityRepository<EntityPermission> repository = repositoryFactory.fromEntityType(EntityPermission.class);
-        return repository.searchManyIf(
-                        repository.newSearchMarker()
-                                .and(EntityPermission::getPlayerId, playerId))
+        return repository.search(
+                        repository.beginCriteria()
+                                .andEquals(EntityPermission::getPlayerId, playerId))
                 .subscribeEach(entityPermission -> {
                     if (entityPermission.isExpired()) {
                         deletePermission(playerId, fromEntityPermission(entityPermission));
@@ -70,9 +70,9 @@ public final class PermissionsManagerStub implements PermissionsManager {
 
     private void deleteAllPermissions(UUID playerId) {
         EntityRepository<EntityPermission> repository = repositoryFactory.fromEntityType(EntityPermission.class);
-        repository.deleteIf(
-                repository.newSearchMarker()
-                        .and(EntityPermission::getPlayerId, playerId));
+        repository.delete(
+                repository.beginCriteria()
+                        .andEquals(EntityPermission::getPlayerId, playerId));
     }
 
     @Override

@@ -114,8 +114,29 @@ public class ListFuture<T> {
      * @return Список результатов асинхронных операций.
      */
     public synchronized List<T> blockAll() {
-        return futures.stream().map(SingleFuture::of).map(SingleFuture::block)
+        return futures.stream()
+                .map(SingleFuture::of)
+                .peek(SingleFuture::block)
+                .filter(futures::contains)
+                .map(SingleFuture::block)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Блокирует выполнение до завершения всех асинхронных операций и возвращает
+     * коллекцию результатов.
+     *
+     * @param collectionSupplier Поставщик коллекции для хранения результатов.
+     * @param <C> Тип коллекции.
+     * @return Коллекция результатов асинхронных операций.
+     */
+    public <C extends Collection<T>> C blockAll(Supplier<C> collectionSupplier) {
+        return futures.stream()
+                .map(SingleFuture::of)
+                .peek(SingleFuture::block)
+                .filter(futures::contains)
+                .map(SingleFuture::block)
+                .collect(Collectors.toCollection(collectionSupplier));
     }
 
     /**
@@ -193,7 +214,11 @@ public class ListFuture<T> {
      * @return Список результатов асинхронных операций.
      */
     public List<T> freezeAll() {
-        return futures.stream().map(SingleFuture::of).map(SingleFuture::freeze)
+        return futures.stream()
+                .map(SingleFuture::of)
+                .peek(SingleFuture::freeze)
+                .filter(futures::contains)
+                .map(SingleFuture::block)
                 .collect(Collectors.toList());
     }
 
@@ -205,21 +230,12 @@ public class ListFuture<T> {
      * @return Список результатов асинхронных операций.
      */
     public List<T> freezeAll(Duration timeout) {
-        return futures.stream().map(SingleFuture::of).map(future -> future.freeze(timeout))
+        return futures.stream()
+                .map(SingleFuture::of)
+                .peek(future -> future.freeze(timeout))
+                .filter(futures::contains)
+                .map(SingleFuture::block)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Блокирует выполнение до завершения всех асинхронных операций и возвращает
-     * коллекцию результатов.
-     *
-     * @param collectionSupplier Поставщик коллекции для хранения результатов.
-     * @param <C> Тип коллекции.
-     * @return Коллекция результатов асинхронных операций.
-     */
-    public <C extends Collection<T>> C blockAll(Supplier<C> collectionSupplier) {
-        return futures.stream().map(CompletableFuture::join)
-                .collect(Collectors.toCollection(collectionSupplier));
     }
 
     /**
@@ -230,7 +246,10 @@ public class ListFuture<T> {
      * @return Текущий ListFuture.
      */
     public ListFuture<T> subscribeEach(Runnable runnable) {
-        futures.stream().map(SingleFuture::of).forEach(future -> future.subscribe(runnable));
+        futures.stream().map(SingleFuture::of).forEach(future -> {
+            if (futures.contains(future.future))
+                future.subscribe(runnable);
+        });
         return this;
     }
 
@@ -242,7 +261,10 @@ public class ListFuture<T> {
      * @return Текущий ListFuture.
      */
     public ListFuture<T> subscribeEach(Consumer<T> consumer) {
-        futures.stream().map(SingleFuture::of).forEach(future -> future.subscribe(consumer));
+        futures.stream().map(SingleFuture::of).forEach(future -> {
+            if (futures.contains(future.future))
+                future.subscribe(consumer);
+        });
         return this;
     }
 
@@ -254,7 +276,10 @@ public class ListFuture<T> {
      * @return Текущий ListFuture.
      */
     public ListFuture<T> subscribeEach(BiConsumer<T, Throwable> consumer) {
-        futures.stream().map(SingleFuture::of).forEach(future -> future.subscribe(consumer));
+        futures.stream().map(SingleFuture::of).forEach(future -> {
+            if (futures.contains(future.future))
+                future.subscribe(consumer);
+        });
         return this;
     }
 

@@ -11,8 +11,8 @@ import me.moonways.bridgenet.jdbc.core.compose.template.collection.SignatureTemp
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedQuery;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
-import me.moonways.bridgenet.jdbc.entity.util.search.SearchElement;
-import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchElement;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchCriteria;
 
 import java.util.*;
 
@@ -51,37 +51,37 @@ class EntityOperationComposer {
                 .build();
     }
 
-    public EntityComposedOperation composeDelete(EntityDescriptor entity, SearchMarker<?> searchMarker) {
+    public EntityComposedOperation composeDelete(EntityDescriptor entity, SearchCriteria<?> searchCriteria) {
         if (!TABLES_STORE.contains(entity.getContainerName())) {
             return EntityComposedOperation.builder().queries(new ArrayList<>()).build();
         }
         return composeWithContainer(entity,
                 composer.useDeletionPattern()
                         .container(entity.getContainerName())
-                        .predicates(composePredicatesTemplate(entity, searchMarker).combine())
+                        .predicates(composePredicatesTemplate(entity, searchCriteria).combine())
                         .combine());
     }
 
-    public EntityComposedOperation composeSearch(EntityDescriptor entity, SearchMarker<?> searchMarker) {
+    public EntityComposedOperation composeSearch(EntityDescriptor entity, SearchCriteria<?> searchCriteria) {
         return composeWithContainer(entity,
                 composer.useSearchPattern()
                         .container(entity.getContainerName())
-                        .limit(searchMarker.getLimit())
+                        .limit(searchCriteria.getLimit())
                         .subjects(composer.subjects()
                                 .selectAll()
                                 .combine())
-                        .predicates(composePredicatesTemplate(entity, searchMarker).combine())
+                        .predicates(composePredicatesTemplate(entity, searchCriteria).combine())
                         .combine());
     }
 
-    private PredicatesTemplate composePredicatesTemplate(EntityDescriptor entity, SearchMarker<?> searchMarker) {
+    private PredicatesTemplate composePredicatesTemplate(EntityDescriptor entity, SearchCriteria<?> searchCriteria) {
         PredicatesTemplate predicates = composer.predicates();
 
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
             String parameterId = parameterUnit.getId();
 
-            if (searchMarker.isExpectationAwait(parameterId)) {
-                SearchElement<?> searchElement = searchMarker.getExpectation(parameterId);
+            if (searchCriteria.isExpectationAwait(parameterId)) {
+                SearchElement<?> searchElement = searchCriteria.getExpectation(parameterId);
 
                 if (searchElement == null) {
                     throw new NullPointerException("expectation for " + parameterId + " from " + entity.getRootClass());

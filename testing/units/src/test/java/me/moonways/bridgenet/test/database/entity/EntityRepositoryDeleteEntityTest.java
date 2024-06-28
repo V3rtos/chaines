@@ -2,7 +2,7 @@ package me.moonways.bridgenet.test.database.entity;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.jdbc.entity.EntityRepository;
-import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchCriteria;
 import me.moonways.bridgenet.test.data.EntityStatus;
 import me.moonways.bridgenet.test.data.EntityUser;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
@@ -30,13 +30,13 @@ public class EntityRepositoryDeleteEntityTest {
     public void test_userDelete() {
         EntityRepository<EntityUser> userRepository = entityRepositoryInsertEntityTest.getUserRepository();
 
-        SearchMarker<EntityUser> searchMarker = userRepository.newSearchMarker()
-                .and(EntityUser::getId, 1)
-                .and(EntityUser::getFirstName, EntityRepositoryInsertEntityTest.ENTITY_USER.getFirstName());
+        SearchCriteria<EntityUser> searchCriteria = userRepository.beginCriteria()
+                .andEquals(EntityUser::getId, 1)
+                .andEquals(EntityUser::getFirstName, EntityRepositoryInsertEntityTest.ENTITY_USER.getFirstName());
 
-        userRepository.deleteIf(searchMarker);
+        userRepository.delete(searchCriteria);
 
-        Optional<EntityUser> userOptional = userRepository.searchIf(searchMarker)
+        Optional<EntityUser> userOptional = userRepository.searchFirst(searchCriteria)
                 .blockOptional();
 
         assertFalse(userOptional.isPresent());
@@ -48,12 +48,12 @@ public class EntityRepositoryDeleteEntityTest {
     public void test_statusDelete() {
         EntityRepository<EntityStatus> statusRepository = entityRepositoryInsertEntityTest.getStatusRepository();
 
-        SearchMarker<EntityStatus> searchMarker = statusRepository.newSearchMarker()
-                .and(EntityStatus::getId, 1);
+        SearchCriteria<EntityStatus> searchCriteria = statusRepository.beginCriteria()
+                .andEquals(EntityStatus::getId, 1);
 
-        statusRepository.deleteIf(searchMarker);
+        statusRepository.delete(searchCriteria);
 
-        Optional<EntityStatus> statusOptional = statusRepository.searchIf(searchMarker)
+        Optional<EntityStatus> statusOptional = statusRepository.searchFirst(searchCriteria)
                 .blockOptional();
 
         assertFalse(statusOptional.isPresent());

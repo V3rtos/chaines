@@ -27,9 +27,9 @@ public final class PlayerLanguagesRepository {
 
     public Optional<EntityLanguage> get(UUID playerId) {
         checkRepository();
-        return languagesRepository.searchIf(
-                languagesRepository.newSearchMarker()
-                        .and(EntityLanguage::getPlayerId, playerId))
+        return languagesRepository.searchFirst(
+                languagesRepository.beginCriteria()
+                        .andEquals(EntityLanguage::getPlayerId, playerId))
                 .blockOptional();
     }
 }

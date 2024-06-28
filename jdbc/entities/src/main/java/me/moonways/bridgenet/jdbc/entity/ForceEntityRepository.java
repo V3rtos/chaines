@@ -16,8 +16,8 @@ import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 import me.moonways.bridgenet.jdbc.entity.util.EntityPersistenceUtil;
 import me.moonways.bridgenet.jdbc.entity.util.EntityReadAndWriteUtil;
-import me.moonways.bridgenet.jdbc.entity.util.search.SearchElement;
-import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchElement;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchCriteria;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -43,38 +43,38 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
     private final TypeAdaptersControl typeAdaptersControl = new TypeAdaptersControl();
 
-    private void doDelete(EntityDescriptor entityDescriptor, SearchMarker<T> searchMarker) {
+    private void doDelete(EntityDescriptor entityDescriptor, SearchCriteria<T> searchCriteria) {
         threadExecutor.submit(() -> {
             connection.openTransaction();
 
-            checkExternalsBefore(entityDescriptor, searchMarker);
+            checkExternalsBefore(entityDescriptor, searchCriteria);
             typeAdaptersControl.trySerializeValues(entityDescriptor);
 
-            searchMarker.getExpectationMap().forEach((name, searchElement) -> {
+            searchCriteria.getExpectationMap().forEach((name, searchElement) -> {
 
                 SearchElement<?> serializedSearchElement = typeAdaptersControl.trySerializeSearchElement(name, entityDescriptor, searchElement);
-                searchMarker.and(name, serializedSearchElement);
+                searchCriteria.andEquals(name, serializedSearchElement);
             });
 
             EntityOperationComposer.EntityComposedOperation operation =
                     new EntityOperationComposer(composer)
-                            .composeDelete(entityDescriptor, searchMarker);
+                            .composeDelete(entityDescriptor, searchCriteria);
 
             justCall(operation);
             connection.closeTransaction();
         });
     }
 
-    private <V> ListFuture<V> doSearch(SearchMarker<V> searchMarker) {
+    private <V> ListFuture<V> doSearch(SearchCriteria<V> searchCriteria) {
         EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entityClass);
         checkExternalsBefore(entityDescriptor);
-        checkExternalsBefore(entityDescriptor, searchMarker);
+        checkExternalsBefore(entityDescriptor, searchCriteria);
 
         typeAdaptersControl.trySerializeValues(entityDescriptor);
 
         EntityOperationComposer.EntityComposedOperation operation =
                 new EntityOperationComposer(composer)
-                        .composeSearch(entityDescriptor, searchMarker);
+                        .composeSearch(entityDescriptor, searchCriteria);
 
         return callAndCollect(operation);
     }
@@ -103,7 +103,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
         Optional<String> entityIDParameterName = findEntityIDParameterName();
         if (entityIDParameterName.isPresent()) {
-            deleteIf(newSearchMarker().and(entityIDParameterName.get(), id));
+            delete(beginCriteria().andEquals(entityIDParameterName.get(), id));
             return;
         }
 
@@ -121,29 +121,29 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
         if (idUnitOptional.isPresent()) {
             doDelete(entityDescriptor,
-                    newSearchMarker()
-                            .and(idUnitOptional.get().getId(), entityDescriptor.getId().getId()));
+                    beginCriteria()
+                            .andEquals(idUnitOptional.get().getId(), entityDescriptor.getId().getId()));
         } else {
-            SearchMarker<T> searchMarker = newSearchMarker();
+            SearchCriteria<T> searchCriteria = beginCriteria();
             List<EntityParametersDescriptor.ParameterUnit> parameterUnits = parameters.getParameterUnits();
 
             parameterUnits.stream()
                     .filter(EntityParametersDescriptor.ParameterUnit::isMaybeStatical)
                     .forEach(parameterUnit ->
-                            searchMarker.and(parameterUnit.getId(), parameterUnit.getValue()));
+                            searchCriteria.andEquals(parameterUnit.getId(), parameterUnit.getValue()));
 
-            if (searchMarker.getExpectationMap() == null || searchMarker.getExpectationMap().isEmpty()) {
+            if (searchCriteria.getExpectationMap() == null || searchCriteria.getExpectationMap().isEmpty()) {
                 parameterUnits.forEach(parameterUnit ->
-                        searchMarker.and(parameterUnit.getId(), parameterUnit.getValue()));
+                        searchCriteria.andEquals(parameterUnit.getId(), parameterUnit.getValue()));
             }
 
-            doDelete(entityDescriptor, searchMarker);
+            doDelete(entityDescriptor, searchCriteria);
         }
     }
 
     @Override
-    public void deleteMany(Long... ids) {
-        log.debug("deleteMany({})", Arrays.toString(ids));
+    public void delete(Long... ids) {
+        log.debug("delete({})", Arrays.toString(ids));
 
         connection.ofTransactionalGet(() -> {
 
@@ -154,8 +154,8 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void deleteMany(T... entities) {
-        log.debug("deleteMany({})", Arrays.toString(entities));
+    public void delete(T... entities) {
+        log.debug("delete({})", Arrays.toString(entities));
 
         connection.ofTransactionalGet(() -> {
 
@@ -165,9 +165,9 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public void deleteIf(SearchMarker<T> searchMarker) {
-        log.debug("deleteIf({})", searchMarker);
-        doDelete(EntityReadAndWriteUtil.read(entityClass), searchMarker);
+    public void delete(SearchCriteria<T> searchCriteria) {
+        log.debug("delete({})", searchCriteria);
+        doDelete(EntityReadAndWriteUtil.read(entityClass), searchCriteria);
     }
 
     @Override
@@ -177,7 +177,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         Optional<String> entityIDParameterName = findEntityIDParameterName();
 
         if (entityIDParameterName.isPresent()) {
-            updateIf(entity, newSearchMarker().and(entityIDParameterName.get(), id));
+            update(entity, beginCriteria().andEquals(entityIDParameterName.get(), id));
             return;
         }
 
@@ -185,8 +185,8 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public void updateIf(T entity, SearchMarker<T> searchMarker) {
-        log.debug("updateIf({}, {})", entity, searchMarker);
+    public void update(T entity, SearchCriteria<T> searchCriteria) {
+        log.debug("update({}, {})", entity, searchCriteria);
         throw new UnsupportedOperationException("jdbc-core is not supported UPDATE function");
     }
 
@@ -198,8 +198,8 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public ListFuture<EntityID> insertMany(T... entities) {
-        log.debug("insertMany({})", Arrays.toString(entities));
+    public ListFuture<EntityID> insert(T... entities) {
+        log.debug("insert({})", Arrays.toString(entities));
         return ListFuture.ofFutures(
                 connection.ofTransactionalGet(() ->
                         Arrays.stream(entities)
@@ -214,21 +214,21 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
         Optional<String> entityIDParameterName = findEntityIDParameterName();
         if (entityIDParameterName.isPresent()) {
-            return searchIf(newSearchMarker()
-                    .and(entityIDParameterName.get(), id));
+            return searchFirst(beginCriteria()
+                    .andEquals(entityIDParameterName.get(), id));
         }
         return SingleFuture.empty();
     }
 
     @Override
-    public SingleFuture<T> searchIf(SearchMarker<T> searchMarker) {
-        log.debug("searchIf({})", searchMarker);
-        return doSearch(searchMarker.limit(1)).first();
+    public SingleFuture<T> searchFirst(SearchCriteria<T> searchCriteria) {
+        log.debug("searchFirst({})", searchCriteria);
+        return doSearch(searchCriteria.limit(1)).first();
     }
 
     @Override
-    public ListFuture<T> searchMany(Long... ids) {
-        log.debug("searchMany({})", Arrays.asList(ids));
+    public ListFuture<T> search(Long... ids) {
+        log.debug("search({})", Arrays.asList(ids));
         return ListFuture.ofFutures(
                 connection.ofTransactionalGet(() ->
                         Stream.of(ids)
@@ -239,32 +239,32 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public ListFuture<T> searchManyIf(SearchMarker<T> searchMarker) {
-        log.debug("searchManyIf({}})", searchMarker);
-        return doSearch(searchMarker);
+    public ListFuture<T> search(SearchCriteria<T> searchCriteria) {
+        log.debug("search({}})", searchCriteria);
+        return doSearch(searchCriteria);
     }
 
     @Override
-    public ListFuture<T> searchManyIf(int limit, SearchMarker<T> searchMarker) {
-        log.debug("searchManyIf({}, {})", limit, searchMarker);
-        return doSearch(searchMarker.limit(limit));
+    public ListFuture<T> search(int limit, SearchCriteria<T> searchCriteria) {
+        log.debug("search({}, {})", limit, searchCriteria);
+        return doSearch(searchCriteria.limit(limit));
     }
 
     @Override
-    public ListFuture<T> searchEach(int limit) {
-        log.debug("searchEach({})", limit);
-        return doSearch(newSearchMarker().limit(limit).and("*", "*"));
+    public ListFuture<T> searchAll(int limit) {
+        log.debug("searchAll({})", limit);
+        return doSearch(beginCriteria().limit(limit).andEquals("*", "*"));
     }
 
     @Override
-    public ListFuture<T> searchEach() {
-        log.debug("searchEach()");
-        return doSearch(newSearchMarker().and("*", "*"));
+    public ListFuture<T> searchAll() {
+        log.debug("searchAll()");
+        return doSearch(beginCriteria().andEquals("*", "*"));
     }
 
     @Override
-    public SearchMarker<T> newSearchMarker() {
-        return new SearchMarker<>(entityClass);
+    public SearchCriteria<T> beginCriteria() {
+        return new SearchCriteria<>(entityClass);
     }
 
     private void justCall(EntityOperationComposer.EntityComposedOperation operation) {
@@ -349,8 +349,8 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         }
     }
 
-    private void checkExternalsBefore(EntityDescriptor descriptor, SearchMarker<?> searchMarker) {
-        searchMarker.getExpectationMap().forEach((name, searchElement) -> {
+    private void checkExternalsBefore(EntityDescriptor descriptor, SearchCriteria<?> searchCriteria) {
+        searchCriteria.getExpectationMap().forEach((name, searchElement) -> {
             Optional<EntityParametersDescriptor.ParameterUnit> parameterUnitOptional
                     = descriptor.getParameters().find(name);
 
@@ -365,7 +365,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                         Object externalEntityObject = externalUnit.getValue();
 
                         if (externalEntityObject instanceof Number) {
-                            searchMarker.and(name, externalEntityObject);
+                            searchCriteria.andEquals(name, externalEntityObject);
                             return;
                         }
 
@@ -375,7 +375,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
                         externalUnit.setType(int.class);
 
-                        searchMarker.and(name, externalUnit.getValue());
+                        searchCriteria.andEquals(name, externalUnit.getValue());
                     });
         });
     }

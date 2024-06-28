@@ -23,20 +23,20 @@ public class FriendsDbRepository {
 
     public List<UUID> findFriendsList(UUID playerID) {
         EntityRepository<EntityFriend> friendsPairRepository = getRepository();
-        return friendsPairRepository.searchManyIf(friendsPairRepository.newSearchMarker()
-                        .and(EntityFriend::getPlayerID, playerID))
+        return friendsPairRepository.search(friendsPairRepository.beginCriteria()
+                        .andEquals(EntityFriend::getPlayerID, playerID))
                 .mapEach(EntityFriend::getFriendID)
                 .blockAll();
     }
 
     public void addFriend(EntityFriend pair) {
         EntityRepository<EntityFriend> friendsPairRepository = getRepository();
-        friendsPairRepository.insertMany(pair, reverse(pair));
+        friendsPairRepository.insert(pair, reverse(pair));
     }
 
     public void removeFriend(EntityFriend pair) {
         EntityRepository<EntityFriend> friendsPairRepository = getRepository();
-        friendsPairRepository.deleteMany(pair, reverse(pair));
+        friendsPairRepository.delete(pair, reverse(pair));
     }
 
     private EntityFriend reverse(EntityFriend pair) {

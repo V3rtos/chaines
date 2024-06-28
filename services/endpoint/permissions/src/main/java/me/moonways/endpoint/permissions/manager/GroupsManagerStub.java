@@ -46,9 +46,9 @@ public final class GroupsManagerStub implements GroupsManager {
 
     private Optional<PermissionGroup> findPlayerGroup(UUID playerId) {
         EntityRepository<EntityGroup> repository = repositoryFactory.fromEntityType(EntityGroup.class);
-        return repository.searchIf(
-                        repository.newSearchMarker()
-                                .and(EntityGroup::getPlayerId, playerId))
+        return repository.searchFirst(
+                        repository.beginCriteria()
+                                .andEquals(EntityGroup::getPlayerId, playerId))
                 .flatMap(entityGroup -> entityGroup.isExpired() ? getGroup(entityGroup.getGroupId()) : Optional.empty())
                 .blockOptional();
     }

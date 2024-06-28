@@ -29,23 +29,23 @@ public final class PlayersRepository {
     }
 
     public SingleFuture<EntityPlayer> get(UUID id) {
-        return namespacesRepository.searchIf(
-                        namespacesRepository.newSearchMarker()
-                                .and(EntityNamespace::getUuid, id))
+        return namespacesRepository.searchFirst(
+                        namespacesRepository.beginCriteria()
+                                .andEquals(EntityNamespace::getUuid, id))
                 .map(this::toEntityPlayer);
     }
 
     public SingleFuture<EntityPlayer> get(String name) {
-        return namespacesRepository.searchIf(
-                        namespacesRepository.newSearchMarker()
-                                .and(EntityNamespace::getName, name.toLowerCase()))
+        return namespacesRepository.searchFirst(
+                        namespacesRepository.beginCriteria()
+                                .andEquals(EntityNamespace::getName, name.toLowerCase()))
                 .map(this::toEntityPlayer);
     }
 
     private EntityPlayer toEntityPlayer(EntityNamespace entityNamespace) {
-        return playersRepository.searchIf(
-                playersRepository.newSearchMarker()
-                        .and(EntityPlayer::getNamespace, entityNamespace.getId()))
+        return playersRepository.searchFirst(
+                playersRepository.beginCriteria()
+                        .andEquals(EntityPlayer::getNamespace, entityNamespace.getId()))
                 .block();
     }
 }
