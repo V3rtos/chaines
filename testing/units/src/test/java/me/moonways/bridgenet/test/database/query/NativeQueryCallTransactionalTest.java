@@ -25,7 +25,7 @@ public class NativeQueryCallTransactionalTest {
 
     @Test
     public void test_repeatableReadTransactionGet() {
-        connection.ofTransactionalGet(TransactionIsolation.REPEATABLE_READ, nativeQueryCallTest::getPlayersResponse)
+        connection.supplyTransactional(TransactionIsolation.REPEATABLE_READ, nativeQueryCallTest::getPlayersResponse)
                 .whenCompleted(System.out::println);
     }
 }

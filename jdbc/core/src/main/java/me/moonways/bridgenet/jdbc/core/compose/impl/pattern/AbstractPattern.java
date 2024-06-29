@@ -53,12 +53,12 @@ public abstract class AbstractPattern
 
     @Override
     public Result<ResponseStream> callTransactional(DatabaseConnection connection) {
-        return connection.ofTransactionalGet(() -> connection.call(toNativeQuery().get()));
+        return connection.supplyTransactional(() -> connection.call(toNativeQuery().get()));
     }
 
     @Override
     public Result<ResponseStream> callTransactional(TransactionIsolation isolation, DatabaseConnection connection) {
-        return connection.ofTransactionalGet(isolation, () -> connection.call(toNativeQuery().get()));
+        return connection.supplyTransactional(isolation, () -> connection.call(toNativeQuery().get()));
     }
 
     @SneakyThrows

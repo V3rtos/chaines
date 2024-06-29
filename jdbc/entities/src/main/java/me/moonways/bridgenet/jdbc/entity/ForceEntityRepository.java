@@ -43,60 +43,6 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
 
     private final TypeAdaptersControl typeAdaptersControl = new TypeAdaptersControl();
 
-    private void doDelete(EntityDescriptor entityDescriptor, SearchCriteria<T> searchCriteria) {
-        threadExecutor.submit(() -> {
-            connection.openTransaction();
-
-            checkExternalsBefore(entityDescriptor, searchCriteria);
-            typeAdaptersControl.trySerializeValues(entityDescriptor);
-
-            searchCriteria.getExpectationMap().forEach((name, searchElement) -> {
-
-                SearchElement<?> serializedSearchElement = typeAdaptersControl.trySerializeSearchElement(name, entityDescriptor, searchElement);
-                searchCriteria.andEquals(name, serializedSearchElement);
-            });
-
-            EntityOperationComposer.EntityComposedOperation operation =
-                    new EntityOperationComposer(composer)
-                            .composeDelete(entityDescriptor, searchCriteria);
-
-            justCall(operation);
-            connection.closeTransaction();
-        });
-    }
-
-    private <V> Multiple<V> doSearch(SearchCriteria<V> searchCriteria) {
-        EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entityClass);
-        checkExternalsBefore(entityDescriptor);
-        checkExternalsBefore(entityDescriptor, searchCriteria);
-
-        typeAdaptersControl.trySerializeValues(entityDescriptor);
-
-        EntityOperationComposer.EntityComposedOperation operation =
-                new EntityOperationComposer(composer)
-                        .composeSearch(entityDescriptor, searchCriteria);
-
-        return callAndCollect(operation);
-    }
-
-    private CompletableFuture<EntityID> doInsert(EntityDescriptor entityDescriptor) {
-        return CompletableFuture.supplyAsync(() -> {
-            connection.openTransaction();
-
-            checkExternalsBefore(entityDescriptor);
-            typeAdaptersControl.trySerializeValues(entityDescriptor);
-
-            EntityOperationComposer.EntityComposedOperation operation =
-                    new EntityOperationComposer(composer)
-                            .composeInsert(entityDescriptor);
-
-            EntityID entityID = callAndGetEntityId(operation);
-            connection.closeTransaction();
-            return entityID;
-
-        }, threadExecutor);
-    }
-
     @Override
     public void delete(Long id) {
         log.debug("delete({})", id);
@@ -113,61 +59,52 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     @Override
     public void delete(T entity) {
         log.debug("delete({})", entity);
+        threadExecutor.submit(() -> {
+            EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entity);
+            EntityParametersDescriptor parameters = entityDescriptor.getParameters();
 
-        EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entity);
-        EntityParametersDescriptor parameters = entityDescriptor.getParameters();
+            Optional<EntityParametersDescriptor.ParameterUnit> idUnitOptional = parameters.findIdUnit();
 
-        Optional<EntityParametersDescriptor.ParameterUnit> idUnitOptional = parameters.findIdUnit();
+            if (idUnitOptional.isPresent()) {
+                doDelete(entityDescriptor,
+                        beginCriteria()
+                                .andEquals(idUnitOptional.get().getId(), entityDescriptor.getId().getId()));
+            } else {
+                SearchCriteria<T> searchCriteria = beginCriteria();
+                List<EntityParametersDescriptor.ParameterUnit> parameterUnits = parameters.getParameterUnits();
 
-        if (idUnitOptional.isPresent()) {
-            doDelete(entityDescriptor,
-                    beginCriteria()
-                            .andEquals(idUnitOptional.get().getId(), entityDescriptor.getId().getId()));
-        } else {
-            SearchCriteria<T> searchCriteria = beginCriteria();
-            List<EntityParametersDescriptor.ParameterUnit> parameterUnits = parameters.getParameterUnits();
+                parameterUnits.stream()
+                        .filter(EntityParametersDescriptor.ParameterUnit::isMaybeStatical)
+                        .forEach(parameterUnit ->
+                                searchCriteria.andEquals(parameterUnit.getId(), parameterUnit.getValue()));
 
-            parameterUnits.stream()
-                    .filter(EntityParametersDescriptor.ParameterUnit::isMaybeStatical)
-                    .forEach(parameterUnit ->
+                if (searchCriteria.getExpectationMap() == null || searchCriteria.getExpectationMap().isEmpty()) {
+                    parameterUnits.forEach(parameterUnit ->
                             searchCriteria.andEquals(parameterUnit.getId(), parameterUnit.getValue()));
+                }
 
-            if (searchCriteria.getExpectationMap() == null || searchCriteria.getExpectationMap().isEmpty()) {
-                parameterUnits.forEach(parameterUnit ->
-                        searchCriteria.andEquals(parameterUnit.getId(), parameterUnit.getValue()));
+                doDelete(entityDescriptor, searchCriteria);
             }
-
-            doDelete(entityDescriptor, searchCriteria);
-        }
+        });
     }
 
     @Override
     public void delete(Long... ids) {
         log.debug("delete({})", Arrays.toString(ids));
-
-        connection.ofTransactionalGet(() -> {
-
-            Arrays.asList(ids).forEach(this::delete);
-            return Void.TYPE;
-        });
+        connection.ofTransactional(() -> Arrays.asList(ids).forEach(this::delete));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void delete(T... entities) {
         log.debug("delete({})", Arrays.toString(entities));
-
-        connection.ofTransactionalGet(() -> {
-
-            Arrays.asList(entities).forEach(this::delete);
-            return Void.TYPE;
-        });
+        connection.ofTransactional(() -> Arrays.asList(entities).forEach(this::delete));
     }
 
     @Override
     public void delete(SearchCriteria<T> searchCriteria) {
         log.debug("delete({})", searchCriteria);
-        doDelete(EntityReadAndWriteUtil.read(entityClass), searchCriteria);
+        threadExecutor.submit(() -> doDelete(EntityReadAndWriteUtil.read(entityClass), searchCriteria));
     }
 
     @Override
@@ -193,7 +130,9 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     @Override
     public Mono<EntityID> insert(T entity) {
         log.debug("insert({})", entity);
-        return Mono.of(doInsert(EntityReadAndWriteUtil.read(entity)));
+        return Mono.of(CompletableFuture.supplyAsync(() ->
+                connection.supplyTransactional(() -> doInsert(EntityReadAndWriteUtil.read(entity))),
+                threadExecutor));
     }
 
     @Override
@@ -201,10 +140,10 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     public Multiple<EntityID> insert(T... entities) {
         log.debug("insert({})", Arrays.toString(entities));
         return Multiple.ofFutures(
-                connection.ofTransactionalGet(() ->
+                connection.supplyTransactional(() ->
                         Arrays.stream(entities)
                                 .map(EntityReadAndWriteUtil::read)
-                                .map(this::doInsert)
+                                .map(entityDescriptor -> CompletableFuture.supplyAsync(() -> doInsert(entityDescriptor), threadExecutor))
                                 .collect(Collectors.toCollection(CopyOnWriteArrayList::new))));
     }
 
@@ -230,7 +169,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     public Multiple<T> search(Long... ids) {
         log.debug("search({})", Arrays.asList(ids));
         return Multiple.ofFutures(
-                connection.ofTransactionalGet(() ->
+                connection.supplyTransactional(() ->
                         Stream.of(ids)
                                 .map(this::search)
                                 .map(entityFuture -> entityFuture.future)
@@ -267,6 +206,53 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         return new SearchCriteria<>(entityClass);
     }
 
+    private void doDelete(EntityDescriptor entityDescriptor, SearchCriteria<T> searchCriteria) {
+        connection.ofTransactional(() -> {
+            checkExternalsBefore(entityDescriptor, searchCriteria);
+            typeAdaptersControl.trySerializeValues(entityDescriptor);
+
+            searchCriteria.getExpectationMap().forEach((name, searchElement) -> {
+
+                SearchElement<?> serializedSearchElement = typeAdaptersControl.trySerializeSearchElement(name, entityDescriptor, searchElement);
+                searchCriteria.andEquals(name, serializedSearchElement);
+            });
+
+            EntityOperationComposer.EntityComposedOperation operation =
+                    new EntityOperationComposer(composer)
+                            .composeDelete(entityDescriptor, searchCriteria);
+
+            justCall(operation);
+        });
+    }
+
+    private <V> Multiple<V> doSearch(SearchCriteria<V> searchCriteria) {
+        return Multiple.ofFutures(connection.supplyTransactional(() -> {
+
+            EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entityClass);
+            checkExternalsBefore(entityDescriptor);
+            checkExternalsBefore(entityDescriptor, searchCriteria);
+
+            typeAdaptersControl.trySerializeValues(entityDescriptor);
+
+            EntityOperationComposer.EntityComposedOperation operation =
+                    new EntityOperationComposer(composer)
+                            .composeSearch(entityDescriptor, searchCriteria);
+
+            return callAndCollect(operation);
+        }));
+    }
+
+    private EntityID doInsert(EntityDescriptor entityDescriptor) {
+        checkExternalsBefore(entityDescriptor);
+        typeAdaptersControl.trySerializeValues(entityDescriptor);
+
+        EntityOperationComposer.EntityComposedOperation operation =
+                new EntityOperationComposer(composer)
+                        .composeInsert(entityDescriptor);
+
+        return callAndGetEntityId(operation);
+    }
+
     private void justCall(EntityOperationComposer.EntityComposedOperation operation) {
         for (CompletedQuery completedQuery : operation.getQueries()) {
             completedQuery.call(connection);
@@ -275,34 +261,44 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         log.debug("Operation result: <NO RETURN CONTENT>");
     }
 
-    private <V> Multiple<V> callAndCollect(EntityOperationComposer.EntityComposedOperation operation) {
-        connection.openTransaction();
-        Multiple<V> multipleResult = Multiple.empty();
+    private <V> List<CompletableFuture<V>> callAndCollect(EntityOperationComposer.EntityComposedOperation operation) {
+        CompletableFuture<List<V>> queryResultFuture = null;
 
         for (CompletedQuery completedQuery : operation.getQueries()) {
-            Result<ResponseStream> result = completedQuery.call(connection);
-
             if (Objects.equals(operation.getResultQuery(), completedQuery)) {
-                multipleResult.addAll(
-                        Multiple.of(result.get(), ResponseRow.class)
-                                .mapEach(responseRow -> {
-                                    EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
+                queryResultFuture = CompletableFuture.supplyAsync(() -> {
 
-                                    checkExternalsAfter(entityDescriptor);
-                                    typeAdaptersControl.tryDeserializeValues(entityDescriptor);
+                    Result<ResponseStream> queryResult = completedQuery.call(connection);
+                    List<V> entitiesList = new ArrayList<>();
 
-                                    //noinspection unchecked
-                                    return (V)EntityReadAndWriteUtil.write(entityDescriptor);
-                                }));
+                    for (ResponseRow responseRow : queryResult.get()) {
+                        EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
+
+                        checkExternalsAfter(entityDescriptor);
+                        typeAdaptersControl.tryDeserializeValues(entityDescriptor);
+
+                        //noinspection unchecked
+                        entitiesList.add((V) EntityReadAndWriteUtil.write(entityDescriptor));
+                    }
+                    return entitiesList;
+                });
+            } else {
+                completedQuery.call(connection);
             }
         }
 
-        if (multipleResult.isEmpty()) {
-            connection.closeTransaction();
+        if (queryResultFuture != null) {
+            List<CompletableFuture<V>> futures = queryResultFuture.thenApply(list ->
+                    list.stream()
+                            .map(CompletableFuture::completedFuture)
+                            .collect(Collectors.toList())
+            ).join();
+            log.debug("Operation result: [{} rows]", futures.size());
+            return futures;
         }
 
-        log.debug("Operation result: [{} elements]", multipleResult.size());
-        return multipleResult.subscribeLast(connection::closeTransaction);
+        log.debug("Operation result: [0 rows]");
+        return Collections.emptyList();
     }
 
     private EntityID callAndGetEntityId(EntityOperationComposer.EntityComposedOperation operation) {
@@ -336,15 +332,12 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                 if (externalEntityObject instanceof Number) {
                     continue;
                 }
-
                 if (externalEntityObject != null) {
-                    doInsert(EntityReadAndWriteUtil.read(externalEntityObject))
-                            .thenAccept(externalEntityID -> externalUnit.setValue(externalEntityID.getId()))
-                            .join();
+                    EntityID externalId = doInsert(EntityReadAndWriteUtil.read(externalEntityObject));
+                    externalUnit.setValue(externalId.getId());
                 } else {
                     externalUnit.setValue(EntityID.NOT_FOUND.getId());
                 }
-
                 externalUnit.setType(int.class);
             }
         }
