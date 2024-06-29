@@ -281,7 +281,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
                         entitiesList.add((V) EntityReadAndWriteUtil.write(entityDescriptor));
                     }
                     return entitiesList;
-                });
+                }, threadExecutor);
             } else {
                 completedQuery.call(connection);
             }
@@ -291,8 +291,8 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
             List<CompletableFuture<V>> futures = queryResultFuture.thenApply(list ->
                     list.stream()
                             .map(CompletableFuture::completedFuture)
-                            .collect(Collectors.toList())
-            ).join();
+                            .collect(Collectors.toList())).join();
+
             log.debug("Operation result: [{} rows]", futures.size());
             return futures;
         }
