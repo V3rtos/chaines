@@ -39,7 +39,7 @@ public class ApiErrors {
      *         и сообщением, указывающим, что путь не обрабатывается API
      */
     public Error badRequestPath(String path) {
-        return new ErrorData(ResponseCode.BAD_REQUEST, String.format("api %s is not handling path: %s", Api.VERSION, path));
+        return new ErrorData(ResponseCode.BAD_REQUEST, String.format("api %s invalid path: %s", Api.VERSION, path));
     }
 
     /**
@@ -50,7 +50,7 @@ public class ApiErrors {
      *         и сообщением, указывающим, что атрибут не найден
      */
     public Error noAttribute(String attr) {
-        return new ErrorData(ResponseCode.BAD_REQUEST, String.format("attribute `?%s` is not found", attr));
+        return new ErrorData(ResponseCode.BAD_REQUEST, String.format("attribute `?%s` is invalid", attr));
     }
 
     /**
@@ -62,7 +62,7 @@ public class ApiErrors {
      *         и сообщением, указывающим, что ресурс не найден
      */
     public Error notFound(String type, Object id) {
-        return new ErrorData(ResponseCode.NOT_FOUND, String.format("%s \"%s\" is not found", type, id));
+        return new ErrorData(ResponseCode.NOT_FOUND, String.format("%s \"%s\" not found", type, id));
     }
 
     /**
@@ -72,6 +72,6 @@ public class ApiErrors {
      *         и сообщением, указывающим, что учетные данные аутентификации неправильны
      */
     public Error forbidden() {
-        return new ErrorData(ResponseCode.FORBIDDEN, "auth credentials is incorrectly: `api-key`");
+        return new ErrorData(ResponseCode.FORBIDDEN, "auth credentials is invalid: `api-key`");
     }
 }

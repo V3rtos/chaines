@@ -27,10 +27,10 @@ import java.util.function.Supplier;
 class EntityOperationComposer {
 
     private static final Set<String> existTablesStore = new ConcurrentSkipListSet<>();
-    private static boolean isTablesPrepared = false;
+    private static final Set<UUID> connectionPreparedStore = new ConcurrentSkipListSet<>();
 
     static void prepareTablesStore(DatabaseConnection connection) {
-        if (isTablesPrepared) {
+        if (connectionPreparedStore.contains(connection.getId().getUniqueId())) {
             return;
         }
 
@@ -39,7 +39,7 @@ class EntityOperationComposer {
             existTablesStore.add(responseRow.field(0).getAsString().toLowerCase());
         }
 
-        isTablesPrepared = true;
+        connectionPreparedStore.add(connection.getId().getUniqueId());
     }
 
     @Getter

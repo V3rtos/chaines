@@ -12,6 +12,8 @@ import me.moonways.bridgenet.rest.model.authentication.Authentication;
 import me.moonways.bridgenet.rest.model.authentication.defaults.HttpBearerAuthenticator;
 import me.moonways.bridgenet.rest.server.HttpServer;
 import me.moonways.bridgenet.rest4j.data.ApiErrors;
+import me.moonways.bridgenet.rest4j.server.accesstoken.AccessTokenAuthenticator;
+import me.moonways.bridgenet.rest4j.server.accesstoken.Bridgenet4jAccessTokenService;
 import me.moonways.bridgenet.rest4j.server.endpoint.RestPlayersEndpoint;
 import me.moonways.bridgenet.rest4j.server.endpoint.RestServersEndpoint;
 
@@ -24,10 +26,9 @@ import java.net.InetSocketAddress;
  * точек API и аутентификацию запросов.
  */
 @Log4j2
-@Autobind
-public final class RestBridgenetServer {
+public final class Bridgenet4jRestServer {
 
-    // todo: From config.
+    // todo: toggle each from config
     private static final Object[] ENDPOINTS_ARR =
             {
                     new RestPlayersEndpoint(),
@@ -48,6 +49,9 @@ public final class RestBridgenetServer {
      * </p>
      */
     public void start() {
+        Bridgenet4jAccessTokenService accessTokenService = new Bridgenet4jAccessTokenService();
+        beansService.bind(accessTokenService);
+
         InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 80); // todo: From config.
         HttpServer httpServer = HttpServer.builder()
                 .executorService(Threads.newCachedThreadPool())
@@ -56,10 +60,10 @@ public final class RestBridgenetServer {
                 .build();
 
         registerEndpoints(httpServer);
-        httpServer.addAuthenticator(Authentication.BEARER,
-                HttpBearerAuthenticator.single("440as08g13btj47yud6455sd6789fas"));
 
+        httpServer.addAuthenticator(new AccessTokenAuthenticator(accessTokenService));
         httpServer.bind();
+
         log.info("HTTP-server has listening on §6{}", socketAddress);
     }
 

@@ -109,7 +109,8 @@ public final class Bridgenet4jRestClient {
     }
 
     /**
-     * Проверяет и инициализирует HttpClient, если он не был инициализирован ранее.
+     * Проверяет и инициализирует HttpClient,
+     * если он не был инициализирован ранее.
      */
     private void checkClient() {
         if (httpClient == null) {

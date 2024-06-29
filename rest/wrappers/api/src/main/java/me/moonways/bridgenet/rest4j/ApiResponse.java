@@ -65,9 +65,11 @@ public class ApiResponse<O extends Ok> implements Response<O>, Serializable {
             return new ApiResponse<>(content.asEntity(okClass), null);
         }
         if (responseCode.getCode() == ResponseCode.FORBIDDEN.getCode()) {
-            return new ApiResponse<>(null, ApiErrors.forbidden());
+            return new ApiResponse<>(null,
+                    ApiErrors.forbidden());
         }
-        return new ApiResponse<>(null, content.asEntity(ErrorData.class));
+        return new ApiResponse<>(null,
+                content.asEntity(ErrorData.class));
     }
 
     /**
@@ -79,7 +81,9 @@ public class ApiResponse<O extends Ok> implements Response<O>, Serializable {
      * @return экземпляр {@code ApiResponse}
      */
     public static <O extends Ok> ApiResponse<O> connectionTimedOut(String message, Throwable ex) {
-        return new ApiResponse<>(null, new ErrorData(ResponseCode.CONNECTION_TIMED_OUT, message + (ex != null ? ": " + ex : "")));
+        return new ApiResponse<>(null,
+                new ErrorData(ResponseCode.CONNECTION_TIMED_OUT,
+                        message + (ex != null ? ": " + ex : "")));
     }
 
     private final O ok;

@@ -12,6 +12,7 @@ import me.moonways.bridgenet.model.service.gui.item.types.Materials;
 import me.moonways.bridgenet.model.service.language.Language;
 import me.moonways.bridgenet.model.service.language.Message;
 import me.moonways.bridgenet.model.service.permissions.permission.Permission;
+import me.moonways.bridgenet.rest.server.authentication.token.TokenGenerator;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -127,7 +128,7 @@ public final class TestConst {
 
     public static final class Rest {
         public static final String BASEURL = "http://127.0.0.1:80";
-        public static final String API_ACCESS_KEY = "440as08g13btj47yud6455sd6789fas";
+        public static final String API_ACCESS_KEY = TokenGenerator.defaults().generate();
     }
 
     public static final class SqlQuery {
