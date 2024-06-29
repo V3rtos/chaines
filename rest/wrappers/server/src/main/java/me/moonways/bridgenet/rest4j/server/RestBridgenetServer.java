@@ -17,6 +17,12 @@ import me.moonways.bridgenet.rest4j.server.endpoint.RestServersEndpoint;
 
 import java.net.InetSocketAddress;
 
+/**
+ * Класс для создания и управления HTTP-сервером для API Bridgenet4j.
+ * <p>
+ * Этот класс отвечает за настройку и запуск HTTP-сервера, регистрацию конечных
+ * точек API и аутентификацию запросов.
+ */
 @Log4j2
 @Autobind
 public final class RestBridgenetServer {
@@ -34,6 +40,13 @@ public final class RestBridgenetServer {
     @Inject
     private BeansService beansService;
 
+    /**
+     * Запускает HTTP-сервер.
+     * <p>
+     * Настраивает сервер, регистрирует конечные точки и устанавливает
+     * аутентификатор для Bearer токенов.
+     * </p>
+     */
     public void start() {
         InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 80); // todo: From config.
         HttpServer httpServer = HttpServer.builder()
@@ -50,14 +63,25 @@ public final class RestBridgenetServer {
         log.info("HTTP-server has listening on §6{}", socketAddress);
     }
 
+    /**
+     * Обрабатывает запросы, для которых не найден соответствующий обработчик.
+     *
+     * @param httpRequest запрос, который не был обработан ни одним из зарегистрированных
+     *                    конечных точек.
+     * @return HTTP-ответ с сообщением об ошибке "Путь не найден".
+     */
     private HttpResponse handleNotFoundRequest(HttpRequest httpRequest) {
         return ApiErrors.badRequestPath(httpRequest.getPath())
                 .getAsResponse(); // todo: Message from config.
     }
 
+    /**
+     * Регистрирует конечные точки API на сервере.
+     *
+     * @param httpServer HTTP-сервер, на котором будут зарегистрированы конечные точки.
+     */
     private void registerEndpoints(HttpServer httpServer) {
         for (Object endpointObj : ENDPOINTS_ARR) {
-
             beansService.inject(endpointObj);
             httpServer.registerRepository(endpointObj);
         }
