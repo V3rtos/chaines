@@ -117,8 +117,16 @@ class EntityOperationComposer {
                 predicationAgent = predicates.ifMoreOrEqual(field);
                 break;
             }
-            case MATCHES: {
+            case LIKE_IS: {
                 predicationAgent = predicates.ifMatches(field);
+                break;
+            }
+            case IS: {
+                predicationAgent = predicates.isNull(CombinedStructs.CombinedLabel.builder().label(field.getLabel()).build());
+                break;
+            }
+            case INSIDE: {
+                predicationAgent = predicates.ifInside(field);
                 break;
             }
             case EQUALS: {

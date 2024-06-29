@@ -88,7 +88,7 @@ public final class CollectionElementMapper {
 
     private String valueToString(Object value) {
         if (value == null) {
-            return String.format(CHARACTERS_FORMAT, "null");
+            return "NULL";
         }
         return isPrimitive(value.getClass()) ? value.toString()
                 : String.format(CHARACTERS_FORMAT, value);

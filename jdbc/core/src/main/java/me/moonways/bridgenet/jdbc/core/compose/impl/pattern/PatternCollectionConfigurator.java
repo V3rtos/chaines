@@ -3,7 +3,9 @@ package me.moonways.bridgenet.jdbc.core.compose.impl.pattern;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
+import me.moonways.bridgenet.jdbc.core.BridgenetJdbcException;
 import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
+import me.moonways.bridgenet.jdbc.core.compose.ConditionMatcher;
 import me.moonways.bridgenet.jdbc.core.compose.MergeDirection;
 import me.moonways.bridgenet.jdbc.core.compose.SubjectFunction;
 import me.moonways.bridgenet.jdbc.core.compose.impl.collection.PatternCollection;
@@ -107,6 +109,9 @@ public class PatternCollectionConfigurator {
 
         CompletedPredicates.CompletedPredicateNode next;
         while ((next = firstNode.poll()) != null) {
+            if (next.field().getValue() == null && next.matcher() != ConditionMatcher.IS) {
+                throw new BridgenetJdbcException("value of " + next + " is null, but matcher is not \"IS\"");
+            }
             collection.add(MAPPER.map(next));
         }
 

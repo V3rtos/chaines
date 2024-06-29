@@ -86,7 +86,7 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> andEquals(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.AND)
                 .matcher(ConditionMatcher.EQUALS)
                 .expectation(expected)
@@ -117,7 +117,7 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> orEquals(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.OR)
                 .matcher(ConditionMatcher.EQUALS)
                 .expectation(expected)
@@ -148,9 +148,9 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> andLike(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.AND)
-                .matcher(ConditionMatcher.MATCHES)
+                .matcher(ConditionMatcher.LIKE_IS)
                 .expectation(expected)
                 .build());
     }
@@ -165,7 +165,7 @@ public final class SearchCriteria<T> {
     public SearchCriteria<T> andLike(String name, Object expected) {
         return with(name, SearchElement.builder()
                 .binder(ConditionBinder.AND)
-                .matcher(ConditionMatcher.MATCHES)
+                .matcher(ConditionMatcher.LIKE_IS)
                 .expectation(expected)
                 .build());
     }
@@ -179,9 +179,9 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> orLike(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.OR)
-                .matcher(ConditionMatcher.MATCHES)
+                .matcher(ConditionMatcher.LIKE_IS)
                 .expectation(expected)
                 .build());
     }
@@ -196,7 +196,7 @@ public final class SearchCriteria<T> {
     public SearchCriteria<T> orLike(String name, Object expected) {
         return with(name, SearchElement.builder()
                 .binder(ConditionBinder.OR)
-                .matcher(ConditionMatcher.MATCHES)
+                .matcher(ConditionMatcher.LIKE_IS)
                 .expectation(expected)
                 .build());
     }
@@ -210,7 +210,7 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> andMore(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.AND)
                 .matcher(ConditionMatcher.MORE)
                 .expectation(expected)
@@ -241,7 +241,7 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> orMore(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.OR)
                 .matcher(ConditionMatcher.MORE)
                 .expectation(expected)
@@ -272,7 +272,7 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> andLess(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.AND)
                 .matcher(ConditionMatcher.LESS)
                 .expectation(expected)
@@ -303,7 +303,7 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> orLess(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.OR)
                 .matcher(ConditionMatcher.LESS)
                 .expectation(expected)
@@ -334,7 +334,7 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> andMoreOrEquals(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.AND)
                 .matcher(ConditionMatcher.MORE_OR_EQUAL)
                 .expectation(expected)
@@ -365,7 +365,7 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> orMoreOrEquals(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.OR)
                 .matcher(ConditionMatcher.MORE_OR_EQUAL)
                 .expectation(expected)
@@ -396,7 +396,7 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> andLessOrEquals(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.AND)
                 .matcher(ConditionMatcher.LESS_OR_EQUAL)
                 .expectation(expected)
@@ -427,7 +427,7 @@ public final class SearchCriteria<T> {
      * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
      */
     public <E> SearchCriteria<T> orLessOrEquals(Function<T, E> parameterGetter, E expected) {
-        return with(findParameterId(parameterGetter), SearchElement.<E>builder()
+        return with(findParameterId(parameterGetter), SearchElement.builder()
                 .binder(ConditionBinder.OR)
                 .matcher(ConditionMatcher.LESS_OR_EQUAL)
                 .expectation(expected)
@@ -445,6 +445,126 @@ public final class SearchCriteria<T> {
         return with(name, SearchElement.builder()
                 .binder(ConditionBinder.OR)
                 .matcher(ConditionMatcher.LESS_OR_EQUAL)
+                .expectation(expected)
+                .build());
+    }
+
+    /**
+     * Добавляет условие "AND IS NULL" для параметра поиска.
+     *
+     * @param parameterGetter Функция для получения параметра сущности.
+     * @param <E>             Тип параметра.
+     * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
+     */
+    public <E> SearchCriteria<T> andNull(Function<T, E> parameterGetter) {
+        return with(findParameterId(parameterGetter), SearchElement.builder()
+                .binder(ConditionBinder.AND)
+                .matcher(ConditionMatcher.IS)
+                .expectation(null)
+                .build());
+    }
+
+    /**
+     * Добавляет условие "AND IS NULL" для параметра поиска по имени параметра.
+     *
+     * @param name     Имя параметра.
+     * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
+     */
+    public SearchCriteria<T> andNull(String name) {
+        return with(name, SearchElement.builder()
+                .binder(ConditionBinder.AND)
+                .matcher(ConditionMatcher.IS)
+                .expectation(null)
+                .build());
+    }
+
+    /**
+     * Добавляет условие "OR IS NULL" для параметра поиска.
+     *
+     * @param parameterGetter Функция для получения параметра сущности.
+     * @param <E>             Тип параметра.
+     * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
+     */
+    public <E> SearchCriteria<T> orNull(Function<T, E> parameterGetter) {
+        return with(findParameterId(parameterGetter), SearchElement.builder()
+                .binder(ConditionBinder.OR)
+                .matcher(ConditionMatcher.IS)
+                .expectation(null)
+                .build());
+    }
+
+    /**
+     * Добавляет условие "OR IS NULL" для параметра поиска по имени параметра.
+     *
+     * @param name     Имя параметра.
+     * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
+     */
+    public SearchCriteria<T> orNull(String name) {
+        return with(name, SearchElement.builder()
+                .binder(ConditionBinder.OR)
+                .matcher(ConditionMatcher.IS)
+                .expectation(null)
+                .build());
+    }
+
+    /**
+     * Добавляет условие "AND IN" для параметра поиска.
+     *
+     * @param parameterGetter Функция для получения параметра сущности.
+     * @param expected        Ожидаемое значение параметра.
+     * @param <E>             Тип параметра.
+     * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
+     */
+    public <E> SearchCriteria<T> andInside(Function<T, E> parameterGetter, E expected) {
+        return with(findParameterId(parameterGetter), SearchElement.builder()
+                .binder(ConditionBinder.AND)
+                .matcher(ConditionMatcher.INSIDE)
+                .expectation(expected)
+                .build());
+    }
+
+    /**
+     * Добавляет условие "AND IN" для параметра поиска по имени параметра.
+     *
+     * @param name     Имя параметра.
+     * @param expected Ожидаемое значение параметра.
+     * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
+     */
+    public SearchCriteria<T> andInside(String name, Object expected) {
+        return with(name, SearchElement.builder()
+                .binder(ConditionBinder.AND)
+                .matcher(ConditionMatcher.INSIDE)
+                .expectation(expected)
+                .build());
+    }
+
+    /**
+     * Добавляет условие "OR IN" для параметра поиска.
+     *
+     * @param parameterGetter Функция для получения параметра сущности.
+     * @param expected        Ожидаемое значение параметра.
+     * @param <E>             Тип параметра.
+     * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
+     */
+    public <E> SearchCriteria<T> orInside(Function<T, E> parameterGetter, E expected) {
+        return with(findParameterId(parameterGetter), SearchElement.builder()
+                .binder(ConditionBinder.OR)
+                .matcher(ConditionMatcher.INSIDE)
+                .expectation(expected)
+                .build());
+    }
+
+    /**
+     * Добавляет условие "OR IN" для параметра поиска по имени параметра.
+     *
+     * @param name     Имя параметра.
+     * @param expected Ожидаемое значение параметра.
+     * @return Текущий экземпляр {@code SearchCriteria} для цепочного вызова.
+     */
+    public SearchCriteria<T> orInside(String name, Object expected) {
+        return with(name, SearchElement.builder()
+                .binder(ConditionBinder.OR)
+                .matcher(ConditionMatcher.INSIDE)
                 .expectation(expected)
                 .build());
     }
@@ -476,12 +596,6 @@ public final class SearchCriteria<T> {
 
         if (expectationMap == null) {
             expectationMap = Collections.synchronizedMap(new HashMap<>());
-        }
-
-        if (element.getMatcher() == null) {
-            element = element.toBuilder()
-                    .matcher(ConditionMatcher.EQUALS)
-                    .build();
         }
         expectationMap.put(name.toLowerCase(), element);
         return this;
