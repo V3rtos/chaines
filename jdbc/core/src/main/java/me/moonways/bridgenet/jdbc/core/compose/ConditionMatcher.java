@@ -10,7 +10,9 @@ public enum ConditionMatcher {
     LESS("<"),
     MORE_OR_EQUAL(">="),
     LESS_OR_EQUAL("<="),
-    MATCHES("LIKE"),
+    LIKE_IS("LIKE"),
+    IS("IS"),
+    INSIDE("IN"),
     ;
 
     private final String toSqlString;

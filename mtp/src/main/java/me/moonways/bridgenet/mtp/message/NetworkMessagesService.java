@@ -2,7 +2,6 @@ package me.moonways.bridgenet.mtp.message;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
-import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.processor.ScanningResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.AwaitAnnotationsScanning;
@@ -13,26 +12,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
 @Autobind
 @AwaitAnnotationsScanning({ClientMessage.class, ServerMessage.class})
 public class NetworkMessagesService {
 
-    private final Set<WrappedNetworkMessage> networkMessageWrappers = Collections.synchronizedSet(new HashSet<>());
-    private List<Object> messagesList;
+    private final Map<Integer, WrappedNetworkMessage> wrappersByIdMap = new ConcurrentHashMap<>();
+    private final Map<Class<?>, WrappedNetworkMessage> wrappersByClassMap = new ConcurrentHashMap<>();
 
     @GetAnnotationsScanningResult
     private ScanningResult<Object> messagesResult;
 
-    @PostConstruct
-    private void init() {
-        messagesList = messagesResult.toList();
-        messagesList.sort(Comparator.comparing(o -> o.getClass().getName()));
-    }
-
     private WrappedNetworkMessage toWrapper(ChannelDirection direction, Class<?> messageClass) {
-        int messageID = networkMessageWrappers.size();
+        int messageID = wrappersByIdMap.size();
         return new WrappedNetworkMessage(messageID, messageClass, direction);
     }
 
@@ -42,6 +36,9 @@ public class NetworkMessagesService {
     }
 
     public void bindMessages(boolean reverse) {
+        List<Object> messagesList = messagesResult.toList();
+        messagesList.sort(Comparator.comparing(o -> o.getClass().getName()));
+
         for (Object message : messagesList) {
             register(reverse, message.getClass());
         }
@@ -74,7 +71,8 @@ public class NetworkMessagesService {
 
     private void registerAnnotated(Class<? extends Annotation> annotation, Class<?> messageType) {
         WrappedNetworkMessage wrapper = toWrapper(annotation, messageType);
-        networkMessageWrappers.add(wrapper);
+        wrappersByIdMap.put(wrapper.getId(), wrapper);
+        wrappersByClassMap.put(wrapper.getMessageType(), wrapper);
 
         log.debug("Protocol was registered message: §3{} §7(id: {}, direction: {})", messageType.getName(),
                 wrapper.getId(),
@@ -82,23 +80,11 @@ public class NetworkMessagesService {
     }
 
     public WrappedNetworkMessage lookupWrapperByID(int id) {
-        for (WrappedNetworkMessage wrapper : networkMessageWrappers) {
-
-            if (wrapper.getId() == id) {
-                return wrapper;
-            }
-        }
-        return null;
+        return wrappersByIdMap.get(id);
     }
 
     public WrappedNetworkMessage lookupWrapperByClass(@NotNull Class<?> messageClass) {
-        for (WrappedNetworkMessage wrapper : networkMessageWrappers) {
-
-            if (wrapper.matchesSimilar(messageClass)) {
-                return wrapper;
-            }
-        }
-        return null;
+        return wrappersByClassMap.get(messageClass);
     }
 
     public ExportedMessage export(@NotNull Object message) {

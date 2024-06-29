@@ -46,11 +46,11 @@ public final class GroupsManagerStub implements GroupsManager {
 
     private Optional<PermissionGroup> findPlayerGroup(UUID playerId) {
         EntityRepository<EntityGroup> repository = repositoryFactory.fromEntityType(EntityGroup.class);
-        return repository.searchIf(
-                        repository.newSearchMarker()
-                                .withGet(EntityGroup::getPlayerId, playerId))
-                .flatMap(entityGroup ->
-                        entityGroup.isExpired() ? getGroup(entityGroup.getGroupId()) : Optional.empty());
+        return repository.searchFirst(
+                        repository.beginCriteria()
+                                .andEquals(EntityGroup::getPlayerId, playerId))
+                .flatMap(entityGroup -> entityGroup.isExpired() ? getGroup(entityGroup.getGroupId()) : Optional.empty())
+                .blockOptional();
     }
 
     private void updateGroup(UUID playerId, PermissionGroup group) {

@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.jdbc.entity.util.search;
+package me.moonways.bridgenet.jdbc.entity.criteria;
 
 import lombok.Builder;
 import lombok.Getter;

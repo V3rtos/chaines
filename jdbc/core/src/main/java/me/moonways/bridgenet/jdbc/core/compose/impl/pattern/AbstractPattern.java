@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.jdbc.core.compose.impl.pattern;
 
 import lombok.*;
+import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
 import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
 import me.moonways.bridgenet.jdbc.core.ResponseStream;
 import me.moonways.bridgenet.jdbc.core.TransactionIsolation;
@@ -13,6 +14,8 @@ import me.moonways.bridgenet.jdbc.core.util.result.Result;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @ToString
 @Getter(AccessLevel.PROTECTED)
@@ -22,6 +25,8 @@ public abstract class AbstractPattern
 
     private static final String PATTERN_FILES_RESOURCES_FOLDER = "/patterns/";
     private static final String PATTERN_FILE_SUFFIX = ".pattern";
+
+    private static final Map<String, String> readPatternsContentsMap = new HashMap<>();
 
     private final PatternCollections totals;
 
@@ -53,12 +58,12 @@ public abstract class AbstractPattern
 
     @Override
     public Result<ResponseStream> callTransactional(DatabaseConnection connection) {
-        return connection.ofTransactionalGet(() -> connection.call(toNativeQuery().get()));
+        return connection.supplyTransactional(() -> connection.call(toNativeQuery().get()));
     }
 
     @Override
     public Result<ResponseStream> callTransactional(TransactionIsolation isolation, DatabaseConnection connection) {
-        return connection.ofTransactionalGet(isolation, () -> connection.call(toNativeQuery().get()));
+        return connection.supplyTransactional(isolation, () -> connection.call(toNativeQuery().get()));
     }
 
     @SneakyThrows
@@ -80,17 +85,11 @@ public abstract class AbstractPattern
                 = converter.toNativeQuery());
     }
 
-    @SuppressWarnings({"resource", "DataFlowIssue", "ResultOfMethodCallIgnored"})
-    @SneakyThrows
     private String readPatternFile(String filename) {
-        String path = PATTERN_FILES_RESOURCES_FOLDER + filename;
-
-        InputStream resourceInputStream
-                = AbstractPattern.class.getResourceAsStream(path);
-
-        byte[] array = new byte[resourceInputStream.available()];
-        resourceInputStream.read(array);
-
-        return new String(array);
+        return readPatternsContentsMap.computeIfAbsent(filename,
+                f -> {
+                    String path = PATTERN_FILES_RESOURCES_FOLDER + filename;
+                    return StreamToStringUtils.toStringFull(AbstractPattern.class.getResourceAsStream(path));
+                });
     }
 }

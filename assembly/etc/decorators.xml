@@ -7,10 +7,16 @@
             <path>me.moonways.bridgenet.api.inject.decorator.persistence.handler.AsyncMethodHandler</path>
         </methodHandler>
         <methodHandler>
+            <name>ParallelAsync</name>
+            <annotation>me.moonways.bridgenet.api.inject.decorator.persistence.ParallelAsync</annotation>
+            <path>me.moonways.bridgenet.api.inject.decorator.persistence.handler.ParallelAsyncMethodHandler</path>
+        </methodHandler>
+        <methodHandler>
             <name>LateExecution</name>
             <annotation>me.moonways.bridgenet.api.inject.decorator.persistence.LateExecution</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.persistence.handler.LateExecutionMethodHandler</path>
             <conflicts>
+                <input>ParallelAsync</input>
                 <input>Async</input>
                 <input>Singleton</input>
             </conflicts>
@@ -20,6 +26,7 @@
             <annotation>me.moonways.bridgenet.api.inject.decorator.persistence.KeepTime</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.persistence.handler.KeepTimeMethodHandler</path>
             <inherits>
+                <input>ParallelAsync</input>
                 <input>Async</input>
                 <input>LateExecution</input>
             </inherits>
@@ -29,6 +36,7 @@
             <annotation>me.moonways.bridgenet.api.inject.decorator.persistence.Singleton</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.persistence.handler.SingletonMethodHandler</path>
             <inherits>
+                <input>ParallelAsync</input>
                 <input>Async</input>
                 <input>LateExecution</input>
             </inherits>
@@ -38,6 +46,7 @@
             <annotation>me.moonways.bridgenet.api.inject.decorator.persistence.RequiredNotNull</annotation>
             <path>me.moonways.bridgenet.api.inject.decorator.persistence.handler.RequiredNotNullMethodHandler</path>
             <inherits>
+                <input>ParallelAsync</input>
                 <input>Async</input>
                 <input>LateExecution</input>
             </inherits>

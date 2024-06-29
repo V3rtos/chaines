@@ -62,34 +62,49 @@ public class DatabaseConnection {
         return this;
     }
 
-    public synchronized void openTransaction(TransactionIsolation isolation) {
+    public void openTransaction(TransactionIsolation isolation) {
         if (!jdbcWrapper.isConnected()) {
             jdbcWrapper.reconnect();
         }
 
-        jdbcWrapper.setTransactionState(TransactionState.ACTIVE);
         jdbcWrapper.setTransactionIsolation(isolation);
+        jdbcWrapper.setTransactionState(TransactionState.ACTIVE);
     }
 
-    public synchronized void openTransaction() {
-        openTransaction(TransactionIsolation.DEFAULT);
+    public void openTransaction() {
+        openTransaction(TransactionIsolation.getDefault());
     }
 
-    public synchronized void closeTransaction() {
+    public void commitTransaction() {
         if (jdbcWrapper.isConnected()) {
             jdbcWrapper.setTransactionState(TransactionState.INACTIVE);
         }
     }
 
-    public synchronized <T> T ofTransactionalGet(TransactionIsolation isolation, Supplier<T> transactionSupplier) {
+    public void commitTransactionNow() {
+        jdbcWrapper.flushTransactionsQueue();
+        commitTransaction();
+    }
+
+    public <T> T supplyTransactional(TransactionIsolation isolation, Supplier<T> transactionSupplier) {
         openTransaction(isolation);
         T value = transactionSupplier.get();
-        closeTransaction();
+        commitTransaction();
         return value;
     }
 
-    public synchronized <T> T ofTransactionalGet(Supplier<T> transactionSupplier) {
-        return ofTransactionalGet(TransactionIsolation.DEFAULT, transactionSupplier);
+    public <T> T supplyTransactional(Supplier<T> transactionSupplier) {
+        return supplyTransactional(TransactionIsolation.getDefault(), transactionSupplier);
+    }
+
+    public void ofTransactional(TransactionIsolation isolation, Runnable action) {
+        openTransaction(isolation);
+        action.run();
+        commitTransaction();
+    }
+
+    public void ofTransactional(Runnable action) {
+        ofTransactional(TransactionIsolation.getDefault(), action);
     }
 
     public synchronized void close() {

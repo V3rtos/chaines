@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.jdbc.entity.util.search;
+package me.moonways.bridgenet.jdbc.entity.criteria;
 
 import javassist.util.proxy.MethodHandler;
 import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;

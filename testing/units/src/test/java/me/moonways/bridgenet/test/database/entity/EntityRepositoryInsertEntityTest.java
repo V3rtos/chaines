@@ -50,7 +50,7 @@ public class EntityRepositoryInsertEntityTest {
 
     @Test
     public void test_success() {
-        EntityID entityID = userRepository.insert(ENTITY_USER);
+        EntityID entityID = userRepository.insert(ENTITY_USER).block();
         assertEquals(1, entityID.getId());
 
         log.debug("Inserted user identify: {}", entityID);

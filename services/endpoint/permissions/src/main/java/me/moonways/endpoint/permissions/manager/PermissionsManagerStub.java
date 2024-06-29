@@ -16,11 +16,11 @@ import me.moonways.endpoint.permissions.entity.EntityPermission;
 
 import java.rmi.RemoteException;
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public final class PermissionsManagerStub implements PermissionsManager {
 
@@ -45,18 +45,17 @@ public final class PermissionsManagerStub implements PermissionsManager {
 
     private Set<Permission> findPermissions(UUID playerId) {
         EntityRepository<EntityPermission> repository = repositoryFactory.fromEntityType(EntityPermission.class);
-        return repository.searchManyIf(
-                        repository.newSearchMarker()
-                                .withGet(EntityPermission::getPlayerId, playerId))
-                .stream()
-                .peek(entityPermission -> {
+        return repository.search(
+                        repository.beginCriteria()
+                                .andEquals(EntityPermission::getPlayerId, playerId))
+                .subscribeEach(entityPermission -> {
                     if (entityPermission.isExpired()) {
                         deletePermission(playerId, fromEntityPermission(entityPermission));
                     }
                 })
                 .filter(entityPermission -> !entityPermission.isExpired())
-                .map(PermissionsManagerStub::fromEntityPermission)
-                .collect(Collectors.toSet());
+                .mapEach(PermissionsManagerStub::fromEntityPermission)
+                .blockAll(HashSet::new);
     }
 
     private void insertPermission(UUID playerId, Permission permission) {
@@ -71,9 +70,9 @@ public final class PermissionsManagerStub implements PermissionsManager {
 
     private void deleteAllPermissions(UUID playerId) {
         EntityRepository<EntityPermission> repository = repositoryFactory.fromEntityType(EntityPermission.class);
-        repository.deleteIf(
-                repository.newSearchMarker()
-                        .withGet(EntityPermission::getPlayerId, playerId));
+        repository.delete(
+                repository.beginCriteria()
+                        .andEquals(EntityPermission::getPlayerId, playerId));
     }
 
     @Override

@@ -29,10 +29,11 @@ public class EntityRepositoryGetEntityTest {
     public void test_userGet() {
         EntityRepository<EntityUser> userRepository = entityRepositoryInsertEntityTest.getUserRepository();
 
-        Optional<EntityUser> userOptional = userRepository.searchIf(
-                userRepository.newSearchMarker()
-                        .withGet(EntityUser::getId, 1)
-                        .withGet(EntityUser::getFirstName, EntityRepositoryInsertEntityTest.ENTITY_USER.getFirstName()));
+        Optional<EntityUser> userOptional = userRepository.searchFirst(
+                userRepository.beginCriteria()
+                        .andEquals(EntityUser::getId, 1)
+                        .andEquals(EntityUser::getFirstName, EntityRepositoryInsertEntityTest.ENTITY_USER.getFirstName()))
+                .blockOptional();
 
         assertTrue(userOptional.isPresent());
         log.debug("Founded user: {}", userOptional.orElse(null));
@@ -43,9 +44,10 @@ public class EntityRepositoryGetEntityTest {
     public void test_statusGet() {
         EntityRepository<EntityStatus> statusRepository = entityRepositoryInsertEntityTest.getStatusRepository();
 
-        Optional<EntityStatus> statusOptional = statusRepository.searchIf(
-                statusRepository.newSearchMarker()
-                        .withGet(EntityStatus::getId, 1));
+        Optional<EntityStatus> statusOptional = statusRepository.searchFirst(
+                statusRepository.beginCriteria()
+                        .andEquals(EntityStatus::getId, 1))
+                .blockOptional();
 
         assertTrue(statusOptional.isPresent());
         log.debug("Founded status: {}", statusOptional.orElse(null));
