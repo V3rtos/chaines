@@ -11,8 +11,7 @@ import java.util.function.Supplier;
 
 @Log4j2
 public class AsyncMethodHandler implements DecoratedMethodHandler {
-
-    private static final ExecutorService ASYNC_POOL_EXECUTOR
+    private final ExecutorService threadExecutor
             = Threads.newCachedThreadPool();
 
     @Override
@@ -25,12 +24,12 @@ public class AsyncMethodHandler implements DecoratedMethodHandler {
 
         if (!invocation.isVoid()) {
             CompletableFuture<Object> objectCompletableFuture
-                    = CompletableFuture.supplyAsync(asyncExecutorCommand, ASYNC_POOL_EXECUTOR);
+                    = CompletableFuture.supplyAsync(asyncExecutorCommand, threadExecutor);
 
             return objectCompletableFuture.join();
 
         } else {
-            ASYNC_POOL_EXECUTOR.submit(asyncExecutorCommand::get);
+            threadExecutor.submit(asyncExecutorCommand::get);
             return null;
         }
     }

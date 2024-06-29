@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.util.pair.Pair;
+import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.jdbc.core.ConnectionID;
 import me.moonways.bridgenet.jdbc.core.TransactionIsolation;
 import me.moonways.bridgenet.jdbc.core.TransactionState;
@@ -19,19 +20,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Getter
 @Log4j2
 @Builder
 public class JdbcWrapper {
-
-    private static final ExecutorService JDBC_THREADS_POOL = Executors.newCachedThreadPool();
-
-    private static final int TRANSACTION_ISOLATION_LEVEL = Connection.TRANSACTION_SERIALIZABLE;
     private static final int VALID_TIMEOUT = 3500;
 
     @RequiredArgsConstructor
@@ -41,6 +36,8 @@ public class JdbcWrapper {
         private final boolean useGeneratedKeys;
     }
 
+    private final ExecutorService threadExecutor = Threads.newCachedThreadPool();
+
     private final ConnectionID connectionID;
     private final Credentials credentials;
     private final Thread.UncaughtExceptionHandler exceptionHandler;
@@ -49,6 +46,8 @@ public class JdbcWrapper {
 
     private List<DatabaseObserver> observers;
     private boolean currentlyWorker;
+
+    private int transactionMod;
 
     @SneakyThrows
     public boolean isConnected() {
@@ -63,9 +62,11 @@ public class JdbcWrapper {
     }
 
     private void observe(@NotNull Observable event) {
-        if (observers != null) {
-            observers.forEach(observer -> observer.observe(event));
-        }
+        threadExecutor.submit(() -> {
+            if (observers != null) {
+                observers.forEach(observer -> observer.observe(event));
+            }
+        });
     }
 
     public synchronized void connect() {
@@ -124,21 +125,30 @@ public class JdbcWrapper {
             Boolean supportsGeneratedKeys = statementAndGeneratedKeysPair.second();
 
             observe(new DbRequestPreprocessEvent(System.currentTimeMillis(), connectionID, sql));
-
             result.beginIntent()
-                    .whenCompleted(__ -> observe(
-                            new DbRequestCompletedEvent(System.currentTimeMillis(), connectionID, sql, result)));
-
-            CompletableFuture.runAsync(() ->
-                    result.completeIntent(() -> {
+                    .completeIntent(() -> {
+                try {
+                    ResultWrapper resultWrapper = resultLookup.get(new PreparedQuerySession(statement, supportsGeneratedKeys));
+                    observe(new DbRequestCompletedEvent(System.currentTimeMillis(), connectionID, sql, result));
+                    return resultWrapper;
+                } catch (SQLException exception) {
+                    if (transactionMod != 0) {
                         try {
-                            return resultLookup.get(new PreparedQuerySession(statement, supportsGeneratedKeys));
-                        } catch (SQLException exception) {
-                            observe(new DbRequestFailureEvent(System.currentTimeMillis(), connectionID, sql));
-                            exceptionHandler.uncaughtException(thread, exception);
-                            return null;
+                            log.debug("Transaction session is rollback");
+                            jdbc.rollback();
+                        } catch (SQLException e) {
+                            exception.addSuppressed(e);
                         }
-                    }), JDBC_THREADS_POOL).join();
+
+                        flushTransactionsQueue();
+                        setTransactionState(TransactionState.INACTIVE);
+                    }
+
+                    observe(new DbRequestFailureEvent(System.currentTimeMillis(), connectionID, sql));
+                    exceptionHandler.uncaughtException(thread, exception);
+                    return null;
+                }
+            });
 
         } catch (SQLException exception) {
             observe(new DbRequestFailureEvent(System.currentTimeMillis(), connectionID, sql));
@@ -179,12 +189,17 @@ public class JdbcWrapper {
         });
     }
 
-    @SuppressWarnings("MagicConstant")
-    public synchronized void setTransactionIsolation(TransactionIsolation isolation) {
-        try {
-            if (jdbc.getAutoCommit()) {
-                jdbc.setTransactionIsolation(isolation.getLevel());
+    public void flushTransactionsQueue() {
+        if (transactionMod != 0) {
+            transactionMod = 1;
+        }
+    }
 
+    @SuppressWarnings("MagicConstant")
+    public void setTransactionIsolation(TransactionIsolation isolation) {
+        try {
+            if (transactionMod == 0) {
+                jdbc.setTransactionIsolation(isolation.getLevel());
                 log.debug("Transaction session isolation was changed to {}", isolation);
             }
         } catch (SQLException exception) {
@@ -192,18 +207,19 @@ public class JdbcWrapper {
         }
     }
 
-    public synchronized void setTransactionState(TransactionState state) {
+    public void setTransactionState(TransactionState state) {
         Thread thread = Thread.currentThread();
         switch (state) {
             case ACTIVE: {
                 try {
-                    if (jdbc.getAutoCommit()) {
-
+                    if (transactionMod <= 0) {
                         jdbc.setAutoCommit(false);
-                        log.debug("Transaction session state is opened");
+                        log.debug("Transaction session is opened");
 
                         observe(new DbTransactionOpenEvent(System.currentTimeMillis(), connectionID));
+                        transactionMod = 0;
                     }
+                    transactionMod++;
                 } catch (SQLException exception) {
                     exceptionHandler.uncaughtException(thread, exception);
                 }
@@ -211,15 +227,19 @@ public class JdbcWrapper {
             }
             case INACTIVE: {
                 try {
-                    if (!jdbc.getAutoCommit()) {
+                    if (transactionMod == 1) {
                         jdbc.commit();
                         jdbc.setAutoCommit(true);
 
-                        log.debug("Transaction session state is closed");
+                        log.debug("Transaction session is commited");
 
                         observe(new DbTransactionCloseEvent(System.currentTimeMillis(), connectionID));
+                        transactionMod = 0;
+                    } else {
+                        transactionMod--;
                     }
                 } catch (SQLException exception) {
+                    log.debug("Transaction session is rollback");
                     try {
                         jdbc.rollback();
                         observe(new DbTransactionRollbackEvent(System.currentTimeMillis(), connectionID));

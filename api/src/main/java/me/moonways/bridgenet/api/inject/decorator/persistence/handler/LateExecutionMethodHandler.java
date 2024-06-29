@@ -13,8 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 @Log4j2
 public class LateExecutionMethodHandler implements DecoratedMethodHandler {
-
-    private static final ScheduledExecutorService SCHEDULER
+    private final ScheduledExecutorService SCHEDULER
             = Threads.newScheduledThreadPool(2);
 
     @SneakyThrows

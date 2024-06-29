@@ -18,6 +18,10 @@ public interface PredicatesTemplate extends Combinable<CompletedPredicates> {
 
     PredicationAgent ifLessOrEqual(CombinedStructs.CombinedField field);
 
+    PredicationAgent ifInside(CombinedStructs.CombinedField field);
+
+    PredicationAgent isNull(CombinedStructs.CombinedLabel label);
+
     interface PredicationAgent {
 
         PredicatesTemplate bind();

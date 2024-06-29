@@ -57,15 +57,15 @@ public class Threads {
         return executorService;
     }
 
-    public ExecutorService newWorkSteelingPool(int parallelism) {
+    public ExecutorService newWorkStealingPool(int parallelism) {
         ExecutorService executorService = Executors.newWorkStealingPool(parallelism);
         pull(executorService);
         return executorService;
     }
 
-    public ExecutorService newWorkSteelingPool() {
+    public ExecutorService newWorkStealingPool() {
         int parallelism = Runtime.getRuntime().availableProcessors();
-        return newWorkSteelingPool(parallelism);
+        return newWorkStealingPool(parallelism);
     }
 
     public ScheduledExecutorService newSingleThreadScheduledExecutor() {

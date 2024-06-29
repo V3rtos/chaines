@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
-import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
+import me.moonways.bridgenet.jdbc.entity.persistence.EntityColumn;
 import me.moonways.bridgenet.model.service.permissions.TemporalState;
 import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 
@@ -25,15 +25,15 @@ public class EntityPermission {
                 .build();
     }
 
-    @Getter(onMethod_ = @EntityParameter(order = 1, id = "player_id",
+    @Getter(onMethod_ = @EntityColumn(order = 1, id = "player_id",
             indexes = {ParameterAddon.KEY}))
     private UUID playerId;
 
-    @Getter(onMethod_ = @EntityParameter(order = 2, id = "permission",
+    @Getter(onMethod_ = @EntityColumn(order = 2, id = "permission",
             indexes = {ParameterAddon.KEY}))
     private String permission;
 
-    @Getter(onMethod_ = @EntityParameter(order = 3, id = "expired_in"))
+    @Getter(onMethod_ = @EntityColumn(order = 3, id = "expired_in"))
     private Long expirationTimeMillis;
 
     public boolean isExpired() {

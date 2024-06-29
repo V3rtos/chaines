@@ -15,10 +15,10 @@ function install() {
 }
 
 # shellcheck disable=SC2054
-declare -a modules_array=("assembly" "profiler" "api" "mtp" "jdbc" "rmi" "rest" "services" "bootstrap" "client" "testing")
+declare -a modules_queue=("assembly" "profiler" "api" "mtp" "jdbc" "rmi" "rest" "services" "bootstrap" "client" "testing")
 
 # shellcheck disable=SC2128
-for module in "${modules_array[@]}"
+for module in "${modules_queue[@]}"
 do
   install "$module"
 done

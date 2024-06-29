@@ -7,7 +7,7 @@ import lombok.ToString;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityId;
-import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
+import me.moonways.bridgenet.jdbc.entity.persistence.EntityColumn;
 
 @Getter
 @Builder
@@ -19,6 +19,6 @@ public class EntityStatus {
     @Getter(onMethod_ = @EntityId)
     private final long id;
 
-    @Getter(onMethod_ = @EntityParameter(indexes = ParameterAddon.PRIMARY))
+    @Getter(onMethod_ = @EntityColumn(indexes = ParameterAddon.PRIMARY))
     private final String name;
 }

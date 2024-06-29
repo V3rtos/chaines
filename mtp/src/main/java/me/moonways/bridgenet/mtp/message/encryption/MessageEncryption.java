@@ -28,6 +28,7 @@ public final class MessageEncryption {
 
 
     private final NetworkCipherSecurityDescriptor security;
+
     private PrivateKey privateKey;
     private PublicKey publicKey;
 
@@ -108,28 +109,28 @@ public final class MessageEncryption {
     }
 
     public ByteBuf decode(ByteBuf byteBuf) {
+        byte[] bytes = ByteCodec.readBytesArray(byteBuf);
         try {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-            return Unpooled.buffer().writeBytes(cipher.doFinal(ByteCodec.readBytesArray(byteBuf)));
+            return Unpooled.buffer().writeBytes(cipher.doFinal(bytes));
         } catch (Exception exception) {
             log.error("§4Cannot be decode encrypted message: §c{}", exception.toString());
+            return Unpooled.buffer().writeBytes(bytes);
         }
-
-        return null;
     }
 
     public ByteBuf encode(ByteBuf byteBuf) {
+        byte[] bytes = ByteCodec.readBytesArray(byteBuf);
         try {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
-            return Unpooled.buffer().writeBytes(cipher.doFinal(ByteCodec.readBytesArray(byteBuf)));
+            return Unpooled.buffer().writeBytes(cipher.doFinal(bytes));
         } catch (Exception exception) {
             log.error("§4Cannot be encode message with encryption: §c{}", exception.toString());
+            return Unpooled.buffer().writeBytes(bytes);
         }
-
-        return null;
     }
 }

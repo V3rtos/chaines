@@ -22,15 +22,14 @@ public final class PlayerLanguagesRepository {
 
     public void update(EntityLanguage entityLanguage) {
         checkRepository();
-
-        languagesRepository.delete(entityLanguage);
         languagesRepository.insert(entityLanguage);
     }
 
     public Optional<EntityLanguage> get(UUID playerId) {
         checkRepository();
-        return languagesRepository.searchIf(
-                languagesRepository.newSearchMarker()
-                        .withGet(EntityLanguage::getPlayerId, playerId));
+        return languagesRepository.searchFirst(
+                languagesRepository.beginCriteria()
+                        .andEquals(EntityLanguage::getPlayerId, playerId))
+                .blockOptional();
     }
 }

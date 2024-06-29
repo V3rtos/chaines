@@ -11,6 +11,7 @@ public final class EntityRepositoryFactory {
     private final DatabaseConnection connection;
 
     public <T> EntityRepository<T> fromEntityType(Class<T> entityClass) {
+        EntityOperationComposer.prepareTablesStore(connection);
         return new ForceEntityRepository<>(entityClass, composer, connection);
     }
 

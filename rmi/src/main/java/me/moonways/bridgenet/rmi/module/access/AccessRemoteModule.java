@@ -19,6 +19,7 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 @Log4j2
 public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
@@ -59,18 +60,40 @@ public class AccessRemoteModule extends AbstractRemoteModule<AccessConfig> {
             beansService.bind(serviceInfo.getModelClass(), stub);
 
             try {
-                LocateRegistry.createRegistry(serviceInfo.getPort());
-                Naming.rebind(uri, stub);
+                try {
+                    LocateRegistry.createRegistry(serviceInfo.getPort());
+                } catch (RemoteException ignored) {
+                    // ignored.
+                }
 
+                Naming.rebind(uri, stub);
                 remoteServicesManagement.registerService(serviceInfo, stub);
 
             } catch (RemoteException exception) {
-                log.error("§4Cannot be export an endpoint from {}: §c{}", uri, exception.toString());
+                log.error("§4Cannot be export an endpoint from {}", uri, exception);
             }
             return stub;
         } catch (Exception exception) {
             log.error("§4Cannot be export an endpoint '{}'", name, exception);
             return null;
+        }
+    }
+
+    public void unbind(@NotNull ServiceInfo serviceInfo) {
+        String name = serviceInfo.getName();
+        try {
+            log.info("Unbinding endpoint '{}' from §3{}", name, serviceInfo.getModelClass().getSimpleName());
+            beansService.unbind(serviceInfo.getModelClass());
+
+            try {
+                Naming.unbind(uri);
+                remoteServicesManagement.unregisterService(serviceInfo);
+
+            } catch (RemoteException exception) {
+                log.error("§4Cannot be unbind an endpoint from {}: §c{}", uri, exception.toString());
+            }
+        } catch (Exception exception) {
+            log.error("§4Cannot be unbind an endpoint '{}'", name, exception);
         }
     }
 

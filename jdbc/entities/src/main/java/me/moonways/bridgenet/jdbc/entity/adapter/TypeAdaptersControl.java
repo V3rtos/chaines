@@ -3,7 +3,7 @@ package me.moonways.bridgenet.jdbc.entity.adapter;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterType;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
-import me.moonways.bridgenet.jdbc.entity.util.search.SearchElement;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchElement;
 
 import java.util.Optional;
 

@@ -5,13 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.UtilityClass;
+import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
-import me.moonways.bridgenet.jdbc.entity.persistence.EntityExternalParameter;
+import me.moonways.bridgenet.jdbc.entity.persistence.EntityExternal;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityId;
-import me.moonways.bridgenet.jdbc.entity.persistence.EntityParameter;
+import me.moonways.bridgenet.jdbc.entity.persistence.EntityColumn;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -50,13 +51,13 @@ public class EntityPersistenceUtil {
     }
 
     private boolean isExternalEntity(Method method) {
-        return method.isAnnotationPresent(EntityExternalParameter.class);
+        return method.isAnnotationPresent(EntityExternal.class);
     }
 
     public boolean isParameter(Method method) {
-        return method.isAnnotationPresent(EntityParameter.class)
+        return method.isAnnotationPresent(EntityColumn.class)
                 || method.isAnnotationPresent(EntityId.class)
-                || method.isAnnotationPresent(EntityExternalParameter.class);
+                || method.isAnnotationPresent(EntityExternal.class);
     }
 
     public int getParameterOrderId(Method method) {
@@ -64,10 +65,10 @@ public class EntityPersistenceUtil {
             return DEFAULT_ENTITY_ID_ORDER;
         }
         if (isExternalEntity(method)) {
-            return method.getDeclaredAnnotation(EntityExternalParameter.class).order();
+            return method.getDeclaredAnnotation(EntityExternal.class).order();
         }
         if (isParameter(method)) {
-            return method.getDeclaredAnnotation(EntityParameter.class).order();
+            return method.getDeclaredAnnotation(EntityColumn.class).order();
         }
 
         throw new DatabaseEntityException("method is not an entity parameter getter");
@@ -82,10 +83,10 @@ public class EntityPersistenceUtil {
             return getIdOrDefault(method.getDeclaredAnnotation(EntityId.class).id(), method);
         }
         if (isExternalEntity(method)) {
-            return getIdOrDefault(method.getDeclaredAnnotation(EntityExternalParameter.class).id(), method);
+            return getIdOrDefault(method.getDeclaredAnnotation(EntityExternal.class).id(), method);
         }
         if (isParameter(method)) {
-            return getIdOrDefault(method.getDeclaredAnnotation(EntityParameter.class).id(), method);
+            return getIdOrDefault(method.getDeclaredAnnotation(EntityColumn.class).id(), method);
         }
 
         throw new DatabaseEntityException("method is not an entity parameter getter");
@@ -96,10 +97,10 @@ public class EntityPersistenceUtil {
             return method.getDeclaredAnnotation(EntityId.class).indexes();
         }
         if (isExternalEntity(method)) {
-            return method.getDeclaredAnnotation(EntityExternalParameter.class).indexes();
+            return method.getDeclaredAnnotation(EntityExternal.class).indexes();
         }
         if (isParameter(method)) {
-            return method.getDeclaredAnnotation(EntityParameter.class).indexes();
+            return method.getDeclaredAnnotation(EntityColumn.class).indexes();
         }
 
         throw new DatabaseEntityException("method is not an entity parameter getter");
@@ -107,13 +108,9 @@ public class EntityPersistenceUtil {
 
     public WrappedEntityParameter toParameterWrapper(Object source, Method method) {
         WrappedEntityParameter wrapper = toParameterUnvaluedWrapper(method);
-        try {
-            wrapper.unit = wrapper.getUnit().toBuilder()
-                    .value(method.invoke(source))
-                    .build();
-        } catch (IllegalAccessException | InvocationTargetException exception) {
-            throw new DatabaseEntityException(exception);
-        }
+        wrapper.unit = wrapper.getUnit().toBuilder()
+                .value(ReflectionUtils.invoke(source, method))
+                .build();
         return wrapper;
     }
 

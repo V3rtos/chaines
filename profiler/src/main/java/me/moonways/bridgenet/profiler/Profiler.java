@@ -13,7 +13,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class Profiler {
 
-    private static final int MAX_VALUES_SIZE = 290;
+    private static final int MAX_VALUES_SIZE = 90;
 
     @EqualsAndHashCode.Include
     private final UUID id;
@@ -32,7 +32,9 @@ public class Profiler {
         values.add(new TimedValue(label, value, System.nanoTime()));
 
         if (values.size() >= MAX_VALUES_SIZE)
-            values.remove(0);
+            if (values.size() - MAX_VALUES_SIZE > 0) {
+                values.subList(0, values.size() - MAX_VALUES_SIZE).clear();
+            }
         return this;
     }
 
@@ -76,7 +78,9 @@ public class Profiler {
      * @param label - наименование значения, которое ищем.
      */
     public Long get(String label) {
-        return values.stream().filter(value -> value.getLabel().equalsIgnoreCase(label))
+        return new ArrayList<>(values)
+                .stream()
+                .filter(value -> value.getLabel().equalsIgnoreCase(label))
                 .max(Comparator.comparingLong(TimedValue::getTimestamp))
                 .map(TimedValue::getValue)
                 .orElse(0L);

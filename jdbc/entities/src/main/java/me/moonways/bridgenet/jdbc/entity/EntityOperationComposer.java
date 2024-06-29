@@ -3,23 +3,44 @@ package me.moonways.bridgenet.jdbc.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.moonways.bridgenet.jdbc.core.DatabaseConnection;
+import me.moonways.bridgenet.jdbc.core.ResponseRow;
+import me.moonways.bridgenet.jdbc.core.ResponseStream;
 import me.moonways.bridgenet.jdbc.core.compose.*;
 import me.moonways.bridgenet.jdbc.core.compose.template.CreationTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.InsertionTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.collection.PredicatesTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.collection.SignatureTemplate;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedQuery;
+import me.moonways.bridgenet.jdbc.core.util.result.Result;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
-import me.moonways.bridgenet.jdbc.entity.util.search.SearchElement;
-import me.moonways.bridgenet.jdbc.entity.util.search.SearchMarker;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchElement;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchCriteria;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 class EntityOperationComposer {
 
-    private static final Set<String> TABLES_STORE = Collections.synchronizedSet(new HashSet<>());
+    private static final Set<String> existTablesStore = new ConcurrentSkipListSet<>();
+    private static boolean isTablesPrepared = false;
+
+    static void prepareTablesStore(DatabaseConnection connection) {
+        if (isTablesPrepared) {
+            return;
+        }
+
+        Result<ResponseStream> call = connection.call("SHOW TABLES;");
+        for (ResponseRow responseRow : call.get()) {
+            existTablesStore.add(responseRow.field(0).getAsString().toLowerCase());
+        }
+
+        isTablesPrepared = true;
+    }
 
     @Getter
     @Builder
@@ -29,6 +50,9 @@ class EntityOperationComposer {
         private final List<CompletedQuery> queries;
 
         public CompletedQuery getResultQuery() {
+            if (resultIndex < 0) {
+                return null;
+            }
             return queries.get(resultIndex);
         }
     }
@@ -38,7 +62,7 @@ class EntityOperationComposer {
     private EntityComposedOperation composeWithContainer(EntityDescriptor entity, CompletedQuery completedQuery) {
         List<CompletedQuery> completedQueryArrayList = new ArrayList<>();
 
-        boolean contains = TABLES_STORE.contains(entity.getContainerName());
+        boolean contains = existTablesStore.contains(entity.getContainerName().toLowerCase());
         if (!contains) {
             completedQueryArrayList.add(prepareCreateContainerQuery(entity));
         }
@@ -51,37 +75,47 @@ class EntityOperationComposer {
                 .build();
     }
 
-    public EntityComposedOperation composeDelete(EntityDescriptor entity, SearchMarker<?> searchMarker) {
-        if (!TABLES_STORE.contains(entity.getContainerName())) {
-            return EntityComposedOperation.builder().queries(new ArrayList<>()).build();
+    private EntityComposedOperation composeWithContainerAndChecks(EntityDescriptor entity, Supplier<CompletedQuery> completedQuery) {
+        if (!existTablesStore.contains(entity.getContainerName().toLowerCase())) {
+            return EntityComposedOperation.builder()
+                    .queries(Collections.singletonList(prepareCreateContainerQuery(entity)))
+                    .resultIndex(-1)
+                    .build();
         }
-        return composeWithContainer(entity,
-                composer.useDeletionPattern()
+        return EntityComposedOperation.builder()
+                .queries(Collections.singletonList(completedQuery.get()))
+                .resultIndex(0)
+                .build();
+    }
+
+    public EntityComposedOperation composeDelete(EntityDescriptor entity, SearchCriteria<?> searchCriteria) {
+        return composeWithContainerAndChecks(entity,
+                () -> composer.useDeletionPattern()
                         .container(entity.getContainerName())
-                        .predicates(composePredicatesTemplate(entity, searchMarker).combine())
+                        .predicates(composePredicatesTemplate(entity, searchCriteria).combine())
                         .combine());
     }
 
-    public EntityComposedOperation composeSearch(EntityDescriptor entity, SearchMarker<?> searchMarker) {
-        return composeWithContainer(entity,
-                composer.useSearchPattern()
+    public EntityComposedOperation composeSearch(EntityDescriptor entity, SearchCriteria<?> searchCriteria) {
+        return composeWithContainerAndChecks(entity,
+                () -> composer.useSearchPattern()
                         .container(entity.getContainerName())
-                        .limit(searchMarker.getLimit())
+                        .limit(searchCriteria.getLimit())
                         .subjects(composer.subjects()
                                 .selectAll()
                                 .combine())
-                        .predicates(composePredicatesTemplate(entity, searchMarker).combine())
+                        .predicates(composePredicatesTemplate(entity, searchCriteria).combine())
                         .combine());
     }
 
-    private PredicatesTemplate composePredicatesTemplate(EntityDescriptor entity, SearchMarker<?> searchMarker) {
+    private PredicatesTemplate composePredicatesTemplate(EntityDescriptor entity, SearchCriteria<?> searchCriteria) {
         PredicatesTemplate predicates = composer.predicates();
 
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entity.getParameters().getParameterUnits()) {
             String parameterId = parameterUnit.getId();
 
-            if (searchMarker.isExpectationAwait(parameterId)) {
-                SearchElement<?> searchElement = searchMarker.getExpectation(parameterId);
+            if (searchCriteria.isExpectationAwait(parameterId)) {
+                SearchElement<?> searchElement = searchCriteria.getExpectation(parameterId);
 
                 if (searchElement == null) {
                     throw new NullPointerException("expectation for " + parameterId + " from " + entity.getRootClass());
@@ -117,8 +151,16 @@ class EntityOperationComposer {
                 predicationAgent = predicates.ifMoreOrEqual(field);
                 break;
             }
-            case MATCHES: {
+            case LIKE_IS: {
                 predicationAgent = predicates.ifMatches(field);
+                break;
+            }
+            case IS: {
+                predicationAgent = predicates.isNull(CombinedStructs.CombinedLabel.builder().label(field.getLabel()).build());
+                break;
+            }
+            case INSIDE: {
+                predicationAgent = predicates.ifInside(field);
                 break;
             }
             case EQUALS: {
@@ -176,7 +218,7 @@ class EntityOperationComposer {
             signatureTemplate = signatureTemplate.with(toStyledParameter(parameterUnit));
         }
 
-        TABLES_STORE.add(entity.getContainerName());
+        existTablesStore.add(entity.getContainerName().toLowerCase());
         return creationTemplate.signature(signatureTemplate.combine())
                 .combine();
     }

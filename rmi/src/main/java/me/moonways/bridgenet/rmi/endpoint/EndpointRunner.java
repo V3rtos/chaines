@@ -3,7 +3,7 @@ package me.moonways.bridgenet.rmi.endpoint;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.api.util.thread.Threads;
+import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
 import me.moonways.bridgenet.rmi.endpoint.persistance.EndpointRemoteObject;
 import me.moonways.bridgenet.rmi.module.ServiceModulesContainer;
 import me.moonways.bridgenet.rmi.module.access.AccessRemoteModule;
@@ -12,13 +12,13 @@ import me.moonways.bridgenet.rmi.service.RemoteServicesManagement;
 import me.moonways.bridgenet.rmi.service.ServiceInfo;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -43,6 +43,10 @@ public class EndpointRunner {
         bind(endpoint);
     }
 
+    public void stop(Endpoint endpoint) {
+        unbind(endpoint);
+    }
+
     @SneakyThrows
     private boolean validate(Endpoint endpoint) {
         final String name = endpoint.getServiceInfo().getName();
@@ -50,7 +54,7 @@ public class EndpointRunner {
 
         Path applicationJarPath = endpoint.getPath().resolve(config.getJar());
 
-        if (!Files.exists(applicationJarPath) || Files.readAllBytes(applicationJarPath).length == 0) {
+        if (!Files.exists(applicationJarPath) || StreamToStringUtils.toBytesBySize(new FileInputStream(applicationJarPath.toFile())).length == 0) {
             log.error("§4Application runner file '{}' for '{}' endpoint is not found", applicationJarPath, name);
             return false;
         }
@@ -121,5 +125,19 @@ public class EndpointRunner {
             EndpointRemoteObject endpointRemoteObject = (EndpointRemoteObject) remoteService;
             endpointRemoteObject.init(endpoint);
         }
+    }
+
+    private void unbind(Endpoint endpoint) {
+        ServiceInfo serviceInfo = endpoint.getServiceInfo();
+        ServiceModulesContainer serviceModulesContainer = remoteServicesManagement.getModulesContainerMap().remove(serviceInfo);
+
+        AccessRemoteModule accessModule = serviceModulesContainer.getModuleInstance(AccessRemoteModule.class);
+
+        if (accessModule == null) {
+            log.error("§4Cannot unbind endpoint '{}': AccessModule is not injected", serviceInfo.getName());
+            return;
+        }
+
+        accessModule.unbind(serviceInfo);
     }
 }

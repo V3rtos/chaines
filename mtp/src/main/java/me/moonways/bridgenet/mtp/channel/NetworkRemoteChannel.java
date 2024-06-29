@@ -26,7 +26,7 @@ import java.util.function.Function;
 public class NetworkRemoteChannel implements BridgenetNetworkChannel {
 
     private static final long serialVersionUID = -4718332193161413564L;
-    public static final int defaultCallbackTimeout = 10_000;
+    public static final int defaultCallbackTimeout = 1200;
 
     public static final String pullingStateProperty = "pulling_state";
 
@@ -57,12 +57,12 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
     }
 
     @Override
-    public synchronized void send(@NotNull Object message) {
+    public void send(@NotNull Object message) {
         send(networkMessagesService.export(message));
     }
 
     @Override
-    public synchronized void send(@NotNull ExportedMessage exportedMessage) {
+    public void send(@NotNull ExportedMessage exportedMessage) {
         Object message = exportedMessage.getMessage();
 
         log.debug("§9[{}]: §r{}", String.format(handleMessageLogFunc.apply(direction), handle.remoteAddress()), message);
@@ -70,17 +70,17 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
     }
 
     @Override
-    public synchronized void pull(@NotNull Object message) {
+    public void pull(@NotNull Object message) {
         pull(networkMessagesService.export(message));
     }
 
     @Override
-    public synchronized void pull(@NotNull ExportedMessage message) {
+    public void pull(@NotNull ExportedMessage message) {
         pull(new InboundMessageContext<>(message.getCallbackID(), message.getMessage(), this, System.currentTimeMillis()));
     }
 
     @Override
-    public synchronized void pull(@NotNull InboundMessageContext<?> context) {
+    public void pull(@NotNull InboundMessageContext<?> context) {
         setProperty(pullingStateProperty, true);
 
         log.debug("§9[PULL]: §r{}", context.getMessage());
@@ -96,7 +96,7 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
     }
 
     @Override
-    public synchronized <R> CompletableFuture<R> sendAwait(int timeout, @NotNull Class<R> responseType, @NotNull Object message) {
+    public <R> CompletableFuture<R> sendAwait(int timeout, @NotNull Class<R> responseType, @NotNull Object message) {
         ExportedMessage exportedMessage = networkMessagesService.export(message);
         exportedMessage.marksResponsible(responsibleService);
 
@@ -109,7 +109,7 @@ public class NetworkRemoteChannel implements BridgenetNetworkChannel {
     }
 
     @Override
-    public synchronized <R> CompletableFuture<R> sendAwait(@NotNull Class<R> responseType, @NotNull Object message) {
+    public <R> CompletableFuture<R> sendAwait(@NotNull Class<R> responseType, @NotNull Object message) {
         return sendAwait(defaultCallbackTimeout, responseType, message);
     }
 

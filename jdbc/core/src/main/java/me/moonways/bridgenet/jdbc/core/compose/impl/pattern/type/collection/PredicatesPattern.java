@@ -27,7 +27,7 @@ public class PredicatesPattern implements PredicatesTemplate, CompletedPredicate
 
     @Override
     public PredicationAgent ifMatches(CombinedStructs.CombinedField field) {
-        return new PredicationAgentPattern(field, ConditionMatcher.MATCHES);
+        return new PredicationAgentPattern(field, ConditionMatcher.LIKE_IS);
     }
 
     @Override
@@ -48,6 +48,17 @@ public class PredicatesPattern implements PredicatesTemplate, CompletedPredicate
     @Override
     public PredicationAgent ifLessOrEqual(CombinedStructs.CombinedField field) {
         return new PredicationAgentPattern(field, ConditionMatcher.LESS_OR_EQUAL);
+    }
+
+    @Override
+    public PredicationAgent ifInside(CombinedStructs.CombinedField field) {
+        return new PredicationAgentPattern(field, ConditionMatcher.INSIDE);
+    }
+
+    @Override
+    public PredicationAgent isNull(CombinedStructs.CombinedLabel label) {
+        return new PredicationAgentPattern(CombinedStructs.CombinedField.builder()
+                .label(label.getLabel()).build(), ConditionMatcher.IS);
     }
 
     @Override

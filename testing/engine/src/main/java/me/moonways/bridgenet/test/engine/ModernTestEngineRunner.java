@@ -47,7 +47,14 @@ public class ModernTestEngineRunner extends BlockJUnit4ClassRunner {
                 .testingObject(testingObject)
                 .build();
 
-        log.debug("Using test-processor context with §2{} steps", flowNodes.size());
+        runWithContext(flowContext);
+    }
+
+    public void runWithContext(TestFlowContext flowContext) {
+        TestClass testClass = flowContext.getTestClass();
+        List<TestFlowNode> flowNodes = flowContext.getFlowNodes();
+
+        log.debug("Using test-processor context with §2{} steps §rfor §2{}", flowNodes.size(), testClass.getName());
 
         for (TestFlowNode flowNode : flowNodes) {
             executeFlowNode(testClass, flowNode, flowContext);

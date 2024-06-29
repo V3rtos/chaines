@@ -212,7 +212,7 @@ public final class PlayerStoreStub implements PlayerStore {
         if (cachedDescription.get() == null) {
             playersRepository.get(id)
                     .map(EntityPlayer::getDescription)
-                    .ifPresent(playerDescription -> {
+                    .blockAndSubscribe(playerDescription -> {
 
                         cachedDescription.set(playerDescription);
                         nameByIdsCache.put(id, playerDescription);
@@ -235,7 +235,7 @@ public final class PlayerStoreStub implements PlayerStore {
         if (cachedDescription.get() == null) {
             playersRepository.get(name)
                     .map(EntityPlayer::getDescription)
-                    .ifPresent(playerDescription -> {
+                    .blockAndSubscribe(playerDescription -> {
 
                         cachedDescription.set(playerDescription);
                         idByNamesCache.put(name.toLowerCase(), playerDescription);
