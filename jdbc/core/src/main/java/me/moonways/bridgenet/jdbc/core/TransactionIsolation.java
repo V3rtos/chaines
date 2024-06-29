@@ -14,11 +14,8 @@ public enum TransactionIsolation {
     REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
     SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
 
-    private static final TransactionIsolation DEFAULT
-            = TransactionIsolation.REPEATABLE_READ;
-
     public static TransactionIsolation getDefault() {
-        return DEFAULT;
+        return TransactionIsolation.REPEATABLE_READ;
     }
 
     private final int level;
