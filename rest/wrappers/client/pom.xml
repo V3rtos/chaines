@@ -9,7 +9,7 @@
         <version>1.2</version>
     </parent>
 
-    <artifactId>rest-bridgenet4j-server</artifactId>
+    <artifactId>rest-bridgenet4j-client</artifactId>
 
     <dependencies>
         <dependency>
@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>http-server</artifactId>
+            <artifactId>http-client</artifactId>
             <version>${rest.version}</version>
             <scope>compile</scope>
         </dependency>

@@ -9,7 +9,7 @@ import me.moonways.bridgenet.test.engine.persistance.BeforeAll;
 import me.moonways.bridgenet.test.engine.persistance.TestExternal;
 import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import me.moonways.bridgenet.test.engine.persistance.TestSleeping;
-import me.moonways.bridgenet.test.database.entity.EntityRepositoryInsertEntityTest;
+import me.moonways.bridgenet.test.database.entity.EntityRepositoryInsertJdbcEntityTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,7 +26,7 @@ public class ModernTestEngineTest {
     private EventService eventService;
 
     @TestExternal
-    private EntityRepositoryInsertEntityTest insertEntityTest;
+    private EntityRepositoryInsertJdbcEntityTest insertEntityTest;
 
     @BeforeAll
     public void setUp() {

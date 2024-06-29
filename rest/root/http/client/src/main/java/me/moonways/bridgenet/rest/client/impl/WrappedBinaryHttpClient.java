@@ -1,8 +1,8 @@
 package me.moonways.bridgenet.rest.client.impl;
 
-import com.jrest.binary.data.CompletedBinary;
-import com.jrest.binary.data.BinaryGeneralProperties;
-import com.jrest.binary.data.BinaryRequest;
+import me.moonways.bridgenet.rest.binary.data.CompletedBinary;
+import me.moonways.bridgenet.rest.binary.data.BinaryGeneralProperties;
+import me.moonways.bridgenet.rest.binary.data.BinaryRequest;
 import me.moonways.bridgenet.rest.client.BinaryHttpClient;
 import me.moonways.bridgenet.rest.client.ClientHttpRequest;
 import me.moonways.bridgenet.rest.client.HttpClient;
@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
  * бинарные конфигурации для запросов.
  */
 public class WrappedBinaryHttpClient extends AbstractHttpClient implements BinaryHttpClient {
+
+    private static final long serialVersionUID = 3629723895388849769L;
 
     private final HttpClient httpClient;
     private final CompletedBinary binary;

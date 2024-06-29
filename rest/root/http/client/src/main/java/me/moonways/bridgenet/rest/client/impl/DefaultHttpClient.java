@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutorService;
 
 public class DefaultHttpClient extends AbstractHttpClient {
 
+    private static final long serialVersionUID = 2314876142908419141L;
+
     private final Integer connectTimeout;
     private final Integer readTimeout;
 

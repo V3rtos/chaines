@@ -42,7 +42,7 @@ public final class HttpRepositoryHelper {
      * @return {@code true}, если класс аннотирован, иначе {@code false}
      */
     public boolean isHttpServer() {
-        return HttpMvcMappersUtil.isAnnotatedAsHttpServer(repositoryClass);
+        return HttpMvcMappersUtil.isAnnotatedAsHttpListener(repositoryClass);
     }
 
     /**
@@ -104,7 +104,7 @@ public final class HttpRepositoryHelper {
     private HttpRequestHandler toRequestHandler(Method method) {
         method.setAccessible(true);
         return HttpRequestHandler.builder()
-                .uri(HttpMvcMappersUtil.findUri(method))
+                .uri(HttpMvcMappersUtil.findUriPrefix(repositoryClass) + HttpMvcMappersUtil.findUri(method))
                 .method(HttpMvcMappersUtil.toHttpMethod(method))
                 .notAuthorized(HttpMvcMappersUtil.isAnnotatedAsBeforeExecution(method) || HttpMvcMappersUtil.isAnnotatedAsNotAuthorized(method))
                 .isAsynchronous(HttpMvcMappersUtil.isAnnotatedAsAsync(method))

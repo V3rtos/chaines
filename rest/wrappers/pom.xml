@@ -13,7 +13,17 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>data</module>
+        <module>api</module>
         <module>server</module>
+        <module>client</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>me.moonways.bridgenet</groupId>
+            <artifactId>rest-model</artifactId>
+            <version>${rest.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>

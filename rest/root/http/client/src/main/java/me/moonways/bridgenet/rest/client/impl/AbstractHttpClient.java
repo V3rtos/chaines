@@ -13,6 +13,8 @@ import java.util.concurrent.ExecutorService;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractHttpClient implements HttpClient {
 
+    private static final long serialVersionUID = 2114541703146484379L;
+
     protected final ExecutorService executorService;
 
     @Override

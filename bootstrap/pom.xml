@@ -60,7 +60,7 @@
         </dependency>
         <dependency>
             <groupId>me.moonways.bridgenet</groupId>
-            <artifactId>rest-server</artifactId>
+            <artifactId>rest-bridgenet4j-server</artifactId>
             <version>${rest.version}</version>
             <scope>compile</scope>
         </dependency>

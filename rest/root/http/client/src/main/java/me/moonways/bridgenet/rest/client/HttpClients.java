@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.rest.client;
 
-import com.jrest.binary.*;
+import me.moonways.bridgenet.rest.binary.HttpBinaryReader;
 import me.moonways.bridgenet.rest.client.impl.WrappedBinaryHttpClient;
 import me.moonways.bridgenet.rest.client.impl.SocketHttpClient;
 import me.moonways.bridgenet.rest.client.impl.DefaultHttpClient;

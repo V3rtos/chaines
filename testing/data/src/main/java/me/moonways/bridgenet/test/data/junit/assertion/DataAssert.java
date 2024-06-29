@@ -13,7 +13,7 @@ public class DataAssert {
         assertNotNull(event);
         assertNotNull(event.getUser());
 
-        assertEquals(event.getUser().getStatus().getName(), TestConst.Entity.STATUS_NAME);
+        assertEquals(event.getUser().getStatus().getName(), TestConst.JdbcEntity.STATUS_NAME);
     }
 
     public void assertIllustrationUrl(String illustrationURL) {

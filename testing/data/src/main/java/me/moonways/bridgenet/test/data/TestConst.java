@@ -6,7 +6,6 @@ import me.moonways.bridgenet.client.api.data.UserDto;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiSlot;
 import me.moonways.bridgenet.model.service.gui.GuiType;
-import me.moonways.bridgenet.model.service.gui.click.ClickAction;
 import me.moonways.bridgenet.model.service.gui.click.ClickType;
 import me.moonways.bridgenet.model.service.gui.item.entries.material.Material;
 import me.moonways.bridgenet.model.service.gui.item.types.Materials;
@@ -16,7 +15,6 @@ import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 
 import java.time.Duration;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public final class TestConst {
 
@@ -120,11 +118,16 @@ public final class TestConst {
         public static final int SIZE = GuiDescription.toSize(4, TYPE);
     }
 
-    public static final class Entity {
+    public static final class JdbcEntity {
         public static final String FIRST_NAME = "Mikhail";
         public static final String LAST_NAME = "Sterkhov";
         public static final String STATUS_NAME = "Middle Java Developer";
         public static final int AGE = 20;
+    }
+
+    public static final class Rest {
+        public static final String BASEURL = "http://127.0.0.1:80";
+        public static final String API_ACCESS_KEY = "440as08g13btj47yud6455sd6789fas";
     }
 
     public static final class SqlQuery {

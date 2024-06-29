@@ -1,6 +1,6 @@
 package me.moonways.bridgenet.test.engine.component.module.impl;
 
-import me.moonways.bridgenet.rest.server.WrappedHttpServer;
+import me.moonways.bridgenet.rest4j.server.RestBridgenetServer;
 import me.moonways.bridgenet.test.engine.component.module.ModuleAdapter;
 import me.moonways.bridgenet.test.engine.component.module.ModuleConfig;
 
@@ -12,7 +12,7 @@ public class RestModule extends ModuleAdapter {
         super(ModuleConfig.builder()
                 .packagesToScanning(
                         Collections.singletonList(
-                                fromClassPackage(WrappedHttpServer.class)
+                                fromClassPackage(RestBridgenetServer.class)
                         ))
                 .build());
     }

@@ -87,14 +87,14 @@ public class HttpMvcMappersUtil {
     }
 
     /**
-     * Проверяет, аннотирован ли класс как HTTP сервер.
+     * Проверяет, аннотирован ли класс как слушатель HTTP сервера.
      *
      * @param cls класс для проверки
-     * @return {@code true}, если класс аннотирован как HTTP сервер, иначе {@code false}
+     * @return {@code true}, если класс аннотирован как слушатель HTTP сервера, иначе {@code false}
      */
-    public boolean isAnnotatedAsHttpServer(Class<?> cls) {
+    public boolean isAnnotatedAsHttpListener(Class<?> cls) {
         initMapsLazy();
-        return cls.isAnnotationPresent(HttpServer.class);
+        return cls.isAnnotationPresent(HttpServerListener.class);
     }
 
     /**
@@ -123,6 +123,20 @@ public class HttpMvcMappersUtil {
         return Optional.ofNullable(HTTP_METHODS_BY_MAPPERS.get(annotationType))
                 .map(func -> func.apply(method.getDeclaredAnnotation(annotationType)))
                 .orElse(HttpMethod.UNKNOWN);
+    }
+
+    /**
+     * Находит префикс URI для всех внутри лежащих слушателей запросов.
+     *
+     * @param repositoryClass метод для поиска URI
+     * @return URI, связанный с аннотацией метода
+     * @throws HttpMvcException если метод не аннотирован аннотацией маппинга или аннотирован более чем одной аннотацией
+     */
+    public String findUriPrefix(Class<?> repositoryClass) {
+        if (!isAnnotatedAsHttpListener(repositoryClass)) {
+            throw new HttpMvcException("Class `" + repositoryClass + "` is not annotated as listener of HTTP requests");
+        }
+        return repositoryClass.getDeclaredAnnotation(HttpServerListener.class).prefix();
     }
 
     /**

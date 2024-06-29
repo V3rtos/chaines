@@ -107,11 +107,11 @@ public class ResponseCode {
     public static final ResponseCode INVALID_SSL_CERTIFICATE = fromCode(526);
 
     // Биты для определения типа кода ответа
-    private static final int INFORMATIONAL_BIT = 100;
-    private static final int SUCCESSFUL_CODE_BIT = 200;
-    private static final int REDIRECTION_CODE_BIT = 300;
-    private static final int CLIENT_ERROR_CODE_BIT = 400;
-    private static final int SERVER_ERROR_CODE_BIT = 500;
+    public static final int INFORMATIONAL_BIT = 100;
+    public static final int SUCCESSFUL_CODE_BIT = 200;
+    public static final int REDIRECTION_CODE_BIT = 300;
+    public static final int CLIENT_ERROR_CODE_BIT = 400;
+    public static final int SERVER_ERROR_CODE_BIT = 500;
 
     private final int code;
     private final String message;

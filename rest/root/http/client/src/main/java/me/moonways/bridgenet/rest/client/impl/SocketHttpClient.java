@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutorService;
 
 public class SocketHttpClient extends AbstractHttpClient {
 
+    private static final long serialVersionUID = -5084654989218393014L;
+
     private final HttpProtocol protocol;
     private final Integer connectTimeout;
     private final Boolean keepAlive;

@@ -25,11 +25,11 @@ public class EventsListenerRegistrationTest {
                 new ExampleUserEvent(
                         EntityUser.builder()
                                 .status(EntityStatus.builder()
-                                        .name(TestConst.Entity.STATUS_NAME)
+                                        .name(TestConst.JdbcEntity.STATUS_NAME)
                                         .build())
-                                .firstName(TestConst.Entity.FIRST_NAME)
-                                .lastName(TestConst.Entity.LAST_NAME)
-                                .age(TestConst.Entity.AGE)
+                                .firstName(TestConst.JdbcEntity.FIRST_NAME)
+                                .lastName(TestConst.JdbcEntity.LAST_NAME)
+                                .age(TestConst.JdbcEntity.AGE)
                                 .build()));
     }
 }
