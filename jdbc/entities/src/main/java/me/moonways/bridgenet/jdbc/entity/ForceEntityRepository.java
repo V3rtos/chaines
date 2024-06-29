@@ -65,7 +65,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         });
     }
 
-    private <V> ListFuture<V> doSearch(SearchCriteria<V> searchCriteria) {
+    private <V> Multiple<V> doSearch(SearchCriteria<V> searchCriteria) {
         EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.read(entityClass);
         checkExternalsBefore(entityDescriptor);
         checkExternalsBefore(entityDescriptor, searchCriteria);
@@ -191,16 +191,16 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public SingleFuture<EntityID> insert(T entity) {
+    public Mono<EntityID> insert(T entity) {
         log.debug("insert({})", entity);
-        return SingleFuture.of(doInsert(EntityReadAndWriteUtil.read(entity)));
+        return Mono.of(doInsert(EntityReadAndWriteUtil.read(entity)));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public ListFuture<EntityID> insert(T... entities) {
+    public Multiple<EntityID> insert(T... entities) {
         log.debug("insert({})", Arrays.toString(entities));
-        return ListFuture.ofFutures(
+        return Multiple.ofFutures(
                 connection.ofTransactionalGet(() ->
                         Arrays.stream(entities)
                                 .map(EntityReadAndWriteUtil::read)
@@ -209,7 +209,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public SingleFuture<T> search(Long id) {
+    public Mono<T> search(Long id) {
         log.debug("search({})", id);
 
         Optional<String> entityIDParameterName = findEntityIDParameterName();
@@ -217,19 +217,19 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
             return searchFirst(beginCriteria()
                     .andEquals(entityIDParameterName.get(), id));
         }
-        return SingleFuture.empty();
+        return Mono.empty();
     }
 
     @Override
-    public SingleFuture<T> searchFirst(SearchCriteria<T> searchCriteria) {
+    public Mono<T> searchFirst(SearchCriteria<T> searchCriteria) {
         log.debug("searchFirst({})", searchCriteria);
         return doSearch(searchCriteria.limit(1)).first();
     }
 
     @Override
-    public ListFuture<T> search(Long... ids) {
+    public Multiple<T> search(Long... ids) {
         log.debug("search({})", Arrays.asList(ids));
-        return ListFuture.ofFutures(
+        return Multiple.ofFutures(
                 connection.ofTransactionalGet(() ->
                         Stream.of(ids)
                                 .map(this::search)
@@ -239,25 +239,25 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
     }
 
     @Override
-    public ListFuture<T> search(SearchCriteria<T> searchCriteria) {
+    public Multiple<T> search(SearchCriteria<T> searchCriteria) {
         log.debug("search({}})", searchCriteria);
         return doSearch(searchCriteria);
     }
 
     @Override
-    public ListFuture<T> search(int limit, SearchCriteria<T> searchCriteria) {
+    public Multiple<T> search(int limit, SearchCriteria<T> searchCriteria) {
         log.debug("search({}, {})", limit, searchCriteria);
         return doSearch(searchCriteria.limit(limit));
     }
 
     @Override
-    public ListFuture<T> searchAll(int limit) {
+    public Multiple<T> searchAll(int limit) {
         log.debug("searchAll({})", limit);
         return doSearch(beginCriteria().limit(limit).andEquals("*", "*"));
     }
 
     @Override
-    public ListFuture<T> searchAll() {
+    public Multiple<T> searchAll() {
         log.debug("searchAll()");
         return doSearch(beginCriteria().andEquals("*", "*"));
     }
@@ -275,16 +275,16 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
         log.debug("Operation result: <NO RETURN CONTENT>");
     }
 
-    private <V> ListFuture<V> callAndCollect(EntityOperationComposer.EntityComposedOperation operation) {
+    private <V> Multiple<V> callAndCollect(EntityOperationComposer.EntityComposedOperation operation) {
         connection.openTransaction();
-        ListFuture<V> listFutureResult = ListFuture.empty();
+        Multiple<V> multipleResult = Multiple.empty();
 
         for (CompletedQuery completedQuery : operation.getQueries()) {
             Result<ResponseStream> result = completedQuery.call(connection);
 
             if (Objects.equals(operation.getResultQuery(), completedQuery)) {
-                listFutureResult.addAll(
-                        ListFuture.of(result.get(), ResponseRow.class)
+                multipleResult.addAll(
+                        Multiple.of(result.get(), ResponseRow.class)
                                 .mapEach(responseRow -> {
                                     EntityDescriptor entityDescriptor = EntityReadAndWriteUtil.readRow(responseRow, entityClass);
 
@@ -297,12 +297,12 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
             }
         }
 
-        if (listFutureResult.isEmpty()) {
+        if (multipleResult.isEmpty()) {
             connection.closeTransaction();
         }
 
-        log.debug("Operation result: [{} elements]", listFutureResult.size());
-        return listFutureResult.subscribeLast(connection::closeTransaction);
+        log.debug("Operation result: [{} elements]", multipleResult.size());
+        return multipleResult.subscribeLast(connection::closeTransaction);
     }
 
     private EntityID callAndGetEntityId(EntityOperationComposer.EntityComposedOperation operation) {

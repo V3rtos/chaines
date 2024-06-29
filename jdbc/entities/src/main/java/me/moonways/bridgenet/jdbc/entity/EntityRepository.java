@@ -14,11 +14,11 @@ import me.moonways.bridgenet.jdbc.entity.criteria.SearchCriteria;
  *
  * // Вставка новой сущности
  * MyEntity newEntity = new MyEntity();
- * SingleFuture<EntityID> insertFuture = repository.insert(newEntity);
+ * Mono<EntityID> insertFuture = repository.insert(newEntity);
  * insertFuture.subscribe(id -> System.out.println("Inserted entity ID: " + id));
  *
  * // Поиск сущности по ID
- * SingleFuture<MyEntity> searchFuture = repository.search(1);
+ * Mono<MyEntity> searchFuture = repository.search(1);
  * searchFuture.subscribe(entity -> System.out.println("Found entity: " + entity));
  *
  * // Обновление сущности
@@ -34,7 +34,7 @@ import me.moonways.bridgenet.jdbc.entity.criteria.SearchCriteria;
  * repository.delete(criteria);
  *
  * // Поиск множества сущностей по критерию
- * ListFuture<MyEntity> searchFuture = repository.search(criteria);
+ * Multiple<MyEntity> searchFuture = repository.search(criteria);
  * searchFuture.subscribeEach(entity -> System.out.println("Found entity: " + entity));
  * }</pre>
  * </p>
@@ -131,9 +131,9 @@ public interface EntityRepository<T> {
      * </p>
      *
      * @param entity Сущность для вставки.
-     * @return Объект {@code SingleFuture}, представляющий асинхронную операцию вставки.
+     * @return Объект {@code Mono}, представляющий асинхронную операцию вставки.
      */
-    SingleFuture<EntityID> insert(T entity);
+    Mono<EntityID> insert(T entity);
 
     /**
      * Вставляет несколько новых сущностей в репозиторий.
@@ -144,9 +144,9 @@ public interface EntityRepository<T> {
      * </p>
      *
      * @param entities Массив сущностей для вставки.
-     * @return Объект {@code ListFuture}, представляющий асинхронную операцию вставки.
+     * @return Объект {@code Multiple}, представляющий асинхронную операцию вставки.
      */
-    ListFuture<EntityID> insert(T... entities);
+    Multiple<EntityID> insert(T... entities);
 
     /**
      * Выполняет поиск сущности по её идентификатору.
@@ -157,9 +157,9 @@ public interface EntityRepository<T> {
      * </p>
      *
      * @param id Идентификатор сущности.
-     * @return Объект {@code SingleFuture}, представляющий асинхронную операцию поиска.
+     * @return Объект {@code Mono}, представляющий асинхронную операцию поиска.
      */
-    SingleFuture<T> search(Long id);
+    Mono<T> search(Long id);
 
     /**
      * Выполняет поиск сущности, удовлетворяющей заданному критерию поиска.
@@ -170,9 +170,9 @@ public interface EntityRepository<T> {
      * </p>
      *
      * @param searchCriteria Критерий поиска.
-     * @return Объект {@code SingleFuture}, представляющий асинхронную операцию поиска.
+     * @return Объект {@code Mono}, представляющий асинхронную операцию поиска.
      */
-    SingleFuture<T> searchFirst(SearchCriteria<T> searchCriteria);
+    Mono<T> searchFirst(SearchCriteria<T> searchCriteria);
 
     /**
      * Выполняет поиск множества сущностей по их идентификаторам.
@@ -183,9 +183,9 @@ public interface EntityRepository<T> {
      * </p>
      *
      * @param ids Массив идентификаторов сущностей.
-     * @return Объект {@code ListFuture}, представляющий асинхронную операцию поиска.
+     * @return Объект {@code Multiple}, представляющий асинхронную операцию поиска.
      */
-    ListFuture<T> search(Long... ids);
+    Multiple<T> search(Long... ids);
 
     /**
      * Выполняет поиск множества сущностей, удовлетворяющих заданному критерию поиска.
@@ -196,9 +196,9 @@ public interface EntityRepository<T> {
      * </p>
      *
      * @param searchCriteria Критерий поиска.
-     * @return Объект {@code ListFuture}, представляющий асинхронную операцию поиска.
+     * @return Объект {@code Multiple}, представляющий асинхронную операцию поиска.
      */
-    ListFuture<T> search(SearchCriteria<T> searchCriteria);
+    Multiple<T> search(SearchCriteria<T> searchCriteria);
 
     /**
      * Выполняет поиск множества сущностей, удовлетворяющих заданному критерию поиска, с ограничением на количество.
@@ -211,9 +211,9 @@ public interface EntityRepository<T> {
      *
      * @param limit        Максимальное количество результатов.
      * @param searchCriteria Критерий поиска.
-     * @return Объект {@code ListFuture}, представляющий асинхронную операцию поиска.
+     * @return Объект {@code Multiple}, представляющий асинхронную операцию поиска.
      */
-    ListFuture<T> search(int limit, SearchCriteria<T> searchCriteria);
+    Multiple<T> search(int limit, SearchCriteria<T> searchCriteria);
 
     /**
      * Выполняет поиск всех сущностей с ограничением на количество.
@@ -224,9 +224,9 @@ public interface EntityRepository<T> {
      * </p>
      *
      * @param limit Максимальное количество результатов.
-     * @return Объект {@code ListFuture}, представляющий асинхронную операцию поиска.
+     * @return Объект {@code Multiple}, представляющий асинхронную операцию поиска.
      */
-    ListFuture<T> searchAll(int limit);
+    Multiple<T> searchAll(int limit);
 
     /**
      * Выполняет поиск всех сущностей.
@@ -235,9 +235,9 @@ public interface EntityRepository<T> {
      * Можно подписаться на результат операции для получения списка всех найденных сущностей.
      * </p>
      *
-     * @return Объект {@code ListFuture}, представляющий асинхронную операцию поиска.
+     * @return Объект {@code Multiple}, представляющий асинхронную операцию поиска.
      */
-    ListFuture<T> searchAll();
+    Multiple<T> searchAll();
 
     /**
      * Создает новый экземпляр {@code SearchMarker} для создания критериев поиска.

@@ -16,66 +16,67 @@ import java.util.function.*;
  */
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class SingleFuture<T> {
+public class Mono<T> {
 
     /**
-     * Создает пустой SingleFuture, завершающийся null значением.
+     * Создает пустой Mono, завершающийся null значением.
      *
      * @param <T> Тип результата.
-     * @return Пустой SingleFuture.
+     * @return Пустой Mono.
      */
-    public static <T> SingleFuture<T> empty() {
-        return new SingleFuture<>(CompletableFuture.completedFuture(null));
+    public static <T> Mono<T> empty() {
+        return new Mono<>(CompletableFuture.completedFuture(null));
     }
 
     /**
-     * Создает SingleFuture из существующего будущего результата.
+     * Создает Mono из существующего будущего результата.
      *
      * @param completableFuture Объект, представляющий асинхронную операцию.
      * @param <T> Тип результата.
-     * @return Новый SingleFuture.
+     * @return Новый Mono.
      */
-    public static <T> SingleFuture<T> of(CompletableFuture<T> completableFuture) {
-        return new SingleFuture<>(completableFuture);
+    public static <T> Mono<T> of(CompletableFuture<T> completableFuture) {
+        return new Mono<>(completableFuture);
     }
 
     /**
-     * Создает SingleFuture, завершающийся указанным значением.
+     * Создает Mono, завершающийся указанным значением.
      *
-     * @param entity Значение, которым должен завершиться SingleFuture.
+     * @param entity Значение, которым должен завершиться Mono.
      * @param <T> Тип результата.
-     * @return Новый SingleFuture.
+     * @return Новый Mono.
      */
-    public static <T> SingleFuture<T> of(T entity) {
-        return new SingleFuture<>(CompletableFuture.completedFuture(entity));
+    public static <T> Mono<T> of(T entity) {
+        return new Mono<>(CompletableFuture.completedFuture(entity));
     }
 
     /**
-     * Создает SingleFuture, выполняющий указанного поставщика в асинхронном режиме.
+     * Создает Mono, выполняющий указанного поставщика в асинхронном режиме.
      *
      * @param entitySupplier Поставщик, выполняющий асинхронную операцию.
      * @param <T> Тип результата.
-     * @return Новый SingleFuture.
+     * @return Новый Mono.
      */
-    public static <T> SingleFuture<T> supplyAsync(Supplier<T> entitySupplier) {
-        return new SingleFuture<>(CompletableFuture.supplyAsync(entitySupplier));
+    public static <T> Mono<T> supplyAsync(Supplier<T> entitySupplier) {
+        return new Mono<>(CompletableFuture.supplyAsync(entitySupplier));
     }
 
     /**
-     * Создает SingleFuture, выполняющий указанного поставщика в асинхронном
+     * Создает Mono, выполняющий указанного поставщика в асинхронном
      * режиме с использованием заданного исполнителя.
      *
      * @param entitySupplier Поставщик, выполняющий асинхронную операцию.
      * @param executor Исполнитель для выполнения асинхронной операции.
      * @param <T> Тип результата.
-     * @return Новый SingleFuture.
+     * @return Новый Mono.
      */
-    public static <T> SingleFuture<T> supplyAsync(Supplier<T> entitySupplier, Executor executor) {
-        return new SingleFuture<>(CompletableFuture.supplyAsync(entitySupplier, executor));
+    public static <T> Mono<T> supplyAsync(Supplier<T> entitySupplier, Executor executor) {
+        return new Mono<>(CompletableFuture.supplyAsync(entitySupplier, executor));
     }
 
     final CompletableFuture<T> future;
     private Supplier<T> orElse;
+    private Predicate<T> filter;
 
     /**
      * Блокирует выполнение до завершения асинхронной операции и возвращает результат.
@@ -83,7 +84,11 @@ public class SingleFuture<T> {
      * @return Результат асинхронной операции.
      */
     public synchronized T block() {
-        return future.join();
+        T join = future.join();
+        if (filter != null && !filter.test(join)) {
+            return orElse != null ? orElse.get() : null;
+        }
+        return join;
     }
 
     /**
@@ -123,7 +128,11 @@ public class SingleFuture<T> {
      */
     @SneakyThrows({InterruptedException.class, ExecutionException.class})
     public T freeze() {
-        return future.get();
+        T get = future.get();
+        if (filter != null && !filter.test(get)) {
+            return orElse != null ? orElse.get() : null;
+        }
+        return get;
     }
 
     /**
@@ -148,9 +157,9 @@ public class SingleFuture<T> {
      * Runnable после завершения.
      *
      * @param runnable Runnable для выполнения после завершения.
-     * @return Текущий SingleFuture.
+     * @return Текущий Mono.
      */
-    public SingleFuture<T> subscribe(Runnable runnable) {
+    public Mono<T> subscribe(Runnable runnable) {
         if (isPresent()) {
             runnable.run();
             return this;
@@ -164,14 +173,17 @@ public class SingleFuture<T> {
      * указанный Consumer после завершения.
      *
      * @param consumer Consumer для обработки результата.
-     * @return Текущий SingleFuture.
+     * @return Текущий Mono.
      */
-    public SingleFuture<T> subscribe(Consumer<T> consumer) {
+    public Mono<T> subscribe(Consumer<T> consumer) {
         if (isPresent()) {
             consumer.accept(block());
             return this;
         }
         future.thenAccept((t) -> {
+            if (filter != null && !filter.test(t)) {
+                return;
+            }
             if (t != null)
                 consumer.accept(t);
             else if (orElse != null)
@@ -185,14 +197,17 @@ public class SingleFuture<T> {
      * в указанный BiConsumer после завершения.
      *
      * @param consumer BiConsumer для обработки результата и исключения.
-     * @return Текущий SingleFuture.
+     * @return Текущий Mono.
      */
-    public SingleFuture<T> subscribe(BiConsumer<T, Throwable> consumer) {
+    public Mono<T> subscribe(BiConsumer<T, Throwable> consumer) {
         if (isPresent()) {
             consumer.accept(block(), null);
             return this;
         }
         future.whenComplete((t, e) -> {
+            if (filter != null && !filter.test(t)) {
+                return;
+            }
             if (t != null)
                 consumer.accept(t, e);
             else if (orElse != null)
@@ -206,9 +221,9 @@ public class SingleFuture<T> {
      * указанный Runnable после завершения.
      *
      * @param runnable Runnable для выполнения после завершения.
-     * @return Текущий SingleFuture.
+     * @return Текущий Mono.
      */
-    public SingleFuture<T> blockAndSubscribe(Runnable runnable) {
+    public Mono<T> blockAndSubscribe(Runnable runnable) {
         block();
         if (runnable != null) {
             runnable.run();
@@ -221,9 +236,9 @@ public class SingleFuture<T> {
      * результат в указанный Consumer после завершения.
      *
      * @param consumer Consumer для обработки результата.
-     * @return Текущий SingleFuture.
+     * @return Текущий Mono.
      */
-    public SingleFuture<T> blockAndSubscribe(Consumer<T> consumer) {
+    public Mono<T> blockAndSubscribe(Consumer<T> consumer) {
         T t = blockOptional().orElseGet(orElse != null ? orElse : () -> null);
         if (t != null || orElse != null) {
             consumer.accept(t);
@@ -236,9 +251,9 @@ public class SingleFuture<T> {
      * результат и исключение в указанный BiConsumer после завершения.
      *
      * @param consumer BiConsumer для обработки результата и исключения.
-     * @return Текущий SingleFuture.
+     * @return Текущий Mono.
      */
-    public SingleFuture<T> blockAndSubscribe(BiConsumer<T, Throwable> consumer) {
+    public Mono<T> blockAndSubscribe(BiConsumer<T, Throwable> consumer) {
         subscribe(consumer);
         block();
         return this;
@@ -249,9 +264,9 @@ public class SingleFuture<T> {
      *
      * @param function Функция для преобразования результата.
      * @param <R> Тип результата после преобразования.
-     * @return Новый SingleFuture с преобразованным результатом.
+     * @return Новый Mono с преобразованным результатом.
      */
-    public <R> SingleFuture<R> map(Function<T, R> function) {
+    public <R> Mono<R> map(Function<T, R> function) {
         return of(future.thenApply(t -> {
             if (t != null)
                 return function.apply(t);
@@ -267,9 +282,9 @@ public class SingleFuture<T> {
      *
      * @param function Функция для преобразования результата.
      * @param <R> Тип результата после преобразования.
-     * @return Новый SingleFuture с преобразованным результатом.
+     * @return Новый Mono с преобразованным результатом.
      */
-    public <R> SingleFuture<R> flatMap(Function<T, Optional<R>> function) {
+    public <R> Mono<R> flatMap(Function<T, Optional<R>> function) {
         return map(t -> function.apply(t).orElse(null));
     }
 
@@ -277,10 +292,15 @@ public class SingleFuture<T> {
      * Фильтрует результат асинхронной операции с помощью указанного предиката.
      *
      * @param predicate Предикат для фильтрации результата.
-     * @return Новый SingleFuture с отфильтрованным результатом.
+     * @return Новый Mono с отфильтрованным результатом.
      */
-    public SingleFuture<T> filter(Predicate<T> predicate) {
-        return toList().filter(predicate).first();
+    public Mono<T> filter(Predicate<T> predicate) {
+        if (filter == null) {
+            filter = predicate;
+        } else {
+            filter = filter.and(predicate);
+        }
+        return this;
     }
 
     /**
@@ -306,9 +326,9 @@ public class SingleFuture<T> {
      * завершится null значением.
      *
      * @param def Значение по умолчанию.
-     * @return Текущий SingleFuture.
+     * @return Текущий Mono.
      */
-    public SingleFuture<T> orElse(T def) {
+    public Mono<T> orElse(T def) {
         this.orElse = () -> def;
         return this;
     }
@@ -318,9 +338,9 @@ public class SingleFuture<T> {
      * завершится null значением.
      *
      * @param def Поставщик значения по умолчанию.
-     * @return Текущий SingleFuture.
+     * @return Текущий Mono.
      */
-    public SingleFuture<T> orElse(Supplier<T> def) {
+    public Mono<T> orElse(Supplier<T> def) {
         this.orElse = def;
         return this;
     }
@@ -330,9 +350,9 @@ public class SingleFuture<T> {
      * операция завершится null значением.
      *
      * @param def Поставщик Optional значения по умолчанию.
-     * @return Текущий SingleFuture.
+     * @return Текущий Mono.
      */
-    public SingleFuture<T> or(Supplier<Optional<T>> def) {
+    public Mono<T> or(Supplier<Optional<T>> def) {
         this.orElse = () -> def.get().orElse(null);
         return this;
     }
@@ -342,19 +362,19 @@ public class SingleFuture<T> {
      * завершится null значением.
      *
      * @param def Optional значение по умолчанию.
-     * @return Текущий SingleFuture.
+     * @return Текущий Mono.
      */
-    public SingleFuture<T> or(Optional<T> def) {
+    public Mono<T> or(Optional<T> def) {
         this.orElse = () -> def.orElse(null);
         return this;
     }
 
     /**
-     * Преобразует текущий SingleFuture в ListFuture, содержащий один элемент.
+     * Преобразует текущий Mono в Multiple, содержащий один элемент.
      *
-     * @return ListFuture, содержащий один элемент.
+     * @return Multiple, содержащий один элемент.
      */
-    public ListFuture<T> toList() {
-        return ListFuture.ofFutures(Collections.singletonList(future));
+    public Multiple<T> toMultiple() {
+        return Multiple.ofFutures(Collections.singletonList(future));
     }
 }

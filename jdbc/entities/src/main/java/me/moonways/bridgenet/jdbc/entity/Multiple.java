@@ -18,67 +18,67 @@ import java.util.stream.Collectors;
  */
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class ListFuture<T> {
+public class Multiple<T> {
 
     /**
-     * Создает пустой ListFuture, завершающийся пустой коллекцией.
+     * Создает пустой Multiple, завершающийся пустой коллекцией.
      *
      * @param <T> Тип результата.
-     * @return Пустой ListFuture.
+     * @return Пустой Multiple.
      */
-    public static <T> ListFuture<T> empty() {
-        return new ListFuture<>(Collections.synchronizedList(new ArrayList<>()));
+    public static <T> Multiple<T> empty() {
+        return new Multiple<>(Collections.synchronizedList(new ArrayList<>()));
     }
 
     /**
-     * Создает ListFuture из списка будущих результатов.
+     * Создает Multiple из списка будущих результатов.
      *
      * @param futures Список асинхронных операций.
      * @param <T> Тип результата.
-     * @return Новый ListFuture.
+     * @return Новый Multiple.
      */
-    public static <T> ListFuture<T> ofFutures(List<CompletableFuture<T>> futures) {
-        return new ListFuture<>(futures);
+    public static <T> Multiple<T> ofFutures(List<CompletableFuture<T>> futures) {
+        return new Multiple<>(Collections.synchronizedList(new ArrayList<>(futures)));
     }
 
     /**
-     * Создает ListFuture из Iterable коллекции.
+     * Создает Multiple из Iterable коллекции.
      *
      * @param entities Коллекция сущностей.
      * @param cls Класс типа результата.
      * @param <T> Тип результата.
-     * @return Новый ListFuture.
+     * @return Новый Multiple.
      */
-    public static <T> ListFuture<T> of(Iterable<T> entities, Class<T> cls) {
-        return new ListFuture<>(Arrays.stream(Iterables.toArray(entities, cls))
+    public static <T> Multiple<T> of(Iterable<T> entities, Class<T> cls) {
+        return new Multiple<>(Arrays.stream(Iterables.toArray(entities, cls))
                 .map(CompletableFuture::completedFuture)
                 .collect(Collectors.toCollection(() -> Collections.synchronizedList(new ArrayList<>()))));
     }
 
     /**
-     * Создает ListFuture, выполняющий список поставщиков в асинхронном режиме.
+     * Создает Multiple, выполняющий список поставщиков в асинхронном режиме.
      *
      * @param entitySuppliers Список поставщиков.
      * @param <T> Тип результата.
-     * @return Новый ListFuture.
+     * @return Новый Multiple.
      */
-    public static <T> ListFuture<T> supplyAsync(List<Supplier<T>> entitySuppliers) {
-        return new ListFuture<>(entitySuppliers.stream()
+    public static <T> Multiple<T> supplyAsync(List<Supplier<T>> entitySuppliers) {
+        return new Multiple<>(entitySuppliers.stream()
                 .map(CompletableFuture::supplyAsync)
                 .collect(Collectors.toCollection(() -> Collections.synchronizedList(new ArrayList<>()))));
     }
 
     /**
-     * Создает ListFuture, выполняющий список поставщиков в асинхронном режиме
+     * Создает Multiple, выполняющий список поставщиков в асинхронном режиме
      * с использованием заданного исполнителя.
      *
      * @param entitySuppliers Список поставщиков.
      * @param executor Исполнитель для выполнения асинхронных операций.
      * @param <T> Тип результата.
-     * @return Новый ListFuture.
+     * @return Новый Multiple.
      */
-    public static <T> ListFuture<T> supplyAsync(List<Supplier<T>> entitySuppliers, Executor executor) {
-        return new ListFuture<>(entitySuppliers.stream()
+    public static <T> Multiple<T> supplyAsync(List<Supplier<T>> entitySuppliers, Executor executor) {
+        return new Multiple<>(entitySuppliers.stream()
                 .map(supplier -> CompletableFuture.supplyAsync(supplier, executor))
                 .collect(Collectors.toCollection(() -> Collections.synchronizedList(new ArrayList<>()))));
     }
@@ -86,25 +86,25 @@ public class ListFuture<T> {
     private final List<CompletableFuture<T>> futures;
 
     /**
-     * Возвращает первый результат асинхронных операций в виде SingleFuture.
+     * Возвращает первый результат асинхронных операций в виде Mono.
      *
-     * @return Первый результат в виде SingleFuture.
+     * @return Первый результат в виде Mono.
      */
-    public SingleFuture<T> first() {
+    public Mono<T> first() {
         return Optional.ofNullable(Iterables.getFirst(futures, null))
-                .map(SingleFuture::of)
-                .orElseGet(SingleFuture::empty);
+                .map(Mono::of)
+                .orElseGet(Mono::empty);
     }
 
     /**
-     * Возвращает последний результат асинхронных операций в виде SingleFuture.
+     * Возвращает последний результат асинхронных операций в виде Mono.
      *
-     * @return Последний результат в виде SingleFuture.
+     * @return Последний результат в виде Mono.
      */
-    public SingleFuture<T> last() {
+    public Mono<T> last() {
         return Optional.ofNullable(Iterables.getLast(futures, null))
-                .map(SingleFuture::of)
-                .orElseGet(SingleFuture::empty);
+                .map(Mono::of)
+                .orElseGet(Mono::empty);
     }
 
     /**
@@ -115,10 +115,10 @@ public class ListFuture<T> {
      */
     public synchronized List<T> blockAll() {
         return futures.stream()
-                .map(SingleFuture::of)
-                .peek(SingleFuture::block)
-                .filter(futures::contains)
-                .map(SingleFuture::block)
+                .map(Mono::of)
+                .peek(Mono::block)
+                .filter(mono -> futures.contains(mono.future))
+                .map(Mono::block)
                 .collect(Collectors.toList());
     }
 
@@ -132,10 +132,10 @@ public class ListFuture<T> {
      */
     public <C extends Collection<T>> C blockAll(Supplier<C> collectionSupplier) {
         return futures.stream()
-                .map(SingleFuture::of)
-                .peek(SingleFuture::block)
-                .filter(futures::contains)
-                .map(SingleFuture::block)
+                .map(Mono::of)
+                .peek(Mono::block)
+                .filter(mono -> futures.contains(mono.future))
+                .map(Mono::block)
                 .collect(Collectors.toCollection(collectionSupplier));
     }
 
@@ -215,10 +215,10 @@ public class ListFuture<T> {
      */
     public List<T> freezeAll() {
         return futures.stream()
-                .map(SingleFuture::of)
-                .peek(SingleFuture::freeze)
-                .filter(futures::contains)
-                .map(SingleFuture::block)
+                .map(Mono::of)
+                .peek(Mono::freeze)
+                .filter(mono -> futures.contains(mono.future))
+                .map(Mono::block)
                 .collect(Collectors.toList());
     }
 
@@ -231,10 +231,10 @@ public class ListFuture<T> {
      */
     public List<T> freezeAll(Duration timeout) {
         return futures.stream()
-                .map(SingleFuture::of)
+                .map(Mono::of)
                 .peek(future -> future.freeze(timeout))
-                .filter(futures::contains)
-                .map(SingleFuture::block)
+                .filter(mono -> futures.contains(mono.future))
+                .map(Mono::block)
                 .collect(Collectors.toList());
     }
 
@@ -243,10 +243,10 @@ public class ListFuture<T> {
      * после завершения.
      *
      * @param runnable Runnable для выполнения после завершения.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> subscribeEach(Runnable runnable) {
-        futures.stream().map(SingleFuture::of).forEach(future -> {
+    public Multiple<T> subscribeEach(Runnable runnable) {
+        futures.stream().map(Mono::of).forEach(future -> {
             if (futures.contains(future.future))
                 future.subscribe(runnable);
         });
@@ -258,10 +258,10 @@ public class ListFuture<T> {
      * Consumer после завершения.
      *
      * @param consumer Consumer для обработки результата.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> subscribeEach(Consumer<T> consumer) {
-        futures.stream().map(SingleFuture::of).forEach(future -> {
+    public Multiple<T> subscribeEach(Consumer<T> consumer) {
+        futures.stream().map(Mono::of).forEach(future -> {
             if (futures.contains(future.future))
                 future.subscribe(consumer);
         });
@@ -273,10 +273,10 @@ public class ListFuture<T> {
      * в указанный BiConsumer после завершения.
      *
      * @param consumer BiConsumer для обработки результата и исключения.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> subscribeEach(BiConsumer<T, Throwable> consumer) {
-        futures.stream().map(SingleFuture::of).forEach(future -> {
+    public Multiple<T> subscribeEach(BiConsumer<T, Throwable> consumer) {
+        futures.stream().map(Mono::of).forEach(future -> {
             if (futures.contains(future.future))
                 future.subscribe(consumer);
         });
@@ -288,12 +288,12 @@ public class ListFuture<T> {
      * после завершения.
      *
      * @param runnable Runnable для выполнения после завершения.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> subscribeFirst(Runnable runnable) {
+    public Multiple<T> subscribeFirst(Runnable runnable) {
         CompletableFuture<T> first = Iterables.getFirst(futures, null);
         if (first != null) {
-            SingleFuture.of(first)
+            Mono.of(first)
                     .subscribe(runnable);
         }
         return this;
@@ -304,12 +304,12 @@ public class ListFuture<T> {
      * Consumer после завершения.
      *
      * @param consumer Consumer для обработки результата.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> subscribeFirst(Consumer<T> consumer) {
+    public Multiple<T> subscribeFirst(Consumer<T> consumer) {
         CompletableFuture<T> first = Iterables.getFirst(futures, null);
         if (first != null) {
-            SingleFuture.of(first)
+            Mono.of(first)
                     .subscribe(consumer);
         }
         return this;
@@ -320,12 +320,12 @@ public class ListFuture<T> {
      * в указанный BiConsumer после завершения.
      *
      * @param consumer BiConsumer для обработки результата и исключения.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> subscribeFirst(BiConsumer<T, Throwable> consumer) {
+    public Multiple<T> subscribeFirst(BiConsumer<T, Throwable> consumer) {
         CompletableFuture<T> first = Iterables.getFirst(futures, null);
         if (first != null) {
-            SingleFuture.of(first)
+            Mono.of(first)
                     .subscribe(consumer);
         }
         return this;
@@ -336,12 +336,12 @@ public class ListFuture<T> {
      * после завершения.
      *
      * @param runnable Runnable для выполнения после завершения.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> subscribeLast(Runnable runnable) {
+    public Multiple<T> subscribeLast(Runnable runnable) {
         CompletableFuture<T> last = Iterables.getLast(futures, null);
         if (last != null) {
-            SingleFuture.of(last)
+            Mono.of(last)
                     .subscribe(runnable);
         }
         return this;
@@ -352,12 +352,12 @@ public class ListFuture<T> {
      * Consumer после завершения.
      *
      * @param consumer Consumer для обработки результата.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> subscribeLast(Consumer<T> consumer) {
+    public Multiple<T> subscribeLast(Consumer<T> consumer) {
         CompletableFuture<T> last = Iterables.getLast(futures, null);
         if (last != null) {
-            SingleFuture.of(last)
+            Mono.of(last)
                     .subscribe(consumer);
         }
         return this;
@@ -368,12 +368,12 @@ public class ListFuture<T> {
      * в указанный BiConsumer после завершения.
      *
      * @param consumer BiConsumer для обработки результата и исключения.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> subscribeLast(BiConsumer<T, Throwable> consumer) {
+    public Multiple<T> subscribeLast(BiConsumer<T, Throwable> consumer) {
         CompletableFuture<T> last = Iterables.getLast(futures, null);
         if (last != null) {
-            SingleFuture.of(last)
+            Mono.of(last)
                     .subscribe(consumer);
         }
         return this;
@@ -383,9 +383,9 @@ public class ListFuture<T> {
      * Блокирует выполнение до завершения всех асинхронных операций и выполняет указанный Runnable.
      *
      * @param runnable Runnable для выполнения после завершения всех операций.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> blockAndSubscribeAll(Runnable runnable) {
+    public Multiple<T> blockAndSubscribeAll(Runnable runnable) {
         blockAll();
         runnable.run();
         return this;
@@ -396,9 +396,9 @@ public class ListFuture<T> {
      * Runnable для каждого результата.
      *
      * @param runnable Runnable для выполнения после завершения каждой операции.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> blockAndSubscribeEach(Runnable runnable) {
+    public Multiple<T> blockAndSubscribeEach(Runnable runnable) {
         blockAll().forEach(t -> runnable.run());
         return this;
     }
@@ -408,9 +408,9 @@ public class ListFuture<T> {
      * в указанный Consumer для каждого результата.
      *
      * @param consumer Consumer для обработки каждого результата.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> blockAndSubscribeEach(Consumer<T> consumer) {
+    public Multiple<T> blockAndSubscribeEach(Consumer<T> consumer) {
         blockAll().forEach(consumer);
         return this;
     }
@@ -420,9 +420,9 @@ public class ListFuture<T> {
      * и исключение в указанный BiConsumer для каждого результата.
      *
      * @param consumer BiConsumer для обработки каждого результата и исключения.
-     * @return Текущий ListFuture.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> blockAndSubscribeEach(BiConsumer<T, Throwable> consumer) {
+    public Multiple<T> blockAndSubscribeEach(BiConsumer<T, Throwable> consumer) {
         subscribeEach(consumer);
         blockAll();
         return this;
@@ -432,9 +432,9 @@ public class ListFuture<T> {
      * Фильтрует результаты асинхронных операций на основе заданного предиката.
      *
      * @param predicate Предикат для фильтрации результатов.
-     * @return Текущий ListFuture с отфильтрованными результатами.
+     * @return Текущий Multiple с отфильтрованными результатами.
      */
-    public ListFuture<T> filter(Predicate<T> predicate) {
+    public Multiple<T> filter(Predicate<T> predicate) {
         new ArrayList<>(futures).forEach(completableFuture -> {
             completableFuture.thenAccept(t -> {
                 if (!predicate.test(t))
@@ -446,27 +446,27 @@ public class ListFuture<T> {
 
     /**
      * Применяет функцию к каждому результату асинхронной операции и возвращает новый
-     * ListFuture с преобразованными результатами.
+     * Multiple с преобразованными результатами.
      *
      * @param function Функция для преобразования результатов.
      * @param <R> Тип преобразованных результатов.
-     * @return Новый ListFuture с преобразованными результатами.
+     * @return Новый Multiple с преобразованными результатами.
      */
-    public <R> ListFuture<R> mapEach(Function<T, R> function) {
-        return ofFutures(futures.stream().map(SingleFuture::of).map(future -> future.map(function).future)
+    public <R> Multiple<R> mapEach(Function<T, R> function) {
+        return ofFutures(futures.stream().map(Mono::of).map(future -> future.map(function).future)
                 .collect(Collectors.toList()));
     }
 
     /**
      * Применяет функцию, возвращающую Optional, к каждому результату асинхронной
-     * операции и возвращает новый ListFuture с преобразованными результатами.
+     * операции и возвращает новый Multiple с преобразованными результатами.
      *
      * @param function Функция для преобразования результатов, возвращающая Optional.
      * @param <R> Тип преобразованных результатов.
-     * @return Новый ListFuture с преобразованными результатами.
+     * @return Новый Multiple с преобразованными результатами.
      */
-    public <R> ListFuture<R> flatMapEach(Function<T, Optional<R>> function) {
-        return ofFutures(futures.stream().map(SingleFuture::of).map(future -> future.flatMap(function).future)
+    public <R> Multiple<R> flatMapEach(Function<T, Optional<R>> function) {
+        return ofFutures(futures.stream().map(Mono::of).map(future -> future.flatMap(function).future)
                 .collect(Collectors.toList()));
     }
 
@@ -480,40 +480,40 @@ public class ListFuture<T> {
     }
 
     /**
-     * Добавляет SingleFuture к текущему ListFuture.
+     * Добавляет Mono к текущему Multiple.
      *
-     * @param other SingleFuture для добавления.
-     * @return Текущий ListFuture.
+     * @param other Mono для добавления.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> add(SingleFuture<T> other) {
+    public Multiple<T> add(Mono<T> other) {
         futures.add(other.future);
         return this;
     }
 
     /**
-     * Добавляет все элементы из другого ListFuture к текущему ListFuture.
+     * Добавляет все элементы из другого Multiple к текущему Multiple.
      *
-     * @param other ListFuture для добавления.
-     * @return Текущий ListFuture.
+     * @param other Multiple для добавления.
+     * @return Текущий Multiple.
      */
-    public ListFuture<T> addAll(ListFuture<T> other) {
+    public Multiple<T> addAll(Multiple<T> other) {
         futures.addAll(other.futures);
         return this;
     }
 
     /**
-     * Возвращает размер текущего ListFuture.
+     * Возвращает размер текущего Multiple.
      *
-     * @return Размер ListFuture.
+     * @return Размер Multiple.
      */
     public int size() {
         return futures.size();
     }
 
     /**
-     * Проверяет, пуст ли текущий ListFuture.
+     * Проверяет, пуст ли текущий Multiple.
      *
-     * @return true, если ListFuture пуст, иначе false.
+     * @return true, если Multiple пуст, иначе false.
      */
     public boolean isEmpty() {
         return futures.isEmpty();
