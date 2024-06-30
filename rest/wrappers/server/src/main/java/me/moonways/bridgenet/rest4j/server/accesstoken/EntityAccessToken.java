@@ -6,7 +6,7 @@ import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityColumn;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityId;
 
-@Entity(name = "bridgenet4j_accessTokens")
+@Entity(name = "PublicAccessTokens")
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
