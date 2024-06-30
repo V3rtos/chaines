@@ -86,7 +86,7 @@ public final class Bridgenet4jAccessTokenService {
         dbRepository.searchFirst(
                         dbRepository.beginCriteria()
                                 .andEquals("source", accessToken.getSource().ordinal())
-                                .andEquals("token", accessToken))
+                                .andEquals("token", accessToken.getToken()))
                 .subscribe((entity, ex) -> {
                     if (entity == null) {
                         dbRepository.insert(accessToken.toEntity());
