@@ -1,6 +1,7 @@
 package me.moonways.bridgenet.bootstrap.command;
 
 import me.moonways.bridgenet.api.command.CommandSession;
+import me.moonways.bridgenet.api.command.annotation.Alias;
 import me.moonways.bridgenet.api.command.annotation.Command;
 import me.moonways.bridgenet.api.command.annotation.MentorExecutor;
 import me.moonways.bridgenet.api.command.sender.ConsoleCommandSender;
@@ -11,6 +12,7 @@ import me.moonways.bridgenet.rest4j.server.accesstoken.AccessToken;
 import me.moonways.bridgenet.rest4j.server.accesstoken.AccessTokenSource;
 import me.moonways.bridgenet.rest4j.server.accesstoken.Bridgenet4jAccessTokenService;
 
+@Alias("publicapi")
 @Command("publickey")
 public class PublicKeyCommand {
 
@@ -20,13 +22,13 @@ public class PublicKeyCommand {
     @MentorExecutor
     public void defaultCommand(CommandSession session) {
         EntityCommandSender commandSender = session.getSender();
+        AccessTokenSource accessTokenSource = AccessTokenSource.CLIENT;
 
         if (commandSender instanceof ConsoleCommandSender) {
-            commandSender.sendMessage(ChatColor.RED + "This command can use only players!");
-            return;
+            accessTokenSource = AccessTokenSource.SYSTEM;
         }
 
-        AccessToken accessToken = accessTokenService.grantAccessToken(AccessTokenSource.CLIENT);
-        commandSender.sendMessage("Ваш API-ключ для использования REST-API: " + accessToken.getToken());
+        AccessToken accessToken = accessTokenService.grantAccessToken(accessTokenSource);
+        commandSender.sendMessage(ChatColor.YELLOW + "Ваш API-ключ для использования REST-API: " + accessToken.getToken());
     }
 }
