@@ -26,7 +26,7 @@ public class ClientStressMessagesTest {
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
 
     private static final int PACKETS_LENGTH = 1000;
-    private static final int SLEEPING_TIMEOUT = PACKETS_LENGTH * 7;
+    private static final int SLEEPING_TIMEOUT = PACKETS_LENGTH * 9;
 
     @Inject
     private ExampleClient subj;

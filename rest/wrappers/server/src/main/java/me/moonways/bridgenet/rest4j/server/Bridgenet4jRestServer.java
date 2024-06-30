@@ -1,15 +1,12 @@
 package me.moonways.bridgenet.rest4j.server;
 
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.util.thread.Threads;
 import me.moonways.bridgenet.assembly.ResourcesAssembly;
 import me.moonways.bridgenet.rest.model.HttpRequest;
 import me.moonways.bridgenet.rest.model.HttpResponse;
-import me.moonways.bridgenet.rest.model.authentication.Authentication;
-import me.moonways.bridgenet.rest.model.authentication.defaults.HttpBearerAuthenticator;
 import me.moonways.bridgenet.rest.server.HttpServer;
 import me.moonways.bridgenet.rest4j.data.ApiErrors;
 import me.moonways.bridgenet.rest4j.server.accesstoken.AccessTokenAuthenticator;
