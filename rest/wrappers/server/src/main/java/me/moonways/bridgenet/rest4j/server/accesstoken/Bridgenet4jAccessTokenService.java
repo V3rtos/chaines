@@ -1,6 +1,5 @@
 package me.moonways.bridgenet.rest4j.server.accesstoken;
 
-import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.jdbc.entity.EntityRepository;
@@ -26,7 +25,8 @@ public final class Bridgenet4jAccessTokenService {
     }
 
     public AccessToken grantAccessToken(AccessTokenSource source) {
-        return addAccessToken(source, TokenGenerator.defaults().generate());
+        return addAccessToken(source,
+                TokenGenerator.defaults().generate());
     }
 
     public AccessToken addAccessToken(AccessTokenSource source, String token) {
