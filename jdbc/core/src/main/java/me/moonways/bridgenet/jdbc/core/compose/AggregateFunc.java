@@ -3,7 +3,7 @@ package me.moonways.bridgenet.jdbc.core.compose;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum SubjectFunction {
+public enum AggregateFunc {
 
     COUNTING("COUNT"),
     AVERAGE("AVG"),

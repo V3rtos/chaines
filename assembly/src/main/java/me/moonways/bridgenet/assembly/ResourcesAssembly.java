@@ -10,7 +10,10 @@ import me.moonways.bridgenet.assembly.jaxb.XmlJaxbParser;
 import me.moonways.bridgenet.assembly.jaxb.XmlRootObject;
 import me.moonways.bridgenet.assembly.util.StreamToStringUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
 

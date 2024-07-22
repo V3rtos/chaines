@@ -9,7 +9,6 @@ import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;

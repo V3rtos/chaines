@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.*;
 import java.util.stream.Collectors;
 
@@ -91,7 +92,8 @@ public class Multiple<T> {
      * @return Первый результат в виде Mono.
      */
     public Mono<T> first() {
-        return Optional.ofNullable(Iterables.getFirst(futures, null))
+        CompletableFuture<T> first = Iterables.getFirst(futures, null);
+        return Optional.ofNullable(first)
                 .map(Mono::of)
                 .orElseGet(Mono::empty);
     }
@@ -102,7 +104,8 @@ public class Multiple<T> {
      * @return Последний результат в виде Mono.
      */
     public Mono<T> last() {
-        return Optional.ofNullable(Iterables.getLast(futures, null))
+        CompletableFuture<T> last = Iterables.getLast(futures, null);
+        return Optional.ofNullable(last)
                 .map(Mono::of)
                 .orElseGet(Mono::empty);
     }

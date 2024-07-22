@@ -5,10 +5,10 @@ import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanComponent;
 import me.moonways.bridgenet.api.inject.bean.BeanException;
 import me.moonways.bridgenet.api.inject.bean.BeanType;
-import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorAdapter;
 import me.moonways.bridgenet.api.inject.processor.ScanningResult;
-import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
+import me.moonways.bridgenet.api.inject.processor.TypeAnnotationProcessorAdapter;
 import me.moonways.bridgenet.api.inject.processor.persistence.AwaitAnnotationsScanning;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
 
 import java.lang.annotation.Annotation;
 import java.util.*;

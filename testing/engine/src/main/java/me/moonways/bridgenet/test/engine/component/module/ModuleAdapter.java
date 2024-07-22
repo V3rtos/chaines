@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.test.engine.component.module;
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import me.moonways.bridgenet.test.engine.flow.TestFlowContext;

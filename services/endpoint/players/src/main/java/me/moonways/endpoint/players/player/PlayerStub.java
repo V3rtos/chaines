@@ -13,8 +13,8 @@ import me.moonways.bridgenet.model.service.players.Player;
 import me.moonways.bridgenet.model.service.players.component.PlayerStore;
 import me.moonways.bridgenet.model.service.players.component.statistic.ActivityStatistics;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
-import me.moonways.bridgenet.model.util.Title;
 import me.moonways.bridgenet.model.util.Fade;
+import me.moonways.bridgenet.model.util.Title;
 import me.moonways.endpoint.players.database.PlayerDescription;
 import net.kyori.adventure.text.Component;
 

@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.test.engine;
 
 import me.moonways.bridgenet.assembly.OverridenProperty;
-import me.moonways.bridgenet.test.data.TestConst;
 
 import java.io.BufferedReader;
 import java.io.IOException;

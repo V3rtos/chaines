@@ -3,15 +3,17 @@ package me.moonways.bridgenet.mtp.message;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.processor.ScanningResult;
-import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.AwaitAnnotationsScanning;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
 import me.moonways.bridgenet.mtp.channel.ChannelDirection;
 import me.moonways.bridgenet.mtp.message.persistence.ClientMessage;
 import me.moonways.bridgenet.mtp.message.persistence.ServerMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2

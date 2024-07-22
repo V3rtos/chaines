@@ -12,12 +12,12 @@ import me.moonways.bridgenet.jdbc.core.compose.DatabaseComposer;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedQuery;
 import me.moonways.bridgenet.jdbc.core.util.result.Result;
 import me.moonways.bridgenet.jdbc.entity.adapter.TypeAdaptersControl;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchCriteria;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchElement;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 import me.moonways.bridgenet.jdbc.entity.util.EntityPersistenceUtil;
 import me.moonways.bridgenet.jdbc.entity.util.EntityReadAndWriteUtil;
-import me.moonways.bridgenet.jdbc.entity.criteria.SearchElement;
-import me.moonways.bridgenet.jdbc.entity.criteria.SearchCriteria;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;

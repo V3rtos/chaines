@@ -3,9 +3,9 @@ package me.moonways.endpoint.players.database;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
-import me.moonways.bridgenet.jdbc.entity.Mono;
 import me.moonways.bridgenet.jdbc.entity.EntityRepository;
 import me.moonways.bridgenet.jdbc.entity.EntityRepositoryFactory;
+import me.moonways.bridgenet.jdbc.entity.Mono;
 
 import java.util.UUID;
 

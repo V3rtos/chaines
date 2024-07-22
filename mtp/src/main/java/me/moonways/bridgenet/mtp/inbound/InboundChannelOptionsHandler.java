@@ -9,7 +9,6 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
-import me.moonways.bridgenet.mtp.BridgenetNetworkController;
 import me.moonways.bridgenet.mtp.channel.ChannelDirection;
 import me.moonways.bridgenet.mtp.config.NetworkJsonConfiguration;
 import me.moonways.bridgenet.mtp.message.NetworkMessagesService;

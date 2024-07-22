@@ -12,6 +12,7 @@ import me.moonways.bridgenet.test.engine.flow.TestFlowNode;
 public class FlowSystemBootstrapNode implements TestFlowNode {
 
     private static final AppBootstrap bootstrap = new AppBootstrap();
+    // todo - мерджить предыдущий тестовый контекст
 
     @Override
     public void execute(TestFlowContext context) {

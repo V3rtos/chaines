@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.bean.factory.BeanFactory;
 import me.moonways.bridgenet.api.inject.bean.factory.type.ConstructorFactory;
-import me.moonways.bridgenet.api.inject.bean.factory.type.UnsafeFactory;
 import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 import me.moonways.bridgenet.mtp.transfer.provider.TransferProvider;
 
