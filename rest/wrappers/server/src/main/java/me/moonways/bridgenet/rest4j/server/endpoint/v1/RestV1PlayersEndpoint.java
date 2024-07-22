@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.rest4j.server.endpoint;
+package me.moonways.bridgenet.rest4j.server.endpoint.v1;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.service.players.OfflinePlayer;
@@ -22,7 +22,7 @@ import java.rmi.RemoteException;
 import java.util.Optional;
 
 @HttpServerListener(prefix = Api.VERSION + Api.PLAYERS_SERVICE)
-public class RestPlayersEndpoint {
+public class RestV1PlayersEndpoint {
 
     @Inject
     private PlayersServiceModel playersServiceModel;

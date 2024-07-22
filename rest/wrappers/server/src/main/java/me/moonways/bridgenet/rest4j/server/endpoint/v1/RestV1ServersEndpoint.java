@@ -1,4 +1,4 @@
-package me.moonways.bridgenet.rest4j.server.endpoint;
+package me.moonways.bridgenet.rest4j.server.endpoint.v1;
 
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.model.service.servers.EntityServer;
@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @HttpServerListener(prefix = (Api.VERSION + Api.SERVERS_SERVICE))
-public class RestServersEndpoint {
+public class RestV1ServersEndpoint {
 
     @Inject
     private ServersServiceModel serversServiceModel;

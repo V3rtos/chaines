@@ -29,6 +29,6 @@ public class PublicKeyCommand {
         }
 
         AccessToken accessToken = accessTokenService.grantAccessToken(accessTokenSource);
-        commandSender.sendMessage(ChatColor.YELLOW + "Ваш API-ключ для использования REST-API: " + accessToken.getToken());
+        commandSender.sendMessage(ChatColor.YELLOW + "Ваш сгенерированный API-ключ для использования REST-API: " + accessToken.getToken());
     }
 }

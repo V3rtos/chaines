@@ -11,8 +11,8 @@ import me.moonways.bridgenet.rest.server.HttpServer;
 import me.moonways.bridgenet.rest4j.data.ApiErrors;
 import me.moonways.bridgenet.rest4j.server.accesstoken.AccessTokenAuthenticator;
 import me.moonways.bridgenet.rest4j.server.accesstoken.Bridgenet4jAccessTokenService;
-import me.moonways.bridgenet.rest4j.server.endpoint.RestPlayersEndpoint;
-import me.moonways.bridgenet.rest4j.server.endpoint.RestServersEndpoint;
+import me.moonways.bridgenet.rest4j.server.endpoint.v1.RestV1PlayersEndpoint;
+import me.moonways.bridgenet.rest4j.server.endpoint.v1.RestV1ServersEndpoint;
 
 import java.net.InetSocketAddress;
 
@@ -26,10 +26,10 @@ import java.net.InetSocketAddress;
 public final class Bridgenet4jRestServer {
 
     // todo: toggle each from config
-    private static final Object[] ENDPOINTS_ARR =
+    private static final Object[] VERSION_1_ENDPOINTS =
             {
-                    new RestPlayersEndpoint(),
-                    new RestServersEndpoint(),
+                    new RestV1PlayersEndpoint(),
+                    new RestV1ServersEndpoint(),
                     // ...
             };
 
@@ -82,7 +82,7 @@ public final class Bridgenet4jRestServer {
      * @param httpServer HTTP-сервер, на котором будут зарегистрированы конечные точки.
      */
     private void registerEndpoints(HttpServer httpServer) {
-        for (Object endpointObj : ENDPOINTS_ARR) {
+        for (Object endpointObj : VERSION_1_ENDPOINTS) {
             beansService.inject(endpointObj);
             httpServer.registerRepository(endpointObj);
         }

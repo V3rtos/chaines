@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.jdbc.provider.DatabaseProvider;
-import me.moonways.bridgenet.test.database.entity.EntityRepositoryInsertEntityTest;
 import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.persistance.BeforeAll;
 import me.moonways.bridgenet.test.engine.persistance.TestExternal;
@@ -24,9 +23,6 @@ public class ModernTestEngineTest {
     private DatabaseProvider databaseProvider;
     @Inject
     private EventService eventService;
-
-    @TestExternal
-    private EntityRepositoryInsertEntityTest insertEntityTest;
 
     @BeforeAll
     public void setUp() {

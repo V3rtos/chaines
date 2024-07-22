@@ -2,6 +2,7 @@ package me.moonways.bridgenet.rest4j;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.rest.client.HttpClient;
 import me.moonways.bridgenet.rest.client.HttpClients;
 import me.moonways.bridgenet.rest.model.Attributes;
@@ -36,6 +37,7 @@ import me.moonways.bridgenet.rest4j.data.*;
  * }
  * }</pre>
  */
+@Log4j2
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Bridgenet4jRestClient {
 
@@ -124,6 +126,7 @@ public final class Bridgenet4jRestClient {
 
     private <T extends Ok> Response<T> executeGet(Class<T> responseType, String path, Attributes attributes) {
         checkClient();
+        log.debug("GET {}", path);
         try {
             Headers headers = createAuthorizedHeaders();
             String url = createUrlString(path);

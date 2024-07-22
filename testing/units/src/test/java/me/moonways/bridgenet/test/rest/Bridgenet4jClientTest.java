@@ -38,10 +38,8 @@ public class Bridgenet4jClientTest {
     @Test
     public void test_playersGetTotalOnline() {
         Response<OkTotalOnline> totalOnlineResponse = bridgenet4jClient.getTotalOnline()
-                .printError()
-                .subscribeOk(okTotalOnline -> log.debug(okTotalOnline.getValue()));
-
-        log.debug(totalOnlineResponse);
+                .printError(System.out)
+                .subscribeOk(log::debug);
 
         assertNotNull(totalOnlineResponse.getOk());
         assertNull(totalOnlineResponse.getError());
@@ -51,10 +49,8 @@ public class Bridgenet4jClientTest {
     @Test
     public void test_playersGetPlayerStatus() {
         Response<OkPlayerStatus> playerStatusResponse = bridgenet4jClient.getPlayerStatus(TestConst.Player.NICKNAME)
-                .printError()
+                .printError(System.out)
                 .subscribeOk(log::debug);
-
-        log.debug(playerStatusResponse);
 
         assertNotNull(playerStatusResponse.getOk());
         assertNull(playerStatusResponse.getError());
@@ -67,10 +63,8 @@ public class Bridgenet4jClientTest {
     @Test
     public void test_serversList() {
         Response<OkServersList> serversListResponse = bridgenet4jClient.getServersList()
-                .printError()
-                .subscribeOk(okServersList -> log.debug(okServersList.getList()));
-
-        log.debug(serversListResponse);
+                .printError(System.out)
+                .subscribeOk(log::debug);
 
         assertNotNull(serversListResponse.getOk());
         assertNull(serversListResponse.getError());
@@ -80,10 +74,8 @@ public class Bridgenet4jClientTest {
     @Test
     public void test_serversGetServer() {
         Response<OkServer> serverResponse = bridgenet4jClient.getServer(TestConst.Server.NAME)
-                .printError()
+                .printError(System.out)
                 .subscribeOk(log::debug);
-
-        log.debug(serverResponse);
 
         assertNotNull(serverResponse.getOk());
         assertNull(serverResponse.getError());
