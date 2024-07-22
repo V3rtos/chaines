@@ -21,7 +21,7 @@ import me.moonways.bridgenet.rest4j.Api;
 import java.rmi.RemoteException;
 import java.util.Optional;
 
-@HttpServerListener(prefix = Api.VERSION + Api.PLAYERS_SERVICE)
+@HttpServerListener(prefix = Api.VERSION_1 + Api.PLAYERS_SERVICE)
 public class RestV1PlayersEndpoint {
 
     @Inject

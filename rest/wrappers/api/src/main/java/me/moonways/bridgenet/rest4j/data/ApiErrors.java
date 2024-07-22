@@ -39,7 +39,7 @@ public class ApiErrors {
      *         и сообщением, указывающим, что путь не обрабатывается API
      */
     public Error badRequestPath(String path) {
-        return new ErrorData(ResponseCode.BAD_REQUEST, String.format("api %s invalid path: %s", Api.VERSION, path));
+        return new ErrorData(ResponseCode.BAD_REQUEST, String.format("invalid path for api %s: %s", Api.VERSION_1, path));
     }
 
     /**

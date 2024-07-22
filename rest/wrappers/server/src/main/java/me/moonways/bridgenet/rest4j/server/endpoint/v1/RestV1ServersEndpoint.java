@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@HttpServerListener(prefix = (Api.VERSION + Api.SERVERS_SERVICE))
+@HttpServerListener(prefix = (Api.VERSION_1 + Api.SERVERS_SERVICE))
 public class RestV1ServersEndpoint {
 
     @Inject

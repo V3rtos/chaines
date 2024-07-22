@@ -24,7 +24,7 @@ public interface Api {
     /**
      * Версия API.
      */
-    String VERSION = "/v1";
+    String VERSION_1 = "/v1";
 
     /**
      * Путь к сервису друзей.
@@ -79,7 +79,7 @@ public interface Api {
      * @return полный путь к ресурсу API
      */
     static String anyServicePath(String service, String... paths) {
-        return String.format("%s%s/%s", VERSION, service, String.join("/", paths));
+        return String.format("%s%s/%s", VERSION_1, service, String.join("/", paths));
     }
 
     /**
