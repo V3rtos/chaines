@@ -6,7 +6,6 @@ import me.moonways.bridgenet.client.api.data.UserDto;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiSlot;
 import me.moonways.bridgenet.model.service.gui.GuiType;
-import me.moonways.bridgenet.model.service.gui.click.ClickAction;
 import me.moonways.bridgenet.model.service.gui.click.ClickType;
 import me.moonways.bridgenet.model.service.gui.item.entries.material.Material;
 import me.moonways.bridgenet.model.service.gui.item.types.Materials;
@@ -16,7 +15,6 @@ import me.moonways.bridgenet.model.service.permissions.permission.Permission;
 
 import java.time.Duration;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public final class TestConst {
 

@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.jdbc.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 import java.time.Duration;
 import java.util.Collections;

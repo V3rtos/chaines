@@ -1,15 +1,16 @@
 package me.moonways.bridgenet.jdbc.entity.adapter;
 
 import me.moonways.bridgenet.jdbc.core.compose.ParameterType;
+import me.moonways.bridgenet.jdbc.entity.criteria.SearchElement;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityDescriptor;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
-import me.moonways.bridgenet.jdbc.entity.criteria.SearchElement;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public final class TypeAdaptersControl {
 
-    public void tryDeserializeValues(EntityDescriptor entityDescriptor) {
+    public void tryDeserializeValues(@NotNull EntityDescriptor entityDescriptor) {
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entityDescriptor.getParameters().getParameterUnits()) {
             for (ParameterTypeAdapter adapter : TypeAdapters.TYPES) {
 
@@ -27,7 +28,7 @@ public final class TypeAdaptersControl {
         }
     }
 
-    public void trySerializeValues(EntityDescriptor entityDescriptor) {
+    public void trySerializeValues(@NotNull EntityDescriptor entityDescriptor) {
         for (EntityParametersDescriptor.ParameterUnit parameterUnit : entityDescriptor.getParameters().getParameterUnits()) {
             if (parameterUnit.isExternal() || ParameterType.fromJavaType(parameterUnit.getType()) != null) {
                 continue;
@@ -63,7 +64,7 @@ public final class TypeAdaptersControl {
         }
     }
 
-    public <E> SearchElement<?> trySerializeSearchElement(String id, EntityDescriptor entityDescriptor, SearchElement<E> searchElement) {
+    public <E> SearchElement<?> trySerializeSearchElement(String id, @NotNull EntityDescriptor entityDescriptor, SearchElement<E> searchElement) {
         Optional<EntityParametersDescriptor.ParameterUnit> parameterUnitOptional
                 = entityDescriptor.getParameters().find(id);
 

@@ -1,7 +1,6 @@
 package me.moonways.bridgenet.rmi.endpoint.persistance;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import me.moonways.bridgenet.api.inject.Autobind;
 import me.moonways.bridgenet.api.inject.Inject;

@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.ToString;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
-import me.moonways.bridgenet.jdbc.entity.persistence.EntityId;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityColumn;
+import me.moonways.bridgenet.jdbc.entity.persistence.EntityId;
 
 import java.util.UUID;
 

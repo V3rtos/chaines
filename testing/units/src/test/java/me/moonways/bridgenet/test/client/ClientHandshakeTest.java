@@ -15,7 +15,8 @@ import org.junit.runner.RunWith;
 
 import java.util.concurrent.CompletableFuture;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(ModernTestEngineRunner.class)
 @TestModules({MtpModule.class, RmiServicesModule.class/* for starting a bus mtp-server */})

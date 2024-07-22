@@ -11,7 +11,9 @@ import me.moonways.bridgenet.test.engine.ModernTestEngineRunner;
 import me.moonways.bridgenet.test.engine.component.module.impl.ClientsModule;
 import me.moonways.bridgenet.test.engine.component.module.impl.RmiServicesModule;
 import me.moonways.bridgenet.test.engine.component.step.impl.JoinPlayerStep;
-import me.moonways.bridgenet.test.engine.persistance.*;
+import me.moonways.bridgenet.test.engine.persistance.BeforeSteps;
+import me.moonways.bridgenet.test.engine.persistance.TestModules;
+import me.moonways.bridgenet.test.engine.persistance.TestOrdered;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

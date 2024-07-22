@@ -4,10 +4,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
 import me.moonways.bridgenet.jdbc.core.BridgenetJdbcException;
+import me.moonways.bridgenet.jdbc.core.compose.AggregateFunc;
 import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 import me.moonways.bridgenet.jdbc.core.compose.ConditionMatcher;
 import me.moonways.bridgenet.jdbc.core.compose.MergeDirection;
-import me.moonways.bridgenet.jdbc.core.compose.SubjectFunction;
 import me.moonways.bridgenet.jdbc.core.compose.impl.collection.PatternCollection;
 import me.moonways.bridgenet.jdbc.core.compose.impl.collection.WrappedPatternCollection;
 import me.moonways.bridgenet.jdbc.core.compose.impl.collection.element.*;
@@ -65,7 +65,7 @@ public class PatternCollectionConfigurator {
         return this;
     }
 
-    private PatternCollectionConfigurator pushSubjects(SubjectFunction function, CombinedStructs.CombinedLabel[] labels) {
+    private PatternCollectionConfigurator pushSubjects(AggregateFunc function, CombinedStructs.CombinedLabel[] labels) {
         var collection = WrappedPatternCollection.multiplied();
 
         var array = Stream.of(labels)
@@ -93,11 +93,11 @@ public class PatternCollectionConfigurator {
 
     public PatternCollectionConfigurator pushSubjectsOnly(CompletedSubjects subjects) {
         validateCollectionsType(CompletedSubjects.class);
-        return pushSubjects(SubjectFunction.AVERAGE, subjects.averages())
-                .pushSubjects(SubjectFunction.COUNTING, subjects.counts())
-                .pushSubjects(SubjectFunction.MAXIMAL, subjects.maxes())
-                .pushSubjects(SubjectFunction.MINIMAL, subjects.mines())
-                .pushSubjects(SubjectFunction.SUMMING, subjects.summed())
+        return pushSubjects(AggregateFunc.AVERAGE, subjects.averages())
+                .pushSubjects(AggregateFunc.COUNTING, subjects.counts())
+                .pushSubjects(AggregateFunc.MAXIMAL, subjects.maxes())
+                .pushSubjects(AggregateFunc.MINIMAL, subjects.mines())
+                .pushSubjects(AggregateFunc.SUMMING, subjects.summed())
                 .pushSubjects(null, subjects.generals());
     }
 

@@ -6,10 +6,7 @@ import me.moonways.bridgenet.api.inject.bean.Bean;
 import me.moonways.bridgenet.api.inject.bean.BeanComponent;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public final class BeansInjectionService {

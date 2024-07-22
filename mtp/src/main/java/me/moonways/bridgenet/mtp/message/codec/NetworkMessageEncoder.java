@@ -6,8 +6,6 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.profiler.BridgenetDataLogger;
-import me.moonways.bridgenet.profiler.ProfilerType;
 import me.moonways.bridgenet.mtp.config.NetworkJsonConfiguration;
 import me.moonways.bridgenet.mtp.message.ExportedMessage;
 import me.moonways.bridgenet.mtp.message.WrappedNetworkMessage;
@@ -16,6 +14,8 @@ import me.moonways.bridgenet.mtp.message.exception.MessageCodecException;
 import me.moonways.bridgenet.mtp.transfer.ByteCodec;
 import me.moonways.bridgenet.mtp.transfer.ByteCompression;
 import me.moonways.bridgenet.mtp.transfer.MessageTransfer;
+import me.moonways.bridgenet.profiler.BridgenetDataLogger;
+import me.moonways.bridgenet.profiler.ProfilerType;
 
 @Log4j2
 @RequiredArgsConstructor

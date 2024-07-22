@@ -5,7 +5,6 @@ import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.PreConstruct;
 import me.moonways.bridgenet.api.util.reflection.ReflectionUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 

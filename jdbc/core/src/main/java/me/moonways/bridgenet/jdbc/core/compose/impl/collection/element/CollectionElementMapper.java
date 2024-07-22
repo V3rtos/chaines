@@ -1,10 +1,10 @@
 package me.moonways.bridgenet.jdbc.core.compose.impl.collection.element;
 
 import lombok.var;
+import me.moonways.bridgenet.jdbc.core.compose.AggregateFunc;
 import me.moonways.bridgenet.jdbc.core.compose.CombinedStructs;
 import me.moonways.bridgenet.jdbc.core.compose.MergeDirection;
 import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
-import me.moonways.bridgenet.jdbc.core.compose.SubjectFunction;
 import me.moonways.bridgenet.jdbc.core.compose.template.completed.CompletedPredicates;
 
 import java.util.Collections;
@@ -34,7 +34,7 @@ public final class CollectionElementMapper {
                 .build();
     }
 
-    public WrappedSubject map(SubjectFunction function, CombinedStructs.CombinedLabel label) {
+    public WrappedSubject map(AggregateFunc function, CombinedStructs.CombinedLabel label) {
         return WrappedSubject.builder()
                 .function(function)
                 .label(label.getLabel())

@@ -8,8 +8,8 @@ import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.PostConstruct;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
 import me.moonways.bridgenet.api.inject.processor.ScanningResult;
-import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
 import me.moonways.bridgenet.api.inject.processor.persistence.AwaitAnnotationsScanning;
+import me.moonways.bridgenet.api.inject.processor.persistence.GetAnnotationsScanningResult;
 import me.moonways.bridgenet.api.util.thread.Threads;
 import org.jetbrains.annotations.NotNull;
 

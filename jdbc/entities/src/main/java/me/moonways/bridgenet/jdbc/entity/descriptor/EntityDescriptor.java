@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.jdbc.entity.descriptor;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import me.moonways.bridgenet.jdbc.entity.EntityID;
 
 @Getter

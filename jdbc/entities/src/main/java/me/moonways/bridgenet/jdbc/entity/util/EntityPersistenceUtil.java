@@ -10,11 +10,10 @@ import me.moonways.bridgenet.jdbc.core.compose.ParameterAddon;
 import me.moonways.bridgenet.jdbc.entity.DatabaseEntityException;
 import me.moonways.bridgenet.jdbc.entity.descriptor.EntityParametersDescriptor;
 import me.moonways.bridgenet.jdbc.entity.persistence.Entity;
+import me.moonways.bridgenet.jdbc.entity.persistence.EntityColumn;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityExternal;
 import me.moonways.bridgenet.jdbc.entity.persistence.EntityId;
-import me.moonways.bridgenet.jdbc.entity.persistence.EntityColumn;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;

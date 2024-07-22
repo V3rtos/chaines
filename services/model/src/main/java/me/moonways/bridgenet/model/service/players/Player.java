@@ -1,11 +1,11 @@
 package me.moonways.bridgenet.model.service.players;
 
+import me.moonways.bridgenet.model.audience.ComponentHolders;
+import me.moonways.bridgenet.model.event.AudienceSendEvent;
 import me.moonways.bridgenet.model.service.language.Message;
 import me.moonways.bridgenet.model.service.players.component.PlayerConnection;
 import me.moonways.bridgenet.model.service.players.component.statistic.ActivityStatistics;
 import me.moonways.bridgenet.model.util.Title;
-import me.moonways.bridgenet.model.audience.ComponentHolders;
-import me.moonways.bridgenet.model.event.AudienceSendEvent;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.ApiStatus;
 

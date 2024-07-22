@@ -6,7 +6,6 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.mtp.BridgenetChannelException;
-import me.moonways.bridgenet.mtp.transfer.ByteCompression;
 
 import java.io.IOException;
 import java.util.Arrays;

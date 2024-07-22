@@ -1,6 +1,9 @@
 package me.moonways.bridgenet.model.service.permissions.permission;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import me.moonways.bridgenet.model.service.permissions.TemporalState;
 import org.jetbrains.annotations.NotNull;
 

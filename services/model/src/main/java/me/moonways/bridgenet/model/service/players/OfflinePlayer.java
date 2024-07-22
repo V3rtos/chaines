@@ -1,9 +1,9 @@
 package me.moonways.bridgenet.model.service.players;
 
+import me.moonways.bridgenet.model.audience.EntityAudience;
 import me.moonways.bridgenet.model.service.language.Language;
 import me.moonways.bridgenet.model.service.permissions.group.PermissionGroup;
 import me.moonways.bridgenet.model.service.permissions.permission.Permission;
-import me.moonways.bridgenet.model.audience.EntityAudience;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

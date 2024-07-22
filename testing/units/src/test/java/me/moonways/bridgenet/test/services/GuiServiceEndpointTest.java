@@ -2,7 +2,6 @@ package me.moonways.bridgenet.test.services;
 
 import lombok.extern.log4j.Log4j2;
 import me.moonways.bridgenet.api.inject.Inject;
-import me.moonways.bridgenet.model.event.GuiItemClickEvent;
 import me.moonways.bridgenet.model.service.gui.Gui;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiServiceModel;

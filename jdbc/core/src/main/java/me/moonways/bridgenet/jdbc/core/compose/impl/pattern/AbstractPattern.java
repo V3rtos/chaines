@@ -13,7 +13,6 @@ import me.moonways.bridgenet.jdbc.core.compose.transform.PatternToQueryTransform
 import me.moonways.bridgenet.jdbc.core.util.result.Result;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,13 +40,11 @@ public abstract class AbstractPattern
     @Override
     public CompletedQuery combine() {
         onPreprocess();
-
         VerificationResult verificationResult = verify(
                 new VerificationContext());
 
         if (!verificationResult.isSuccess())
             cachedNativeSql = verificationResult.toString();
-
         return this;
     }
 

@@ -6,16 +6,19 @@ import lombok.ToString;
 import me.moonways.bridgenet.api.event.EventService;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.api.inject.bean.service.BeansService;
+import me.moonways.bridgenet.model.event.GuiItemClickEvent;
 import me.moonways.bridgenet.model.service.gui.Gui;
 import me.moonways.bridgenet.model.service.gui.GuiDescription;
 import me.moonways.bridgenet.model.service.gui.GuiSlot;
-import me.moonways.bridgenet.model.event.GuiItemClickEvent;
 import me.moonways.bridgenet.model.service.gui.click.ItemClickListener;
 import me.moonways.bridgenet.model.service.gui.item.ItemStack;
 import me.moonways.bridgenet.model.service.players.Player;
 
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 

@@ -2,8 +2,8 @@ package me.moonways.bridgenet.endpoint.servers.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.moonways.bridgenet.api.event.SubscribeEvent;
 import me.moonways.bridgenet.api.event.EventService;
+import me.moonways.bridgenet.api.event.SubscribeEvent;
 import me.moonways.bridgenet.api.inject.Inject;
 import me.moonways.bridgenet.endpoint.servers.ServersContainer;
 import me.moonways.bridgenet.model.event.ServerDisconnectEvent;
