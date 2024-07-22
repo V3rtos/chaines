@@ -15,7 +15,7 @@ import me.moonways.bridgenet.rest4j.Error;
 @RequiredArgsConstructor
 public class ErrorData implements Error {
 
-    private final transient ResponseCode code;
+    private final ResponseCode code;
     private final String message;
 
     @Override
