@@ -214,7 +214,7 @@ public class ForceEntityRepository<T> implements EntityRepository<T> {
             searchCriteria.getExpectationMap().forEach((name, searchElement) -> {
 
                 SearchElement<?> serializedSearchElement = typeAdaptersControl.trySerializeSearchElement(name, entityDescriptor, searchElement);
-                searchCriteria.andEquals(name, serializedSearchElement);
+                searchCriteria.with(name, serializedSearchElement);
             });
 
             EntityOperationComposer.EntityComposedOperation operation =
