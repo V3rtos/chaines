@@ -90,7 +90,7 @@ $ ./bridgenet build
 - Советуется запускать скрипт `./bridgenet` через **Git Bash**
 
 Возможные ошибки:
-- `mvn: command not found`: Необходимо найти скрипт `./scripts/utils.sh` и добавить туда строчку:
+- `mvn: command not found`: Необходимо найти скрипт `.scripts/utils.sh` и добавить туда строчку:
   ```shell
   alias mvn="path\to\maven\bin\mvn"
   ```
