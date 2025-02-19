@@ -1,77 +1,55 @@
 package me.moonways.bridgenet.api.inject.bean.util;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.ClassPath;
 import lombok.experimental.UtilityClass;
-import me.moonways.bridgenet.api.inject.bean.BeanException;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
+import java.io.*;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("UnstableApiUsage")
 @UtilityClass
 public class ClasspathScanner {
 
-    public Set<Class<?>> getAllClasses() throws InterruptedException {
-        List<URL> urls = Arrays.asList(((URLClassLoader) Thread.currentThread().getContextClassLoader()).getURLs());
-        List<File> files = urls.stream().map(url -> new File(url.getFile())).collect(Collectors.toList());
-
-        int chunkSize = 1000;
-        List<List<File>> chunks = new ArrayList<>();
-        for (int i = 0; i < files.size(); i += chunkSize) {
-            chunks.add(files.subList(i, Math.min(files.size(), i + chunkSize)));
+    private @NotNull String repeat(String string, int count) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            result.append(string);
         }
-
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        List<Future<Set<Class<?>>>> futures = new ArrayList<>();
-
-        for (List<File> chunk : chunks) {
-            futures.add(executor.submit(() -> {
-                Set<Class<?>> classes = new HashSet<>();
-                for (File file : chunk) {
-                    if (file.isDirectory()) {
-                        classes.addAll(findClassesInDirectory(file, file.getAbsolutePath()));
-                    }
-                }
-                return classes;
-            }));
-        }
-
-        executor.shutdown();
-        Set<Class<?>> allClasses = Collections.synchronizedSet(new HashSet<>());
-        for (Future<Set<Class<?>>> future : futures) {
-            try {
-                allClasses.addAll(future.get());
-            } catch (ExecutionException e) {
-                throw new BeanException(e);
-            }
-        }
-
-        return allClasses;
+        return result.toString();
     }
 
-    private Set<Class<?>> findClassesInDirectory(File directory, String rootPath) {
-        Set<Class<?>> classes = new HashSet<>();
-        try {
-            String rootPathWithSlash = rootPath.endsWith(File.separator) ? rootPath : rootPath + File.separator;
-            Files.walk(directory.toPath()).filter(Files::isRegularFile).forEach(path -> {
-                String className = path.toString().replace(rootPathWithSlash, "").replace(File.separator, ".").replace(".class", "");
-                try {
-                    classes.add(Class.forName(className, false, Thread.currentThread().getContextClassLoader()));
-                } catch (ClassNotFoundException | NoClassDefFoundError | UnsatisfiedLinkError |
-                         IllegalStateException e) {
-                    // ignored
-                }
-            });
-        } catch (IOException e) {
-            throw new BeanException(e);
-        }
-        return classes;
+    public Set<Class<?>> findAllClassesUsingClassLoader() throws IOException {
+        AtomicInteger loadedClassesCount = new AtomicInteger(0);
+
+        ImmutableSet<ClassPath.ClassInfo> classInfos = ClassPath.from(ClasspathScanner.class.getClassLoader())
+                .getAllClasses();
+
+        int totalClasses = classInfos.size();
+        Set<Class<?>> allClasses = classInfos
+                .stream()
+                .map(classInfo -> {
+                    int count = loadedClassesCount.incrementAndGet();
+
+                    String progressBar = String.format("[%-50s]", repeat("#", (int) (Math.min(1.0, (double)count / totalClasses) * 50))); //предотвращение ошибки index out of bounds
+                    String progressPercent = String.format("%.2f%%", (double) count / totalClasses * 100);
+
+                    String formattedProgress = String.format("Loading resources: %d/%d %s %s", count, totalClasses, progressBar, progressPercent);
+                    System.out.print("\r" + formattedProgress);
+
+                    try {
+                        return classInfo.load();
+                    } catch (Throwable ignored) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        System.out.println();
+        return allClasses;
     }
 }

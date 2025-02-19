@@ -16,6 +16,7 @@ import me.moonways.bridgenet.api.inject.processor.persistence.UseTypeAnnotationP
 import me.moonways.bridgenet.api.util.pair.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -39,8 +40,8 @@ public final class BeansScanningService {
 
         log.info("Processing search all project resources & classes...");
         try {
-            allResourcesSet = ClasspathScanner.getAllClasses();
-        } catch (InterruptedException exception) {
+            allResourcesSet = ClasspathScanner.findAllClassesUsingClassLoader();
+        } catch (IOException exception) {
             throw new BeanException(exception);
         }
     }
