@@ -16,4 +16,6 @@ public @interface EntityColumn {
     String id() default "";
 
     ParameterAddon[] indexes() default {};
+	// for varhar
+	int length() default 255;
 }

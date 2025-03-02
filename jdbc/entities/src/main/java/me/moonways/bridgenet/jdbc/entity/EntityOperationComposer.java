@@ -222,13 +222,28 @@ class EntityOperationComposer {
                 .combine();
     }
 
+    // todo fix сделать нормально
     private CombinedStructs.CombinedStyledParameter toStyledParameter(EntityParametersDescriptor.ParameterUnit parameterUnit) {
+        ParameterType parameterType = ParameterType.fromJavaType(parameterUnit.getType());
+
+        // Если длина нужна, то используем длину из параметра или дефолтную
+        int length = 0;
+        if (parameterType != null && parameterType.isLengthRequired()) {
+            length = parameterUnit.getLength() > 0
+                    ? parameterUnit.getLength()
+                    : parameterType.getDefaultLength(); // Длина по умолчанию из ParameterType
+        }
+
+        // Устанавливаем defaultValue, если значение есть
+        Object defaultValue = parameterUnit.getValue();
+
         return CombinedStructs.CombinedStyledParameter.builder()
-                .name(parameterUnit.getId())
+                .name(parameterUnit.getId()) // Имя параметра
                 .style(ParameterStyle.builder()
-                        .type(ParameterType.fromJavaType(parameterUnit.getType()))
-                        .addons(Arrays.asList(parameterUnit.getIndexes()))
-                        //.defaultValue(???)
+                        .type(parameterType) // SQL-тип
+                        .addons(Arrays.asList(parameterUnit.getIndexes())) // Индексы
+                        .length(length > 0 ? length : null) // Устанавливаем длину только если она нужна
+                        .defaultValue(defaultValue != null ? defaultValue : null) // Значение по умолчанию
                         .build())
                 .build();
     }

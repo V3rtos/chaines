@@ -41,7 +41,8 @@ public class OpenJdbcConnectionHook extends BootstrapHook {
             bridgenetJdbcProvider.initConnection(jdbcSettingsConfig);
 
             DatabaseConnection databaseConnection = bridgenetJdbcProvider.getDatabaseConnection();
-            databaseConnection.call("SET MODE MySQL;");
+            // todo fix connect not only for h2
+            //databaseConnection.call("SET MODE MySQL;");
 
             handleDatabaseEventsForMetric(databaseConnection);
 

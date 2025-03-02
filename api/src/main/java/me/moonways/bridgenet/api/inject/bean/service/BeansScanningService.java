@@ -86,20 +86,24 @@ public final class BeansScanningService {
      */
     private synchronized Stream<Class<?>> getResourcesFromPackage(String... packageNamesArray) {
         if (packageNamesArray.length == 0) {
+            log.warn("No packages specified");
             return Stream.empty();
         }
 
         scanAllResourcesAsClasses();
+        // Жёстко заданный базовый пакет
+        String basePackage = "me.moonways";
+
         return allResourcesSet.stream()
                 .parallel()
                 .filter(resourceClass -> {
-                    String resourcePackageName = resourceClass.getPackage().getName();
-                    for (String packageName : packageNamesArray) {
-                        if (resourcePackageName.startsWith(packageName)) {
-                            return true;
-                        }
+                    Package pkg = resourceClass.getPackage();
+                    if (pkg == null) {
+                        return false; // Класс без пакета пропускаем
                     }
-                    return false;
+                    String resourcePackageName = pkg.getName();
+                    // Проверяем, начинается ли имя пакета с "me.moonways"
+                    return resourcePackageName.startsWith(basePackage);
                 });
     }
 
